@@ -1,5 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
+import LoginModal from './/modals/LoginModal';
+import RegisterModal from './/modals/RegistrationModal';
 
 const AuthenticateUser = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,10 +16,19 @@ const AuthenticateUser = () => {
     setIsAuthenticated(false);
   };
 
-  const handleLogin = () => {
+  const handleLogin = (event) => {
+    event.preventDefault();
     // Příklad přihlášení, zde můžete nahradit skutečnou přihlašovací logikou
     localStorage.setItem('user', 'true');
     setIsAuthenticated(true);
+    document.getElementById('login_modal').close();
+  };
+
+  const handleRegister = (event) => {
+    event.preventDefault();
+    // Příklad registrace, zde můžete nahradit skutečnou registrační logikou
+    // V této ukázce jen zavřeme modal
+    document.getElementById('register_modal').close();
   };
 
   return (
@@ -46,10 +57,13 @@ const AuthenticateUser = () => {
           </ul>
         </div>
       ) : (
-        <button onClick={handleLogin}>Přihlásit se</button>
+        <>
+          <LoginModal handleLogin={handleLogin} />
+          <RegisterModal handleRegister={handleRegister} />
+        </>
       )}
     </div>
   );
-}
+};
 
 export default AuthenticateUser;

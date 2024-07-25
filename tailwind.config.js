@@ -18,7 +18,7 @@ module.exports = {
     require('daisyui'),
   ],
   daisyui: {
-    themes: ["lemonade", "dark","dim"],
+    themes: ["nord", "dark","dim"],
     darkTheme: "dim",
     base: true, // applies background color and foreground color for root element by default
     styled: true, // include daisyUI colors and design decisions for all components

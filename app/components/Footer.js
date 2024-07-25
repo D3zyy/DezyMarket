@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 
@@ -5,9 +6,9 @@ const Footer = () => {
   return (
     <footer className="footer footer-center bg-base-200 text-base-content rounded p-10">
   <nav className="grid grid-flow-col gap-4">
-    <a className="link link-hover">O náš</a>
-    <a className="link link-hover">Kontakty</a>
-    <a className="link link-hover">Vize</a>
+    <Link href="/users" className="link link-hover">O nás</Link>
+    <Link href="/" className="link link-hover">Kontakty</Link>
+    <Link href="/users" className="link link-hover">Vize</Link>
 
   </nav>
   <nav>
