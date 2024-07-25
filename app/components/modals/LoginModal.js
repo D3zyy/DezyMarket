@@ -24,7 +24,7 @@ const LoginModal = ({ handleLogin }) => {
           </form>
           <button className="btn btn-link" onClick={() => {
             document.getElementById('login_modal').close();
-            <RegistrationModal/>
+            document.getElementById('register_modal').showModal();
           }}>Registrace</button>
         </div>
       </dialog>
