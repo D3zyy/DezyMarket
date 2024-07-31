@@ -30,6 +30,15 @@ const AuthenticateUser = () => {
     document.getElementById('register_modal').close();
   };
 
+  // Funkce pro otevření modálních oken
+  function openLoginModal() {
+    document.getElementById('login_modal').showModal();
+  }
+
+  function openRegisterModal() {
+    document.getElementById('register_modal').showModal();
+  }
+
   return (
     <div>
       {isAuthenticated ? (
@@ -58,8 +67,22 @@ const AuthenticateUser = () => {
       ) : (
         <>
           <div className="hidden sm:flex">
-            <button id="login-btn" className="btn" onClick={() => document.getElementById('login_modal').showModal()}>Přihlásit se</button>
-            <button id="registration-btn" className="btn" onClick={() => document.getElementById('register_modal').showModal()}>Registrace</button>
+            <button
+              id="login-btn"
+              className="btn"
+              onClick={openLoginModal}
+              onTouchStart={openLoginModal}
+            >
+              Přihlásit se
+            </button>
+            <button
+              id="registration-btn"
+              className="btn"
+              onClick={openRegisterModal}
+              onTouchStart={openRegisterModal}
+            >
+              Registrace
+            </button>
           </div>
           <div className="sm:hidden">
             <div className="dropdown dropdown-end">
@@ -69,28 +92,40 @@ const AuthenticateUser = () => {
                   className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h7" />
+                    d="M4 6h16M4 12h16M4 18h7"
+                  />
                 </svg>
               </div>
-              <ul
-                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                  
-                <li><button onClick={() => document.getElementById('login_modal').showModal()}>Přihlásit se</button></li>
-                <li><button onClick={() => document.getElementById('register_modal').showModal()}>Registrace</button></li>
+              <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                <li>
+                  <button
+                    onClick={openLoginModal}
+                    onTouchStart={openLoginModal}
+                  >
+                    Přihlásit se
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={openRegisterModal}
+                    onTouchStart={openRegisterModal}
+                  >
+                    Registrace
+                  </button>
+                </li>
               </ul>
             </div>
           </div>
+          <LoginModal handleLogin={handleLogin} />
+          <RegistrationModal handleRegister={handleRegister} />
         </>
       )}
-
-        <LoginModal handleLogin={handleLogin} />
-        <RegistrationModal handleRegister={handleRegister} />
-     
     </div>
   );
 };
