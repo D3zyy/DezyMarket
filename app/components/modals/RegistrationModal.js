@@ -3,7 +3,7 @@ import React from 'react';
 const RegistrationModal = ({ handleRegister }) => {
   return (
     <>
-      <button className="btn" onClick={() => document.getElementById('register_modal').showModal()}>Registrace</button>
+      
       <dialog id="register_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Registrace</h3>
@@ -18,11 +18,11 @@ const RegistrationModal = ({ handleRegister }) => {
             </div>
             <div className="py-2">
               <label htmlFor="email" className="block">Email</label>
-              <input type="email" id="email" className="input input-bordered w-full" required />
+              <input type="email"  className="input input-bordered w-full email" required />
             </div>
             <div className="py-2">
               <label htmlFor="password" className="block">Heslo</label>
-              <input type="password" id="password" className="input input-bordered w-full" required />
+              <input type="password"  className="input input-bordered w-full password" required />
             </div>
             <div className="py-2">
               <label className="cursor-pointer">
@@ -32,7 +32,7 @@ const RegistrationModal = ({ handleRegister }) => {
             </div>
             <div className="modal-action">
               <button type="submit" className="btn btn-primary">Registrovat se</button>
-              <button type="button" className="btn" onClick={() => document.getElementById('register_modal').close()}>Close</button>
+              <button type="button" className="btn" onClick={() => document.getElementById('register_modal').close()}>Zavřít</button>
             </div>
           </form>
         </div>
