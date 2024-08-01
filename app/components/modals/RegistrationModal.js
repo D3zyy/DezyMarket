@@ -22,7 +22,7 @@ const RegistrationModal = ({ handleRegister }) => {
             </div>
             <div className="py-2">
               <label htmlFor="password" className="block">Heslo</label>
-              <input type="password"  className="input input-bordered w-full password" required />
+              <input type="password"  autoComplete="on"  className="input input-bordered w-full password" required />
             </div>
             <div className="py-2">
               <label className="cursor-pointer">
