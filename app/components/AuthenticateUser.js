@@ -1,36 +1,62 @@
 'use client';
-import { useState, useEffect } from 'react';
+
 import LoginModal from './modals/LoginModal';
 import RegistrationModal from './modals/RegistrationModal';
+import { useState, useEffect } from 'react';
+import { logOut } from '../authentication/actions';
+import ProfileNavBar from './profileNavBar';
 
-const AuthenticateUser = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+ 
+const AuthenticateUser =  () => {
+
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
+    const fetchSession = async () => {
+      try {
+        const res = await fetch('/api/session');
+        if (res.ok) {
+          const data = await res.json();
+          setSession(data);
+          
+        } else {
+          // Handle non-OK responses
+          console.error("Failed to fetch session:", res.statusText);
+          setError(`Error: ${res.statusText}`);
+        }
+      } catch (err) {
+        // Handle network errors or other exceptions
+        console.error("An error occurred while fetching session:", err);
+        setError("An error occurred while fetching session.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    setIsAuthenticated(!!user);
-  }, []);
+   
+    fetchSession();
+    
+  }, []); 
+ 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+  
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    setIsAuthenticated(false);
+    
   };
 
-  const handleLogin = (event) => {
-    event.preventDefault();
-    // Příklad přihlášení, zde můžete nahradit skutečnou přihlašovací logikou
-    localStorage.setItem('user', 'true');
-    setIsAuthenticated(true);
-    document.getElementById('login_modal').close();
-  };
+
 
   const handleRegister = (event) => {
-    event.preventDefault();
-    // Příklad registrace, zde můžete nahradit skutečnou registrační logikou
-    document.getElementById('register_modal').close();
+    
   };
 
-  // Funkce pro otevření modálních oken
+
   function openLoginModal() {
     document.getElementById('login_modal').showModal();
   }
@@ -41,29 +67,8 @@ const AuthenticateUser = () => {
 
   return (
     <div>
-      {isAuthenticated ? (
-        <div className="dropdown dropdown-end">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-            <div className="w-10 rounded-full">
-              <img
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                alt="User avatar"
-              />
-            </div>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-            <li>
-              <a className="justify-between">
-                Profile
-                <span className="badge">New</span>
-              </a>
-            </li>
-            <li><a>Settings</a></li>
-            <li><button onClick={handleLogout}>Logout</button></li>
-          </ul>
-        </div>
+      {session.isLoggedIn ? (
+        <ProfileNavBar />
       ) : (
         <>
           <div className="hidden sm:flex">
@@ -72,6 +77,7 @@ const AuthenticateUser = () => {
               className="btn"
               onClick={openLoginModal}
               onTouchStart={openLoginModal}
+              style={{margin: "0px 10px"}}
             >
               Přihlásit se
             </button>
@@ -122,7 +128,7 @@ const AuthenticateUser = () => {
               </ul>
             </div>
           </div>
-          <LoginModal handleLogin={handleLogin} />
+          <LoginModal />
           <RegistrationModal handleRegister={handleRegister} />
         </>
       )}

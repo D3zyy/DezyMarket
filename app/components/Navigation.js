@@ -3,6 +3,8 @@ import Link from 'next/link'
 import AuthenticateUser from './AuthenticateUser'
 import { Pacifico} from 'next/font/google';
 import { Bebas_Neue } from 'next/font/google'
+import { getSession } from '../authentication/actions';
+
 
 const babes = Bebas_Neue({
     subsets: ['latin'],
@@ -18,15 +20,18 @@ const pacifico = Pacifico({
   display: 'swap'
 })
 
-const Navigation = () => {
+const Navigation = async () => {
+
+  
+
   return (
     <div className="navbar bg-base-100">
           <div className="flex-1">
           <Link href="/"className={`${babes.className} btn btn-ghost text-xl`}style={{ fontSize: "1.5rem" }}>Dezy</Link>
-          <span  className={pacifico.className} style={{ marginLeft: "5px"}}>„de to i online.“</span> 
+          <span  className={pacifico.className} style={{ marginLeft: "5px"}}>„de to i bezpečně.“</span> 
           </div>
           <div>
-            <AuthenticateUser />
+            <AuthenticateUser  />
           </div>
     </div>
   )
