@@ -19,8 +19,8 @@ export async function GET(req) {
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    console.error("Error fetching session:", error);
-    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+    console.error("Chyba posílaní session:", error);
+    return new Response(JSON.stringify({ message: "Chyba na serveru [GET metoda session]" }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -39,8 +39,8 @@ export async function DELETE(req) {
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    console.error("Error destroying session:", error);
-    return new Response(JSON.stringify({ message: "Internal Server Error" }), {
+    console.error("Chyba níčení session:", error);
+    return new Response(JSON.stringify({ message: "Chyba na serveru [DELETE metoda session] " }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

@@ -15,7 +15,7 @@ export async function POST(req) {
         });
       } catch (error) {
         console.error("Chyba při přihlašování:", error);
-        return new Response(JSON.stringify({ message: "Chyba na serveru" }), {
+        return new Response(JSON.stringify({ message: "Chyba na serveru [POST metoda přihlašování ]" }), {
           status: 500,
           headers: { 'Content-Type': 'application/json' }
         });
