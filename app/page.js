@@ -4,7 +4,7 @@ import ProductCard from './components/ProductCard'
 const page = () => {
   return (
     <div>
-      ahoj  
+      ahoj tady hlavní stránka
     </div>
   )
 }

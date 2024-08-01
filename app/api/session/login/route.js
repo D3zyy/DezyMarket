@@ -2,7 +2,7 @@ import { login } from "@/app/authentication/actions";
 
 // Handler for GET requests for logging in
 export async function POST(req) {
-    console.log("GET method hit on /api/session/login");
+    //console.log("GET method hit on /api/session/login");
 
     try {
         const { email, password } = await req.json();

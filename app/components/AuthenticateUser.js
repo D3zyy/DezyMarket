@@ -23,13 +23,13 @@ const AuthenticateUser =  () => {
           
         } else {
           // Handle non-OK responses
-          console.error("Failed to fetch session:", res.statusText);
-          setError(`Error: ${res.statusText}`);
+          console.error("Chyba při ukládání session:", res.statusText);
+          setError(`Chyba: ${res.statusText}`);
         }
       } catch (err) {
         // Handle network errors or other exceptions
-        console.error("An error occurred while fetching session:", err);
-        setError("An error occurred while fetching session.");
+        console.error("Nastala chyba při získávaní session:", err);
+        setError("Nastala chyba při získávaní session");
       } finally {
         setLoading(false);
       }
