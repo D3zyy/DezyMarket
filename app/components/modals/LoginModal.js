@@ -1,5 +1,6 @@
 "use client";
-
+import { color } from 'framer-motion';
+import Link from 'next/link';
 import React, { useState } from 'react';
 
 export function openLoginModal() {
@@ -31,8 +32,20 @@ const handleLogin = async (event, setError) => {
       window.location.reload(); 
     } else { // error from server showing to the client
       const errorData = await res.json();
-      setError(errorData.message || 'Chyba při přihlašování.');
-      console.error('Chyba při přihlašování:', errorData.message);
+      if(errorData.message == "Váš účet byl trvale zablokován"){
+        setError(<span>
+          Váš účet byl trvale zablokován. Pokud si myslíte že došlo k omylu, kontaktujte nás v{' '}
+          <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontaktech</Link>
+        </span>
+      );
+        console.error('Chyba při přihlašování:', errorData.message);
+      }else{
+
+        setError(errorData.message || 'Chyba při přihlašování.');
+        console.error('Chyba při přihlašování:', errorData.message);
+      }
+      
+      
     }
   } catch (err) {
     setError('Nastala chyba při přihlašovaní, zkuste to prosím později.');

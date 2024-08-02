@@ -10,7 +10,7 @@ export async function GET(req) {
 
   try {
     const session = await getSession();
-    console.log(session.userId)
+
     let banTill = false
     let messageBan = false
     let ban = false

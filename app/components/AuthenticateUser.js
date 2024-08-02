@@ -15,16 +15,14 @@ const AuthenticateUser =  () => {
     const fetchSession = async () => {
       try {
         const res = await fetch('/api/session');
-        console.log("odpoved",res)
+
         if (res.ok) {
-          console.log("je ok ",res)
           const data = await res.json();
-          console.log(data)
           setSession(data);
           
         } else {
           const errorData = await res.json()
-          console.log("neni ok",res)
+
           // Handle non-OK responses
           console.error("Chyba při ukládání session:", errorData.message);
           setError(`Chyba: ${errorData.message}`);

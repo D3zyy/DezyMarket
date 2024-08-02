@@ -34,8 +34,8 @@ export async function POST(req) {
       console.log(ban)
       
       if (ban.pernament == true) {
-        messageBan = "Váš účet byl trvale zablokován. Pokud si myslíte že došlo k  omylu, kontaktujte nás na  "
-        console.log("pernamentní ban")
+        messageBan = "Váš účet byl trvale zablokován"
+
       }  else{
        messageBan = `Účet byl zabanován do: ${ban.banTill}`
       }
