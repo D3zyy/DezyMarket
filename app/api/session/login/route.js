@@ -1,8 +1,6 @@
 import { login } from "@/app/authentication/actions";
 
 export async function POST(req) {
-  console.log("POST method hit on /api/session/login");
-
   try {
     const { email, password } = await req.json();
 
@@ -15,19 +13,25 @@ export async function POST(req) {
       });
     }
 
-    await login(email, password);
-
-    return new Response(JSON.stringify({ message: "Přihlášení úspěšné" }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    const success = await login(email, password);
+    if (success) {
+      return new Response(JSON.stringify({ message: "Přihlášení úspěšné" }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } else {
+      return new Response(JSON.stringify({ message: "Neplatné přihlašovací údaje" }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
   } catch (error) {
     console.error("Chyba při přihlašování:", error);
 
     let status = 500;
     let message = "Chyba na serveru";
 
-    // Můžeš přidat specifickou kontrolu chyb
+    
     if (error.message === "Invalid credentials") {
       status = 401;
       message = "Neplatné přihlašovací údaje";

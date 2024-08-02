@@ -31,7 +31,7 @@ export const login = async  (Formemail,Formpassword) => {
  session.password = Formpassword
  session.isLoggedIn = true
  await session.save()
- console.log("tady je to v poradku jeste 3")
+return true
 }
 
 export const logOut = async  () => {
