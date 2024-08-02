@@ -13,24 +13,15 @@ export const getSession = async  () => {
 
 }
 
-export const login = async  (Formemail,Formpassword) => {
+export const createSession = async  (userId) => {
 
  const session = await getSession()
 
-
- // zkontrolovat proti databázi...
- 
-
-
- // nastavíme udaje z db
- session.userId = 1
- session.firstName = "Yo"
- session.lastName = "SecondNameYo"
- session.role = ["Regular"]
- session.email = Formemail
- session.password = Formpassword
+ session.userId = userId
+ session.isBanned = false
  session.isLoggedIn = true
- await session.save()
+await session.save()
+ 
 return true
 }
 

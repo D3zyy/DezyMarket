@@ -23,6 +23,7 @@ model Users {
   image               String   @default("default.png")
   roleId              Int
   role                Roles    @relation(fields: [roleId], references: [id])
+  bans                Bans[]   // Establish one-to-many relationship with Bans
 
   @@index([email, password])
 }
@@ -35,5 +36,10 @@ model Roles {
 
 }
 
-
-
+model Bans {
+  id         Int      @id @default(autoincrement())
+  bannedFrom DateTime @default(now())
+  bannedTill DateTime
+  userId     Int
+  user       Users    @relation(fields: [userId], references: [id])  // Establish many-to-one relationship with Users
+}
