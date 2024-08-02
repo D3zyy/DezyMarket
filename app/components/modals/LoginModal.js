@@ -33,9 +33,46 @@ const handleLogin = async (event, setError) => {
     } else { // error from server showing to the client
       const errorData = await res.json();
       if(errorData.message == "Váš účet byl trvale zablokován"){
-        setError(<span>
-          Váš účet byl trvale zablokován. Pokud si myslíte že došlo k omylu, kontaktujte nás v{' '}
-          <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontaktech</Link>
+        setError(<span><div style={{ textAlign: 'center' }}>
+          <div style={{
+            marginBottom: "10px",
+            display: 'inline-block',
+            width: '50px',
+            height: '50px',
+            background: 'linear-gradient(to right, #f54b42 50%, #e02e24 50%)',
+            borderRadius: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'relative'
+          }}>
+            <div style={{
+              width: '30px',
+              height: '30px',
+              position: 'relative',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <div style={{
+                position: 'absolute',
+                width: '100%',
+                height: '20%',
+                backgroundColor: '#e2e2e2',
+                transform: 'rotate(45deg)'
+              }}></div>
+              <div style={{
+                position: 'absolute',
+                width: '100%',
+                height: '20%',
+                backgroundColor: '#e2e2e2',
+                transform: 'rotate(-45deg)'
+              }}></div>
+            </div>
+          </div>
+        </div>
+          Váš účet byl trvale zablokován. Pokud si myslíte že došlo k omylu, kontaktujte nás prosím{' '}
+          <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
         </span>
       );
         console.error('Chyba při přihlašování:', errorData.message);

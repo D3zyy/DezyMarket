@@ -25,8 +25,8 @@ const AuthenticateUser =  () => {
           const errorData = await res.json()
           if(errorData.message == "Váš účet byl trvale zablokován"){
             setError(<span>
-              Váš účet byl trvale zablokován. Pokud si myslíte že došlo k omylu, kontaktujte nás v{' '}
-              <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontaktech</Link>
+              Váš účet byl trvale zablokován. Pokud si myslíte že došlo k omylu, kontaktujte nás prosím{' '}
+              <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
             </span>
           );
             console.error('Chyba při přihlašování:', errorData.message);
