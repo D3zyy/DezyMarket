@@ -40,6 +40,7 @@ model Bans {
   id         Int      @id @default(autoincrement())
   bannedFrom DateTime @default(now())
   bannedTill DateTime
+  pernament  Boolean @default(false)
   userId     Int
   user       Users    @relation(fields: [userId], references: [id])  // Establish many-to-one relationship with Users
 }

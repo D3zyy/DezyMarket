@@ -12,21 +12,31 @@ export async function GET(req) {
     const session = await getSession();
     console.log(session.userId)
     let banTill = false
+    let messageBan = false
+    let ban = false
     if(session.userId){
-      banTill = await checkUserBan(session.userId)
+      ban = await checkUserBan(session.userId)
+      console.log(ban.pernament)
+      if (ban.pernament == true) {
+        messageBan = "Váš účet byl trvale zablokován. Pokud si myslíte že došlo k  omylu, kontaktujte nás na  "
+        console.log("pernamentní ban")
+      }  else{
+       messageBan = `Účet byl zabanován do: ${ban.banTill}`
+      }
     }
     
 
-    if (session.isLoggedIn && !banTill) {
+    if (session.isLoggedIn && !ban) {
       console.log("neni zabanovan")
       return new Response(JSON.stringify(session), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
-    } else if (session.isLoggedIn && banTill) {
-       console.log(banTill)
+    } else if (session.isLoggedIn && ban) {
+       console.log(ban)
        await logOut()
-      return new Response(JSON.stringify({ message: `Uživatel zabanován do: ${banTill}` }), {
+       
+      return new Response(JSON.stringify({ message: messageBan }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });

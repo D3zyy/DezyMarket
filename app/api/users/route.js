@@ -26,22 +26,31 @@ export async function POST(req) {
  
     // check validity of his password
     let  isPasswordValid = false
-    let banTill = false
+    let ban = false
+    let messageBan = false
     if(user){
       isPasswordValid = await bcrypt.compare(password, user.password);
-      banTill = await checkUserBan(user.id)
-
+      ban = await checkUserBan(user.id)
+      console.log(ban)
+      
+      if (ban.pernament == true) {
+        messageBan = "Váš účet byl trvale zablokován. Pokud si myslíte že došlo k  omylu, kontaktujte nás na  "
+        console.log("pernamentní ban")
+      }  else{
+       messageBan = `Účet byl zabanován do: ${ban.banTill}`
+      }
     }
 
     
-    if (user && isPasswordValid && !banTill) {
+    if (user && isPasswordValid && !ban) {
        await createSession(user.id);
       return new Response(JSON.stringify({ message: "Přihlášení úspěšné" }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
-    } else if (user && isPasswordValid && banTill){
-      return new Response(JSON.stringify({ message: `Uživatel zabanován do: ${banTill}`}), {
+    } else if (user && isPasswordValid && ban){
+      console.log("banned")
+      return new Response(JSON.stringify({ message : messageBan }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
