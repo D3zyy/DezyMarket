@@ -3,7 +3,6 @@ import { prisma } from "@/app/database/db";
 export const checkUserBan = async (userId) => {
     try {
       const currentDate = new Date();
-  
       // Find the active ban for the user, if any
       const activeBan = await prisma.bans.findFirst({
         where: {

@@ -28,13 +28,10 @@ export async function POST(req) {
     let  isPasswordValid = false
     let banTill = false
     if(user){
-      console.log(user.password)
-      console.log(password)
-      console.log(user.id)
       isPasswordValid = await bcrypt.compare(password, user.password);
-      banTill = await checkUserBan(user.userId)
-    }
+      banTill = await checkUserBan(user.id)
 
+    }
 
     
     if (user && isPasswordValid && !banTill) {
