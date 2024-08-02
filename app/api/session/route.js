@@ -2,11 +2,13 @@ import { getSession,logOut } from "../../authentication/actions";
 
 // Handler for GET requests
 export async function GET(req) {
- 
+  console.log("GET session HIT")
+  // Kontrola zda se session  nachází v db
+  
 
   try {
     const session = await getSession();
-
+    console.log(session)
     if (!session) {
       return new Response(JSON.stringify(), {
         status: 200,

@@ -37,7 +37,6 @@ const AuthenticateUser =  () => {
 
 
   useEffect(() => {
-   
     fetchSession();
     
   }, []); 
