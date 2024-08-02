@@ -80,41 +80,45 @@ const handleLogin = async (event, setError) => {
         console.log("zprava ban na nejakou dobu : ",errorData.message )
         setError(
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ textAlign: 'center' }}>
+          <div style={{
+            marginRight: "20px",
+            marginBottom: "10px",
+            display: 'inline-block',
+            width: '50px',
+            height: '50px',
+            background: 'linear-gradient(to right, #f54b42 50%, #e02e24 50%)',
+            borderRadius: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'relative'
+          }}>
             <div style={{
-              marginRight: '5px', // Vzdálenost mezi ikonou a textem
-              width: '40px', // Zmenšení velikosti ikony
-              height: '40px', // Zmenšení velikosti ikony
-              background: 'linear-gradient(to right, #f54b42 50%, #e02e24 50%)',
-              borderRadius: '50%',
+              width: '30px',
+              height: '30px',
+              position: 'relative',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center',
-              position: 'relative'
+              alignItems: 'center'
             }}>
               <div style={{
-                width: '25px', // Zmenšení velikosti křížku
-                height: '25px', // Zmenšení velikosti křížku
-                position: 'relative',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '10%', // Zmenšení výšky křížku
-                  backgroundColor: '#e2e2e2',
-                  transform: 'rotate(45deg)'
-                }}></div>
-                <div style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '10%', // Zmenšení výšky křížku
-                  backgroundColor: '#e2e2e2',
-                  transform: 'rotate(-45deg)'
-                }}></div>
-              </div>
+                position: 'absolute',
+                width: '100%',
+                height: '20%',
+                backgroundColor: '#e2e2e2',
+                transform: 'rotate(45deg)'
+              }}></div>
+              <div style={{
+                position: 'absolute',
+                width: '100%',
+                height: '20%',
+                backgroundColor: '#e2e2e2',
+                transform: 'rotate(-45deg)'
+              }}></div>
             </div>
+          </div>
+        </div>
             <div style={{marginLeft: "5px"}}>{errorData.message}</div>
           </div>
         );
