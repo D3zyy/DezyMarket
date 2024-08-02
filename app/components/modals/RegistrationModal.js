@@ -1,5 +1,10 @@
+"use client"
 import React from 'react';
 
+
+export function openRegisterModal() {
+  document.getElementById('register_modal').showModal();
+}
 const RegistrationModal = ({ handleRegister }) => {
   return (
     <>

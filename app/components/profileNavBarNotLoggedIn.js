@@ -2,15 +2,11 @@
 import React from 'react'
 import LoginModal from './modals/LoginModal'
 import RegistrationModal from './modals/RegistrationModal'
+import { openLoginModal } from './modals/LoginModal'
+import { openRegisterModal } from './modals/RegistrationModal'
 
 
-function openLoginModal() {
-    document.getElementById('login_modal').showModal();
-  }
 
-  function openRegisterModal() {
-    document.getElementById('register_modal').showModal();
-  }
 
 const profileNavBarNotLoggedIn = () => {
   return (

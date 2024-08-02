@@ -2,6 +2,10 @@
 
 import React, { useState } from 'react';
 
+export function openLoginModal() {
+  document.getElementById('login_modal').showModal();
+}
+
 const handleLogin = async (event, setError) => {
   event.preventDefault();
 

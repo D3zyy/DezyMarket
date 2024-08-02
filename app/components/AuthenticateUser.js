@@ -1,9 +1,7 @@
 'use client';
 
-import LoginModal from './modals/LoginModal';
-import RegistrationModal from './modals/RegistrationModal';
 import { useState, useEffect } from 'react';
-import { logOut } from '../authentication/actions';
+
 import ProfileNavBarLoggedIn from './profileNavBarLoggedIn';
 import ProfileNavBarNotLoggedIn from './profileNavBarNotLoggedIn';
  
