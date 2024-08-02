@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
+import Link from 'next/link';
 import ProfileNavBarLoggedIn from './profileNavBarLoggedIn';
 import ProfileNavBarNotLoggedIn from './profileNavBarNotLoggedIn';
  
@@ -22,10 +22,21 @@ const AuthenticateUser =  () => {
           
         } else {
           const errorData = await res.json()
-
+          if(errorData.message == "Váš účet byl trvale zablokován"){
+            setError(<span>
+              Váš účet byl trvale zablokován. Pokud si myslíte že došlo k omylu, kontaktujte nás v{' '}
+              <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontaktech</Link>
+            </span>
+          );
+            console.error('Chyba při přihlašování:', errorData.message);
+          }else{
+    
           // Handle non-OK responses
           console.error("Chyba při ukládání session:", errorData.message);
           setError(`Chyba: ${errorData.message}`);
+          }
+
+          
         }
       } catch (err) { 
         // Handle network errors or other exceptions

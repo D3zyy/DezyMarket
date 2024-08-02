@@ -18,8 +18,7 @@ export async function GET(req) {
       ban = await checkUserBan(session.userId)
       console.log(ban.pernament)
       if (ban.pernament == true) {
-        messageBan = "Váš účet byl trvale zablokován. Pokud si myslíte že došlo k  omylu, kontaktujte nás  "
-        console.log("pernamentní ban")
+        messageBan = "Váš účet byl trvale zablokován"
       }  else{
        messageBan = `Účet byl zabanován do: ${ban.banTill}`
       }
