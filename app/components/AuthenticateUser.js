@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ProfileNavBarLoggedIn from './profileNavBarLoggedIn';
 import ProfileNavBarNotLoggedIn from './profileNavBarNotLoggedIn';
- 
+import InfoModal from "@/app/components/modals/InfoModal";
+
 const AuthenticateUser =  () => {
 
   const [session, setSession] = useState(null);

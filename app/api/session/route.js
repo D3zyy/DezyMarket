@@ -2,6 +2,7 @@ import { getSession,logOut } from "../../authentication/actions";
 import { prisma } from "@/app/database/db";
 import { checkUserBan } from "./dbMethodsSession";
 
+
 // Handler for GET requests
 export async function GET(req) {
   console.log("GET session HIT")
@@ -11,7 +12,7 @@ export async function GET(req) {
   try {
     const session = await getSession();
 
-    let banTill = false
+    
     let messageBan = false
     let ban = false
     if(session.userId){
@@ -26,7 +27,7 @@ export async function GET(req) {
     
 
     if (session.isLoggedIn && !ban) {
-      console.log("neni zabanovan")
+
       return new Response(JSON.stringify(session), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
