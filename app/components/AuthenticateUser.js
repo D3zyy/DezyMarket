@@ -25,7 +25,7 @@ const AuthenticateUser =  () => {
           const errorData = await res.json()
           if(errorData.message == "Váš účet byl trvale zablokován"){
             setError(<span>
-              Váš účet byl trvale zablokován. Pokud si myslíte že došlo k omylu, kontaktujte nás prosím{' '}
+              Váš účet byl trvale zablokován. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.{' '}
               <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
             </span>
           );

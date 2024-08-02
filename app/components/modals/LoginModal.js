@@ -71,7 +71,7 @@ const handleLogin = async (event, setError) => {
             </div>
           </div>
         </div>
-          Váš účet byl trvale zablokován. Pokud si myslíte že došlo k omylu, kontaktujte nás prosím{' '}
+         Váš účet byl trvale zablokován. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.{' '}
           <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
         </span>
       );
