@@ -9,29 +9,29 @@ const handleLogin = async (event, setError) => {
   const email = formData.get('email');
   const password = formData.get('password');
 
-
+   // checkin valid format of email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     setError('Neplatný formát emailu.');
     return;
   }
-
+  // loggin in
   try {
-    const res = await fetch('/api/session/login', {
+    const res = await fetch('/api/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
-
+    //if ok reload page because user alreaddy has a session in his browser
     if (res.ok) {
       window.location.reload(); 
-    } else {
+    } else { // error from server showing to the client
       const errorData = await res.json();
       setError(errorData.message || 'Chyba při přihlašování.');
       console.error('Chyba při přihlašování:', errorData.message);
     }
   } catch (err) {
-    setError('Nastala chyba při přihlašování, zkuste to prosím později.');
+    setError('Nastala chyba při přihlašovaní, zkuste to prosím později.');
     console.error('Nastala chyba při přihlašování:', err);
   }
 };
