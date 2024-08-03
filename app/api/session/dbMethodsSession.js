@@ -7,9 +7,16 @@ export const checkUserBan = async (userId) => {
     const activeBan = await prisma.bans.findFirst({
       where: {
         userId: userId,
-        bannedTill: {
-          gt: currentDate, // Ensure the ban is still active
-        },
+        OR: [
+          {
+            bannedTill: {
+              gt: currentDate, // Ensure the ban is still active
+            },
+          },
+          {
+            pernament: true, // Include permanent bans
+          },
+        ],
       },
       select: {
         bannedTill: true,
@@ -21,8 +28,8 @@ export const checkUserBan = async (userId) => {
     });
 
     if (activeBan) {
-      const banTill = activeBan.bannedTill.toLocaleString('cs-CZ', { timeZone: 'Europe/Prague' });
- 
+      const banTill = activeBan.pernament ? 'trvale' : activeBan.bannedTill.toLocaleString('cs-CZ', { timeZone: 'Europe/Prague' });
+
       return {
         banTill,
         pernament: activeBan.pernament,
