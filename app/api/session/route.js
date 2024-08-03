@@ -43,8 +43,8 @@ export async function GET(req) {
     }
     else{
      
-      return new Response(JSON.stringify("Donť try to test this"), {
-        status: 200,
+      return new Response(JSON.stringify({message: "Session nebyla nalezena"}), {
+        status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
     }
@@ -62,9 +62,10 @@ export async function GET(req) {
 
 export async function DELETE(req) {
   try {
+    console.log("tady 0")
     // Call logOut and handle its response
     const { success, message, status } = await logOut(req);
-
+    console.log("tady 1")
     // Return the appropriate response
     return new Response(JSON.stringify({  message }), {
       status,
