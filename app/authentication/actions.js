@@ -5,6 +5,8 @@ import {  getIronSession } from "iron-session"
 import { redirect } from 'next/navigation'
 import { cookies } from "next/headers"
 import { prisma } from '../database/db';
+import { addDays, addHours } from 'date-fns';
+
 
 export const getSession = async () => {
     try {
@@ -48,14 +50,20 @@ export const createSession = async (userId) => {
   const sessionId = uuidv4(); // Generate a unique session ID
 
   // Save session ID and userId in your database
-  await prisma.Sessions.create({
-    data: {
-      sessionId,
-      userId,
-      isLoggedIn: true,
-      // Add other session-related data if necessary
-    },
-  });
+        const now = new Date();
+        let validTill = addDays(now, 7); // Adds 7 days
+        validTill = addHours(validTill, 2); // Adds 2 hours to the result
+
+        console.log(validTill);
+
+       await prisma.Sessions.create({
+            data: {
+            sessionId,
+            userId,
+            validFrom: now,
+            validTill: validTill
+            },
+        });
 
   // Use iron-session to set the session ID in a cookie
   const session = await getIronSession(cookies(),sessionOptions);

@@ -46,10 +46,9 @@ model Bans {
 }
 
 model Sessions {
-  id        Int    @id @default(autoincrement())
-  sessionId String @unique
-  userId    Int
-  isLoggedIn Boolean
-  validFrom DateTime @default(now())
-  validTill DateTime
+  id         Int      @id @default(autoincrement())
+  sessionId  String   @unique
+  userId     Int
+  validFrom  DateTime @default(now())
+  validTill  DateTime
 }
