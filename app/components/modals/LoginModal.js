@@ -34,6 +34,7 @@ const handleLogin = async (event, setError) => {
     } else { // error from server showing to the client
       const errorData = await res.json();
       if(errorData.message == "Váš účet byl trvale zablokován"){
+        console.log("zprava ban na trvale  : ",errorData.message )
         setError(<span><div style={{ textAlign: 'center' }}>
           <div style={{
             marginBottom: "10px",
@@ -78,7 +79,7 @@ const handleLogin = async (event, setError) => {
       );
         console.error('Chyba při přihlašování:', errorData.message);
       }else if(errorData.message.includes("Účet byl zabanován do:")){
-       
+        console.log("zprava ban na nejakou dobu : ",errorData.message )
         setError(
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
             <div style={{ textAlign: 'center' }}>
@@ -125,7 +126,7 @@ const handleLogin = async (event, setError) => {
         );
         console.error('Chyba při přihlašování:', errorData.message);
       } else{
-     
+        console.log("tady doleee")
         setError(errorData.message || 'Chyba při přihlašování.');
         console.error('Chyba při přihlašování:', errorData.message);
       }

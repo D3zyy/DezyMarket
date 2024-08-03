@@ -53,10 +53,12 @@ export async function POST(req) {
       isPasswordValid = await bcrypt.compare(password, user.password);
       ban = await checkUserBan(user.id);
    
-      
-      if (ban.permanent) {
+   
+      if (ban.pernament) {
+        
         messageBan = "Váš účet byl trvale zablokován";
       } else {
+    
         messageBan = `Účet byl zabanován do: ${ban.banTill}`;
       }
     }
@@ -68,7 +70,7 @@ export async function POST(req) {
         headers: { 'Content-Type': 'application/json' }
       });
     } else if (user && isPasswordValid && ban) {
-     
+      
       return new Response(JSON.stringify({ message: messageBan }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }

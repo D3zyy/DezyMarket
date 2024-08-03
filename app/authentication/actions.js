@@ -2,10 +2,9 @@
 import { v4 as uuidv4 } from 'uuid'; 
 import { sessionOptions, sessionData, defaultSession } from "./lib"
 import {  getIronSession } from "iron-session"
-import { redirect } from 'next/navigation'
 import { cookies } from "next/headers"
 import { prisma } from '../database/db';
-import { addDays, addHours } from 'date-fns';
+
 
 
 export const getSession = async () => {
@@ -27,14 +26,14 @@ export const getSession = async () => {
           // If sessionId is not found in the database, call logOut to clean up
           session.destroy()
           // Optionally, you can return an error or handle it as needed
-          return { success: false, message: "Session nebyla nalezena. Byli jste odhlášeni", status: 401 };
+          
         }
         
         // If sessionId exists in the database, return the session
         
         return session;
       } else {
-      
+     
         // Return a 401 Unauthorized response if session not found
         return { success: false, message: "Session nebyla nalezena", status: 401 };
       }
@@ -46,35 +45,40 @@ export const getSession = async () => {
 
 
 
-export const createSession = async (userId) => {
-  const sessionId = uuidv4(); // Generate a unique session ID
-
-  // Save session ID and userId in your database
-        const now = new Date();
-        let validTill = addDays(now, 7); // Adds 7 days
-        validTill = addHours(validTill, 2); // Adds 2 hours to the result
-
-        console.log(validTill);
-
-       await prisma.Sessions.create({
-            data: {
-            sessionId,
-            userId,
-            validFrom: now,
-            validTill: validTill
-            },
-        });
-
-  // Use iron-session to set the session ID in a cookie
-  const session = await getIronSession(cookies(),sessionOptions);
-  session.userId = userId;
-  session.sessionId = sessionId; // Store session ID in session object
-  session.isLoggedIn = true;
-  await session.save();
-
-  return session; // Return the generated session ID
-};
-
+  export const createSession = async (userId) => {
+    const sessionId = uuidv4(); // Generate a unique session ID
+  
+    try {
+      const now = new Date();
+      now.setHours(now.getHours() + 2); // Add 2 hours to the current date for validFrom
+  
+      const validTill = new Date(now); // Create a copy of the now date
+      validTill.setDate(now.getDate() + 2); // Adds 7 days
+      
+  
+      // Create session in the database
+      await prisma.Sessions.create({
+        data: {
+          sessionId,
+          userId,
+          validFrom: now,
+          validTill: validTill,
+        },
+      });
+  
+      // Use iron-session to set the session ID in a cookie
+      const session = await getIronSession(cookies(), sessionOptions);
+      session.userId = userId;
+      session.sessionId = sessionId; // Store session ID in session object
+      session.isLoggedIn = true;
+      await session.save();
+  
+      return session; // Return the generated session
+    } catch (error) {
+      console.error("Error creating session:", error);
+      throw new Error("Failed to create session"); // Optionally, re-throw with a custom message
+    }
+  };
 export const logOut = async (req) => {
     try {
       

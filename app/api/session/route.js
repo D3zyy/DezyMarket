@@ -5,7 +5,7 @@ import { checkUserBan } from "./dbMethodsSession";
 
 // Handler for GET requests
 export async function GET(req) {
-  console.log("GET session HIT")
+
   
   
 
@@ -17,10 +17,11 @@ export async function GET(req) {
     let ban = false
     if(session.userId){
       ban = await checkUserBan(session.userId)
-      console.log(ban.pernament)
       if (ban.pernament == true) {
+      
         messageBan = "Váš účet byl trvale zablokován"
       }  else{
+       
        messageBan = `Účet byl zabanován do: ${ban.banTill}`
       }
     }
@@ -33,7 +34,7 @@ export async function GET(req) {
         headers: { 'Content-Type': 'application/json' }
       });
     } else if (session.isLoggedIn && ban) {
-       console.log(ban)
+   
        await logOut()
        
       return new Response(JSON.stringify({ message: messageBan }), {
@@ -62,10 +63,10 @@ export async function GET(req) {
 
 export async function DELETE(req) {
   try {
-    console.log("tady 0")
+
     // Call logOut and handle its response
     const { success, message, status } = await logOut(req);
-    console.log("tady 1")
+   
     // Return the appropriate response
     return new Response(JSON.stringify({  message }), {
       status,

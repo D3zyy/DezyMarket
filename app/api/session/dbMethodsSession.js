@@ -33,6 +33,7 @@ export const checkUserBan = async (userId) => {
       // Check if there is a permanent ban
       const permanentBan = activeBan.find(ban => ban.pernament);
       if (permanentBan) {
+       
         return {
           banTill: 'trvale',
           pernament: true,
@@ -46,6 +47,7 @@ export const checkUserBan = async (userId) => {
       const banTill = localDate.toLocaleString('cs-CZ');
 
       return {
+        
         banTill,
         pernament: false,
       };
