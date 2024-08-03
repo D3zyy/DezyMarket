@@ -13,6 +13,7 @@ const handleLogin = async (event, setError) => {
   const formData = new FormData(event.target);
   const email = formData.get('email');
   const password = formData.get('password');
+  const randomKey = formData.get("randomKey")
 
    // checkin valid format of email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -142,6 +143,7 @@ const LoginModal = () => {
 
   return (
     <>
+      <input type="hidden" name="randomKey" value={42} />
       <dialog id="login_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           {error && <div style={{ color: 'red', marginBottom: "10px" }}>{error}</div>}

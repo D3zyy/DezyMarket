@@ -44,3 +44,11 @@ model Bans {
   userId     Int
   user       Users    @relation(fields: [userId], references: [id])  // Establish many-to-one relationship with Users
 }
+
+model Sessions {
+  id        Int    @id @default(autoincrement())
+  sessionId String @unique
+  userId    Int
+  isLoggedIn Boolean
+
+}

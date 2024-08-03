@@ -6,7 +6,7 @@ import { checkUserBan } from "./dbMethodsSession";
 // Handler for GET requests
 export async function GET(req) {
   console.log("GET session HIT")
-  // Kontrola zda se session  nachází v db
+  
   
 
   try {
@@ -61,18 +61,21 @@ export async function GET(req) {
 
 
 export async function DELETE(req) {
-  console.log("DELETE method hit on /api/session");
-
   try {
+    // Call logOut and handle its response
+    const { success, message, status } = await logOut(req);
 
-    await logOut()
-    return new Response(JSON.stringify(), {
-      status: 200,
+    // Return the appropriate response
+    return new Response(JSON.stringify({  message }), {
+      status,
       headers: { 'Content-Type': 'application/json' }
     });
+
   } catch (error) {
     console.error("Chyba níčení session:", error);
-    return new Response(JSON.stringify({ message: "Chyba na serveru [DELETE metoda session] " }), {
+
+    // Return a 500 Internal Server Error response on exception
+    return new Response(JSON.stringify({ message: "Chyba na serveru [DELETE metoda session]" }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
