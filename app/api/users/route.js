@@ -1,61 +1,79 @@
 import { createSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
-import { verifyUserCredentials } from "./dbMethodsUsers";
 import bcrypt from 'bcrypt'; 
 import { checkUserBan } from "../session/dbMethodsSession";
+
 // POST method for logging in
 export async function POST(req) {
 
   try {
-    const { email, password } = await req.json();
+    // Attempt to parse the request body
+    let data;
+    try {
+      data = await req.json();
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
     
+    const { email, password } = data;
+    
+    // Check if both email and password are provided
+    if (!email || !password) {
+      return new Response(JSON.stringify({ message: "Údaje nebyly nalezeny." }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // check format of email on server
+    // Check format of email on server
     if (!emailRegex.test(email)) {
       return new Response(JSON.stringify({ message: "Neplatný formát emailu." }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
     }
-    // find the user in the db
+    
+    // Find the user in the database
     const user = await prisma.Users.findUnique({
       where: {
         email: email,
       },
     });
- 
-    // check validity of his password
-    let  isPasswordValid = false
-    let ban = false
-    let messageBan = false
-    if(user){
-      isPasswordValid = await bcrypt.compare(password, user.password);
-      ban = await checkUserBan(user.id)
-      console.log(ban)
-      
-      if (ban.pernament == true) {
-        messageBan = "Váš účet byl trvale zablokován"
 
-      }  else{
-       messageBan = `Účet byl zabanován do: ${ban.banTill}`
+    // Check validity of the password and ban status
+    let isPasswordValid = false;
+    let ban = false;
+    let messageBan = false;
+    
+    if (user) {
+      isPasswordValid = await bcrypt.compare(password, user.password);
+      ban = await checkUserBan(user.id);
+   
+      
+      if (ban.permanent) {
+        messageBan = "Váš účet byl trvale zablokován";
+      } else {
+        messageBan = `Účet byl zabanován do: ${ban.banTill}`;
       }
     }
 
-    
     if (user && isPasswordValid && !ban) {
-       await createSession(user.id);
+      await createSession(user.id);
       return new Response(JSON.stringify({ message: "Přihlášení úspěšné" }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
-    } else if (user && isPasswordValid && ban){
-      console.log("banned")
-      return new Response(JSON.stringify({ message : messageBan }), {
+    } else if (user && isPasswordValid && ban) {
+     
+      return new Response(JSON.stringify({ message: messageBan }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
-    }
-    else {
+    } else {
       return new Response(JSON.stringify({ message: "Neplatné přihlašovací údaje" }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
@@ -64,12 +82,8 @@ export async function POST(req) {
   } catch (error) {
     console.error("Chyba ze strany serveru:", error);
 
-    let status = 500;
-    let message = "Chyba na serveru";
-
-
-    return new Response(JSON.stringify({ message }), {
-      status,
+    return new Response(JSON.stringify({ message: "Chyba na serveru" }), {
+      status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
   }

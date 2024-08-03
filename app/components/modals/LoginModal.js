@@ -13,7 +13,7 @@ const handleLogin = async (event, setError) => {
   const formData = new FormData(event.target);
   const email = formData.get('email');
   const password = formData.get('password');
-  const randomKey = formData.get("randomKey")
+
 
    // checkin valid format of email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,7 +78,7 @@ const handleLogin = async (event, setError) => {
       );
         console.error('Chyba při přihlašování:', errorData.message);
       }else if(errorData.message.includes("Účet byl zabanován do:")){
-        console.log("zprava ban na nejakou dobu : ",errorData.message )
+       
         setError(
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
             <div style={{ textAlign: 'center' }}>
@@ -125,7 +125,7 @@ const handleLogin = async (event, setError) => {
         );
         console.error('Chyba při přihlašování:', errorData.message);
       } else{
-        console.log("zprava  obecne: ",errorData.message )
+     
         setError(errorData.message || 'Chyba při přihlašování.');
         console.error('Chyba při přihlašování:', errorData.message);
       }
@@ -142,8 +142,7 @@ const LoginModal = () => {
   const [error, setError] = useState(null);
 
   return (
-    <>
-      <input type="hidden" name="randomKey" value={42} />
+    <>  
       <dialog id="login_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           {error && <div style={{ color: 'red', marginBottom: "10px" }}>{error}</div>}

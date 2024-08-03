@@ -44,7 +44,7 @@ export async function GET(req) {
     else{
      
       return new Response(JSON.stringify({message: "Session nebyla nalezena"}), {
-        status: 401,
+        status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
     }

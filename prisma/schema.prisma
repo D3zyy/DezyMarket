@@ -50,5 +50,6 @@ model Sessions {
   sessionId String @unique
   userId    Int
   isLoggedIn Boolean
-
+  validFrom DateTime @default(now())
+  validTill DateTime
 }
