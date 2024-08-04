@@ -19,6 +19,7 @@ const translateField = (field) => {
     password: 'Heslo',
     firstName: 'Jméno',
     lastName: 'Příjmení',
+    nickname: 'Přezdívka',
     termsOfUseAndPrivatePolicy: 'Podmínky použití a zásady ochrany osobních údajů'
   };
   return translations[field] || field;
@@ -62,6 +63,10 @@ const RegistrationModal = () => {
             <div className="py-2">
               <label htmlFor="lastName" className="block">Příjmení</label>
               <input type="text" id="lastName" name="lastName" className="input input-bordered w-full" required />
+            </div>
+            <div className="py-2">
+              <label htmlFor="lastName" className="block">Přezdívka</label>
+              <input type="text" id="lastName" name="nickname" className="input input-bordered w-full" required />
             </div>
             <div className="py-2">
               <label htmlFor="email" className="block">Email</label>
