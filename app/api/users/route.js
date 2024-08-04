@@ -2,6 +2,8 @@ import { createSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import bcrypt from 'bcrypt'; 
 import { checkUserBan } from "../session/dbMethodsSession";
+import { revalidatePath, revalidateTag } from 'next/cache';
+
 
 // POST method for logging in
 export async function POST(req) {
@@ -11,6 +13,7 @@ export async function POST(req) {
     let data;
     try {
       data = await req.json();
+      
     } catch (error) {
       return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
         status: 400,
@@ -64,7 +67,9 @@ export async function POST(req) {
     }
 
     if (user && isPasswordValid && !ban) {
+      console.log("tady pred vytvareni seesion")
       await createSession(user.id);
+      console.log("tady v poradku prihlaseni uspesne")
       return new Response(JSON.stringify({ message: "Přihlášení úspěšné" }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }

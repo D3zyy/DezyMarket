@@ -15,7 +15,7 @@ datasource db {
 
 model Users {
   id                  Int      @id @default(autoincrement())
-  fullName           String
+  fullName            String
   nickname            String?
   email               String   @unique
   password            String   @db.VarChar(255)
@@ -24,6 +24,7 @@ model Users {
   roleId              Int
   role                Roles    @relation(fields: [roleId], references: [id])
   bans                Bans[]   // Establish one-to-many relationship with Bans
+  sessions            Sessions[] // No need to specify onDelete here
   termsOfUseAndPrivatePolicy Boolean @default(false)
   @@index([email, password])
 }
@@ -33,7 +34,6 @@ model Roles {
   name       String  @unique
   privileges Int     @default(1)
   users      Users[]
-
 }
 
 model Bans {
@@ -42,7 +42,7 @@ model Bans {
   bannedTill DateTime? 
   pernament  Boolean @default(false)
   userId     Int
-  user       Users    @relation(fields: [userId], references: [id])  // Establish many-to-one relationship with Users
+  user       Users    @relation(fields: [userId], references: [id])
 }
 
 model Sessions {
@@ -51,4 +51,5 @@ model Sessions {
   userId     Int
   validFrom  DateTime @default(now())
   validTill  DateTime
+  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade) // Specify onDelete here
 }

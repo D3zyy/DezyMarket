@@ -1,10 +1,8 @@
 "use server";
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { prisma } from '@/app/database/db';
 import bcrypt from 'bcrypt';
-
-
 
 const schema = z.object({
   email: z.string()
@@ -43,8 +41,6 @@ export const handleRegistration = async (currentState, formData) => {
       message: JSON.stringify(validatedFields.error.flatten().fieldErrors),
     };
   } else {
-    console.log("no error");
-
     try {
       // Check if the email already exists
       const existingUser = await prisma.Users.findUnique({
@@ -84,12 +80,14 @@ export const handleRegistration = async (currentState, formData) => {
           nickname: validatedFields.data.nickname,
           termsOfUseAndPrivatePolicy: validatedFields.data.termsOfUseAndPrivatePolicy,
           roleId: role.id,
-        },
+        }
       });
 
-      revalidatePath('/');
       return {
         message: "Registrace úspěšná!",
+        closeModal: true,
+        email: validatedFields.data.email,
+        password: validatedFields.data.password,
       };
     } catch (error) {
       console.error("Database error:", error);

@@ -1,12 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { handleRegistration } from '@/app/authentication/registration/actions';
 import { useFormState } from 'react-dom';
 import { SubmitButton } from '../SubmitButton';
 
 const initialState = {
   message: null,
+  closeModal: false,
+  email: null,
+  password: null,
 };
 
 export function openRegisterModal() {
@@ -38,21 +41,13 @@ const parseErrors = (message) => {
       </div>
     ));
   } catch {
-    // If JSON parsing fails, handle the error message as a string
-    if (message === "Email již existuje.") {
+    if(message === "Email již existuje."){
       return (
         <span>
-          {message}{' '}
-
-          <button
-            style={{color: "gray", textDecoration: "underline"}}
-            onClick={() => {
-              document.getElementById('register_modal').close();
-              document.getElementById('login_modal').showModal();
-            }}
-          >
-            Přihlásit se
-          </button>
+          {message} Chcete se přihlásit? <button className="btn btn-link" onClick={() => {
+            document.getElementById('register_modal').close();
+            document.getElementById('login_modal').showModal();
+          }}>Přihlásit</button>
         </span>
       );
     } else {
@@ -61,8 +56,34 @@ const parseErrors = (message) => {
   }
 };
 
+const loginUser = async (email, password) => {
+  try {
+    const response = await fetch('/api/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (response.ok) {
+      console.log("User logged in successfully:", await response.json());
+      location.reload()
+   
+    } else {
+      console.error("Login failed:", await response.text());
+    }
+  } catch (error) {
+    console.error("Login request error:", error);
+  }
+};
+
 const RegistrationModal = () => {
   const [state, formAction] = useFormState(handleRegistration, initialState);
+
+  useEffect(() => {
+    if (state?.closeModal && state.email && state.password) {
+      loginUser(state.email, state.password);
+    }
+  }, [state?.closeModal, state.email, state.password]);
 
   return (
     <>
@@ -84,11 +105,11 @@ const RegistrationModal = () => {
             </div>
             <div className="py-2">
               <label htmlFor="email" className="block">Email</label>
-              <input type="email" id="email" name="email" className="input input-bordered w-full" required />
+              <input type="email" name="email" className="input input-bordered w-full" required />
             </div>
             <div className="py-2">
               <label htmlFor="password" className="block">Heslo</label>
-              <input type="password" id="password" name="password" autoComplete="on" className="input input-bordered w-full" required />
+              <input type="password" name="password" autoComplete="on" className="input input-bordered w-full" required />
             </div>
             <div className="py-2">
               <label className="cursor-pointer">
