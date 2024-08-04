@@ -15,8 +15,8 @@ datasource db {
 
 model Users {
   id                  Int      @id @default(autoincrement())
-  firstName           String
-  lastName            String
+  fullName           String
+  nickname            String?
   email               String   @unique
   password            String   @db.VarChar(255)
   dateOfRegistration  DateTime @default(now())
@@ -24,7 +24,7 @@ model Users {
   roleId              Int
   role                Roles    @relation(fields: [roleId], references: [id])
   bans                Bans[]   // Establish one-to-many relationship with Bans
-
+  termsOfUseAndPrivatePolicy Boolean @default(false)
   @@index([email, password])
 }
 
