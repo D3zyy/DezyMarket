@@ -38,7 +38,26 @@ const parseErrors = (message) => {
       </div>
     ));
   } catch {
-    return <span>{message}</span>;
+    // If JSON parsing fails, handle the error message as a string
+    if (message === "Email již existuje.") {
+      return (
+        <span>
+          {message}{' '}
+
+          <button
+            style={{color: "gray", textDecoration: "underline"}}
+            onClick={() => {
+              document.getElementById('register_modal').close();
+              document.getElementById('login_modal').showModal();
+            }}
+          >
+            Přihlásit se
+          </button>
+        </span>
+      );
+    } else {
+      return <span>{message}</span>;
+    }
   }
 };
 
@@ -56,20 +75,20 @@ const RegistrationModal = () => {
           <h3 className="font-bold text-lg">Registrace</h3>
           <form action={formAction}>
             <div className="py-2">
-              <label htmlFor="firstName" className="block">Celé jméno</label>
+              <label htmlFor="fullName" className="block">Celé jméno</label>
               <input type="text" id="fullName" name="fullName" className="input input-bordered w-full" required />
             </div>
             <div className="py-2">
-              <label htmlFor="lastName" className="block">Přezdívka</label>
-              <input type="text" id="lastName" name="nickname" className="input input-bordered w-full" required />
+              <label htmlFor="nickname" className="block">Přezdívka</label>
+              <input type="text" id="nickname" name="nickname" className="input input-bordered w-full" required />
             </div>
             <div className="py-2">
               <label htmlFor="email" className="block">Email</label>
-              <input type="email" name="email" className="input input-bordered w-full" required />
+              <input type="email" id="email" name="email" className="input input-bordered w-full" required />
             </div>
             <div className="py-2">
               <label htmlFor="password" className="block">Heslo</label>
-              <input type="password" name="password" autoComplete="on" className="input input-bordered w-full" required />
+              <input type="password" id="password" name="password" autoComplete="on" className="input input-bordered w-full" required />
             </div>
             <div className="py-2">
               <label className="cursor-pointer">

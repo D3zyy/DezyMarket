@@ -1,10 +1,10 @@
 "use server";
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/app/database/db';
 import bcrypt from 'bcrypt';
 
-const prisma = new PrismaClient();
+
 
 const schema = z.object({
   email: z.string()
@@ -22,7 +22,6 @@ const schema = z.object({
     .max(10, 'Přezdívka může mít maximalně 10 znaků.')
     .regex(/^(?!.*Dezy).*$/, 'Tato přezdívka není dostupná.')
     .regex(/^\S+$/, 'Přezdívka nesmí obsahovat mezery.'),
-    
   termsOfUseAndPrivatePolicy: z.boolean()
     .refine(val => val === true, 'Musíte souhlasit s podmínkami použití a zásadami ochrany osobních údajů.')
 });
@@ -47,8 +46,22 @@ export const handleRegistration = async (currentState, formData) => {
     console.log("no error");
 
     try {
+      // Check if the email already exists
+      const existingUser = await prisma.Users.findUnique({
+        where: {
+          email: validatedFields.data.email,
+        }
+      });
+
+      if (existingUser) {
+        return {
+          message: "Email již existuje.",
+        };
+      }
+
       // Hash the password before saving it to the database
       const hashedPassword = await bcrypt.hash(validatedFields.data.password, 10);
+
       // Retrieve the role ID for the "regular" role
       const role = await prisma.Roles.findUnique({
         where: {
@@ -61,6 +74,7 @@ export const handleRegistration = async (currentState, formData) => {
           message: "Chyba na serveru",
         };
       }
+
       // Add user to the database
       await prisma.Users.create({
         data: {
@@ -69,7 +83,7 @@ export const handleRegistration = async (currentState, formData) => {
           fullName: validatedFields.data.fullName,
           nickname: validatedFields.data.nickname,
           termsOfUseAndPrivatePolicy: validatedFields.data.termsOfUseAndPrivatePolicy,
-          roleId : role.id
+          roleId: role.id,
         },
       });
 
