@@ -12,23 +12,30 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-
 model Users {
-  id                  Int      @id @default(autoincrement())
-  fullName            String
-  nickname            String?
-  email               String   @unique
-  password            String   @db.VarChar(255)
-  dateOfRegistration  DateTime @default(now())
-  image               String   @default("default.png")
-  roleId              Int
-  role                Roles    @relation(fields: [roleId], references: [id])
-  bans                Bans[]   // Establish one-to-many relationship with Bans
-  sessions            Sessions[] // No need to specify onDelete here
+  id                       Int      @id @default(autoincrement())
+  fullName                 String
+  nickname                 String?
+  email                    String   @unique
+  password                 String   @db.VarChar(255)
+  dateOfRegistration       DateTime @default(now())
+  image                    String   @default("default.png")
+  roleId                   Int
+  role                     Roles    @relation(fields: [roleId], references: [id])
+  bans                     Bans[]   // Establish one-to-many relationship with Bans
+  sessions                 Sessions[]
   termsOfUseAndPrivatePolicy Boolean @default(false)
+  verifiedEmail            Boolean  @default(false) // New field to track email verification status
+  verificationToken        VerificationTokens? // Optional relation to VerificationToken
   @@index([email, password])
 }
-
+model VerificationTokens {
+  id         Int      @id @default(autoincrement())
+  token      String
+  expiresAt  DateTime
+  userId     Int      @unique
+  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 model Roles {
   id         Int     @id @default(autoincrement())
   name       String  @unique

@@ -3,7 +3,7 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { prisma } from '@/app/database/db';
 import bcrypt from 'bcrypt';
-
+import { sendVerificationEmail } from '@/app/api/email/email';
 const schema = z.object({
   email: z.string()
     .email({ message: 'Nesprávný formát emailu.' }),
@@ -25,7 +25,7 @@ const schema = z.object({
 });
 
 export const handleRegistration = async (currentState, formData) => {
-  console.log("registration HIT with data:", formData);
+
 
   const validatedFields = schema.safeParse({
     email: formData.get('email'),
@@ -70,7 +70,7 @@ export const handleRegistration = async (currentState, formData) => {
           message: "Chyba na serveru",
         };
       }
-
+      let registrationMail = validatedFields.data.email
       // Add user to the database
       await prisma.Users.create({
         data: {
@@ -82,14 +82,32 @@ export const handleRegistration = async (currentState, formData) => {
           roleId: role.id,
         }
       });
-        // send verification email
-      return {
-        message: "Registrace úspěšná!",
-        closeModal: true,
-        email: validatedFields.data.email,
-        password: validatedFields.data.password,
-        emailSend : true
-      };
+      const result = await sendVerificationEmail(validatedFields.data.email);
+
+      if (result) {
+        console.log('Verifikační email byl úspěšně poslán');
+        
+        return {
+          message: "Registrace úspěšná!",
+          closeModal: true,
+        };
+        
+
+      } else {
+        await prisma.Users.delete({
+          where: {
+            email: registrationMail,
+          },
+        });
+        // Handle failure
+        console.error('Chyba při odesílaní verifikačního emailu. Registrace nebyla úspěšná');
+        return {
+          message: "Chyba při odesílaní verifikačního emailu.\n Registrace nebyla úspěšná.",
+        };
+       
+      }
+
+     
     } catch (error) {
       console.error("Database error:", error);
       return {
