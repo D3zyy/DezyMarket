@@ -4,7 +4,7 @@ import { prisma } from '@/app/database/db';
 export async function POST(req) {
   try {
     const { token, newPassword } = await req.json();
-
+    
     if (!token || !newPassword) {
       return new Response(
         JSON.stringify({ message: 'Token a nové heslo jsou povinné.' }),
@@ -66,7 +66,7 @@ export async function POST(req) {
       });
 
       return new Response(
-        JSON.stringify({ message: 'Heslo bylo úspěšně změněno.' }),
+        JSON.stringify({ message: 'Heslo bylo úspěšně změněno.' , success: true}),
         {
           status: 200,
           headers: { 'Content-Type': 'application/json' },

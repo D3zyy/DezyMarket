@@ -1,5 +1,5 @@
 "use client";
-
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -56,7 +56,7 @@ const Page = () => {
     setSuccess(null);
 
     const result = await fetchVerification(token, newPassword);
-
+    console.log(result)
     if (result.success) {
       setSuccess('Heslo bylo úspěšně změněno.');
     } else {
@@ -70,8 +70,8 @@ const Page = () => {
     <>
       <dialog open={showModal} id="recovery_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
-          {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-          {success && <div style={{ color: 'green', marginBottom: '10px' }}>{success}</div>}
+          {error && <div className="flex items-center space-x-10 p-1"  style={{ color: 'red', marginBottom: '10px' }}><XCircleIcon className="h-6 w-6 text-red-500"  style={{marginRight: "5px"}}/>{error}</div>}
+          {success && <div className="flex items-center space-x-10 p-1" style={{ color: 'green'}}><CheckCircleIcon className="h-6 w-6 text-green-500" style={{marginRight: "5px"}}/> {success}</div>}
           <h3 className="font-bold text-lg">Obnovení hesla</h3>
           <form onSubmit={handleSubmit}>
             <div className="py-4">
