@@ -53,9 +53,11 @@ export async function POST(req) {
     let messageBan = false;
     
     if (user) {
+
       isPasswordValid = await bcrypt.compare(password, user.password);
       ban = await checkUserBan(user.id);
-   
+    
+      
    
       if (ban.pernament) {
         
@@ -67,9 +69,14 @@ export async function POST(req) {
     }
 
     if (user && isPasswordValid && !ban) {
-      console.log("tady pred vytvareni seesion")
+      if(user.verifiedEmail === false){
+        return new Response(JSON.stringify({ message: "Email nebyl ověřen." }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
       await createSession(user.id);
-      console.log("tady v poradku prihlaseni uspesne")
+     
       return new Response(JSON.stringify({ message: "Přihlášení úspěšné" }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }

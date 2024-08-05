@@ -48,7 +48,7 @@ export async function verifyToken(email, token) {
       return { message: 'Email byl úspěšně ověřen.', success: true };
     } else {
      
-      return { message: 'Token je neplatné.', success: false };
+      return { message: 'Ověření je neplatné.', success: false };
     }
   } catch (error) {
     // Log only critical errors

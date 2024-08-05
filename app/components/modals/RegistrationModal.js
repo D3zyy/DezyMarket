@@ -61,6 +61,8 @@ const parseErrors = (message) => {
 const RegistrationModal = () => {
   const [state, formAction] = useFormState(handleRegistration, initialState);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  
+
 
   useEffect(() => {
     if (state?.closeModal ) {
@@ -80,7 +82,7 @@ const RegistrationModal = () => {
               
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">Dokončete svoji registraci!</h3>
-            <p className="text-lg text-gray-600">Ověřovací email Vám byl zaslán na vaši adresu.</p>
+            <p className="text-lg text-gray-600">Ověřovací email  byl zaslán na vaši emailovou adresu.</p>
             <div className="modal-action mt-4">
               <button type="button" className="btn btn-primary" onClick={() => document.getElementById('register_modal').close()}>Zavřít</button>
             </div>
