@@ -10,7 +10,7 @@ const AuthenticateUser = async () => {
  
 
   const session = await getSession();
-  console.log("session odpoved ze serveru: ",session)
+
   
 
   return (

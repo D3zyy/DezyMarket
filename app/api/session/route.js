@@ -1,69 +1,12 @@
-import { getSession,logOut } from "../../authentication/actions";
-import { prisma } from "@/app/database/db";
-import { checkUserBan } from "./dbMethodsSession";
+import { logOut } from "../../authentication/actions";
 
 
-// Handler for GET requests
-export async function GET(req) {
 
-  
-  
-
-  try {
-    const session = await getSession();
-
-    
-    let messageBan = false
-    let ban = false
-    if(session.userId){
-      ban = await checkUserBan(session.userId)
-      if (ban.pernament == true) {
-      
-        messageBan = "Váš účet byl trvale zablokován"
-      }  else{
-       
-       messageBan = `Účet byl zabanován do: ${ban.banTill}`
-      }
-    }
-    
-
-    if (session.isLoggedIn && !ban) {
-
-      return new Response(JSON.stringify(session), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    } else if (session.isLoggedIn && ban) {
-   
-       await logOut()
-       
-      return new Response(JSON.stringify({ message: messageBan }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-    else{
-     
-      return new Response(JSON.stringify({message: "Session nebyla nalezena"}), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-    
-    
-  } catch (error) {
-    console.error("Chyba posílaní session:", error);
-    return new Response(JSON.stringify({ message: "Chyba na serveru [GET metoda session]" }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-}
 
 
 export async function DELETE(req) {
   try {
-    console.log("tady delete session")
+
     // Call logOut and handle its response
     const { success, message, status } = await logOut(req);
    

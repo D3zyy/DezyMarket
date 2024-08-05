@@ -82,12 +82,13 @@ export const handleRegistration = async (currentState, formData) => {
           roleId: role.id,
         }
       });
-
+        // send verification email
       return {
         message: "Registrace úspěšná!",
         closeModal: true,
         email: validatedFields.data.email,
         password: validatedFields.data.password,
+        emailSend : true
       };
     } catch (error) {
       console.error("Database error:", error);
