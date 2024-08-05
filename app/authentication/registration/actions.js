@@ -13,13 +13,13 @@ const schema = z.object({
     .regex(/[A-Z]/, 'Heslo musí obsahovat alespoň jedno velké písmeno.')
     .regex(/[a-z]/, 'Heslo musí obsahovat alespoň jedno malé písmeno.')
     .regex(/\d/, 'Heslo musí obsahovat alespoň jedno číslo.'),
-  fullName: z.string()
-    .regex(/^[^\s]{2,} [^\s]{2,}$/, 'Celé jméno musí mít formát "Jméno Příjmení", kde obě části mají alespoň 2 znaky a mezi nimi je jedna mezera.'),
-  nickname: z.string()
+    fullName: z.string()
+    .regex(/^[A-Za-z]{2,} [A-Za-z]{2,}$/, 'Celé jméno musí mít formát "Jméno Příjmení", kde obě části mají alespoň 2 znaky, obsahují pouze písmena a mezi nimi je jedna mezera.'),
+    nickname: z.string()
     .min(4, 'Přezdívka musí mít alespoň 4 znaky.')
-    .max(10, 'Přezdívka může mít maximalně 10 znaků.')
+    .max(10, 'Přezdívka může mít maximálně 10 znaků.')
     .regex(/^(?!.*Dezy).*$/, 'Tato přezdívka není dostupná.')
-    .regex(/^\S+$/, 'Přezdívka nesmí obsahovat mezery.'),
+    .regex(/^[A-Za-z0-9]+$/, 'Přezdívka smí obsahovat pouze písmena a čísla.'),
   termsOfUseAndPrivatePolicy: z.boolean()
     .refine(val => val === true, 'Musíte souhlasit s podmínkami použití a zásadami ochrany osobních údajů.')
 });
@@ -88,7 +88,7 @@ export const handleRegistration = async (currentState, formData) => {
         console.log('Verifikační email byl úspěšně poslán');
         
         return {
-          message: "Registrace úspěšná!",
+          message: "",
           closeModal: true,
         };
         

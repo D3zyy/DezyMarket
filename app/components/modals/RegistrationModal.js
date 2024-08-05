@@ -62,11 +62,10 @@ const RegistrationModal = () => {
   const [state, formAction] = useFormState(handleRegistration, initialState);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
-
   useEffect(() => {
-    if (state?.closeModal) {
+    if (state?.closeModal ) {
+      // Set success state to true
       setRegistrationSuccess(true);
-
     }
   }, [state?.closeModal]);
 
@@ -89,7 +88,7 @@ const RegistrationModal = () => {
             <>
               <div style={{ color: "red" }}>
                 {state?.message && parseErrors(state.message)}
-               
+            
               </div>
 
               <h3 className="font-bold text-lg">Registrace</h3>
