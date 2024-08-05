@@ -58,7 +58,6 @@ export async function POST(req) {
     const token = uuidv4();
 
     const currentDate = new Date();
-    console.log("při vytvaření tokenu nezaheshovaný :",token)
 
     const newDate = new Date(currentDate.getTime() + 3600000);
 

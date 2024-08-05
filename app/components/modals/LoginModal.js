@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
@@ -7,7 +8,7 @@ export function openLoginModal() {
   document.getElementById('login_modal').showModal();
 }
 
-const handleLogin = async (event, setError, setLoading) => {
+const handleLogin = async (event, setError, setLoading,setSuccess) => {
   event.preventDefault();
 
   setLoading(true);
@@ -18,7 +19,10 @@ const handleLogin = async (event, setError, setLoading) => {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    setError('Neplatný formát emailu.');
+    setError(<div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+      <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>
+      <div style={{ marginLeft: "5px" }}>{'Neplatný formát emailu'}</div>
+    </div>);
     setLoading(false);
     return;
   }
@@ -37,98 +41,35 @@ const handleLogin = async (event, setError, setLoading) => {
       if (errorData.message == "Váš účet byl trvale zablokován") {
         setError(
           <span>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{
-                marginBottom: "10px",
-                display: 'inline-block',
-                width: '50px',
-                height: '50px',
-                background: 'linear-gradient(to right, #f54b42 50%, #e02e24 50%)',
-                borderRadius: '50%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative'
-              }}>
-                <div style={{
-                  width: '30px',
-                  height: '30px',
-                  position: 'relative',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <div style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '20%',
-                    backgroundColor: '#e2e2e2',
-                    transform: 'rotate(45deg)'
-                  }}></div>
-                  <div style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '20%',
-                    backgroundColor: '#e2e2e2',
-                    transform: 'rotate(-45deg)'
-                  }}></div>
-                </div>
-              </div>
-            </div>
-            Váš účet byl trvale zablokován. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.{' '}
-            <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
+            <div class="container_row" style={{display: "grid"}}>
+    <div class="layer1" style={{gridColumn: 1,gridRow: 1}}>
+    <XCircleIcon className="h-12 w-12 text-red-500"  style={{marginBottom: "10px"}}/>
+    </div>
+    <div class="layer2">
+    Váš účet byl trvale zablokován. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.{' '}
+    <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
+    </div>
+</div>
+            
           </span>
         );
         console.error('Chyba při přihlašování:', errorData.message);
       } else if (errorData.message.includes("Účet byl zabanován do:")) {
         setError(
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{
-                marginRight: "20px",
-                marginBottom: "10px",
-                display: 'inline-block',
-                width: '50px',
-                height: '50px',
-                background: 'linear-gradient(to right, #f54b42 50%, #e02e24 50%)',
-                borderRadius: '50%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative'
-              }}>
-                <div style={{
-                  width: '30px',
-                  height: '30px',
-                  position: 'relative',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <div style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '20%',
-                    backgroundColor: '#e2e2e2',
-                    transform: 'rotate(45deg)'
-                  }}></div>
-                  <div style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '20%',
-                    backgroundColor: '#e2e2e2',
-                    transform: 'rotate(-45deg)'
-                  }}></div>
-                </div>
-              </div>
-            </div>
+            <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>
             <div style={{ marginLeft: "5px" }}>{errorData.message}</div>
           </div>
         );
         console.error('Chyba při přihlašování:', errorData.message);
       } else {
-        setError(errorData.message || 'Chyba při přihlašování.');
-        console.error('Chyba při přihlašování:', errorData.message);
+        setError(
+        <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+        <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>
+       <div style={{ marginLeft: "5px" }}>{ errorData.message || 'Chyba při přihlašování.'}</div>
+        {console.error('Chyba při přihlašování:', errorData.message)}
+        </div>
+          );
       }
     }
   } catch (err) {
@@ -139,7 +80,7 @@ const handleLogin = async (event, setError, setLoading) => {
   }
 };
 
-const handleRecovery = async (event, setError, setLoading) => {
+const handleRecovery = async (event, setError, setLoading,setSuccess) => {
   event.preventDefault();
 
   setLoading(true);
@@ -149,7 +90,11 @@ const handleRecovery = async (event, setError, setLoading) => {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    setError('Neplatný formát emailu.');
+    setError(<div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+      <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>
+     <div style={{ marginLeft: "5px" }}>{ 'Neplatný formát emailu.'}</div>
+      </div>);
+    
     setLoading(false);
     return;
   }
@@ -162,11 +107,22 @@ const handleRecovery = async (event, setError, setLoading) => {
     });
 
     if (res.ok) {
-      setError('Pokyny k obnovení hesla byly odeslány na váš email.');
+      setError(false)
+      setSuccess(<div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+        <CheckCircleIcon className="h-8 w-8 text-green-500"  style={{marginRight: "10px"}}/>
+       <div style={{ marginLeft: "5px" }}>{'Pokyny k obnovení vašeho hesla byli zaslány na uvedený email'}</div>
+        </div>);
+   
     } else {
       const errorData = await res.json();
-      setError(errorData.message || 'Chyba při odesílání požadavku na obnovení hesla.');
-      console.error('Chyba při odesílání požadavku na obnovení hesla:', errorData.message);
+      setError(
+        <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+        <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>
+       <div style={{ marginLeft: "5px" }}>{ errorData.message || 'Chyba při odesílání požadavku na obnovení hesla.'}</div>
+        {console.error('Chyba při odesílání požadavku na obnovení hesla.', errorData.message)}
+        </div>
+          );
+     
     }
   } catch (err) {
     setError('Nastala chyba při odesílání požadavku na obnovení hesla, zkuste to prosím později.');
@@ -175,21 +131,28 @@ const handleRecovery = async (event, setError, setLoading) => {
     setLoading(false);
   }
 };
-
-const RecoveryButton = ({ setRecoverPassword }) => (
+const RecoveryButton = ({ setRecoverPassword, setSuccess, setError }) => (
   <button
     className="btn btn-link"
-    onClick={() => setRecoverPassword(true)}
+    onClick={() => {
+      setRecoverPassword(true);
+      setSuccess(false);
+      setError(false);
+    }}
     style={{ color: 'gray' }}
   >
     Obnovit heslo
   </button>
 );
 
-const BackToLoginButton = ({ setRecoverPassword }) => (
+const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError }) => (
   <button
     className="btn btn-link"
-    onClick={() => setRecoverPassword(false)}
+    onClick={() => {
+      setRecoverPassword(false);
+      setSuccess(false);
+      setError(false);
+    }}
     style={{ color: 'gray', marginLeft: 'auto' }}
   >
     Zpět na přihlášení
@@ -197,6 +160,7 @@ const BackToLoginButton = ({ setRecoverPassword }) => (
 );
 
 const LoginModal = () => {
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [recoverPassword, setRecoverPassword] = useState(false);
@@ -206,8 +170,9 @@ const LoginModal = () => {
       <dialog id="login_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           {error && <div style={{ color: 'red', marginBottom: "10px" }}>{error}</div>}
+          {success && <div style={{ color: 'green', marginBottom: "10px" }}>{success}</div>}
           <h3 className="font-bold text-lg">{recoverPassword ? 'Obnovení hesla' : 'Přihlášení'}</h3>
-          <form onSubmit={(event) => recoverPassword ? handleRecovery(event, setError, setLoading) : handleLogin(event, setError, setLoading)}>
+          <form onSubmit={(event) => recoverPassword ? handleRecovery(event, setError, setLoading, setSuccess) : handleLogin(event, setError, setLoading, setSuccess)}>
             <div className="py-4">
               <label htmlFor="email" className="block">Email</label>
               <input type="email" name="email" className="input input-bordered w-full email" required />
@@ -232,9 +197,17 @@ const LoginModal = () => {
             </div>
           </form>
           {recoverPassword ? (
-            <BackToLoginButton setRecoverPassword={setRecoverPassword} />
+           <BackToLoginButton 
+           setRecoverPassword={setRecoverPassword} 
+           setSuccess={setSuccess} 
+           setError={setError} 
+         />
           ) : (
-            <RecoveryButton setRecoverPassword={setRecoverPassword} />
+            <RecoveryButton 
+            setRecoverPassword={setRecoverPassword} 
+            setSuccess={setSuccess} 
+            setError={setError} 
+          />
           )}
         </div>
       </dialog>

@@ -14,7 +14,7 @@ export async function POST(req) {
         }
       );
     }
-    console.log("token ktery sem ziskal :" , token)
+  
    
 
     // Retrieve the token record from the database using the token
@@ -22,7 +22,7 @@ export async function POST(req) {
       where: { token: token },
       include: { user: true }
     });
-    console.log(tokenRecord)
+   
     // Check if the token record exists
     if (!tokenRecord) {
       return new Response(
