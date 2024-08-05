@@ -7,140 +7,145 @@ export function openLoginModal() {
   document.getElementById('login_modal').showModal();
 }
 
-const handleLogin = async (event, setError) => {
+const handleLogin = async (event, setError, setLoading) => {
   event.preventDefault();
+
+  setLoading(true);
 
   const formData = new FormData(event.target);
   const email = formData.get('email');
   const password = formData.get('password');
 
-
-   // checkin valid format of email
+  // Check for valid email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     setError('Neplatný formát emailu.');
+    setLoading(false);
     return;
   }
-  // loggin in
+
+  // Logging in
   try {
     const res = await fetch('/api/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
-    //if ok reload page because user alreaddy has a session in his browser
+
+    // If successful, reload the page to establish the session
     if (res.ok) {
-      window.location.reload(); 
-    } else { // error from server showing to the client
+      window.location.reload();
+    } else {
+      // Handle server errors
       const errorData = await res.json();
-      if(errorData.message == "Váš účet byl trvale zablokován"){
-        console.log("zprava ban na trvale  : ",errorData.message )
-        setError(<span><div style={{ textAlign: 'center' }}>
-          <div style={{
-            marginBottom: "10px",
-            display: 'inline-block',
-            width: '50px',
-            height: '50px',
-            background: 'linear-gradient(to right, #f54b42 50%, #e02e24 50%)',
-            borderRadius: '50%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'relative'
-          }}>
-            <div style={{
-              width: '30px',
-              height: '30px',
-              position: 'relative',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
+      if (errorData.message == "Váš účet byl trvale zablokován") {
+        setError(
+          <span>
+            <div style={{ textAlign: 'center' }}>
               <div style={{
-                position: 'absolute',
-                width: '100%',
-                height: '20%',
-                backgroundColor: '#e2e2e2',
-                transform: 'rotate(45deg)'
-              }}></div>
-              <div style={{
-                position: 'absolute',
-                width: '100%',
-                height: '20%',
-                backgroundColor: '#e2e2e2',
-                transform: 'rotate(-45deg)'
-              }}></div>
+                marginBottom: "10px",
+                display: 'inline-block',
+                width: '50px',
+                height: '50px',
+                background: 'linear-gradient(to right, #f54b42 50%, #e02e24 50%)',
+                borderRadius: '50%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'relative'
+              }}>
+                <div style={{
+                  width: '30px',
+                  height: '30px',
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '20%',
+                    backgroundColor: '#e2e2e2',
+                    transform: 'rotate(45deg)'
+                  }}></div>
+                  <div style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '20%',
+                    backgroundColor: '#e2e2e2',
+                    transform: 'rotate(-45deg)'
+                  }}></div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-         Váš účet byl trvale zablokován. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.{' '}
-          <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
-        </span>
-      );
+            Váš účet byl trvale zablokován. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.{' '}
+            <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
+          </span>
+        );
         console.error('Chyba při přihlašování:', errorData.message);
-      }else if(errorData.message.includes("Účet byl zabanován do:")){
-        console.log("zprava ban na nejakou dobu : ",errorData.message )
+      } else if (errorData.message.includes("Účet byl zabanován do:")) {
         setError(
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
             <div style={{ textAlign: 'center' }}>
-          <div style={{
-            marginRight: "20px",
-            marginBottom: "10px",
-            display: 'inline-block',
-            width: '50px',
-            height: '50px',
-            background: 'linear-gradient(to right, #f54b42 50%, #e02e24 50%)',
-            borderRadius: '50%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'relative'
-          }}>
-            <div style={{
-              width: '30px',
-              height: '30px',
-              position: 'relative',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
               <div style={{
-                position: 'absolute',
-                width: '100%',
-                height: '20%',
-                backgroundColor: '#e2e2e2',
-                transform: 'rotate(45deg)'
-              }}></div>
-              <div style={{
-                position: 'absolute',
-                width: '100%',
-                height: '20%',
-                backgroundColor: '#e2e2e2',
-                transform: 'rotate(-45deg)'
-              }}></div>
+                marginRight: "20px",
+                marginBottom: "10px",
+                display: 'inline-block',
+                width: '50px',
+                height: '50px',
+                background: 'linear-gradient(to right, #f54b42 50%, #e02e24 50%)',
+                borderRadius: '50%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'relative'
+              }}>
+                <div style={{
+                  width: '30px',
+                  height: '30px',
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '20%',
+                    backgroundColor: '#e2e2e2',
+                    transform: 'rotate(45deg)'
+                  }}></div>
+                  <div style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '20%',
+                    backgroundColor: '#e2e2e2',
+                    transform: 'rotate(-45deg)'
+                  }}></div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-            <div style={{marginLeft: "5px"}}>{errorData.message}</div>
+            <div style={{ marginLeft: "5px" }}>{errorData.message}</div>
           </div>
         );
         console.error('Chyba při přihlašování:', errorData.message);
-      } else{
-        console.log("tady doleee")
+      } else {
         setError(errorData.message || 'Chyba při přihlašování.');
         console.error('Chyba při přihlašování:', errorData.message);
       }
-      
-      
     }
   } catch (err) {
     setError('Nastala chyba při přihlašovaní, zkuste to prosím později.');
     console.error('Nastala chyba při přihlašování:', err);
+  } finally {
+    setLoading(false);
   }
 };
 
 const LoginModal = () => {
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   return (
     <>  
@@ -148,7 +153,7 @@ const LoginModal = () => {
         <div className="modal-box">
           {error && <div style={{ color: 'red', marginBottom: "10px" }}>{error}</div>}
           <h3 className="font-bold text-lg">Přihlášení</h3>
-          <form onSubmit={(event) => handleLogin(event, setError)}>
+          <form onSubmit={(event) => handleLogin(event, setError, setLoading)}>
             <div className="py-4">
               <label htmlFor="email" className="block">Email</label>
               <input type="email" name="email" className="input input-bordered w-full email" required />
@@ -158,13 +163,15 @@ const LoginModal = () => {
               <input
                 type="password"
                 name="password"
-                autoComplete="on" 
+                autoComplete="on"
                 className="input input-bordered w-full password"
                 required
               />
             </div>
             <div className="modal-action">
-              <button type="submit" className="btn btn-primary">Přihlásit se</button>
+              <button type="submit" className="btn btn-primary" disabled={loading}>
+                {loading ? 'Načítání...' : 'Přihlásit se'}
+              </button>
               <button type="button" className="btn" onClick={() => document.getElementById('login_modal').close()}>Zavřít</button>
             </div>
           </form>

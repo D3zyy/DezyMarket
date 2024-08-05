@@ -8,7 +8,7 @@ import { openRegisterModal } from './modals/RegistrationModal'
 
 
 
-const profileNavBarNotLoggedIn = () => {
+const ProfileNavBarNotLoggedIn = () => {
   return (
     <>
           <div className="hidden sm:flex">
@@ -74,7 +74,7 @@ const profileNavBarNotLoggedIn = () => {
   )
 }
 
-export default profileNavBarNotLoggedIn
+export default ProfileNavBarNotLoggedIn
 
 
 

@@ -44,10 +44,10 @@ const parseErrors = (message) => {
     if(message === "Email již existuje."){
       return (
         <span>
-          {message} Chcete se přihlásit? <button className="btn btn-link" onClick={() => {
+          {message}<button style={{color: "gray", textDecoration: "underline", marginLeft: "10px"}} onClick={() => {
             document.getElementById('register_modal').close();
             document.getElementById('login_modal').showModal();
-          }}>Přihlásit</button>
+          }}> Přihlásit se</button>
         </span>
       );
     } else {
@@ -56,32 +56,13 @@ const parseErrors = (message) => {
   }
 };
 
-const loginUser = async (email, password) => {
-  try {
-    const response = await fetch('/api/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-
-    if (response.ok) {
-      console.log("User logged in successfully:", await response.json());
-      location.reload()
-   
-    } else {
-      console.error("Login failed:", await response.text());
-    }
-  } catch (error) {
-    console.error("Login request error:", error);
-  }
-};
 
 const RegistrationModal = () => {
   const [state, formAction] = useFormState(handleRegistration, initialState);
 
   useEffect(() => {
     if (state?.closeModal && state.email && state.password) {
-      loginUser(state.email, state.password);
+        
     }
   }, [state?.closeModal, state.email, state.password]);
 

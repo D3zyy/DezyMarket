@@ -1,21 +1,8 @@
 
 
 import React from 'react'
+import LogOutButton from './LogOutButton'
 
-const handleLogout = async (event) => {
-    event.preventDefault();
-    
-    try {
-      const res = await fetch('/api/session', { method: 'DELETE' });
-      if (res.ok) {
-        window.location.reload(); // Reload the page after logging out
-      } else {
-        console.error('Failed to log out:', res.statusText);
-      }
-    } catch (err) {
-      console.error('An error occurred while logging out:', err);
-    }
-  };
 
   
 
@@ -39,7 +26,7 @@ const ProfileNavBar = () => {
             </li>
             
             <li><a>Nastavení</a></li>
-            <li><form onClick={handleLogout}><button type="submit" >Odhlásit se</button></form></li>
+              <LogOutButton />
           </ul>
         </div>
   </div>

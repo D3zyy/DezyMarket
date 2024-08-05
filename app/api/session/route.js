@@ -63,7 +63,7 @@ export async function GET(req) {
 
 export async function DELETE(req) {
   try {
-
+    console.log("tady delete session")
     // Call logOut and handle its response
     const { success, message, status } = await logOut(req);
    

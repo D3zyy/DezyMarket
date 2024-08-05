@@ -4,7 +4,7 @@ import { sessionOptions, sessionData, defaultSession } from "./lib"
 import {  getIronSession } from "iron-session"
 import { cookies } from "next/headers"
 import { prisma } from '../database/db';
-
+import { checkUserBan } from '../api/session/dbMethodsSession';
 
 
 
@@ -13,7 +13,7 @@ export const getSession = async () => {
    
       // Retrieve the session using iron-session
       const session = await getIronSession(cookies(),sessionOptions);
-
+      
       if (session && session.sessionId) {
         // Check if the sessionId exists in the database
         const sessionRecord = await prisma.Sessions.findUnique({
@@ -25,22 +25,52 @@ export const getSession = async () => {
         if (!sessionRecord) {
             
           // If sessionId is not found in the database, call logOut to clean up
-          session.destroy()
+          return {message: "Session nebyla nalezena"}
           // Optionally, you can return an error or handle it as needed
           
         }
         
         // If sessionId exists in the database, return the session
         
-        return session;
-      } else {
-     
-        // Return a 401 Unauthorized response if session not found
-        return { success: false, message: "Session nebyla nalezena", status: 401 };
+       
       }
+
+
+    let messageBan = false
+    let ban = false
+    let logOut = false
+    if(session.userId){
+      ban = await checkUserBan(session.userId)
+      console.log("ban odpoved : ",ban)
+      if (ban.pernament == true) {
+      
+        messageBan = "Váš účet byl trvale zablokován"
+      }  else{
+       
+       messageBan = `Účet byl zabanován do: ${ban.banTill}`
+      }
+    }
+    
+
+    if (session.isLoggedIn && !ban) {
+
+      return session
+    } else if (session.isLoggedIn && ban) {
+        // Delete all sessions where userId equals session.userId
+        await prisma.Sessions.deleteMany({
+          where: { userId: session.userId },
+      });
+      
+       
+      return  {message: messageBan};
+    }
+    else{
+     
+      return {message: "Session nebyla nalezena"}
+    }
     } catch (error) {
-      console.error("Error getting session:", error);
-      throw new Error("Error getting session"); // or handle the error as needed
+      console.error("Chyba posílaní session:", error);
+      return { message: "Chyba na serveru [GET metoda session]" }
     }
   };
 
@@ -80,23 +110,25 @@ export const getSession = async () => {
       throw new Error("Failed to create session"); // Optionally, re-throw with a custom message
     }
   };
-export const logOut = async (req) => {
+export const logOut = async (state,formData) => {
     try {
-      
+
       // Get the current session
       const session = await getIronSession(cookies(),sessionOptions);
-  
+
       if (session && session.sessionId) {
-   
+        console.log("tady pred db")
         // Remove the session from the database
+        let sessionIdForDb = session.sessionId
+        await session.destroy();
         await prisma.Sessions.delete({
           where: {
-            sessionId: session.sessionId,
+            sessionId: sessionIdForDb
           },
         });
-       
+        console.log("tady po db")
         // Destroy the session
-        await session.destroy();
+       
        
         // Return a success response
         return { success: true, message: "Logged out successfully", status: 200 };
