@@ -8,10 +8,7 @@ async function fetchVerification(email, token) {
     );
 
     // Check if the response is OK
-    if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`);
-    }
-
+   
     // Parse and return JSON response
     return await res.json();
   } catch (error) {

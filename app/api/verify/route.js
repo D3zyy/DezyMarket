@@ -1,6 +1,7 @@
 import { verifyToken } from "../email/verifyToken";
 
 export async function GET(req) {
+
   const { searchParams } = new URL(req.url);
   const token = searchParams.get('token');
   const email = searchParams.get('email');
@@ -18,6 +19,7 @@ export async function GET(req) {
   }
 
   try {
+    console.log("tady")
     // Call the verifyToken function
     const result = await verifyToken(email, token);
     console.log(result);

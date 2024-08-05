@@ -16,7 +16,16 @@ export async function verifyToken(email, token) {
     }
 
     // Check if the token has expired
-    if (Date.now() > tokenRecord.expiresAt.getTime()) {
+    const currentDate = new Date();
+    const expirationDate = new Date(tokenRecord.expiresAt);
+    
+    // Odečtěte 2 hodiny (7200000 ms) od času vypršení
+    expirationDate.setTime(expirationDate.getTime() - 7200000);
+    
+    console.log("čas teď:", currentDate.toLocaleString('cs-CZ'));
+    console.log("čas vypršení upravený:", expirationDate.toLocaleString('cs-CZ'));
+    
+    if (currentDate > expirationDate) {
       console.log("token vypršel");
       return { message: 'Ověření již vypršelo.', success: false };
     }
