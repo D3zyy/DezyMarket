@@ -36,7 +36,7 @@ export const handleRegistration = async (currentState, formData) => {
   });
 
   if (!validatedFields.success) {
-    console.log("error", validatedFields.error.flatten().fieldErrors);
+
     return {
       message: JSON.stringify(validatedFields.error.flatten().fieldErrors),
     };
@@ -85,7 +85,7 @@ export const handleRegistration = async (currentState, formData) => {
       const result = await sendVerificationEmail(validatedFields.data.email);
 
       if (result) {
-        console.log('Verifikační email byl úspěšně poslán');
+      
         
         return {
           message: "",

@@ -30,7 +30,7 @@ const newDate = new Date(currentDate.getTime() + 3600000);
 const localOffset = newDate.getTimezoneOffset() * 60000;
 const localISODate = new Date(newDate.getTime() - localOffset).toISOString();
 
-console.log(localISODate);
+
  
   try {
     // Create the verification token record
@@ -67,7 +67,7 @@ console.log(localISODate);
 
     // Send email
     let succ = await transporter.sendMail(mailOptions);
-    console.log('Email byl úspěšně poslán');
+
 
     return true;
   } catch (error) {

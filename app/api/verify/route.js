@@ -8,7 +8,7 @@ export async function GET(req) {
 
   // Check if email and token are provided
   if (!email || !token) {
-    console.log("Chybý email nebo token");
+ 
     return new Response(
       JSON.stringify({ message: 'Email nebo token chybý.', success: false }),
       {
@@ -19,10 +19,10 @@ export async function GET(req) {
   }
 
   try {
-    console.log("tady")
+
     // Call the verifyToken function
     const result = await verifyToken(email, token);
-    console.log(result);
+
 
     // Return JSON response with appropriate status
     return new Response(

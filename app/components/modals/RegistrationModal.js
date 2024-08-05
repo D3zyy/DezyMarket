@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { handleRegistration } from '@/app/authentication/registration/actions';
 import { useFormState } from 'react-dom';
 import { SubmitButton } from '../SubmitButton';
-import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import { CheckCircleIcon, BellAlertIcon , InboxArrowDownIcon} from '@heroicons/react/24/solid';
 
 const initialState = {
   message: null,
@@ -76,10 +76,11 @@ const RegistrationModal = () => {
           {registrationSuccess ? (
             <div className="text-center">
             <div className="flex justify-center mb-4">
-              <CheckCircleIcon className="w-16 h-16 text-green-500" />
+            <InboxArrowDownIcon className="w-16 h-16 text-yellow-500" />
+              
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Úspěšná registrace!</h3>
-            <p className="text-lg text-gray-600">Ověřovací email byl zaslán na vaši adresu.</p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Dokončete svoji registraci!</h3>
+            <p className="text-lg text-gray-600">Ověřovací email Vám byl zaslán na vaši adresu.</p>
             <div className="modal-action mt-4">
               <button type="button" className="btn btn-primary" onClick={() => document.getElementById('register_modal').close()}>Zavřít</button>
             </div>
@@ -92,6 +93,8 @@ const RegistrationModal = () => {
               </div>
 
               <h3 className="font-bold text-lg">Registrace</h3>
+              
+
               <form action={formAction}>
                 <div className="py-2">
                   <label htmlFor="fullName" className="block">Celé jméno</label>
