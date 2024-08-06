@@ -1,6 +1,6 @@
 "use client";
+import React, { useEffect, useRef, useState } from 'react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
-import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 async function fetchVerification(token, newPassword) {
@@ -29,8 +29,9 @@ const Page = () => {
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(true); // Modal should be shown by default
-  
+
   const router = useRouter();
+  const dialogRef = useRef(null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -41,6 +42,12 @@ const Page = () => {
       router.push('/'); // Redirect to home if token is missing
     }
   }, [router]);
+
+  useEffect(() => {
+    if (dialogRef.current) {
+      dialogRef.current.showModal();
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,34 +63,21 @@ const Page = () => {
 
     const result = await fetchVerification(token, newPassword);
 
-    
     if (result.success) {
-   
       setSuccess('Heslo bylo úspěšně změněno.');
     } else {
-
-      if(result.message === "Ověření je neplatné." || result.message === "Chyba při ověřování tokenu. " || result.message === "Ověření již vypršelo. "){
+      if (result.message === "Ověření je neplatné." || result.message === "Chyba při ověřování tokenu. " || result.message === "Ověření již vypršelo. ") {
         setError(result.message || 'Nastala chyba při obnově hesla.');
-      } else{
-        let parsedData = JSON.parse(result.message)
+      } else {
+        let parsedData = JSON.parse(result.message);
         if (parsedData['password']) {
-        
           let formattedText = '\n';
-      
           for (const [key, value] of Object.entries(parsedData)) {
-              formattedText += `\n${value}\n\n`;
+            formattedText += `\n${value}\n\n`;
           }
-          // Volání funkce setError s naformátovaným textem
           setError(formattedText);
+        }
       }
-
-
-      
-    
-    
-
-    } 
-      
     }
 
     setLoading(false);
@@ -91,10 +85,22 @@ const Page = () => {
 
   return (
     <>
-      <dialog open={showModal} id="recovery_modal" className="modal modal-bottom sm:modal-middle">
+      {/* Include global styles to ensure the dialog backdrop styles are applied */}
+      <style jsx global>{`
+        dialog::backdrop {
+          background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+          backdrop-filter: blur(8px); /* Apply blur effect */
+        }
+        /* Ensure dialog element is visible and styled properly */
+        dialog {
+          display: block;
+          border: none;
+        }
+      `}</style>
+      <dialog ref={dialogRef} id="recovery_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
-          {error && <div className="flex items-center space-x-10 p-1"  style={{ color: 'red', marginBottom: '10px' }}><XCircleIcon className="h-6 w-6 text-red-500"  style={{marginRight: "5px"}}/>{error}</div>}
-          {success && <div className="flex items-center space-x-10 p-1" style={{ color: 'green', marginBottom: '10px' }}><CheckCircleIcon className="h-6 w-6 text-green-500" style={{marginRight: "5px"}}/> {success}</div>}
+          {error && <div className="flex items-center space-x-10 p-1" style={{ color: 'red', marginBottom: '10px' }}><XCircleIcon className="h-6 w-6 text-red-500" style={{ marginRight: "5px" }} />{error}</div>}
+          {success && <div className="flex items-center space-x-10 p-1" style={{ color: 'green', marginBottom: '10px' }}><CheckCircleIcon className="h-6 w-6 text-green-500" style={{ marginRight: "5px" }} /> {success}</div>}
           <h3 className="font-bold text-lg">Obnovení hesla</h3>
           <form onSubmit={handleSubmit}>
             <div className="py-4">
@@ -120,29 +126,28 @@ const Page = () => {
               />
             </div>
             <div className="modal-action">
-              {success ? console.log()
-             
-             : 
-             <button
-             type="submit"
-             className="btn btn-primary"
-             disabled={loading}
-           >
-             {loading ? 'Načítání...' : 'Obnovit heslo'}
-           </button>
+              {success ?
+                console.log()
+                :
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? 'Načítání...' : 'Obnovit heslo'}
+                </button>
               }
-              
+
               <button
                 type="button"
                 className="btn"
-                onClick={() => setShowModal(false)}
+                onClick={() => dialogRef.current.close()}
               >
                 Zavřít
               </button>
             </div>
           </form>
         </div>
-       
       </dialog>
     </>
   );
