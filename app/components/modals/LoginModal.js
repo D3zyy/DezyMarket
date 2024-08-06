@@ -191,9 +191,12 @@ const LoginModal = () => {
               </div>
             )}
             <div className="modal-action">
+              {success ?  '':
               <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? 'Načítání...' : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
-              </button>
+              {loading ? 'Načítání...' : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
+              </button> 
+              }
+             
               <button type="button" className="btn" onClick={() => document.getElementById('login_modal').close()}>Zavřít</button>
             </div>
           </form>
