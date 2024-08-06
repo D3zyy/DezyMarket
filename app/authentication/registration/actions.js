@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { prisma } from '@/app/database/db';
 import bcrypt from 'bcrypt';
 import { sendVerificationEmail } from '@/app/api/email/email';
+
 const schema = z.object({
   email: z.string()
     .email({ message: 'Nesprávný formát emailu.' }),

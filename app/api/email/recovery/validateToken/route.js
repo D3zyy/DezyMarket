@@ -1,5 +1,8 @@
 import bcrypt from 'bcrypt';
 import { prisma } from '@/app/database/db';
+import { z } from 'zod';
+
+
 
 export async function POST(req) {
   try {
@@ -14,6 +17,17 @@ export async function POST(req) {
         }
       );
     }
+    const schema = z.object({
+      password: z.string()
+        .max(40, 'Heslo může mít maximálně 40 znaků.')
+        .min(6, 'Heslo musí mít alespoň 6 znaků.')
+        .regex(/[A-Z]/, 'Heslo musí obsahovat alespoň jedno velké písmeno.')
+        .regex(/[a-z]/, 'Heslo musí obsahovat alespoň jedno malé písmeno.')
+        .regex(/\d/, 'Heslo musí obsahovat alespoň jedno číslo.'),
+    });
+    const validatedFields = schema.safeParse({
+      password: newPassword,
+    });
   
    
 
@@ -33,7 +47,16 @@ export async function POST(req) {
         }
       );
     }
-
+    if (!validatedFields.success) {
+      return new Response(
+        JSON.stringify({ message: JSON.stringify(validatedFields.error.flatten().fieldErrors) }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      
+    }
     const currentDate = new Date();
     const expirationDate = new Date(tokenRecord.expiresAt);
     expirationDate.setTime(expirationDate.getTime() - 7200000);

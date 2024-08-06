@@ -4,7 +4,8 @@ import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
-export function openLoginModal() {
+
+  export function openLoginModal() {
   document.getElementById('login_modal').showModal();
 }
 
@@ -110,7 +111,7 @@ const handleRecovery = async (event, setError, setLoading,setSuccess) => {
       setError(false)
       setSuccess(<div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <CheckCircleIcon className="h-8 w-8 text-green-500"  style={{marginRight: "10px"}}/>
-       <div style={{ marginLeft: "5px" }}>{'Pokyny k obnovení vašeho hesla byli zaslány na uvedený email'}</div>
+       <div style={{ marginLeft: "5px" }}>{'Pokyny k obnovení hesla byli zaslány na uvedený email'}</div>
         </div>);
    
     } else {

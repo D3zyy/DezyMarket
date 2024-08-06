@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { handleRegistration } from '@/app/authentication/registration/actions';
 import { useFormState } from 'react-dom';
 import { SubmitButton } from '../SubmitButton';
-import { CheckCircleIcon, BellAlertIcon , InboxArrowDownIcon} from '@heroicons/react/24/solid';
+import { CheckCircleIcon , InboxArrowDownIcon} from '@heroicons/react/24/solid';
 
 const initialState = {
   message: null,
@@ -17,7 +17,7 @@ export function openRegisterModal() {
   document.getElementById('register_modal').showModal();
 }
 
-const translateField = (field) => {
+ const translateField = (field) => {
   const translations = {
     email: 'Email',
     password: 'Heslo',
@@ -28,7 +28,7 @@ const translateField = (field) => {
   return translations[field] || field;
 };
 
-const parseErrors = (message) => {
+ const parseErrors = (message) => {
   try {
     const errors = JSON.parse(message);
     return Object.entries(errors).map(([field, messages]) => (
