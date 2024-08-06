@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 
 async function fetchVerification(email, token) {
@@ -7,9 +7,6 @@ async function fetchVerification(email, token) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify?token=${token}&email=${email}`
     );
-
-   
-
     return await res.json();
   } catch (error) {
     console.error('Error fetching verification:', error);
@@ -19,10 +16,10 @@ async function fetchVerification(email, token) {
 
 const Page = ({ searchParams }) => {
   const { token, email } = searchParams;
-  const [showModal, setShowModal] = useState(true); 
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
+  const dialogRef = useRef(null);
 
   useEffect(() => {
     const verify = async () => {
@@ -34,7 +31,6 @@ const Page = ({ searchParams }) => {
       }
 
       const result = await fetchVerification(email, token);
-      console.log(result.message)
       setMessage(result.message || 'An error occurred or verification is not valid.');
       setIsSuccess(result.success);
       setLoading(false);
@@ -43,44 +39,51 @@ const Page = ({ searchParams }) => {
     verify();
   }, [token, email]);
 
+  useEffect(() => {
+    if (dialogRef.current) {
+      dialogRef.current.showModal();
+    }
+  }, []);
+
   return (
     <>
-      <dialog open={showModal} id="recovery_modal" className="modal modal-bottom sm:modal-middle">
+      {/* Include global styles to ensure the dialog backdrop styles are applied */}
+      <dialog ref={dialogRef} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <div className="modal-action">
-          <div className="flex items-center justify-center h-32 w-full p-4">
+            <div className="flex items-center justify-center h-full w-full p-3">
               {loading ? (
-                <div className="grid place-items-center h-full w-full">
+                <div className="flex items-center justify-center h-full w-full">
                   <span className="loading loading-spinner loading-lg"></span>
                 </div>
               ) : (
-                <>
+                <div className="flex flex-col items-center justify-center h-full w-full">
                   {token && email ? (
                     isSuccess ? (
                       <>
-                        <CheckCircleIcon className="h-6 w-6 text-green-500" />
-                        <span>{message}</span>
+                        <CheckCircleIcon className="h-12 w-12 text-green-500" />
+                        <span className="ml-2 text-lg">{message}</span>
                       </>
                     ) : (
                       <>
-                        <XCircleIcon className="h-6 w-6 text-red-500" />
-                        <span>{message}</span>
+                        <XCircleIcon className="h-12 w-12 text-red-500" />
+                        <span className="ml-2 text-lg">{message}</span>
                       </>
                     )
                   ) : (
                     <>
-                      <XCircleIcon className="h-6 w-6 text-red-500" />
-                      <span>{message}</span>
+                      <XCircleIcon className="h-12 w-12 text-red-500" />
+                      <span className="ml-2 text-lg">{message}</span>
                     </>
                   )}
                   <button
                     type="button"
-                    className="btn"
-                    onClick={() => setShowModal(false)}
+                    className="btn mt-4"
+                    onClick={() => dialogRef.current.close()}
                   >
                     Zavřít
                   </button>
-                </>
+                </div>
               )}
             </div>
           </div>

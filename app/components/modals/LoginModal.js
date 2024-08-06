@@ -167,7 +167,14 @@ const LoginModal = () => {
   const [recoverPassword, setRecoverPassword] = useState(false);
 
   return (
+    
     <>  
+    <style jsx global>{`
+        dialog::backdrop {
+          background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+          backdrop-filter: blur(2px); /* Apply blur effect */
+        }
+      `}</style>
       <dialog id="login_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           {error && <div style={{ color: 'red', marginBottom: "10px" }}>{error}</div>}
