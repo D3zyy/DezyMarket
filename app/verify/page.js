@@ -1,4 +1,5 @@
-import React from 'react';
+"use client";
+import React, { useEffect, useState } from 'react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 
 async function fetchVerification(email, token) {
@@ -7,52 +8,85 @@ async function fetchVerification(email, token) {
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify?token=${token}&email=${email}`
     );
 
-    // Check if the response is OK
    
-    // Parse and return JSON response
+
     return await res.json();
   } catch (error) {
     console.error('Error fetching verification:', error);
-    // Return a default result in case of error
     return { message: '', success: false };
   }
 }
 
-const Page = async ({ searchParams }) => {
+const Page = ({ searchParams }) => {
   const { token, email } = searchParams;
+  const [showModal, setShowModal] = useState(true); 
+  const [message, setMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Check if token and email are provided
-  if (!token || !email) {
-    return <>
-     <div className="flex items-center space-x-2 p-4">
-    <XCircleIcon className="h-6 w-6 text-red-500" />
-    <span>{'Žádný parametry nebyli načteny'}</span>
-    </div>
-  </>
-  }
+  useEffect(() => {
+    const verify = async () => {
+      if (!token || !email) {
+        setMessage('Žádné parametry nebyly načteny');
+        setIsSuccess(false);
+        setLoading(false);
+        return;
+      }
 
-  const result = await fetchVerification(email, token);
+      const result = await fetchVerification(email, token);
+      console.log(result.message)
+      setMessage(result.message || 'An error occurred or verification is not valid.');
+      setIsSuccess(result.success);
+      setLoading(false);
+    };
 
-  // Use default values if result properties are missing
-  const message = result?.message || '';
-  const isSuccess = result?.success || false;
+    verify();
+  }, [token, email]);
 
   return (
-    <div className="flex items-center space-x-2 p-4">
-      {isSuccess ? (
-        // Render the success icon and message
-        <>
-          <CheckCircleIcon className="h-6 w-6 text-green-500" />
-          <span>{message}</span>
-        </>
-      ) : (
-        // Render the error icon and message
-        <>
-          <XCircleIcon className="h-6 w-6 text-red-500" />
-          <span>{message || 'An error occurred or verification is not valid.'}</span>
-        </>
-      )}
-    </div>
+    <>
+      <dialog open={showModal} id="recovery_modal" className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box">
+          <div className="modal-action">
+          <div className="flex items-center justify-center h-32 w-full p-4">
+              {loading ? (
+                <div className="grid place-items-center h-full w-full">
+                  <span className="loading loading-spinner loading-lg"></span>
+                </div>
+              ) : (
+                <>
+                  {token && email ? (
+                    isSuccess ? (
+                      <>
+                        <CheckCircleIcon className="h-6 w-6 text-green-500" />
+                        <span>{message}</span>
+                      </>
+                    ) : (
+                      <>
+                        <XCircleIcon className="h-6 w-6 text-red-500" />
+                        <span>{message}</span>
+                      </>
+                    )
+                  ) : (
+                    <>
+                      <XCircleIcon className="h-6 w-6 text-red-500" />
+                      <span>{message}</span>
+                    </>
+                  )}
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Zavřít
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </dialog>
+    </>
   );
 };
 
