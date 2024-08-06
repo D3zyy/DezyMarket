@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from 'react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
+import { useRouter } from 'next/navigation';
 
 async function fetchVerification(email, token) {
   try {
@@ -14,12 +15,16 @@ async function fetchVerification(email, token) {
   }
 }
 
+
+
 const Page = ({ searchParams }) => {
   const { token, email } = searchParams;
   const [message, setMessage] = useState('');
+  
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const dialogRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     const verify = async () => {
@@ -37,8 +42,14 @@ const Page = ({ searchParams }) => {
     };
 
     verify();
-  }, [token, email]);
-
+  }, [token, email]); 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenFromUrl = urlParams.get('token');
+    if (!tokenFromUrl) {
+      router.push('/'); 
+    } 
+  }, [router]);
   useEffect(() => {
     if (dialogRef.current) {
       dialogRef.current.showModal();

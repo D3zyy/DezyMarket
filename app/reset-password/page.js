@@ -39,7 +39,7 @@ const Page = () => {
     if (tokenFromUrl) {
       setToken(tokenFromUrl);
     } else {
-      router.push('/'); // Redirect to home if token is missing
+      router.push('/'); 
     }
   }, [router]);
 
@@ -86,17 +86,7 @@ const Page = () => {
   return (
     <>
       {/* Include global styles to ensure the dialog backdrop styles are applied */}
-      <style jsx global>{`
-        dialog::backdrop {
-          background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-          backdrop-filter: blur(8px); /* Apply blur effect */
-        }
-        /* Ensure dialog element is visible and styled properly */
-        dialog {
-          display: block;
-          border: none;
-        }
-      `}</style>
+      
       <dialog ref={dialogRef} id="recovery_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           {error && <div className="flex items-center space-x-10 p-1" style={{ color: 'red', marginBottom: '10px' }}><XCircleIcon className="h-6 w-6 text-red-500" style={{ marginRight: "5px" }} />{error}</div>}
