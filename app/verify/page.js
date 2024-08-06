@@ -94,6 +94,7 @@ const Page = ({ searchParams }) => {
                     </>
                   )}
                      <button
+                     style={{marginTop: "15px"}}
                       type="button"
                       className="btn"
                       onClick={() => {
