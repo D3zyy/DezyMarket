@@ -52,7 +52,7 @@ export const checkUserBan = async (userId) => {
         pernament: false,
       };
     } else {
-      console.log('Uživatel není zabanován');
+   
       return false;
     }
   } catch (error) {

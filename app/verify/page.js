@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from 'react';
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
+import { CheckCircleIcon, XCircleIcon , ShieldExclamationIcon} from '@heroicons/react/24/solid';
 import { useRouter } from 'next/navigation';
 
 async function fetchVerification(email, token) {
@@ -72,8 +72,12 @@ const Page = ({ searchParams }) => {
                   {token && email ? (
                     isSuccess ? (
                       <>
-                        <CheckCircleIcon className="h-12 w-12 text-green-500" />
-                        <span className="ml-2 text-lg">{message}</span>
+                        {message === "Email byl úspěšně ověřen." ? (
+                              <CheckCircleIcon className="h-12 w-12 text-green-500" />
+                            ) : (
+                              <ShieldExclamationIcon className="h-12 w-12 text-yellow-500" />
+                            )}
+                        <span  className="ml-2 text-lg">{message}</span>
                       </>
                     ) : (
                       <>

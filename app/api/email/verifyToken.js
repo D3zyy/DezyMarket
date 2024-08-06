@@ -8,12 +8,21 @@ export async function verifyToken(email, token) {
       where: { user: { email } },
       include: { user: true }
     });
+    const user = await prisma.Users.findUnique({
+      where: {  email }
+    });
 
     // Check if the token record exists
     if (!tokenRecord) {
-     
-      return { message: 'Ověření je neplatné.', success: false };
+      if(user){
+        if (user.verifiedEmail == true) {
+          return { message: 'Email byl již ověřen.', success: true };
+        }
+      } 
+      
+      return { message: 'Odkaz je neplatný.', success: false };
     }
+    
 
     // Check if the token has expired
     const currentDate = new Date();
@@ -26,7 +35,7 @@ export async function verifyToken(email, token) {
     
     if (currentDate > expirationDate) {
     
-      return { message: 'Ověření již vypršelo.', success: false };
+      return { message: 'Odkaz již vypršel.', success: false };
     }
 
     // Verify the token against the hashed token in the database
@@ -48,11 +57,11 @@ export async function verifyToken(email, token) {
       return { message: 'Email byl úspěšně ověřen.', success: true };
     } else {
      
-      return { message: 'Ověření je neplatné.', success: false };
+      return { message: 'Odkaz je neplatný.', success: false };
     }
   } catch (error) {
     // Log only critical errors
     console.error('Chyba při ověřování tokenu:', error.message);
-    return { message: 'Chyba při ověřování tokenu.', success: false };
+    return { message: 'Chyba při ověřování emailu.', success: false };
   }
 }

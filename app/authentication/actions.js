@@ -41,7 +41,7 @@ export const getSession = async () => {
     let logOut = false
     if(session.userId){
       ban = await checkUserBan(session.userId)
-      console.log("ban odpoved : ",ban)
+
       if (ban.pernament == true) {
       
         messageBan = "Váš účet byl trvale zablokován"
@@ -117,7 +117,7 @@ export const logOut = async (state,formData) => {
       const session = await getIronSession(cookies(),sessionOptions);
 
       if (session && session.sessionId) {
-        console.log("tady pred db")
+      
         // Remove the session from the database
         let sessionIdForDb = session.sessionId
         await session.destroy();
@@ -126,7 +126,7 @@ export const logOut = async (state,formData) => {
             sessionId: sessionIdForDb
           },
         });
-        console.log("tady po db")
+
         // Destroy the session
        
        
