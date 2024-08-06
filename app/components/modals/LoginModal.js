@@ -3,7 +3,7 @@
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import React, { useState } from 'react';
-
+import { useRouter } from 'next/navigation';
 
   export function openLoginModal() {
   document.getElementById('login_modal').showModal();
@@ -36,7 +36,9 @@ const handleLogin = async (event, setError, setLoading,setSuccess) => {
     });
 
     if (res.ok) {
+
       window.location.reload();
+
     } else {
       const errorData = await res.json();
       if (errorData.message == "Váš účet byl trvale zablokován") {

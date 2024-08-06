@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 async function fetchVerification(email, token) {
   try {
+    
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify?token=${token}&email=${email}`
     );
@@ -36,7 +37,8 @@ const Page = ({ searchParams }) => {
       }
 
       const result = await fetchVerification(email, token);
-      setMessage(result.message || 'An error occurred or verification is not valid.');
+      
+      setMessage(result.message || 'Nastala chyba.');
       setIsSuccess(result.success);
       setLoading(false);
     };
@@ -91,13 +93,16 @@ const Page = ({ searchParams }) => {
                       <span className="ml-2 text-lg">{message}</span>
                     </>
                   )}
-                  <button
-                    type="button"
-                    className="btn mt-4"
-                    onClick={() => dialogRef.current.close()}
-                  >
-                    Zavřít
-                  </button>
+                     <button
+                      type="button"
+                      className="btn"
+                      onClick={() => {
+                        dialogRef.current.close();
+                        router.push('/');
+                      }}
+                    >
+                      Zavřít
+                    </button>
                 </div>
               )}
             </div>

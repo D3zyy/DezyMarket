@@ -66,7 +66,7 @@ const Page = () => {
     if (result.success) {
       setSuccess('Heslo bylo úspěšně změněno.');
     } else {
-      if (result.message === "Ověření je neplatné." || result.message === "Chyba při ověřování tokenu. " || result.message === "Ověření již vypršelo. ") {
+      if (result.message === "Odkaz je neplatný." || result.message === "Chyba při ověřování tokenu. " || result.message === "Odkaz již vypršel. ") {
         setError(result.message || 'Nastala chyba při obnově hesla.');
       } else {
         let parsedData = JSON.parse(result.message);
@@ -131,7 +131,10 @@ const Page = () => {
               <button
                 type="button"
                 className="btn"
-                onClick={() => dialogRef.current.close()}
+                onClick={() => {
+                  dialogRef.current.close();
+                  router.push('/');
+                }}
               >
                 Zavřít
               </button>

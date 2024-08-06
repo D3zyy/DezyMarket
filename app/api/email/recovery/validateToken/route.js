@@ -40,7 +40,7 @@ export async function POST(req) {
     // Check if the token record exists
     if (!tokenRecord) {
       return new Response(
-        JSON.stringify({ message: 'Ověření je neplatné.' }),
+        JSON.stringify({ message: 'Odkaz je neplatný.' }),
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },
@@ -65,7 +65,7 @@ export async function POST(req) {
     if (currentDate > expirationDate) {
     
         return new Response(
-            JSON.stringify({ message: 'Ověření již vypršelo.' }),
+            JSON.stringify({ message: 'Odkaz již vypršel' }),
             {
               status: 400,
               headers: { 'Content-Type': 'application/json' },
@@ -97,7 +97,7 @@ export async function POST(req) {
       );
     } else {
       return new Response(
-        JSON.stringify({ message: 'Ověření je neplatné.' }),
+        JSON.stringify({ message: 'Odkaz je neplatný.' }),
         {
           status: 400,
           headers: { 'Content-Type': 'application/json' },

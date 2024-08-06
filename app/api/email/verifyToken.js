@@ -11,9 +11,10 @@ export async function verifyToken(email, token) {
     const user = await prisma.Users.findUnique({
       where: {  email }
     });
-
+ 
     // Check if the token record exists
     if (!tokenRecord) {
+   
       if(user){
         if (user.verifiedEmail == true) {
           return { message: 'Email byl již ověřen.', success: true };
@@ -53,7 +54,7 @@ export async function verifyToken(email, token) {
         where: { id: tokenRecord.id }
       });
 
-
+  
       return { message: 'Email byl úspěšně ověřen.', success: true };
     } else {
      

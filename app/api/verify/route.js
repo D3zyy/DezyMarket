@@ -21,6 +21,7 @@ export async function GET(req) {
   try {
 
     // Call the verifyToken function
+
     const result = await verifyToken(email, token);
 
 
