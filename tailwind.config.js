@@ -41,10 +41,52 @@ module.exports = {
           "warning-content": "#edddd0",
           "error": "#ff246f",
           "error-content": "#160004",
-        },
+        }, myDarktheme: {
+          
+          "primary": "#17153B",
+          
+"primary-content": "#000a0c",
+          
+"secondary": "#007f00",
+          
+"secondary-content": "#d2e6d0",
+          
+"accent": "#0079ff",
+          
+"accent-content": "#000516",
+          
+"neutral": "#01110a",
+          
+"neutral-content": "#c4c9c7",
+          
+"base-100": "#17153B",
+          
+"base-200": "#433D8B",
+          
+"base-300": "#C8ACD6",
+          
+"base-content": "#ECECEC",
+          
+"info": "#00d0ff",
+          
+"info-content": "#001016",
+          
+"success": "#009b77",
+          
+"success-content": "#000905",
+          
+"warning": "#a24500",
+          
+"warning-content": "#efd9cf",
+          
+"error": "#ff6da0",
+          
+"error-content": "#160409",
+                    },
       },
       "dark",
-      "dim",
+      "dim"
+ 
     ],
     darkTheme: "dim",
     base: true, // applies background color and foreground color for root element by default
