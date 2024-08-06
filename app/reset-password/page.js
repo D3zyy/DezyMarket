@@ -2,7 +2,7 @@
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import ErrorMessages from './ErrorMessages';
+
 async function fetchVerification(token, newPassword) {
   try {
     const res = await fetch('/api/email/recovery/validateToken', {
@@ -55,26 +55,34 @@ const Page = () => {
     setSuccess(null);
 
     const result = await fetchVerification(token, newPassword);
-    console.log("tady dole result :",result.success)
-    console.log(result.message)
-    let parsedData = JSON.parse(result.message)
+
+    
     if (result.success) {
+   
       setSuccess('Heslo bylo úspěšně změněno.');
     } else {
-      if (parsedData['password']) {
-        let formattedText = '\n';
-    
-        for (const [key, value] of Object.entries(parsedData)) {
-            formattedText += `\n${value}\n\n`;
-        }
-        // Volání funkce setError s naformátovaným textem
-        setError(formattedText);
+
+      if(result.message === "Ověření je neplatné." || result.message === "Chyba při ověřování tokenu. " || result.message === "Ověření již vypršelo. "){
+        setError(result.message || 'Nastala chyba při obnově hesla.');
+      } else{
+        let parsedData = JSON.parse(result.message)
+        if (parsedData['password']) {
+        
+          let formattedText = '\n';
+      
+          for (const [key, value] of Object.entries(parsedData)) {
+              formattedText += `\n${value}\n\n`;
+          }
+          // Volání funkce setError s naformátovaným textem
+          setError(formattedText);
+      }
+
+
+      
     
     
 
-    } else{
-        setError(result.message || 'Nastala chyba při obnově hesla.');
-      }
+    } 
       
     }
 
@@ -112,13 +120,18 @@ const Page = () => {
               />
             </div>
             <div className="modal-action">
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={loading}
-              >
-                {loading ? 'Načítání...' : 'Obnovit heslo'}
-              </button>
+              {success ? console.log()
+             
+             : 
+             <button
+             type="submit"
+             className="btn btn-primary"
+             disabled={loading}
+           >
+             {loading ? 'Načítání...' : 'Obnovit heslo'}
+           </button>
+              }
+              
               <button
                 type="button"
                 className="btn"

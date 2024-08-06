@@ -59,12 +59,12 @@ export async function POST(req) {
 
     const currentDate = new Date();
 
-    const newDate = new Date(currentDate.getTime() + 3600000);
+    const newDate = new Date(currentDate.getTime() + 600000);
 
      // Získání lokálního časového pásma (je třeba pro správnou časovou zónu)
     const localOffset = newDate.getTimezoneOffset() * 60000;
     const localISODate = new Date(newDate.getTime() - localOffset).toISOString();
-
+    console.log("validita končí : ",localISODate)
     await prisma.VerificationTokens.create({
       data: {
         token: token,

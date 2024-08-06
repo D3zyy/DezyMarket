@@ -19,11 +19,11 @@ export async function POST(req) {
     }
     const schema = z.object({
       password: z.string()
-        .max(40, 'Heslo může mít maximálně 40 znaků.')
-        .min(6, 'Heslo musí mít alespoň 6 znaků.')
-        .regex(/[A-Z]/, 'Heslo musí obsahovat alespoň jedno velké písmeno.')
-        .regex(/[a-z]/, 'Heslo musí obsahovat alespoň jedno malé písmeno.')
-        .regex(/\d/, 'Heslo musí obsahovat alespoň jedno číslo.'),
+        .max(40, 'Heslo může mít maximálně 40 znaků')
+        .min(6, ' Heslo musí mít alespoň 6 znaků')
+        .regex(/[A-Z]/, ' Heslo musí obsahovat alespoň jedno velké písmeno')
+        .regex(/[a-z]/, ' Heslo musí obsahovat alespoň jedno malé písmeno')
+        .regex(/\d/, ' Heslo musí obsahovat alespoň jedno číslo'),
     });
     const validatedFields = schema.safeParse({
       password: newPassword,
