@@ -2,7 +2,7 @@ import { createSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import bcrypt from 'bcrypt'; 
 import { checkUserBan } from "../session/dbMethodsSession";
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { handleLoginAttempt, resetUserTries } from "./handleLoginAttempts";
 
 
 // POST method for logging in
@@ -53,9 +53,17 @@ export async function POST(req) {
     let messageBan = false;
     
     if (user) {
+      
+
 
       isPasswordValid = await bcrypt.compare(password, user.password);
       ban = await checkUserBan(user.id);
+
+   
+
+      if(user && !ban && !isPasswordValid ){
+       await handleLoginAttempt(user.id);
+      }
     
       
    
@@ -67,7 +75,6 @@ export async function POST(req) {
         }
       
       } else {
-        console.log(ban.reason )
         if(ban.reason == null){
           messageBan = `Účet byl zablokován do: ${ban.banTill}. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.`;
         } else {
@@ -76,6 +83,8 @@ export async function POST(req) {
     
       
       }
+
+    
     }
 
     if (user && isPasswordValid && !ban) {
@@ -85,18 +94,22 @@ export async function POST(req) {
           headers: { 'Content-Type': 'application/json' }
         });
       }
+      // check users numbero of login attempts
+
+
+      await resetUserTries(user.id)
       await createSession(user.id);
       return new Response(JSON.stringify({ message: "Přihlášení úspěšné" }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
-    } else if (user && isPasswordValid && ban) {
-        console.log("tady",messageBan)
+    } else if (user && ban) {
       return new Response(JSON.stringify({ message: messageBan }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
-    } else {
+    } 
+    else {
       return new Response(JSON.stringify({ message: "Neplatné přihlašovací údaje" }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }

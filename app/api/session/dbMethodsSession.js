@@ -4,7 +4,7 @@ export const checkUserBan = async (userId) => {
   try {
     const currentDate = new Date();
     const localISODate = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString();
-
+    
     // Find the active ban for the user, if any
     const activeBans = await prisma.bans.findMany({
       where: {

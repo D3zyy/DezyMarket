@@ -37,13 +37,10 @@ const handleLogin = async (event, setError, setLoading,setSuccess) => {
 
     if (res.ok) {
       setSuccess(true)
-    
-
     } else {
-      console.log("a")
+
       const errorData = await res.json();
       if (errorData.message.includes ("Váš účet byl trvale zablokován")) {
-        console.log("c")
         setError(
           <span>
             <div className="container_row" style={{display: "grid"}}>
@@ -60,7 +57,7 @@ const handleLogin = async (event, setError, setLoading,setSuccess) => {
         );
         console.error('Chyba při přihlašování:', errorData.message);
       } else if (errorData.message.includes ("Účet byl zablokován do:")) {
-        console.log("d")
+
         setError(
           <span>
             <div className="container_row" style={{display: "grid"}}>
@@ -77,7 +74,7 @@ const handleLogin = async (event, setError, setLoading,setSuccess) => {
         );
         console.error('Chyba při přihlašování:', errorData.message);
       } else {
-        console.log("e")
+
         setError(
         <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>

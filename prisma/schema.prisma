@@ -27,7 +27,17 @@ model Users {
   termsOfUseAndPrivatePolicy Boolean @default(false)
   verifiedEmail            Boolean  @default(false) // New field to track email verification status
   verificationToken        VerificationTokens? // Optional relation to VerificationToken
+  numberOfTries            NumberOfTries?  
   @@index([email, password])
+}
+model NumberOfTries {
+  id     Int    @id @default(autoincrement())
+  number Int
+  round  Int    @default(0)
+  userId Int    @unique
+  user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 model VerificationTokens {
   id         Int      @id @default(autoincrement())
