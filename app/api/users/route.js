@@ -60,11 +60,21 @@ export async function POST(req) {
       
    
       if (ban.pernament) {
-        
-        messageBan = "Váš účet byl trvale zablokován";
+        if(ban.reason == null){
+          messageBan = `Váš účet byl trvale zablokován. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.`;
+        } else{
+          messageBan = `Váš účet byl trvale zablokován z důvodu: ${ban.reason}. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.`;
+        }
+      
       } else {
+        console.log(ban.reason )
+        if(ban.reason == null){
+          messageBan = `Účet byl zablokován do: ${ban.banTill}. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.`;
+        } else {
+          messageBan = `Účet byl zablokován do: ${ban.banTill} z důvodu: ${ban.reason}.  Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.`;
+        }
     
-        messageBan = `Účet byl zabanován do: ${ban.banTill}`;
+      
       }
     }
 
@@ -81,7 +91,7 @@ export async function POST(req) {
         headers: { 'Content-Type': 'application/json' }
       });
     } else if (user && isPasswordValid && ban) {
-      
+        console.log("tady",messageBan)
       return new Response(JSON.stringify({ message: messageBan }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }

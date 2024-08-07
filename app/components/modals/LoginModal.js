@@ -40,16 +40,18 @@ const handleLogin = async (event, setError, setLoading,setSuccess) => {
     
 
     } else {
+      console.log("a")
       const errorData = await res.json();
-      if (errorData.message == "Váš účet byl trvale zablokován") {
+      if (errorData.message.includes ("Váš účet byl trvale zablokován")) {
+        console.log("c")
         setError(
           <span>
-            <div class="container_row" style={{display: "grid"}}>
-    <div class="layer1" style={{gridColumn: 1,gridRow: 1}}>
+            <div className="container_row" style={{display: "grid"}}>
+    <div className="layer1" style={{gridColumn: 1,gridRow: 1}}>
     <XCircleIcon className="h-12 w-12 text-red-500"  style={{marginBottom: "10px"}}/>
     </div>
-    <div class="layer2">
-    Váš účet byl trvale zablokován. Pokud si myslíte, že došlo k omylu, kontaktujte nás prosím.{' '}
+    <div className="layer2">
+    {errorData.message}{' '}
     <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
     </div>
 </div>
@@ -57,15 +59,25 @@ const handleLogin = async (event, setError, setLoading,setSuccess) => {
           </span>
         );
         console.error('Chyba při přihlašování:', errorData.message);
-      } else if (errorData.message.includes("Účet byl zabanován do:")) {
+      } else if (errorData.message.includes ("Účet byl zablokován do:")) {
+        console.log("d")
         setError(
-          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-            <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>
-            <div style={{ marginLeft: "5px" }}>{errorData.message}</div>
-          </div>
+          <span>
+            <div className="container_row" style={{display: "grid"}}>
+    <div className="layer1" style={{gridColumn: 1,gridRow: 1}}>
+    <XCircleIcon className="h-12 w-12 text-red-500"  style={{marginBottom: "10px"}}/>
+    </div>
+    <div className="layer2">
+    {errorData.message}{' '}
+    <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
+    </div>
+</div>
+            
+          </span>
         );
         console.error('Chyba při přihlašování:', errorData.message);
       } else {
+        console.log("e")
         setError(
         <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>

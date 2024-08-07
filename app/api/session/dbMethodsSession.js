@@ -6,7 +6,7 @@ export const checkUserBan = async (userId) => {
     const localISODate = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString();
 
     // Find the active ban for the user, if any
-    const activeBan = await prisma.bans.findMany({
+    const activeBans = await prisma.bans.findMany({
       where: {
         userId: userId,
         OR: [
@@ -23,37 +23,36 @@ export const checkUserBan = async (userId) => {
       select: {
         bannedTill: true,
         pernament: true,
+        reason: true,
       },
       orderBy: {
         bannedTill: 'desc', // Get the most recent ban if there are multiple
       },
     });
 
-    if (activeBan.length > 0) {
+    if (activeBans.length > 0) {
       // Check if there is a permanent ban
-      const permanentBan = activeBan.find(ban => ban.pernament);
+      const permanentBan = activeBans.find(ban => ban.pernament);
+ 
       if (permanentBan) {
-       
         return {
           banTill: 'trvale',
           pernament: true,
+          reason: permanentBan.reason,
         };
       }
 
       // If no permanent ban, get the most recent time-based ban
-      const recentBan = activeBan[0];
+      const recentBan = activeBans[0];
       const dbDate = new Date(recentBan.bannedTill);
       const localDate = new Date(dbDate.getTime() + (dbDate.getTimezoneOffset() * 60000));
       const banTill = localDate.toLocaleString('cs-CZ');
-        // tady reason  
       return {
-        
         banTill,
         pernament: false,
-        reason: true
+        reason: recentBan.reason,
       };
     } else {
-   
       return false;
     }
   } catch (error) {
