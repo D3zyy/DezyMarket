@@ -40,10 +40,10 @@ export async function handleLoginAttempt(userId) {
           banDuration = 2880; // 48 hours
           newRound = 4;
         } else if (tries <= 25) {
-          banDuration = 43200; // 1 month (30 days)
+          banDuration = 43830; // 1 month (30 days)
           newRound = 5;
         } else {
-          banDuration = 43200; // 1 month (30 days)
+          banDuration = 43830; // 1 month (30 days)
           newRound = Math.ceil(tries / 5) + 5; // Increase round number
         }
   
