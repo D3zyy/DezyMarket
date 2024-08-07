@@ -49,7 +49,7 @@ model Bans {
   bannedTill DateTime? 
   pernament  Boolean @default(false)
   userId     Int
-  user       Users    @relation(fields: [userId], references: [id])
+  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Sessions {
