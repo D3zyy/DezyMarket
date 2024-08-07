@@ -28,10 +28,10 @@ export async function handleLoginAttempt(userId) {
         let newRound;
   
         if (tries <= 5) {
-          banDuration = 1; // 10 minutes
+          banDuration = 10; // 10 minutes
           newRound = 1;
         } else if (tries <= 10) {
-          banDuration = 1; // 30 minutes
+          banDuration = 30; // 30 minutes
           newRound = 2;
         } else if (tries <= 15) {
           banDuration = 1440; // 24 hours
@@ -73,10 +73,10 @@ export async function handleLoginAttempt(userId) {
           },
         });
   
-        console.log("Uživatel byl zablokován:", ban);
+   
         return true;
       } else {
-        console.log("Zatím není zablokován.");
+
         return false;
       }
     } catch (error) {
