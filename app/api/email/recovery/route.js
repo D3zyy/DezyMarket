@@ -7,7 +7,7 @@ const smtpServer = process.env.SMTP_SERVER;
 const port = parseInt(process.env.SMTP_PORT, 10);
 const senderEmail = process.env.EMAIL_USER;
 const password = process.env.EMAIL_PASS;
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; // Přidání proměnné prostředí pro základní URL
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; 
 
 export async function POST(req) {
   try {

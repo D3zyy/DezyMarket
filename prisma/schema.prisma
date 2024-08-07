@@ -48,6 +48,7 @@ model Bans {
   bannedFrom DateTime @default(now())
   bannedTill DateTime? 
   pernament  Boolean @default(false)
+  reason     String?
   userId     Int
   user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

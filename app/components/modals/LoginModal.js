@@ -36,8 +36,8 @@ const handleLogin = async (event, setError, setLoading,setSuccess) => {
     });
 
     if (res.ok) {
-
-      window.location.reload();
+      setSuccess(true)
+    
 
     } else {
       const errorData = await res.json();
@@ -167,7 +167,13 @@ const LoginModal = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [recoverPassword, setRecoverPassword] = useState(false);
+  const router = useRouter()
 
+  if(success && recoverPassword === false){
+    
+  router.push("/")
+  router.refresh()
+  }
   return (
     
     <>  

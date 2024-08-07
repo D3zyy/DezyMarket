@@ -45,11 +45,12 @@ export const checkUserBan = async (userId) => {
       const dbDate = new Date(recentBan.bannedTill);
       const localDate = new Date(dbDate.getTime() + (dbDate.getTimezoneOffset() * 60000));
       const banTill = localDate.toLocaleString('cs-CZ');
-
+        // tady reason  
       return {
         
         banTill,
         pernament: false,
+        reason: true
       };
     } else {
    

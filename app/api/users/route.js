@@ -76,7 +76,6 @@ export async function POST(req) {
         });
       }
       await createSession(user.id);
-     
       return new Response(JSON.stringify({ message: "Přihlášení úspěšné" }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
