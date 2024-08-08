@@ -25,23 +25,26 @@ const schema = z.object({
     .refine(val => val === true, 'Musíte souhlasit s podmínkami použití a zásadami ochrany osobních údajů.')
 });
 
-export const handleRegistration = async (currentState, formData) => {
-
+export const handleRegistration = async (formData) => {
+  console.log("data: ",formData)
+  console.log(formData.email)
 
   const validatedFields = schema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-    fullName: formData.get('fullName'),
-    nickname: formData.get('nickname'),
-    termsOfUseAndPrivatePolicy: formData.get('termsOfUseAndPrivatePolicy') === 'on', // checkbox values are either 'on' or undefined
+    email: formData.email,
+    password: formData.password,
+    fullName: formData.fullName,
+    nickname: formData.nickname,
+    termsOfUseAndPrivatePolicy: formData.termsOfUseAndPrivatePolicy === 'on', // checkbox values are either 'on' or undefined
   });
 
   if (!validatedFields.success) {
-
+      console.log("  validace dat neprošla ")
+      console.log(validatedFields.error.flatten().fieldErrors)
     return {
       message: JSON.stringify(validatedFields.error.flatten().fieldErrors),
     };
   } else {
+    console.log("  validace dat prošla ")
     try {
       // Check if the email already exists
       const existingUser = await prisma.Users.findUnique({

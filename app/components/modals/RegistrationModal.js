@@ -1,10 +1,8 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import { handleRegistration } from '@/app/authentication/registration/actions';
-import { useFormState } from 'react-dom';
-import { SubmitButton } from '../SubmitButton';
-import { CheckCircleIcon , InboxArrowDownIcon} from '@heroicons/react/24/solid';
+import { InboxArrowDownIcon } from '@heroicons/react/24/solid';
 
 const initialState = {
   message: null,
@@ -17,7 +15,7 @@ export function openRegisterModal() {
   document.getElementById('register_modal').showModal();
 }
 
- const translateField = (field) => {
+const translateField = (field) => {
   const translations = {
     email: 'Email',
     password: 'Heslo',
@@ -28,7 +26,7 @@ export function openRegisterModal() {
   return translations[field] || field;
 };
 
- const parseErrors = (message) => {
+const parseErrors = (message) => {
   try {
     const errors = JSON.parse(message);
     return Object.entries(errors).map(([field, messages]) => (
@@ -46,10 +44,15 @@ export function openRegisterModal() {
       return (
         <span>
           {message}
-          <button style={{ color: "gray", textDecoration: "underline", marginLeft: "10px" }} onClick={() => {
-            document.getElementById('register_modal').close();
-            document.getElementById('login_modal').showModal();
-          }}> Přihlásit se</button>
+          <button
+            style={{ color: "gray", textDecoration: "underline", marginLeft: "10px" }}
+            onClick={() => {
+              document.getElementById('register_modal').close();
+              document.getElementById('login_modal').showModal();
+            }}
+          >
+            Přihlásit se
+          </button>
         </span>
       );
     } else {
@@ -59,17 +62,34 @@ export function openRegisterModal() {
 };
 
 const RegistrationModal = () => {
-  const [state, formAction] = useFormState(handleRegistration, initialState);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
-  
-
+  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState(null); // Initialize as null
 
   useEffect(() => {
-    if (state?.closeModal ) {
-      // Set success state to true
+    if (state?.closeModal) {
+      setLoading(false);
       setRegistrationSuccess(true);
     }
   }, [state?.closeModal]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent default form submission
+    setLoading(true);
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries()); // Convert FormData to plain object
+
+    try {
+      console.log("posílám na server");
+      let result = await handleRegistration(data); // Pass plain object to server action
+      setState(result); // Update state with result
+      console.log("odpověď od serveru: ", result);
+    } catch (error) {
+      console.error("Chyba při registraci:", error); // Handle error if needed
+    } finally {
+      setLoading(false); // Ensure loading is set back to false
+    }
+  };
 
   return (
     <>
@@ -77,27 +97,24 @@ const RegistrationModal = () => {
         <div className="modal-box">
           {registrationSuccess ? (
             <div className="text-center">
-            <div className="flex justify-center mb-4">
-            <InboxArrowDownIcon className="w-16 h-16 text-yellow-500" />
-              
+              <div className="flex justify-center mb-4">
+                <InboxArrowDownIcon className="w-16 h-16 text-yellow-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Dokončete svoji registraci!</h3>
+              <p className="text-lg text-gray-600">Ověřovací email byl zaslán na vaši emailovou adresu.</p>
+              <div className="modal-action mt-4">
+                <button type="button" className="btn btn-primary" onClick={() => document.getElementById('register_modal').close()}>Zavřít</button>
+              </div>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Dokončete svoji registraci!</h3>
-            <p className="text-lg text-gray-600">Ověřovací email  byl zaslán na vaši emailovou adresu.</p>
-            <div className="modal-action mt-4">
-              <button type="button" className="btn btn-primary" onClick={() => document.getElementById('register_modal').close()}>Zavřít</button>
-            </div>
-          </div>
           ) : (
             <>
               <div style={{ color: "red" }}>
-                {state?.message && parseErrors(state.message)}
-            
+                {state?.message ? parseErrors(state.message) : ""}
               </div>
 
               <h3 className="font-bold text-lg">Registrace</h3>
-              
 
-              <form action={formAction}>
+              <form onSubmit={handleSubmit}>
                 <div className="py-2">
                   <label htmlFor="fullName" className="block">Celé jméno</label>
                   <input type="text" id="fullName" name="fullName" className="input input-bordered w-full" required />
@@ -121,7 +138,11 @@ const RegistrationModal = () => {
                   </label>
                 </div>
                 <div className="modal-action">
-                  <SubmitButton />
+                  {!registrationSuccess && (
+                    <button type="submit" className="btn btn-primary" disabled={loading}>
+                      {loading ? 'Načítání...' : 'Registrovat se'}
+                    </button>
+                  )}
                   <button type="button" className="btn" onClick={() => document.getElementById('register_modal').close()}>Zavřít</button>
                 </div>
               </form>

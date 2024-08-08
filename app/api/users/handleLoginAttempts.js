@@ -20,7 +20,6 @@ export async function handleLoginAttempt(userId) {
   
       // Step 2: Determine if a ban is needed
       const tries = numberOfTries.number;
-      console.log("Počet pokusů:", tries);
   
       if (tries % 5 === 0 && tries >= 5) {
         // Determine the appropriate ban duration and new round
@@ -101,11 +100,7 @@ export async function resetUserTries(userId) {
             userId: userId,
           },
         });
-  
-        console.log("Počet pokusů byl smazán uživateli:", userId);
-      } else {
-        console.log("Záznam pro uživatele neexistuje, nic se nemění.");
-      }
+      } 
     } catch (error) {
       console.error('Chyba při resetování pokusů uživatele:', error);
       throw error; // Ensure errors are properly propagated
