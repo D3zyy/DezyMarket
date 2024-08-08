@@ -80,10 +80,9 @@ const RegistrationModal = () => {
     const data = Object.fromEntries(formData.entries()); // Convert FormData to plain object
 
     try {
-      console.log("posílám na server");
+    
       let result = await handleRegistration(data); // Pass plain object to server action
       setState(result); // Update state with result
-      console.log("odpověď od serveru: ", result);
     } catch (error) {
       console.error("Chyba při registraci:", error); // Handle error if needed
     } finally {
