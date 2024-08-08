@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useRef, useState } from 'react';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/navigation';
@@ -69,13 +70,17 @@ const Page = () => {
       if (result.message === "Odkaz je neplatný." || result.message === "Chyba při ověřování tokenu. " || result.message === "Odkaz již vypršel. ") {
         setError(result.message || 'Nastala chyba při obnově hesla.');
       } else {
-        let parsedData = JSON.parse(result.message);
-        if (parsedData['password']) {
-          let formattedText = '\n';
-          for (const [key, value] of Object.entries(parsedData)) {
-            formattedText += `\n${value}\n\n`;
+        try {
+          let parsedData = JSON.parse(result.message);
+          if (parsedData['password']) {
+            let formattedText = '\n';
+            for (const [key, value] of Object.entries(parsedData)) {
+              formattedText += `\n${value}\n\n`;
+            }
+            setError(formattedText);
           }
-          setError(formattedText);
+        } catch (err) {
+          setError('Chyba při parsování odpovědi.');
         }
       }
     }
@@ -85,12 +90,20 @@ const Page = () => {
 
   return (
     <>
-      {/* Include global styles to ensure the dialog backdrop styles are applied */}
-      
       <dialog ref={dialogRef} id="recovery_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
-          {error && <div className="flex items-center space-x-10 p-1" style={{ color: 'red', marginBottom: '10px' }}><XCircleIcon className="h-6 w-6 text-red-500" style={{ marginRight: "5px" }} />{error}</div>}
-          {success && <div className="flex items-center space-x-10 p-1" style={{ color: 'green', marginBottom: '10px' }}><CheckCircleIcon className="h-6 w-6 text-green-500" style={{ marginRight: "5px" }} /> {success}</div>}
+          {error && (
+            <div className="flex items-center space-x-10 p-1" style={{ color: 'red', marginBottom: '10px' }}>
+              <XCircleIcon className="h-6 w-6 text-red-500" style={{ marginRight: "5px" }} />
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="flex items-center space-x-10 p-1" style={{ color: 'green', marginBottom: '10px' }}>
+              <CheckCircleIcon className="h-6 w-6 text-green-500" style={{ marginRight: "5px" }} />
+              {success}
+            </div>
+          )}
           <h3 className="font-bold text-lg">Obnovení hesla</h3>
           <form onSubmit={handleSubmit}>
             <div className="py-4">
@@ -116,9 +129,7 @@ const Page = () => {
               />
             </div>
             <div className="modal-action">
-              {success ?
-                console.log()
-                :
+              {error && error != "Hesla se neshodují."? <></> : (
                 <button
                   type="submit"
                   className="btn btn-primary"
@@ -126,8 +137,7 @@ const Page = () => {
                 >
                   {loading ? 'Načítání...' : 'Obnovit heslo'}
                 </button>
-              }
-
+              )}
               <button
                 type="button"
                 className="btn"

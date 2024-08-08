@@ -22,7 +22,7 @@ const schema = z.object({
     .regex(/^(?!.*Dezy).*$/, 'Tato přezdívka není dostupná.')
     .regex(/^[A-Za-z0-9]+$/, 'Přezdívka smí obsahovat pouze písmena a čísla.'),
   termsOfUseAndPrivatePolicy: z.boolean()
-    .refine(val => val === true, 'Musíte souhlasit s podmínkami použití a zásadami ochrany osobních údajů.')
+    .refine(val => val === true, 'Musíte souhlasit s podmínkami použití a zásadami zpracování osobních údajů.')
 });
 
 export const handleRegistration = async (formData) => {
