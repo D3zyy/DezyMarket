@@ -1,11 +1,8 @@
-
-
-
 import Link from 'next/link';
 import ProfileNavBarLoggedIn from './profileNavBarLoggedIn';
 import ProfileNavBarNotLoggedIn from './profileNavBarNotLoggedIn';
-import InfoModal from "@/app/components/modals/InfoModal";
 import { getSession } from '../authentication/actions';
+
 const AuthenticateUser = async () => {
  
 
@@ -15,6 +12,7 @@ const AuthenticateUser = async () => {
 
   return (
     <div>
+
       {session.isLoggedIn ? (
         <ProfileNavBarLoggedIn />
       ) : (

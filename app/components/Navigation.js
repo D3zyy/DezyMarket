@@ -3,7 +3,7 @@ import Link from 'next/link'
 import AuthenticateUser from './AuthenticateUser'
 import { Pacifico} from 'next/font/google';
 import { Bebas_Neue } from 'next/font/google'
-
+import AddOfferButton from './addOfferButton';
 
 const babes = Bebas_Neue({
     subsets: ['latin'],
