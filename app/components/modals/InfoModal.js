@@ -136,13 +136,14 @@ const handleRecovery = async (event, setError, setLoading, setSuccess) => {
   }
 };
 
-const RecoveryButton = ({ setRecoverPassword, setSuccess, setError }) => (
+const RecoveryButton = ({ setRecoverPassword, setSuccess, setError, setMessageProp }) => (
   <button
     className="btn btn-link"
     onClick={() => {
       setRecoverPassword(true);
       setSuccess(false);
       setError(false);
+      setMessageProp(false);
     }}
     style={{ color: 'gray' }}
   >
@@ -150,13 +151,14 @@ const RecoveryButton = ({ setRecoverPassword, setSuccess, setError }) => (
   </button>
 );
 
-const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError }) => (
+const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessageProp}) => (
   <button
     className="btn btn-link"
     onClick={() => {
       setRecoverPassword(false);
       setSuccess(false);
       setError(false);
+      setMessageProp(false);
     }}
     style={{ color: 'gray', marginLeft: 'auto' }}
   >
@@ -167,24 +169,21 @@ const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError }) => (
 const InfoModal = ({ defaultOpen, message }) => {
 
   const [success, setSuccess] = useState(false);
+  const [messageProp, setMessageProp] = useState(message);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [recoverPassword, setRecoverPassword] = useState(false);
   const router = useRouter();
-  console.log("Co je ulozene v messainfo ted :" , message)
-
+  
   useEffect(() => {
-
     if (defaultOpen) {
-      console.log("zpravaaa",message)
       document.getElementById('info_modal').showModal();
-
     }
     if (success && !recoverPassword) {
       router.refresh();
     }
   }, [success, recoverPassword, router ]);
-
+   
   return (
 
     <>  
@@ -200,10 +199,10 @@ const InfoModal = ({ defaultOpen, message }) => {
       <div className="modal-box">
         {error && <div style={{ color: 'red', marginBottom: "10px" }}>{error}</div>}
         {success && <div style={{ color: 'green', marginBottom: "10px" }}>{success}</div>}
-        {message && (
+        {messageProp && (
         <div style={{ display: 'flex', alignItems: 'center', color: '#676b1c', marginBottom: '10px' }}>
             <LockClosedIcon className="h-10 w-10 text-yellow-500" style={{ marginRight: '10px' }} />
-            <div>{message}</div>
+            <div>{messageProp}</div>
         </div>
         )}
         <h3 className="font-bold text-lg">{recoverPassword ? 'Obnovení hesla' : 'Přihlášení'}</h3>
@@ -230,7 +229,16 @@ const InfoModal = ({ defaultOpen, message }) => {
                 {loading ? 'Načítání...' : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
               </button>
             )}
-            
+                <button 
+                type="button" 
+                className="btn" 
+                onClick={() => {
+                    document.getElementById('info_modal').close(); 
+                    router.push("/");
+                }}
+                >
+                Zavřít
+                </button>
           </div>
         </form>
         {recoverPassword ? (
@@ -238,12 +246,14 @@ const InfoModal = ({ defaultOpen, message }) => {
             setRecoverPassword={setRecoverPassword} 
             setSuccess={setSuccess} 
             setError={setError} 
+            setMessageProp = {setMessageProp}
           />
         ) : (
           <RecoveryButton 
             setRecoverPassword={setRecoverPassword} 
             setSuccess={setSuccess} 
             setError={setError} 
+            setMessageProp = {setMessageProp}
           />
         )}
       </div>
