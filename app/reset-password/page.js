@@ -33,7 +33,22 @@ const Page = () => {
 
   const router = useRouter();
   const dialogRef = useRef(null);
+  useEffect(() => {
+    const dialog = document.getElementById('recovery_modal');
+    
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault(); // Prevent closing the dialog on ESC key press
+      }
+    };
 
+    if (dialog) {
+      dialog.addEventListener('keydown', handleKeyDown);
+      return () => {
+        dialog.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, []);
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenFromUrl = urlParams.get('token');

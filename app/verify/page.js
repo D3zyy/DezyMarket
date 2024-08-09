@@ -26,7 +26,22 @@ const Page = ({ searchParams }) => {
   const [loading, setLoading] = useState(true);
   const dialogRef = useRef(null);
   const router = useRouter();
+  useEffect(() => {
+    const dialog = document.getElementById('verify_modal');
+    
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault(); // Prevent closing the dialog on ESC key press
+      }
+    };
 
+    if (dialog) {
+      dialog.addEventListener('keydown', handleKeyDown);
+      return () => {
+        dialog.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, []);
   useEffect(() => {
     const verify = async () => {
       if (!token || !email) {
@@ -60,8 +75,9 @@ const Page = ({ searchParams }) => {
 
   return (
     <>
+    <div style={{marginBottom: "900px"}}> </div>
       {/* Include global styles to ensure the dialog backdrop styles are applied */}
-      <dialog ref={dialogRef} className="modal modal-bottom sm:modal-middle">
+      <dialog ref={dialogRef} id='verify_modal' className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <div className="modal-action">
             <div className="flex items-center justify-center h-full w-full p-3">
