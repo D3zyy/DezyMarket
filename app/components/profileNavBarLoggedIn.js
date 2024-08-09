@@ -22,16 +22,18 @@ const ProfileNavBar = () => {
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-             <li> <AddOfferButton /> </li>
+             <li className=" sm:hidden"> {/* This ensures it's only visible on mobile */}
+              <AddOfferButton />
+            </li>
             <li>
-              <a className="justify-between">
+              <a  style={{marginTop : "10px"}} className="justify-between">
                 Profil 
                 <span className="badge">New</span>
               </a>
             </li>
             
             <li><a>Nastavení</a></li>
-            
+            <LogOutButton />
 
           </ul>
         </div>

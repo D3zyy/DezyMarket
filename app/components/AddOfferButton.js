@@ -16,7 +16,7 @@ const AddOfferButton = () => {
         id="add-offer-btn"
         onClick={handleClick}
         onTouchStart={handleClick}
-        style={{ margin: "10px 0px" }}
+        style={{ margin: "0px 10px" }}
         className="btn"
       >
         Přidat inzerát
