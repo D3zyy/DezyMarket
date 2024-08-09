@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import InfoModal from './modals/InfoModal'
-import { LockClosedIcon } from '@heroicons/react/24/solid';
+
 
 
 const NotLoggedIn = () => {
@@ -9,10 +9,10 @@ const NotLoggedIn = () => {
   return (
     <>
                 <div >
-                    <div>
-                    <LockClosedIcon className="h-20 w-20 text-red-500" /> Pro přístup se prosím přihlaste <button >Přihlásit se</button>
+                    <div style={{textAlign: "center", marginBottom: "500px"}}>
+                    <span className="loading loading-dots loading-lg"></span>
                     </div>
-                    <InfoModal defaultOpen={true} message="Pro přístup se prosím přihlaste" />
+                    <InfoModal defaultOpen={true} message="Pro pokračování se prosím přihlaste" />
                 </div>
         </>
   )

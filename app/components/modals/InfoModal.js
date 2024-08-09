@@ -167,7 +167,22 @@ const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessag
 );
 
 const InfoModal = ({ defaultOpen, message }) => {
+  useEffect(() => {
+    const dialog = document.getElementById('info_modal');
+    
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault(); // Prevent closing the dialog on ESC key press
+      }
+    };
 
+    if (dialog) {
+      dialog.addEventListener('keydown', handleKeyDown);
+      return () => {
+        dialog.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, []);
   const [success, setSuccess] = useState(false);
   const [messageProp, setMessageProp] = useState(message);
   const [error, setError] = useState(null);
@@ -176,13 +191,25 @@ const InfoModal = ({ defaultOpen, message }) => {
   const router = useRouter();
   
   useEffect(() => {
-    if (defaultOpen) {
-      document.getElementById('info_modal').showModal();
+    const modal = document.getElementById('info_modal');
+
+    if (modal) {
+      // Check if the modal is already open
+      const isModalOpen = modal.open;
+
+      if (defaultOpen) {
+        // Close the modal if it's already open
+        if (isModalOpen) {
+          modal.close();
+        }
+        // Show the modal
+        modal.showModal();
+      } else if (success && !recoverPassword) {
+        // Refresh the router if success and not in recoverPassword mode
+        router.refresh();
+      }
     }
-    if (success && !recoverPassword) {
-      router.refresh();
-    }
-  }, [success, recoverPassword, router ]);
+  }, [defaultOpen, success, recoverPassword, router]);
    
   return (
 

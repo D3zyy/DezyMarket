@@ -1,30 +1,37 @@
-"use client"
-import React from 'react'
+"use client";
+import React from 'react';
+import { useRouter } from 'next/navigation';
 
-const handleLogout = async (event) => {
+const LogOutButton = () => {
+  const router = useRouter(); // Move useRouter inside the component
+
+  const handleLogout = async (event) => {
     event.preventDefault();
-    
+
     try {
       const res = await fetch('/api/session', { method: 'DELETE' });
       if (res.ok) {
-        window.location.reload(); 
+        router.push("/"); // Redirect after successful logout
+        router.refresh();
       } else {
-        window.location.reload(); 
         console.error('Chyba při odhlašovaní :', res.statusText);
+        router.push("/"); // Redirect even if there is an error
+        router.refresh();
       }
     } catch (err) {
-        window.location.reload(); 
       console.error('Nastala chyba při odhlašování :', err);
+      router.push("/"); // Reload the page on error
+      router.refresh();
     }
   };
 
-
-const LogOutButton = () => {
   return (
-    <>
-           <li><form onClick={handleLogout}><button type="submit" >Odhlásit se</button></form></li> 
-    </>
-  )
-}
+    <li>
+      <form onSubmit={handleLogout}>
+        <button type="submit">Odhlásit se</button>
+      </form>
+    </li>
+  );
+};
 
-export default LogOutButton
+export default LogOutButton;
