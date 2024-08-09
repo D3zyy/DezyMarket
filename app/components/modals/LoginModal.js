@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
   document.getElementById('login_modal').showModal();
 }
 
+
 const handleLogin = async (event, setError, setLoading,setSuccess) => {
   event.preventDefault();
   
@@ -196,6 +197,7 @@ const LoginModal = () => {
         <div className="modal-box">
           {error && <div style={{ color: 'red', marginBottom: "10px" }}>{error}</div>}
           {success && <div style={{ color: 'green', marginBottom: "10px" }}>{success}</div>}
+          
           <h3 className="font-bold text-lg">{recoverPassword ? 'Obnovení hesla' : 'Přihlášení'}</h3>
           <form onSubmit={(event) => recoverPassword ? handleRecovery(event, setError, setLoading, setSuccess) : handleLogin(event, setError, setLoading, setSuccess)}>
             <div className="py-4">

@@ -1,9 +1,9 @@
 import React from 'react';
 import LoginModal from './modals/LoginModal';
 import RegistrationModal from './modals/RegistrationModal';
-import { openLoginModal } from './modals/LoginModal';
+import {  openLoginModal } from './modals/LoginModal';
 import { openRegisterModal } from './modals/RegistrationModal';
-import AddOfferButton from './addOfferButton';
+
 
 const ProfileNavBarNotLoggedIn = () => {
   return (

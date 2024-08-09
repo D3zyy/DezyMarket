@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+
 import { getSession } from '../authentication/actions';
 import { openLoginModal } from './modals/LoginModal'
 
