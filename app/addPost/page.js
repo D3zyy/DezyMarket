@@ -2,6 +2,7 @@
 import React from 'react'
 import { getSession } from '../authentication/actions';
 import { openLoginModal } from '../components/modals/LoginModal';
+import NotLoggedIn from '../components/NotLoggedIn';
 
 const page = async ()  => {
     const session = await getSession();
@@ -13,9 +14,9 @@ const page = async ()  => {
         {session.isLoggedIn ? (
         "prihlasen"
       ) : (
-        "neprihlasen"
+        <NotLoggedIn />
       )}
-      přidat inzerát
+   
     </div>
   )
 }
