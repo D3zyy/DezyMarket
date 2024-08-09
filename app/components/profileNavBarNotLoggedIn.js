@@ -3,22 +3,15 @@ import LoginModal from './modals/LoginModal';
 import RegistrationModal from './modals/RegistrationModal';
 import {  openLoginModal } from './modals/LoginModal';
 import { openRegisterModal } from './modals/RegistrationModal';
-
-
+import AddOfferButton from './AddOfferButton';
 const ProfileNavBarNotLoggedIn = () => {
+
+
   return (
     <>
       <div className="hidden sm:flex items-center">
         {/* Přidat inzerát tlačítko */}
-        <button
-            id="add-offer-btn"
-            onClick={openLoginModal}
-            onTouchStart={openLoginModal}
-            className="btn"
-            style={{ margin: "0px 10px" }}
-          >
-            Přidat inzerát
-          </button>
+        <AddOfferButton />
 
         {/* Čára mezi tlačítky */}
         <div className="border-r-2 border-dotted border-black mx-4 h-8" />
@@ -64,16 +57,7 @@ const ProfileNavBarNotLoggedIn = () => {
             </svg>
           </div>
           <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-          <li> {/* Tlačítko */}
-        <button
-          id="add-offer-btn"
-          onClick={openLoginModal}
-          onTouchStart={openLoginModal}
-          className="btn block sm:hidden"
-          style={{ margin: "10px 0px" }}
-        >
-          Přidat inzerát
-        </button></li>
+            <li> <AddOfferButton /> </li>
             <li>
               <button
                 onClick={openLoginModal}

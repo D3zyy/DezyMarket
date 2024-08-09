@@ -1,28 +1,28 @@
+"use client"; // Ensure this file is used in a client component context
 
-import { getSession } from '../authentication/actions';
-import { openLoginModal } from './modals/LoginModal'
+import { useRouter } from 'next/navigation';
 
-const AddOfferButton = async (loginModal ) => {
+const AddOfferButton = () => {
+  const router = useRouter();
 
- const session = await getSession();
+  const handleClick = () => {
+    router.push("/addPost");
+  };
 
   return (
-    <div>
-       
-        <div className="hidden sm:flex">
-          <button
-            id="add-offer-btn"
-            onClick={openLoginModal}
-            onTouchStart={openLoginModal}
-            className="btn"
-            style={{ margin: "0px 10px" }}
-          >
-            Přidat inzerát
-          </button>
-        </div>
+  
+      
+      <button
+        id="add-offer-btn"
+        onClick={handleClick}
+        onTouchStart={handleClick}
+        style={{ margin: "10px 0px" }}
+        className="btn"
+      >
+        Přidat inzerát
+      </button>
     
-    </div>
   );
-}
+};
 
 export default AddOfferButton;
