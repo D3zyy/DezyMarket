@@ -1,19 +1,13 @@
 import React from 'react';
 import LogOutButton from './LogOutButton';
-
+import AddOfferButton from './AddOfferButton';
 const ProfileNavBar = () => {
   
   return (
 
       <div className="flex items-center">
         <div className="hidden sm:flex items-center">
-        <button
-          id="add-offer-btn"
-          className="btn"
-          style={{ margin: "0px 10px" }}
-        >
-          Přidat inzerát
-        </button>
+        <AddOfferButton />
          {/* Čára mezi tlačítky */}
          <div className="border-r-2 border-dotted border-black mx-4 h-8" />
 
@@ -28,14 +22,7 @@ const ProfileNavBar = () => {
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-          <li> {/* Tlačítko */}
-        <button
-          id="add-offer-btn"
-          className="btn block sm:hidden"
-          style={{ margin: "10px 0px" }}
-        >
-          Přidat inzerát
-        </button></li>
+             <li> <AddOfferButton /> </li>
             <li>
               <a className="justify-between">
                 Profil 
@@ -45,7 +32,7 @@ const ProfileNavBar = () => {
             
             <li><a>Nastavení</a></li>
             
-              <LogOutButton />
+
           </ul>
         </div>
       </div>
