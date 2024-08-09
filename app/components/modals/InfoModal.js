@@ -191,25 +191,13 @@ const InfoModal = ({ defaultOpen, message }) => {
   const router = useRouter();
   
   useEffect(() => {
-    const modal = document.getElementById('info_modal');
-
-    if (modal) {
-      // Check if the modal is already open
-      const isModalOpen = modal.open;
-
-      if (defaultOpen) {
-        // Close the modal if it's already open
-        if (isModalOpen) {
-          modal.close();
-        }
-        // Show the modal
-        modal.showModal();
-      } else if (success && !recoverPassword) {
-        // Refresh the router if success and not in recoverPassword mode
-        router.refresh();
-      }
+    if (defaultOpen) {
+      document.getElementById('info_modal').showModal();
     }
-  }, [defaultOpen, success, recoverPassword, router]);
+    if (success && !recoverPassword) {
+      router.refresh();
+    }
+  }, [success, recoverPassword, router ]);
    
   return (
 

@@ -105,6 +105,7 @@ const Page = () => {
 
   return (
     <>
+      <div style={{marginBottom: "900px"}}> </div>
       <dialog ref={dialogRef} id="recovery_modal" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           {error && (
