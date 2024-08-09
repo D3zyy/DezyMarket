@@ -10,9 +10,9 @@ const NotLoggedIn = () => {
     <>
                 <div >
                     <div>
-                    <LockClosedIcon className="h-20 w-20 text-red-500" /> Pro přístup se prosím přihlaště <button >Přihlásit se</button>
+                    <LockClosedIcon className="h-20 w-20 text-red-500" /> Pro přístup se prosím přihlaste <button >Přihlásit se</button>
                     </div>
-                    <InfoModal defaultOpen={true} message="Pro přístup se prosím přihlašte" />
+                    <InfoModal defaultOpen={true} message="Pro přístup se prosím přihlaste" />
                 </div>
         </>
   )

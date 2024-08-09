@@ -9,11 +9,11 @@ export function openInfoModal() {
   document.getElementById('info_modal').showModal();
 }
 
-const handleLogin = async (event, setError, setLoading, setSuccess) => {
+const handleLogin = async (event, setError, setLoading, setSuccess,setMessageProp) => {
   event.preventDefault();
   
   setLoading(true);
-
+  setMessageProp(false)
   const formData = new FormData(event.target);
   const email = formData.get('email');
   const password = formData.get('password');
@@ -206,7 +206,7 @@ const InfoModal = ({ defaultOpen, message }) => {
         </div>
         )}
         <h3 className="font-bold text-lg">{recoverPassword ? 'Obnovení hesla' : 'Přihlášení'}</h3>
-        <form onSubmit={(event) => recoverPassword ? handleRecovery(event, setError, setLoading, setSuccess) : handleLogin(event, setError, setLoading, setSuccess)}>
+        <form onSubmit={(event) => recoverPassword ? handleRecovery(event, setError, setLoading, setSuccess) : handleLogin(event, setError, setLoading, setSuccess, setMessageProp)}>
           <div className="py-4">
             <label htmlFor="email" className="block">Email</label>
             <input type="email" name="email" className="input input-bordered w-full email" required />
