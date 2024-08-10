@@ -13,7 +13,7 @@ export const getSession = async () => {
    
       // Retrieve the session using iron-session
       const session = await getIronSession(cookies(),sessionOptions);
-      
+
       if (session && session.sessionId) {
         // Check if the sessionId exists in the database
         const sessionRecord = await prisma.Sessions.findUnique({
@@ -39,6 +39,7 @@ export const getSession = async () => {
     let messageBan = false
     let ban = false
     let logOut = false
+
     if(session.userId){
       ban = await checkUserBan(session.userId)
 
@@ -51,9 +52,9 @@ export const getSession = async () => {
       }
     }
     
-
+  
     if (session.isLoggedIn && !ban) {
-
+     
       return session
     } else if (session.isLoggedIn && ban) {
         // Delete all sessions where userId equals session.userId
@@ -65,7 +66,7 @@ export const getSession = async () => {
       return  {message: messageBan};
     }
     else{
-     
+      
       return {message: "Session nebyla nalezena"}
     }
     } catch (error) {
@@ -115,7 +116,6 @@ export const logOut = async (state,formData) => {
 
       // Get the current session
       const session = await getIronSession(cookies(),sessionOptions);
-
       if (session && session.sessionId) {
       
         // Remove the session from the database
@@ -145,3 +145,5 @@ export const logOut = async (state,formData) => {
       return { success: false, message: "Chyba při odhlašování", status: 500 };
     }
   };
+  
+  

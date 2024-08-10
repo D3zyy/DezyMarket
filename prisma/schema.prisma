@@ -24,12 +24,21 @@ model Users {
   role                     Roles    @relation(fields: [roleId], references: [id])
   bans                     Bans[]   // Establish one-to-many relationship with Bans
   sessions                 Sessions[]
+  AccountType              AccountType? @relation(fields: [accountTypeId], references: [id]) // Optional relation
+  accountTypeId            Int?     // Foreign key to AccountType
   termsOfUseAndPrivatePolicy Boolean @default(false)
   verifiedEmail            Boolean  @default(false) // New field to track email verification status
   verificationToken        VerificationTokens? // Optional relation to VerificationToken
   numberOfTries            NumberOfTries?  
   @@index([email, password])
 }
+model AccountType {
+  id     Int    @id @default(autoincrement())
+  name   String
+  users  Users[]  
+  @@index([id])
+}
+
 model NumberOfTries {
   id     Int    @id @default(autoincrement())
   number Int

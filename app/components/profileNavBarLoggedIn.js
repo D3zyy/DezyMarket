@@ -1,11 +1,13 @@
 import React from 'react';
 import LogOutButton from './LogOutButton';
 import AddOfferButton from './AddOfferButton';
-const ProfileNavBar = () => {
-  
-  return (
+const  ProfileNavBar = async () => {
+  const session = await getSession();
 
-      <div className="flex items-center">
+  return (
+    <>
+    {session.isLoggedIn ? (
+        <div className="flex items-center">
         <div className="hidden sm:flex items-center">
         <AddOfferButton />
          {/* Čára mezi tlačítky */}
@@ -38,7 +40,11 @@ const ProfileNavBar = () => {
           </ul>
         </div>
       </div>
-
+      ) : (
+       <> </>
+      )}
+      
+      </>
   );
 }
 
