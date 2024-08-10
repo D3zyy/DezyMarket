@@ -26,8 +26,7 @@ const schema = z.object({
 });
 
 export const handleRegistration = async (formData) => {
-  console.log("data: ",formData)
-  console.log(formData.email)
+
 
   const validatedFields = schema.safeParse({
     email: formData.email,
@@ -38,13 +37,12 @@ export const handleRegistration = async (formData) => {
   });
 
   if (!validatedFields.success) {
-      console.log("  validace dat neprošla ")
-      console.log(validatedFields.error.flatten().fieldErrors)
+  
     return {
       message: JSON.stringify(validatedFields.error.flatten().fieldErrors),
     };
   } else {
-    console.log("  validace dat prošla ")
+
     try {
       // Check if the email already exists
       const existingUser = await prisma.Users.findUnique({

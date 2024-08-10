@@ -96,8 +96,6 @@ export async function POST(req) {
       }
       // check users numbero of login attempts
 
-      console.log("prvni : ",user.firstLogin)
-      console.log(user.id)
       if(user.firstLogin){
         await prisma.Users.update({
           where: {
