@@ -96,10 +96,21 @@ export async function POST(req) {
       }
       // check users numbero of login attempts
 
-
+      console.log("prvni : ",user.firstLogin)
+      console.log(user.id)
+      if(user.firstLogin){
+        await prisma.Users.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            firstLogin: false, 
+          },
+        });
+      }
       await resetUserTries(user.id)
       await createSession(user);
-      return new Response(JSON.stringify({ message: "Přihlášení úspěšné" }), {
+      return new Response(JSON.stringify({ message: "Přihlášení úspěšné" , firstLoggin : user.firstLogin}), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });

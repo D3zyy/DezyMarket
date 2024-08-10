@@ -4,7 +4,6 @@ import NotLoggedIn from '../components/NotLoggedIn'
 
 const  page = async() => {
     const session = await getSession()
-    console.log("session : ",session)
 
   return (
     <div>

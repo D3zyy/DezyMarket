@@ -86,7 +86,6 @@ export const getSession = async () => {
       
       const validTill = new Date(now); // Create a copy of the now date
       validTill.setDate(now.getDate() + 2); // Adds 7 days
-      console.log(userToCreate)
       let userId = userToCreate.id
       
       // Create session in the database
@@ -146,12 +145,9 @@ export const logOut = async (state,formData) => {
             sessionId: sessionIdForDb
           },
         });
-
-        // Destroy the session
-       
        
         // Return a success response
-        return { success: true, message: "Logged out successfully", status: 200 };
+        return { success: true, message: "Odhlášení  proběhlo úspěšně", status: 200 };
   
       } else {
         // Return a 401 Unauthorized response if session not found
@@ -159,7 +155,7 @@ export const logOut = async (state,formData) => {
       }
   
     } catch (error) {
-      console.error("Error during logout:", error);
+      console.error("Chyba při odhlašování :", error);
   
       // Return a 500 Internal Server Error response on exception
       return { success: false, message: "Chyba při odhlašování", status: 500 };

@@ -9,7 +9,7 @@ export function openLoginModal() {
   document.getElementById('login_modal').showModal();
 }
 
-const handleLogin = async (event, setError, setLoading, setSuccess) => {
+const handleLogin = async (event, setError, setLoading, setSuccess,setFirstLogin) => {
   event.preventDefault();
   
   setLoading(true);
@@ -36,6 +36,8 @@ const handleLogin = async (event, setError, setLoading, setSuccess) => {
     });
 
     if (res.ok) {
+      let result = await res.json()
+      setFirstLogin(result.firstLoggin)
       setSuccess(true);
     } else {
       const errorData = await res.json();
@@ -180,7 +182,7 @@ const LoginModal = () => {
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
-
+  const [firstLogin, setFirstLogin] = useState(null);
   const [loading, setLoading] = useState(false);
   const [recoverPassword, setRecoverPassword] = useState(false);
   const router = useRouter();
@@ -190,6 +192,9 @@ const LoginModal = () => {
 
     
     if (success && !recoverPassword) {
+      if(!firstLogin){
+        router.push("/typeOfAccount")
+      }
       router.refresh();
     }
   }, [success, recoverPassword, router]);
@@ -212,7 +217,7 @@ const LoginModal = () => {
 
   
         <h3 className="font-bold text-lg">{recoverPassword ? 'Obnovení hesla' : 'Přihlášení'}</h3>
-        <form onSubmit={(event) => recoverPassword ? handleRecovery(event, setError, setLoading, setSuccess) : handleLogin(event, setError, setLoading, setSuccess)}>
+        <form onSubmit={(event) => recoverPassword ? handleRecovery(event, setError, setLoading, setSuccess) : handleLogin(event, setError, setLoading, setSuccess, setFirstLogin)}>
           <div className="py-4">
             <label htmlFor="email" className="block">Email</label>
             <input type="email" name="email" className="input input-bordered w-full email" required />
@@ -235,7 +240,7 @@ const LoginModal = () => {
                 {loading ? 'Načítání...' : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
               </button>
             )}
-            <button type="button" className="btn" onClick={() => document.getElementById('login_modal').close()}> onTouchStart={() => document.getElementById('login_modal').close()}Zavřít</button>
+            <button type="button" className="btn" onClick={() => document.getElementById('login_modal').close()} onTouchStart={() => document.getElementById('login_modal').close()}>Zavřít</button>
           </div>
         </form>
         {recoverPassword ? (

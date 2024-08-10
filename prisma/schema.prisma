@@ -30,6 +30,7 @@ model Users {
   verifiedEmail            Boolean  @default(false) // New field to track email verification status
   verificationToken        VerificationTokens? // Optional relation to VerificationToken
   numberOfTries            NumberOfTries?  
+  firstLogin               Boolean   @default(true)
   @@index([email, password])
 }
 model AccountType {

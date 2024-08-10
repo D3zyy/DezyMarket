@@ -3,7 +3,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 const LogOutButton = () => {
-  const router = useRouter(); // Move useRouter inside the component
+  const router = useRouter(); 
 
   const handleLogout = async (event) => {
     event.preventDefault();
