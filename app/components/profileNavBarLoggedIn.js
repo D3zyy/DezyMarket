@@ -1,6 +1,7 @@
 import React from 'react';
 import LogOutButton from './LogOutButton';
 import AddOfferButton from './AddOfferButton';
+import { getSession } from '../authentication/actions';
 const  ProfileNavBar = async () => {
   const session = await getSession();
 
