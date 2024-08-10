@@ -77,17 +77,18 @@ export const getSession = async () => {
 
 
 
-  export const createSession = async (userId) => {
+  export const createSession = async (userToCreate) => {
     const sessionId = uuidv4(); // Generate a unique session ID
   
     try {
       const now = new Date();
       now.setHours(now.getHours() + 2); // Add 2 hours to the current date for validFrom
-  
+      
       const validTill = new Date(now); // Create a copy of the now date
       validTill.setDate(now.getDate() + 2); // Adds 7 days
+      console.log(userToCreate)
+      let userId = userToCreate.id
       
-  
       // Create session in the database
       await prisma.Sessions.create({
         data: {
@@ -97,10 +98,29 @@ export const getSession = async () => {
           validTill: validTill,
         },
       });
-  
+      let roleName
+      let accountName
+      if(userToCreate.roleId ){
+         roleName = await prisma.Roles.findUnique({
+          where: {
+            id: userToCreate.roleId ,
+          },
+        });
+      }
+      if(userToCreate.accountTypeId){
+         accountName = await prisma.accountType.findUnique({
+          where: {
+            id: userToCreate.accountTypeId ,
+          },
+        });
+      }
+      
+
       // Use iron-session to set the session ID in a cookie
       const session = await getIronSession(cookies(), sessionOptions);
       session.userId = userId;
+      session.role = roleName || null
+      session.accountType = accountName || null
       session.sessionId = sessionId; // Store session ID in session object
       session.isLoggedIn = true;
       await session.save();

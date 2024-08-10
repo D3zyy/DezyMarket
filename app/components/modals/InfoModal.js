@@ -4,6 +4,8 @@ import { CheckCircleIcon, XCircleIcon , LockClosedIcon} from '@heroicons/react/2
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { openRegisterModal } from './RegistrationModal';
+
 
 export function openInfoModal() {
   document.getElementById('info_modal').showModal();
@@ -256,6 +258,7 @@ const InfoModal = ({ defaultOpen, message }) => {
                 </button>
           </div>
         </form>
+       
         {recoverPassword ? (
           <BackToLoginButton 
             setRecoverPassword={setRecoverPassword} 
@@ -264,12 +267,31 @@ const InfoModal = ({ defaultOpen, message }) => {
             setMessageProp = {setMessageProp}
           />
         ) : (
+          <>
+          
           <RecoveryButton 
             setRecoverPassword={setRecoverPassword} 
             setSuccess={setSuccess} 
             setError={setError} 
             setMessageProp = {setMessageProp}
           />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+    <span style={{ textDecoration: 'none', color: 'gray', padding: "0px 16px"}}>
+        Ještě nemáte účet?
+    </span>
+    <button
+        className="btn btn-link"
+        style={{padding: "0px"}}
+        onClick={ () => {
+          router.push("/");
+          document.getElementById('info_modal').close(); 
+          openRegisterModal()
+        }}
+    >
+        Registrace
+    </button>
+</div>
+          </>
         )}
       </div>
     </dialog>

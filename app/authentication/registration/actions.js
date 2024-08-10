@@ -65,11 +65,21 @@ export const handleRegistration = async (formData) => {
       // Retrieve the role ID for the "regular" role
       const role = await prisma.Roles.findUnique({
         where: {
-          name: 'regular'
+          name: 'uživatel'
+        }
+      });
+      const accountType = await prisma.accountType.findFirst({
+        where: {
+          name: 'základní'
         }
       });
 
       if (!role) {
+        return {
+          message: "Chyba na serveru",
+        };
+      }
+      if (!accountType) {
         return {
           message: "Chyba na serveru",
         };
@@ -84,6 +94,7 @@ export const handleRegistration = async (formData) => {
           nickname: validatedFields.data.nickname,
           termsOfUseAndPrivatePolicy: validatedFields.data.termsOfUseAndPrivatePolicy,
           roleId: role.id,
+          accountTypeId: accountType.id
         }
       });
       const result = await sendVerificationEmail(validatedFields.data.email);
