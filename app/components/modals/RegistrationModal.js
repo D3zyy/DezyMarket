@@ -50,6 +50,10 @@ const parseErrors = (message) => {
               document.getElementById('register_modal').close();
               document.getElementById('login_modal').showModal();
             }}
+            onTouchStart={() => {
+              document.getElementById('register_modal').close();
+              document.getElementById('login_modal').showModal();
+            }}
           >
             Přihlásit se
           </button>
@@ -102,7 +106,7 @@ const RegistrationModal = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-2">Dokončete svoji registraci!</h3>
               <p className="text-lg text-gray-600">Ověřovací email byl zaslán na vaši emailovou adresu.</p>
               <div className="modal-action mt-4">
-                <button type="button" className="btn btn-primary" onClick={() => document.getElementById('register_modal').close()}>Zavřít</button>
+                <button type="button" className="btn btn-primary" onClick={() => document.getElementById('register_modal').close()} onTouchStart={() => document.getElementById('register_modal').close()}>Zavřít</button>
               </div>
             </div>
           ) : (
@@ -142,7 +146,7 @@ const RegistrationModal = () => {
                       {loading ? 'Načítání...' : 'Registrovat se'}
                     </button>
                   )}
-                  <button type="button" className="btn" onClick={() => document.getElementById('register_modal').close()}>Zavřít</button>
+                  <button type="button" className="btn" onClick={() => document.getElementById('register_modal').close()} onTouchStart={() => document.getElementById('register_modal').close()}>Zavřít</button>
                 </div>
               </form>
             </>

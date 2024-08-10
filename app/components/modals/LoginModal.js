@@ -144,6 +144,12 @@ const RecoveryButton = ({ setRecoverPassword, setSuccess, setError }) => (
       setSuccess(false);
       setError(false);
     }}
+    onTouchStart={() => {
+      setRecoverPassword(true);
+      setSuccess(false);
+      setError(false);
+    }}
+
     style={{ color: 'gray' }}
   >
     Obnovit heslo
@@ -158,6 +164,12 @@ const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError }) => (
       setSuccess(false);
       setError(false);
     }}
+    onTouchStart={() => {
+      setRecoverPassword(false);
+      setSuccess(false);
+      setError(false);
+    }}
+
     style={{ color: 'gray', marginLeft: 'auto' }}
   >
     Zpět na přihlášení
@@ -223,7 +235,7 @@ const LoginModal = () => {
                 {loading ? 'Načítání...' : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
               </button>
             )}
-            <button type="button" className="btn" onClick={() => document.getElementById('login_modal').close()}>Zavřít</button>
+            <button type="button" className="btn" onClick={() => document.getElementById('login_modal').close()}> onTouchStart={() => document.getElementById('login_modal').close()}Zavřít</button>
           </div>
         </form>
         {recoverPassword ? (

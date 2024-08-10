@@ -147,6 +147,12 @@ const RecoveryButton = ({ setRecoverPassword, setSuccess, setError, setMessagePr
       setError(false);
       setMessageProp(false);
     }}
+    onTouchStart={() => {
+      setRecoverPassword(true);
+      setSuccess(false);
+      setError(false);
+      setMessageProp(false);
+    }}
     style={{ color: 'gray' }}
   >
     Obnovit heslo
@@ -158,6 +164,12 @@ const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessag
     className="btn btn-link"
     onClick={() => {
       setRecoverPassword(false);
+      setSuccess(false);
+      setError(false);
+      setMessageProp(false);
+    }}
+    onTouchStart={() => {
+      setRecoverPassword(true);
       setSuccess(false);
       setError(false);
       setMessageProp(false);
@@ -253,6 +265,10 @@ const InfoModal = ({ defaultOpen, message }) => {
                     document.getElementById('info_modal').close(); 
                     router.push("/");
                 }}
+                onTouchStart={() => {
+                  document.getElementById('info_modal').close(); 
+                  router.push("/");
+              }}
                 >
                 Zavřít
                 </button>
@@ -283,6 +299,11 @@ const InfoModal = ({ defaultOpen, message }) => {
         className="btn btn-link"
         style={{padding: "0px"}}
         onClick={ () => {
+          router.push("/");
+          document.getElementById('info_modal').close(); 
+          openRegisterModal()
+        }}
+        onTouchStart={() => {
           router.push("/");
           document.getElementById('info_modal').close(); 
           openRegisterModal()
