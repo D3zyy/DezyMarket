@@ -28,7 +28,7 @@ const LogOutButton = () => {
   return (
  
 
-        <button onClick={handleLogout} type="submit">Odhlásit se</button>
+        <button onClick={handleLogout} onTouchStart={handleLogout} type="submit">Odhlásit se</button>
 
   
   );

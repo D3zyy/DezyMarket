@@ -11,7 +11,7 @@ export function openInfoModal() {
   document.getElementById('info_modal').showModal();
 }
 
-const handleLogin = async (event, setError, setLoading, setSuccess,setMessageProp) => {
+const handleLogin = async (event, setError, setLoading, setSuccess,setMessageProp,setFirstLogin) => {
   event.preventDefault();
   
   setLoading(true);
@@ -38,6 +38,8 @@ const handleLogin = async (event, setError, setLoading, setSuccess,setMessagePro
     });
 
     if (res.ok) {
+      let result = await res.json()
+      setFirstLogin(result.firstLoggin)
       setSuccess(true);
     } else {
       const errorData = await res.json();
@@ -199,6 +201,7 @@ const InfoModal = ({ defaultOpen, message }) => {
   }, []);
   const [success, setSuccess] = useState(false);
   const [messageProp, setMessageProp] = useState(message);
+  const [firstLogin, setFirstLogin] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [recoverPassword, setRecoverPassword] = useState(false);
@@ -209,6 +212,10 @@ const InfoModal = ({ defaultOpen, message }) => {
       document.getElementById('info_modal').showModal();
     }
     if (success && !recoverPassword) {
+      if(firstLogin){
+        router.push("/")
+      }
+      router.refresh();
       router.refresh();
     }
   }, [success, recoverPassword, router ]);
@@ -235,7 +242,7 @@ const InfoModal = ({ defaultOpen, message }) => {
         </div>
         )}
         <h3 className="font-bold text-lg">{recoverPassword ? 'Obnovení hesla' : 'Přihlášení'}</h3>
-        <form onSubmit={(event) => recoverPassword ? handleRecovery(event, setError, setLoading, setSuccess) : handleLogin(event, setError, setLoading, setSuccess, setMessageProp)}>
+        <form onSubmit={(event) => recoverPassword ? handleRecovery(event, setError, setLoading, setSuccess) : handleLogin(event, setError, setLoading, setSuccess, setMessageProp,setFirstLogin)}>
           <div className="py-4">
             <label htmlFor="email" className="block">Email</label>
             <input type="email" name="email" className="input input-bordered w-full email" required />
