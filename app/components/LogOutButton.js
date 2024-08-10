@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 const LogOutButton = () => {
   const router = useRouter(); 
 
-  const handleLogout = async (event) => {
-    event.preventDefault();
+  const handleLogout = async () => {
+
 
     try {
       const res = await fetch('/api/session', { method: 'DELETE' });
@@ -26,11 +26,11 @@ const LogOutButton = () => {
   };
 
   return (
-    <li>
-      <form onSubmit={handleLogout}>
-        <button type="submit">Odhlásit se</button>
-      </form>
-    </li>
+ 
+
+        <button onClick={handleLogout} type="submit">Odhlásit se</button>
+
+  
   );
 };
 

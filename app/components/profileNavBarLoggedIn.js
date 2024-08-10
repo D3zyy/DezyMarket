@@ -2,6 +2,7 @@ import React from 'react';
 import LogOutButton from './LogOutButton';
 import AddOfferButton from './AddOfferButton';
 import { getSession } from '../authentication/actions';
+import { Suspense } from 'react';
 const  ProfileNavBar = async () => {
   const session = await getSession();
 
@@ -36,7 +37,10 @@ const  ProfileNavBar = async () => {
             </li>
             
             <li><a>Nastavení</a></li>
-            <LogOutButton />
+          
+            <li><LogOutButton /></li>
+
+    
 
           </ul>
         </div>

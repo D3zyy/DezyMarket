@@ -186,11 +186,10 @@ const LoginModal = () => {
   const [loading, setLoading] = useState(false);
   const [recoverPassword, setRecoverPassword] = useState(false);
   const router = useRouter();
-  
+
 
   useEffect(() => {
 
-    
     if (success && !recoverPassword) {
       if(firstLogin){
         router.push("/typeOfAccount")
