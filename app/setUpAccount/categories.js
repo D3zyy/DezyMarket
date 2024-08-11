@@ -37,7 +37,7 @@ const Categories = ({ name, id, isChecked: initialIsChecked, logo }) => {
   };
 
   return (
-    <div>
+    <div >
       {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>} {/* Zobraz chybu */}
       <label  className='btn btn-active'
         onClick={handleChange}

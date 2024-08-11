@@ -74,14 +74,14 @@ async function updateUserCategory(data, session) {
               userId: userId
             }
           });
-          console.log('Created Category:', newCategory);
+      
           return newCategory;
         } else {
-          console.log('Category already exists');
+
           return existingCategory;
         }
       } else {
-        console.log("existuje dem to zoktnrolvat")
+
         // Pokud isChecked je false, zkontroluj, zda záznam existuje
         const existingCategory = await prisma.userCategories.findFirst({
           where: {
@@ -89,7 +89,7 @@ async function updateUserCategory(data, session) {
             userId: userId
           }
         });
-        console.log("existuje ? :",existingCategory)
+   
         if (existingCategory) {
           // Pokud záznam existuje, smaž ho
           const deletedCategory = await prisma.userCategories.delete({
@@ -100,14 +100,14 @@ async function updateUserCategory(data, session) {
                 }
               }
           });
-          console.log('Deleted Category:', deletedCategory);
+   
           return deletedCategory;
         } else {
-          console.log('No category to delete');
+       
         }
       }
     } catch (error) {
-      console.error('Error processing category:', error);
+      console.error('Chyba při zpracování kategorie: ', error);
       throw error;
     }
   }
