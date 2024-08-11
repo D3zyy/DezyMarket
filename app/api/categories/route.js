@@ -128,7 +128,7 @@ export async function PUT(req) {
           );
      } 
      let  data = await req.json();
-        console.log("data co jsem dostal :", data)
+
      if(!data) {
       return new Response(
           JSON.stringify({ message: 'Kategorie nebo uživatel nebyli nalezeny' }),
