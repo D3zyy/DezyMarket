@@ -7,6 +7,7 @@ import Categories from './categories';
 
 const page = async () => {
   const session = await getSession(); 
+  if (!session.isLoggedIn)  redirect('/');
   let user_id = session.userId 
 
   const res = await fetch( `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`, {
@@ -18,30 +19,34 @@ const page = async () => {
   
 
 
-  if (!session.isLoggedIn)  redirect('/');
+
 
     return (
       <div>
         {session.isLoggedIn? (
-          <div style={{ display: 'flex', justifyContent: "centre" }}>
-            <div> 
-              <h3> Zvolte kategorie které Vás zajímají</h3>
-              {categories.map(category => (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <h3>Zvolte kategorie, které Vás zajímají</h3>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '20px',
+            padding: "30px",
+            justifyContent: 'center',
+            maxWidth: '700px', // Maximální šířka kontejneru, kterou můžete upravit
+            width: '100%'
+          }}>
+            {categories.map(category => (
+              <div key={category.id} style={{ flex: '1 1 calc(20% - 16px)', boxSizing: 'border-box' }}>
                 <Categories
-                  key={category.id}
                   id={category.id}
                   name={category.name}
                   isChecked={category.checked}
+                  logo={category.logo}
                 />
-               ))}
-          
-           
-              
-   
-            
-            
-            </div>
+              </div>
+            ))}
           </div>
+        </div>
         ) : (
           <></>
         )}

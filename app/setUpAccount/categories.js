@@ -1,5 +1,6 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Funkce pro zpracování změny
 async function changeValue(id, isChecked) {
@@ -8,29 +9,50 @@ async function changeValue(id, isChecked) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ id, isChecked })
   });
-  let response = await res.json();
-  console.log(response);
-  alert(response.message || 'Success');
+  
+  if (!res.ok) {
+    // Vyhoď chybu, pokud odpověď není OK
+    throw new Error(`Error ${res.status}: ${res.statusText}`);
+  }
+
+  return res.json(); // Vrátí response json
 }
 
-const Categories = ({ name, id, isChecked }) => {
-  // Funkce, která se volá při změně zaškrtávacího políčka
-  const handleChange = (event) => {
-    const newChecked = event.target.checked;
-    changeValue(id, newChecked); // Volání funkce changeValue s id a novým stavem
+const Categories = ({ name, id, isChecked: initialIsChecked, logo }) => {
+  const [isChecked, setIsChecked] = useState(initialIsChecked);
+  const [error, setError] = useState(null); // Stav pro chyby
+  const router = useRouter();
+
+  // Funkce, která se volá při kliknutí na label
+  const handleChange = async () => {
+    const newChecked = !isChecked; // Přepni stav
+    try {
+      await changeValue(id, newChecked); // Volání funkce changeValue s id a novým stavem
+      setIsChecked(newChecked); // Aktualizuj místní stav
+      router.refresh(); // Refresh stránky
+    } catch (error) {
+      console.error('Chyba aktualizace kategorie:', error);
+      setError(error.message); // Nastav chybu do stavu
+    }
   };
 
   return (
     <div>
-      <label className='btn btn-active' htmlFor={name}>
-        <span style={{ fontSize: "30px" }}>&#128663;</span> {name}
+      {error && <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>} {/* Zobraz chybu */}
+      <label  className='btn btn-active'
+        onClick={handleChange}
+        style={{
+          cursor: 'pointer',
+          display: 'inline-flex',
+          alignItems: 'center',
+          borderRadius: '5px',
+          transition: 'background-color 0.3s, box-shadow 0.3s',
+          boxShadow: isChecked ? '0 0 10px rgba(0, 255, 0, 0.5)' : 'none', // Světelný efekt pokud je zaškrtnuto
+          border: isChecked ? '2px solid #0d5408' : '' // Zelený border pro zaškrtnutý stav, šedý pro ne
+        }}
+      >
+        <span style={{ fontSize: "30px" }} dangerouslySetInnerHTML={{ __html: logo }} /> {name}
         <input type="hidden" name="id" value={id} />
-        <input
-          type="checkbox"
-          checked={isChecked}
-          onChange={handleChange} // Použití funkce handleChange
-          name={name}
-        />
       </label>
     </div>
   );
