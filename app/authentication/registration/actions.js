@@ -66,22 +66,18 @@ export const handleRegistration = async (formData) => {
           name: 'uživatel'
         }
       });
-      const accountType = await prisma.accountType.findFirst({
-        where: {
-          name: 'základní'
-        }
-      });
+      //const accountType = await prisma.accountType.findFirst({
+        //where: {
+          //name: 'základní'
+        //}
+      //});
 
       if (!role) {
         return {
           message: "Chyba na serveru",
         };
       }
-      if (!accountType) {
-        return {
-          message: "Chyba na serveru",
-        };
-      }
+
       let registrationMail = validatedFields.data.email
       // Add user to the database
       await prisma.Users.create({
@@ -92,7 +88,7 @@ export const handleRegistration = async (formData) => {
           nickname: validatedFields.data.nickname,
           termsOfUseAndPrivatePolicy: validatedFields.data.termsOfUseAndPrivatePolicy,
           roleId: role.id,
-          accountTypeId: accountType.id
+
         }
       });
       const result = await sendVerificationEmail(validatedFields.data.email);

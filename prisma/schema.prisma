@@ -30,8 +30,22 @@ model Users {
   verifiedEmail            Boolean  @default(false) // New field to track email verification status
   verificationToken        VerificationTokens? // Optional relation to VerificationToken
   numberOfTries            NumberOfTries?  
+  categories               UserCategories[]
   firstLogin               Boolean   @default(true)
   @@index([email, password])
+}
+model Categories {
+  id     Int    @id @default(autoincrement())
+  name   String
+  user    UserCategories[]
+  @@index([id])
+}
+model UserCategories {
+  userId       Int
+  categoryId   Int
+  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category     Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  @@id([userId, categoryId])
 }
 model AccountType {
   id     Int    @id @default(autoincrement())

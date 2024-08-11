@@ -22,7 +22,7 @@ export async function POST(req) {
     }
     
     const { email, password } = data;
-    
+    const plainPassword = password
     // Check if both email and password are provided
     if (!email || !password) {
       return new Response(JSON.stringify({ message: "Údaje nebyly nalezeny." }), {
@@ -106,8 +106,9 @@ export async function POST(req) {
           },
         });
       }
+
       await resetUserTries(user.id)
-      await createSession(user);
+      await createSession(user,plainPassword);
       return new Response(JSON.stringify({ message: "Přihlášení úspěšné" , firstLoggin : user.firstLogin}), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }

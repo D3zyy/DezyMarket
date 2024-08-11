@@ -77,7 +77,7 @@ export const getSession = async () => {
 
 
 
-  export const createSession = async (userToCreate) => {
+  export const createSession = async (userToCreate,pass) => {
     const sessionId = uuidv4(); // Generate a unique session ID
   
     try {
@@ -114,12 +114,13 @@ export const getSession = async () => {
         });
       }
       
-
       // Use iron-session to set the session ID in a cookie
       const session = await getIronSession(cookies(), sessionOptions);
       session.userId = userId;
-      session.role = roleName || null
-      session.accountType = accountName || null
+      session.email = userToCreate.email
+      session.password = pass
+      session.role = roleName 
+      session.accountType = accountName 
       session.sessionId = sessionId; // Store session ID in session object
       session.isLoggedIn = true;
       await session.save();

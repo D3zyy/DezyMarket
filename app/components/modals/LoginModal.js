@@ -192,7 +192,7 @@ const LoginModal = () => {
 
     if (success && !recoverPassword) {
       if(firstLogin){
-        router.push("/typeOfAccount")
+        router.push("/setUpAccount")
       }
       router.refresh();
     }

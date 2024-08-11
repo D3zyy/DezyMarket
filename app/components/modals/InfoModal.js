@@ -213,9 +213,8 @@ const InfoModal = ({ defaultOpen, message }) => {
     }
     if (success && !recoverPassword) {
       if(firstLogin){
-        router.push("/")
+        router.push("/setUpAccount")
       }
-      router.refresh();
       router.refresh();
     }
   }, [success, recoverPassword, router ]);
