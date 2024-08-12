@@ -233,7 +233,7 @@ const InfoModal = ({ defaultOpen, message }) => {
     <dialog id="info_modal" className="modal modal-bottom sm:modal-middle">
       <div className="modal-box">
         {error && <div style={{ color: 'red', marginBottom: "10px" }}>{error}</div>}
-        {success && <div style={{ color: 'green', marginBottom: "10px" }}>{success}</div>}
+        {success && recoverPassword && <div style={{ color: 'green', marginBottom: "10px" }}>{success}</div>}
         {messageProp && (
         <div style={{ display: 'flex', alignItems: 'center', color: '#676b1c', marginBottom: '10px' }}>
             <LockClosedIcon className="h-10 w-10 text-yellow-500" style={{ marginRight: '10px' }} />

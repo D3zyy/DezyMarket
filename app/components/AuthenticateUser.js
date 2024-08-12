@@ -8,7 +8,6 @@ const AuthenticateUser = async () => {
 
   const session = await getSession();
   
-  
 
   return (
     <div>
