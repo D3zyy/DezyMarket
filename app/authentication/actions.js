@@ -98,7 +98,7 @@ export const getSession = async () => {
         },
       });
       let roleName
-      let accountName
+      let accountTypeName
       if(userToCreate.roleId ){
          roleName = await prisma.Roles.findUnique({
           where: {
@@ -106,13 +106,57 @@ export const getSession = async () => {
           },
         });
       }
-      if(userToCreate.accountTypeId){
-         accountName = await prisma.accountType.findUnique({
-          where: {
-            id: userToCreate.accountTypeId ,
+    //correct czech time
+    const currentDate = new Date();
+    const localISODate = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString();
+    console.log("cas ted : ",localISODate)
+     
+         // Fetch the existing UserAccountType record
+  const existingAccountType = await prisma.userAccountType.findFirst({
+    where: {
+      userId: userToCreate.id,
+    },
+    include: {
+      AccountType: true, // Ensure that AccountType details are fetched
+    },
+  });
+  console.log("existuje záznam o typu učtu u tohohle uživatele :",existingAccountType)
+  if (existingAccountType) {
+    // Check if the existing record's validTill is valid
+    const isValid = existingAccountType.validTill > new Date(localISODate);
+    console.log("Je aktivní pořád ten typ účtu : ",isValid)
+    console.log(existingAccountType.AccountType.name)
+    if (!isValid && existingAccountType.AccountType.name !== 'Základní') {
+      console.log("tady")
+      // If expired and not 'basic', delete the old record
+      await prisma.userAccountType.delete({
+        where: {
+          userId_accountTypeId: {
+            userId: userToCreate.id,
+            accountTypeId: existingAccountType.accountTypeId,
           },
-        });
-      }
+        },
+      });
+      const idOfBasicAccType = await prisma.AccountType.findFirst({
+        where: {
+          name: "Základní"
+        }})
+      // Insert a new UserAccountType record
+      await prisma.userAccountType.create({
+        data: {
+          userId: userToCreate.id,
+          accountTypeId: idOfBasicAccType.id,
+          validFrom: localISODate,
+        },
+      });
+      accountTypeName = "Základní"
+    } else {
+      console.log("tady 1")
+      accountTypeName = existingAccountType.AccountType.name;
+    }
+  } 
+  console.log("Jméno učtu které budu vkladat do session :" , accountTypeName)
+      
       
       // Use iron-session to set the session ID in a cookie
       const session = await getIronSession(cookies(), sessionOptions);
@@ -120,7 +164,7 @@ export const getSession = async () => {
       session.email = userToCreate.email
       session.password = pass
       session.role = roleName 
-      session.accountType = accountName 
+      session.accountType = accountTypeName 
       session.sessionId = sessionId; // Store session ID in session object
       session.isLoggedIn = true;
       await session.save();

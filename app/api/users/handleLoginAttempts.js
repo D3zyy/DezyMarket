@@ -51,7 +51,6 @@ export async function handleLoginAttempt(userId) {
         const additionalHours = 2; // Additional 2 hours
         const banDurationInMinutes = banDuration + (additionalHours * 60); // Convert additional hours to minutes and add to banDuration
         const bannedTill = new Date(bannedFrom.getTime() + banDurationInMinutes * 60000); // Convert total duration to milliseconds
-  
         const ban = await prisma.bans.create({
           data: {
             userId: userId,

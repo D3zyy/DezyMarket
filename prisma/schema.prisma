@@ -24,8 +24,7 @@ model Users {
   role                     Roles    @relation(fields: [roleId], references: [id])
   bans                     Bans[]   // Establish one-to-many relationship with Bans
   sessions                 Sessions[]
-  AccountType              AccountType? @relation(fields: [accountTypeId], references: [id]) // Optional relation
-  accountTypeId            Int?     // Foreign key to AccountType
+  AccountType              UserAccountType[]
   termsOfUseAndPrivatePolicy Boolean @default(false)
   verifiedEmail            Boolean  @default(false) // New field to track email verification status
   verificationToken        VerificationTokens? // Optional relation to VerificationToken
@@ -34,6 +33,23 @@ model Users {
   firstLogin               Boolean   @default(true)
   @@index([email, password])
 }
+
+model AccountType {
+  id     Int    @id @default(autoincrement())
+  name   String
+  users  UserAccountType[]  
+  @@index([id])
+}
+model UserAccountType {
+  userId       Int
+  accountTypeId   Int
+  validFrom DateTime @default(now())
+  validTill DateTime?
+  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  AccountType    AccountType @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
+  @@id([userId, accountTypeId])
+}
+
 model Categories {
   id     Int    @id @default(autoincrement())
   name   String
@@ -48,12 +64,7 @@ model UserCategories {
   category     Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   @@id([userId, categoryId])
 }
-model AccountType {
-  id     Int    @id @default(autoincrement())
-  name   String
-  users  Users[]  
-  @@index([id])
-}
+
 
 model NumberOfTries {
   id     Int    @id @default(autoincrement())
