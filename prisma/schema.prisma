@@ -41,13 +41,13 @@ model AccountType {
   @@index([id])
 }
 model UserAccountType {
+  id           Int  @id @default(autoincrement())
   userId       Int
   accountTypeId   Int
   validFrom DateTime @default(now())
   validTill DateTime?
   user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   AccountType    AccountType @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
-  @@id([userId, accountTypeId])
 }
 
 model Categories {

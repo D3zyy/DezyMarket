@@ -110,52 +110,95 @@ export const getSession = async () => {
     const currentDate = new Date();
     const localISODate = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString();
     console.log("cas ted : ",localISODate)
-     
+    
          // Fetch the existing UserAccountType record
-  const existingAccountType = await prisma.userAccountType.findFirst({
-    where: {
-      userId: userToCreate.id,
-    },
-    include: {
-      AccountType: true, // Ensure that AccountType details are fetched
-    },
-  });
-  console.log("existuje záznam o typu učtu u tohohle uživatele :",existingAccountType)
-  if (existingAccountType) {
-    // Check if the existing record's validTill is valid
-    const isValid = existingAccountType.validTill > new Date(localISODate);
-    console.log("Je aktivní pořád ten typ účtu : ",isValid)
-    console.log(existingAccountType.AccountType.name)
-    if (!isValid && existingAccountType.AccountType.name !== 'Základní') {
-      console.log("tady")
-      // If expired and not 'basic', delete the old record
-      await prisma.userAccountType.delete({
-        where: {
-          userId_accountTypeId: {
-            userId: userToCreate.id,
-            accountTypeId: existingAccountType.accountTypeId,
-          },
-        },
-      });
-      const idOfBasicAccType = await prisma.AccountType.findFirst({
-        where: {
-          name: "Základní"
-        }})
-      // Insert a new UserAccountType record
-      await prisma.userAccountType.create({
-        data: {
-          userId: userToCreate.id,
-          accountTypeId: idOfBasicAccType.id,
-          validFrom: localISODate,
-        },
-      });
-      accountTypeName = "Základní"
-    } else {
-      console.log("tady 1")
-      accountTypeName = existingAccountType.AccountType.name;
-    }
-  } 
-  console.log("Jméno učtu které budu vkladat do session :" , accountTypeName)
+         try {
+          const currentDate = new Date();
+          const localISODate = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString();
+        
+          // Fetch existing UserAccountType records
+          const existingAccountTypes = await prisma.userAccountType.findMany({
+            where: {
+              userId: userToCreate.id,
+              OR: [
+                {
+                  validTill: {
+                    gt: new Date(localISODate), // Ensure the accountType is still active
+                  },
+                },
+                {
+                  AccountType: {
+                    name: "Základní", // Include 'Základní' as a fallback
+                  },
+                },
+              ],
+            },
+            include: {
+              AccountType: true, // Ensure that AccountType details are fetched
+            },
+            orderBy: [
+              {
+                validTill: 'desc', // Prioritize active records based on validTill
+              },
+              {
+                AccountType: {
+                  name: 'asc', // Secondary sort to ensure 'Základní' is last if there are active records
+                },
+              },
+            ],
+          });
+        
+          console.log("Existuje záznam o typu učtu u tohohle uživatele:", existingAccountTypes);
+        
+          // Define account type hierarchy
+          const hierarchy = ['Legend', 'Premium', 'Základní'];
+        
+          // Function to get the index of the account type in the hierarchy
+          const getAccountTypePriority = (name) => hierarchy.indexOf(name);
+        
+          let bestAccountType = null;
+        
+          if (existingAccountTypes.length > 0) {
+            // Determine the best account type based on priority
+            bestAccountType = existingAccountTypes.reduce((best, current) => {
+              if (!best) return current;
+              const bestPriority = getAccountTypePriority(best.AccountType.name);
+              const currentPriority = getAccountTypePriority(current.AccountType.name);
+              // Compare priorities
+              return currentPriority < bestPriority ? current : best;
+            }, null);
+        
+            // Determine if the best account type is still valid
+            const isValid = bestAccountType.validTill > new Date(localISODate);
+            console.log("Je aktivní pořád ten typ účtu:", isValid);
+            console.log(bestAccountType.AccountType.name);
+        
+            if (!isValid) {
+              // If the best account type is not valid, create a new 'Základní' record
+              const idOfBasicAccType = await prisma.accountType.findFirst({
+                where: {
+                  name: "Základní",
+                },
+              });
+        
+              await prisma.userAccountType.create({
+                data: {
+                  userId: userToCreate.id,
+                  accountTypeId: idOfBasicAccType.id,
+                  validFrom: localISODate,
+                },
+              });
+              accountTypeName = "Základní";
+            } else {
+              accountTypeName = bestAccountType.AccountType.name;
+            }
+          } 
+        
+          console.log("Jméno účtu, které budu vkládat do session:", accountTypeName);
+        } catch (error) {
+          console.error("Chyba při načítaní uživatelského typu účtu:", error);
+          // Handle errors as appropriate
+        }
       
       
       // Use iron-session to set the session ID in a cookie
