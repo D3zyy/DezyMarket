@@ -4,17 +4,19 @@ import NotLoggedIn from '../components/NotLoggedIn';
 import { redirect } from 'next/navigation';
 import Account from './Account'; // Import Account properly
 import Link from 'next/link';
+import { getUserAccountType } from './Methods';
+
+
+
 
 const Page = async () => {
   const session = await getSession();
-  console.log(session);
+  let accType = await getUserAccountType(session.userId)
+  console.log("typ účtu: ",accType)
+
 
   if (!session.isLoggedIn) redirect('/');
-  if (!session.accountType) {
-    console.log("Ještě nevybral účet");
-  }
-  console.log("ucet uzivatele :",session.accountType); // Fix typo here
-  console.log("tady taky:",session?.accountType?.name)
+
 
   return (
     <div>
@@ -25,7 +27,7 @@ const Page = async () => {
           </h3>
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 p-4">
             <Account
-              hasThisType={session?.accountType}
+              hasThisType={accType}
               name="Základní"
               price={0}
               benefits={[
@@ -39,7 +41,7 @@ const Page = async () => {
               ]}
             />
             <Account
-              hasThisType={session?.accountType}
+              hasThisType={accType}
               name="Premium"
               price={28}
               benefits={[
@@ -53,7 +55,7 @@ const Page = async () => {
               ]}
             />
             <Account
-              hasThisType={session?.accountType}
+              hasThisType={accType}
               name="Legend"
               price={89}
               benefits={[
@@ -66,6 +68,7 @@ const Page = async () => {
                 ["Stránky bez reklam", true],
               ]}
             />
+     
           </div>
         </>
       ) : (

@@ -1,36 +1,28 @@
 "use client";
 
-import Link from 'next/link'; // Ensure Link is imported
+import Link from 'next/link';
+import { PaymentModal,openPaymentModal } from './modalForPayment';
 
 export function Account({ name, price, benefits, hasThisType }) {
-  // Determine if the current account type matches the selected type
   const isActive = hasThisType === name;
-  console.log(hasThisType)
-  console.log(name)
-  console.log(isActive)
 
-  // Function to render text with links
   const renderBenefitText = (text) => {
-    // Use a regex to find and replace links in the text
     const regex = /<Link href='([^']+)'>([^<]+)<\/Link>/g;
     const parts = [];
     let lastIndex = 0;
     let match;
 
     while ((match = regex.exec(text)) !== null) {
-      // Push text before the current match
       if (match.index > lastIndex) {
         parts.push(text.substring(lastIndex, match.index));
       }
-      // Push the link component
       parts.push(
-        <Link key={match.index} href={match[1]} className="text-blue-500 underline">
+        <Link target='_blank' key={match.index} href={match[1]} className="text-blue-500 underline">
           {match[2]}
         </Link>
       );
       lastIndex = regex.lastIndex;
     }
-    // Push remaining text after the last match
     if (lastIndex < text.length) {
       parts.push(text.substring(lastIndex));
     }
@@ -68,12 +60,14 @@ export function Account({ name, price, benefits, hasThisType }) {
         })}
       </ul>
       <button
+        onClick={() => openPaymentModal(price)} // Pass the price to the function
         type="button"
-        className={`w-full ${isActive ? 'btn-disabled' : 'bg-[#8300ff] text-white'} btn`}
+        className={`w-full btn ${isActive ? 'btn-disabled' : 'bg-[#8300ff] text-white hover:bg-[#8300ff] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50'} ${isActive ? 'cursor-not-allowed' : 'cursor-pointer'}`}
         disabled={isActive}
       >
         {isActive ? 'Vaše předplatné' : 'Zvolit'}
       </button>
+      <PaymentModal price={price} />
     </div>
   );
 }

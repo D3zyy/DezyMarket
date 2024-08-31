@@ -173,26 +173,13 @@ export const getSession = async () => {
             console.log("Je aktivní pořád ten typ účtu:", isValid);
             console.log(bestAccountType.AccountType.name);
         
-            if (!isValid) {
-              // If the best account type is not valid, create a new 'Základní' record
-              const idOfBasicAccType = await prisma.accountType.findFirst({
-                where: {
-                  name: "Základní",
-                },
-              });
         
-              await prisma.userAccountType.create({
-                data: {
-                  userId: userToCreate.id,
-                  accountTypeId: idOfBasicAccType.id,
-                  validFrom: localISODate,
-                },
-              });
-              accountTypeName = "Základní";
-            } else {
+      
+          
               accountTypeName = bestAccountType.AccountType.name;
-            }
+            
           } 
+          
         
           console.log("Jméno účtu, které budu vkládat do session:", accountTypeName);
         } catch (error) {
