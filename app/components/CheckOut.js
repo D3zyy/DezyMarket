@@ -11,20 +11,20 @@ import {
 
 
 
-const CheckOut = (amount) => {
+const CheckOut = (amount,priceId) => {
     const stripe = useStripe()
     const elements = useElements()
     const [errorMessage,setErrorMessage] = useState(false)
     const [clientSecret,setClientSecret] = useState("")
     const [loading,setLoading] = useState(false)
-    const [successPaymenet,setSuccessPaymenet] = useState(false)
+    const [successPayment,setSuccessPayment] = useState(false)
     useEffect(() => {
-        fetch("/api/create-payment-intent", {
+        fetch("/api/create-subscription", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify( amount ), 
+   
         })
         .then((res) => res.json())
         .then((data) => {

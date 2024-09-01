@@ -30,6 +30,7 @@ const Page = async () => {
               hasThisType={accType}
               name="Základní"
               price={0}
+              priceId={""}
               benefits={[
                 ["Služba <Link href='/DezySafety'> DezySafety ochrana kupujícího i prodavajícího</Link>", true],
                 ["1 fotka u inzerátu", true],
@@ -43,7 +44,8 @@ const Page = async () => {
             <Account
               hasThisType={accType}
               name="Premium"
-              price={28}
+              price={88}
+              priceId={"price_1PuGDnHvhgFZWc3HhhIBOX7o"}
               benefits={[
                 ["Služba <Link href='/DezySafety'> DezySafety ochrana kupujícího i prodavajícího</Link>", true],
                 ["10 inzerátů za měsíc", true],
@@ -57,7 +59,8 @@ const Page = async () => {
             <Account
               hasThisType={accType}
               name="Legend"
-              price={89}
+              price={128}
+              priceId={"price_1PuGEOHvhgFZWc3HsPPFGuDB"}
               benefits={[
                 ["Služba <Link href='/DezySafety'> DezySafety ochrana kupujícího i prodavajícího</Link>", true],
                 ["Neomezený počet inzerátů za měsíc", true],
