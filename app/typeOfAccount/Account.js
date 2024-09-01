@@ -67,7 +67,7 @@ export function Account({ name, price, benefits, hasThisType }) {
       >
         {isActive ? 'Vaše předplatné' : 'Zvolit'}
       </button>
-      <PaymentModal price={price} />
+      <PaymentModal price={price} name={name} />
     </div>
   );
 }

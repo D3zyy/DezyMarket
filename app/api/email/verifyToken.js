@@ -64,7 +64,7 @@ const customer = await stripe.customers.create({
   name: userFromDb.fullName
 
 });
-  console.log("ucet do stripe pridani :",customer)
+
       return { message: 'Email byl úspěšně ověřen.', success: true };
     } else {
      
