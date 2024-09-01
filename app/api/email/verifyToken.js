@@ -53,7 +53,7 @@ export async function verifyToken(email, token) {
       await prisma.verificationTokens.delete({
         where: { id: tokenRecord.id }
       });
-
+      console.log("yo")
   
       return { message: 'Email byl úspěšně ověřen.', success: true };
     } else {
