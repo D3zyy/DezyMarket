@@ -4,6 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckOut from '../components/CheckOut';
 import { useState,useEffect } from 'react';
+import CheckoutForm from '../components/CheckOutForm';
 
 // Function to open the modal
 export function openPaymentModal(price) {
@@ -29,13 +30,13 @@ export function PaymentModal({ price,name }) {
                     <Elements 
                     stripe={stripePromise}
                     options={{
-                        mode: "payment",
+                        mode: "subscription",
                         amount: price *100,
                         currency: "czk"
                     }}
                 >
+                    <CheckoutForm />
                     
-                    <CheckOut amount={price} />
                 </Elements>
                 
                     ) : (
