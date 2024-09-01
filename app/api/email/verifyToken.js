@@ -53,6 +53,7 @@ export async function verifyToken(email, token) {
       await prisma.verificationTokens.delete({
         where: { id: tokenRecord.id }
       });
+
       //adding customer to the stripe 
       const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
       let userFromDb = await prisma.Users.findUnique({
@@ -65,6 +66,7 @@ export async function verifyToken(email, token) {
 
       });
       console.log("nový uživatel přidan na stripe : ",customer)
+
   
       return { message: 'Email byl úspěšně ověřen.', success: true };
     } else {
