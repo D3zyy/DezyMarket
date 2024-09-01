@@ -23,7 +23,7 @@ export function PaymentModal({ price }) {
         <div>
             <dialog id={`payment_modal_${price}`} className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
-                    Ahoj tady se platí {price} Kč
+             
                     {price >= 15 ?(
                         
                     <Elements 
