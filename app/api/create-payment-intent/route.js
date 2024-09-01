@@ -4,6 +4,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 export async function POST(request) {
 
     try {
+        
      const { amount } = await request.json()
      const paymentIntent = await stripe.paymentIntents.create({
         amount : amount *10000,

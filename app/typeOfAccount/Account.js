@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { PaymentModal,openPaymentModal } from './modalForPayment';
 
-export function Account({ name, price, benefits, hasThisType }) {
+export function Account({ name, price,priceId, benefits, hasThisType }) {
   const isActive = hasThisType === name;
 
   const renderBenefitText = (text) => {
@@ -67,7 +67,7 @@ export function Account({ name, price, benefits, hasThisType }) {
       >
         {isActive ? 'Vaše předplatné' : 'Zvolit'}
       </button>
-      <PaymentModal price={price} />
+      <PaymentModal price={price} priceId ={priceId} />
     </div>
   );
 }

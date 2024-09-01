@@ -94,7 +94,7 @@ export const handleRegistration = async (formData) => {
       const result = await sendVerificationEmail(validatedFields.data.email);
 
       if (result) {
-      
+          
         
         return {
           message: "",
