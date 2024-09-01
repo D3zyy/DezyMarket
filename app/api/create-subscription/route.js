@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
-import { custom } from "zod";
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 export async function POST(request) {
@@ -16,20 +16,18 @@ export async function POST(request) {
           );
 
    
-       // const { priceId } = await request.json()
+        const { priceId } = await request.json()
 
         const customer= await stripe.customers.list({
             email: session.email
           });
-          const id = obj.data[0].id;
 
-          console.log("uživatel  ID: ", customer.data[0].id)
 
-          //creating the subscription
+
           const subscription = await stripe.subscriptions.create({
-            customer:  "cus_QlqUQFidqsnvoy",
+            customer:  customer.data[0].id,
             items: [{
-              price: "price_1PuH84HvhgFZWc3HGd8JElE1",
+              price: priceId.priceId,
             }],
             payment_behavior: 'default_incomplete',
             payment_settings: { save_default_payment_method: 'on_subscription' },
@@ -38,7 +36,7 @@ export async function POST(request) {
 
 
           if (subscription.pending_setup_intent !== null) {
-            console.log(5)
+
             return new NextResponse(
                 JSON.stringify({ 
                      type: 'setup',
@@ -50,8 +48,9 @@ export async function POST(request) {
               );
           } else {
   
-           
+ 
             return new NextResponse(
+         
                 JSON.stringify({ 
                     type: 'payment',
                     clientSecret: subscription.latest_invoice.payment_intent.client_secret}),

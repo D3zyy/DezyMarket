@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
 
-export default function CheckoutForm() {
+export default function CheckoutForm(priceId) {
   const stripe = useStripe();
   const elements = useElements();
-
   const [errorMessage, setErrorMessage] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -35,8 +34,12 @@ export default function CheckoutForm() {
 
     // Create the subscription
     const res = await fetch('/api/create-subscription', {
-      method: "POST",
-    });
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json' // Add the Content-Type header
+        },
+        body: JSON.stringify({ priceId }) // Send as an object
+      });
     const {type, clientSecret} = await res.json();
     const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
 
@@ -45,21 +48,23 @@ export default function CheckoutForm() {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: 'https://example.com/order/123/complete',
+        return_url: process.env.NEXT_PUBLIC_BASE_URL,
       },
     });
 
     if (error) {
-      // This point is only reached if there's an immediate error when confirming the Intent.
-      // Show the error to your customer (for example, "payment details incomplete").
+
       handleError(error);
     } else {
-      // Your customer is redirected to your `return_url`. For some payment
-      // methods like iDEAL, your customer is redirected to an intermediate
-      // site first to authorize the payment, then redirected to the `return_url`.
     }
   };
-
+  if(!stripe || !elements)
+    {
+        return <div style={{textAlign: "center"}}>  <div
+        className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+        role="status" >
+      </div></div>
+    }
   return (
     <form onSubmit={handleSubmit}>
       <PaymentElement />
@@ -68,7 +73,7 @@ export default function CheckoutForm() {
              className='w-full btn bg-[#8300ff] text-white hover:bg-[#8300ff] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50 cursor-pointer' style={{ display: "block", margin: "20px auto" }}>
                 {!loading ? "Zaplatit" : "Načítání.."} 
                 </button>
-      {errorMessage && <div>{errorMessage}</div>}
+
     </form>
   );
 }

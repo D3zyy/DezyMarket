@@ -15,7 +15,7 @@ export function openPaymentModal(price) {
 }
 
 // PaymentModal Component
-export function PaymentModal({ price,name }) {
+export function PaymentModal({ price,name ,priceId}) {
     const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
     const stripePromise = loadStripe(publicKey);
  
@@ -35,7 +35,7 @@ export function PaymentModal({ price,name }) {
                         currency: "czk"
                     }}
                 >
-                    <CheckoutForm />
+                    <CheckoutForm priceId={priceId} />
                     
                 </Elements>
                 
