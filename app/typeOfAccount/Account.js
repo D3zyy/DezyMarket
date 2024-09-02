@@ -6,10 +6,9 @@ import { PaymentModal, openPaymentModal } from './modalForPayment';
 export function Account({ name, price, priceId, benefits, hasThisType }) {
   const isActive = hasThisType === name;
   const isZákladní = name === 'Základní';
-  const hasOtherActive = hasThisType && hasThisType !== 'Základní';
-  
-  // Determine if the current button should be enabled or disabled
-  const shouldDisable = isZákladní || hasOtherActive || (isActive && !isZákladní);
+
+  // Determine if the button should be disabled
+  const shouldDisable = hasThisType && (isZákladní || hasThisType !== 'Základní');
 
   // Determine if the "Zrušit předplatné" link should be shown
   const showCancelLink = isActive && !isZákladní;
@@ -75,7 +74,7 @@ export function Account({ name, price, priceId, benefits, hasThisType }) {
       >
         {isActive ? 'Vaše předplatné' : 'Zvolit'}
       </button>
-      {!isZákladní && showCancelLink && (
+      {showCancelLink && !isZákladní && (
         <Link href="/zrusit-predplatne" className="block mt-4 text-red-500 underline">
           Zrušit předplatné
         </Link>
