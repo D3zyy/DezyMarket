@@ -236,7 +236,7 @@ const LoginModal = () => {
           <div className="modal-action">
             {!success && (
               <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? 'Načítání...' : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
+                {loading ? <span className="loading loading-spinner loading-sm"></span>  : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
               </button>
             )}
             <button type="button" className="btn" onClick={() => document.getElementById('login_modal').close()} onTouchStart={() => document.getElementById('login_modal').close()}>Zavřít</button>

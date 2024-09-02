@@ -143,7 +143,7 @@ const RegistrationModal = () => {
                 <div className="modal-action">
                   {!registrationSuccess && (
                     <button type="submit" className="btn btn-primary" disabled={loading}>
-                      {loading ? 'Načítání...' : 'Registrovat se'}
+                      {loading ? <span className="loading loading-spinner loading-sm"></span>  : 'Registrovat se'}
                     </button>
                   )}
                   <button type="button" className="btn" onClick={() => document.getElementById('register_modal').close()} onTouchStart={() => document.getElementById('register_modal').close()}>Zavřít</button>
