@@ -13,42 +13,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model Users {
-  id                       Int      @id @default(autoincrement())
+  id                       Int              @id @default(autoincrement())
   fullName                 String
   nickname                 String?
-  email                    String   @unique
-  password                 String   @db.VarChar(255)
-  dateOfRegistration       DateTime @default(now())
-  image                    String   @default("default.png")
+  email                    String           @unique
+  password                 String           @db.VarChar(255)
+  dateOfRegistration       DateTime         @default(now())
+  image                    String           @default("default.png")
   roleId                   Int
-  role                     Roles    @relation(fields: [roleId], references: [id])
-  bans                     Bans[]   // Establish one-to-many relationship with Bans
+  role                     Roles            @relation(fields: [roleId], references: [id])
+  bans                     Bans[]           // Establish one-to-many relationship with Bans
   sessions                 Sessions[]
-  AccountType              UserAccountType[]
-  termsOfUseAndPrivatePolicy Boolean @default(false)
-  verifiedEmail            Boolean  @default(false) // New field to track email verification status
+  accountTypes             AccountType[]    // One-to-many relationship with AccountType
+  termsOfUseAndPrivatePolicy Boolean        @default(false)
+  verifiedEmail            Boolean          @default(false) // New field to track email verification status
   verificationToken        VerificationTokens? // Optional relation to VerificationToken
   numberOfTries            NumberOfTries?  
   categories               UserCategories[]
-  firstLogin               Boolean   @default(true)
+  firstLogin               Boolean          @default(true)
   @@index([email, password])
 }
 
 model AccountType {
-  id     Int    @id @default(autoincrement())
-  name   String
-  users  UserAccountType[]  
+  id       Int    @id @default(autoincrement())
+  name     String
+  userId   Int
+  user     Users  @relation(fields: [userId], references: [id])  // Foreign key for the one-to-many relationship
   @@index([id])
+  @@index([userId])
 }
-model UserAccountType {
-  id           Int  @id @default(autoincrement())
-  userId       Int
-  accountTypeId   Int
-  validFrom DateTime @default(now())
-  validTill DateTime?
-  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  AccountType    AccountType @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
-}
+
 
 model Categories {
   id     Int    @id @default(autoincrement())

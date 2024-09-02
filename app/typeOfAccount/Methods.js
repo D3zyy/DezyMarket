@@ -1,9 +1,13 @@
 import { prisma } from "../database/db";
+import { getSession } from "../authentication/actions";
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 
 export async function getUserAccountTypeOnStripe(email) {
   try {
+
+
     // Najdeme zákazníka na základě e-mailu
     const customers = await stripe.customers.list({
       email: email,
@@ -27,6 +31,26 @@ export async function getUserAccountTypeOnStripe(email) {
 
     // Zkontrolujeme, zda existuje aktivní předplatné
     if (!subscriptions.data.length) {
+      const userAccountTypes = await prisma.users.findUnique({
+        where: {
+          email: email, 
+        },
+        select: {
+          accountTypes: {
+            select: {
+              name: true, 
+            },
+          },
+        },
+      });
+      
+      // Log the account type names
+      if (userAccountTypes && userAccountTypes.accountTypes.length > 0) {
+        // Return the name of the first (and only) account type
+        return userAccountTypes.accountTypes[0].name;
+      } else {
+        return null; // Or handle this case as needed, e.g., throw an error or return a default value
+      }
      // console.log(`Žádné aktivní předplatné pro zákazníka ${email} nebylo nalezeno.`);
       return null;
     }

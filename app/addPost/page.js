@@ -8,7 +8,7 @@ import { getUserAccountType, getUserAccountTypeOnStripe } from '../typeOfAccount
 const page = async ()  => {
     const session = await getSession();
     let accType = await getUserAccountTypeOnStripe(session.email)
-
+    console.log("jmeno uctu pri zobrazeni AddPost:",accType)
     if (!accType && session.isLoggedIn) redirect('/typeOfAccount');
   return (
     <div>

@@ -106,7 +106,7 @@ export const getSession = async () => {
         });
       }
        accountTypeName = await getUserAccountTypeOnStripe(userToCreate.email)
-        console.log("jmeno uctu :",accountTypeName)
+       console.log("jmeno uctu pri login:",accountTypeName)
       
       
       // Use iron-session to set the session ID in a cookie
