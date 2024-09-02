@@ -74,7 +74,7 @@ const { error } = await confirmIntent({
       <button 
              disabled={!stripe || loading}
              className='w-full btn bg-[#8300ff] text-white hover:bg-[#8300ff] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50 cursor-pointer' style={{ display: "block", margin: "20px auto" }}>
-                {!loading ? "Zaplatit" : "Načítání.."} 
+                {!loading ? "Zaplatit" : <span className="loading loading-spinner loading-sm"></span>} 
                 </button>
 
     </form>
