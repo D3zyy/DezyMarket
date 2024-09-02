@@ -4,28 +4,29 @@ import NotLoggedIn from '../components/NotLoggedIn';
 import { redirect } from 'next/navigation';
 import Account from './Account'; // Import Account properly
 import Link from 'next/link';
-import { getUserAccountType , getUserAccountTypeOnStripe} from './Methods';
+import { getUserAccountType, getUserAccountTypeOnStripe } from './Methods';
 
-
-
-
-const Page = async () => {
+const Page = async ({ searchParams }) => {
   const session = await getSession();
-  //let accType = await getUserAccountType(session.userId)
-  let accType = await getUserAccountTypeOnStripe(session.email)
+  const successMessage = searchParams?.success; // Get the 'success' parameter from searchParams
 
-
+  let accType = await getUserAccountTypeOnStripe(session.email);
 
   if (!session.isLoggedIn) redirect('/');
-
 
   return (
     <div>
       {session.isLoggedIn ? (
         <>
-          <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold" }}>
-            Zvolte typ účtu, který vám sedí..
-          </h3>
+          {successMessage ? (
+            <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold", color: "green", marginTop: "20px" }}>
+              Úspěšně jste aktivovali {successMessage} účet
+            </h3>
+          ) : (
+            <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold" }}>
+              Zvolte typ účtu, který vám sedí..
+            </h3>
+          )}
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 p-4">
             <Account
               hasThisType={accType}
@@ -72,7 +73,6 @@ const Page = async () => {
                 ["Stránky bez reklam", true],
               ]}
             />
-     
           </div>
         </>
       ) : (

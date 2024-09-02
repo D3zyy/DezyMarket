@@ -44,13 +44,16 @@ export default function CheckoutForm(priceId) {
     const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
 
     // Confirm the Intent using the details collected by the Payment Element
-    const {error} = await confirmIntent({
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: process.env.NEXT_PUBLIC_BASE_URL,
-      },
-    });
+    const successAccountType = "Šikula"; // Store the account type name
+const returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/typeOfAccount?success=${encodeURIComponent(successAccountType)}`; // Construct the URL and encode the parameter
+
+const { error } = await confirmIntent({
+  elements,
+  clientSecret,
+  confirmParams: {
+    return_url: returnUrl, // Use the constructed URL
+  },
+});
 
     if (error) {
 

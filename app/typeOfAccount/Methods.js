@@ -6,7 +6,9 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 export async function getUserAccountTypeOnStripe(email) {
   try {
-
+    if(!email){
+      return;
+    }
 
     // Najdeme zákazníka na základě e-mailu
     const customers = await stripe.customers.list({
