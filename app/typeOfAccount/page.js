@@ -4,15 +4,16 @@ import NotLoggedIn from '../components/NotLoggedIn';
 import { redirect } from 'next/navigation';
 import Account from './Account'; // Import Account properly
 import Link from 'next/link';
-import { getUserAccountType } from './Methods';
+import { getUserAccountType , getUserAccountTypeOnStripe} from './Methods';
 
 
 
 
 const Page = async () => {
   const session = await getSession();
-  let accType = await getUserAccountType(session.userId)
-  console.log("typ účtu: ",accType)
+  //let accType = await getUserAccountType(session.userId)
+  let accType = await getUserAccountTypeOnStripe(session.email)
+
 
 
   if (!session.isLoggedIn) redirect('/');

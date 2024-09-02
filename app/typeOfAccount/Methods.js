@@ -1,9 +1,50 @@
 import { prisma } from "../database/db";
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 
+export async function getUserAccountTypeOnStripe(email) {
+  try {
+    // Najdeme zákazníka na základě e-mailu
+    const customers = await stripe.customers.list({
+      email: email,
+      limit: 1, // Omezíme na jeden výsledek, protože e-mail by měl být unikátní
+    });
 
+    // Zkontrolujeme, zda zákazník existuje
+    if (!customers.data.length) {
+    //  console.log(`Zákazník s e-mailem ${email} nebyl nalezen.`);
+      return null;
+    }
 
+    const customer = customers.data[0];
 
+    // Najdeme aktivní předplatná pro zákazníka
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customer.id,
+      status: 'active',
+      limit: 1, // Pokud chceme pouze první aktivní předplatné
+    });
+
+    // Zkontrolujeme, zda existuje aktivní předplatné
+    if (!subscriptions.data.length) {
+     // console.log(`Žádné aktivní předplatné pro zákazníka ${email} nebylo nalezeno.`);
+      return null;
+    }
+
+    const subscription = subscriptions.data[0];
+
+    // Získáme informace o předplatném a produktu
+    const subscriptionInfo = await stripe.subscriptions.retrieve(subscription.id);
+    const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
+
+    console.log(`Nalezený produkt: ${product.name}`);
+    return product.name;
+
+  } catch (error) {
+    console.error("Chyba při získávání typu účtu ze Stripe:", error);
+    throw error; // Re-throw error to be handled by caller
+  }
+}
 
 
 export async function getUserAccountType(userId) {

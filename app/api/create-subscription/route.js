@@ -1,11 +1,12 @@
-import {  NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
-
+import { custom } from "zod";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 export async function POST(request) {
 
     try {
+        console.log("tadyy")
         const session = await getSession();  
         if (!session.isLoggedIn)   return new NextResponse(
             JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na subscription. Session nebyla nalezena'}),
@@ -16,13 +17,10 @@ export async function POST(request) {
           );
 
    
-        const { priceId } = await request.json()
-
+       const { priceId } = await request.json()
         const customer= await stripe.customers.list({
             email: session.email
           });
-
-
 
           const subscription = await stripe.subscriptions.create({
             customer:  customer.data[0].id,
@@ -36,26 +34,26 @@ export async function POST(request) {
 
 
           if (subscription.pending_setup_intent !== null) {
-
+  
             return new NextResponse(
                 JSON.stringify({ 
                      type: 'setup',
                     clientSecret: subscription.pending_setup_intent.client_secret}),
                 {
-                  status: 500,
+                  status: 200,
                   headers: { 'Content-Type': 'application/json' }
                 }
               );
           } else {
   
- 
+    
             return new NextResponse(
          
                 JSON.stringify({ 
                     type: 'payment',
                     clientSecret: subscription.latest_invoice.payment_intent.client_secret}),
                 {
-                  status: 500,
+                  status: 200,
                   headers: { 'Content-Type': 'application/json' }
                 }
               );
