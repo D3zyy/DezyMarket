@@ -5,8 +5,7 @@ import {  getIronSession } from "iron-session"
 import { cookies } from "next/headers"
 import { prisma } from '../database/db';
 import { checkUserBan } from '../api/session/dbMethodsSession';
-
-
+import { getUserAccountTypeOnStripe } from '../typeOfAccount/Methods';
 
 export const getSession = async () => {
     try {
@@ -106,86 +105,8 @@ export const getSession = async () => {
           },
         });
       }
-    //correct czech time
-    const currentDate = new Date();
-    const localISODate = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString();
-    console.log("cas ted : ",localISODate)
-    
-         // Fetch the existing UserAccountType record
-         try {
-          const currentDate = new Date();
-          const localISODate = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString();
-        
-          // Fetch existing UserAccountType records
-          const existingAccountTypes = await prisma.userAccountType.findMany({
-            where: {
-              userId: userToCreate.id,
-              OR: [
-                {
-                  validTill: {
-                    gt: new Date(localISODate), // Ensure the accountType is still active
-                  },
-                },
-                {
-                  AccountType: {
-                    name: "Základní", // Include 'Základní' as a fallback
-                  },
-                },
-              ],
-            },
-            include: {
-              AccountType: true, // Ensure that AccountType details are fetched
-            },
-            orderBy: [
-              {
-                validTill: 'desc', // Prioritize active records based on validTill
-              },
-              {
-                AccountType: {
-                  name: 'asc', // Secondary sort to ensure 'Základní' is last if there are active records
-                },
-              },
-            ],
-          });
-        
-          console.log("Existuje záznam o typu učtu u tohohle uživatele:", existingAccountTypes);
-        
-          // Define account type hierarchy
-          const hierarchy = ['Legend', 'Premium', 'Základní'];
-        
-          // Function to get the index of the account type in the hierarchy
-          const getAccountTypePriority = (name) => hierarchy.indexOf(name);
-        
-          let bestAccountType = null;
-        
-          if (existingAccountTypes.length > 0) {
-            // Determine the best account type based on priority
-            bestAccountType = existingAccountTypes.reduce((best, current) => {
-              if (!best) return current;
-              const bestPriority = getAccountTypePriority(best.AccountType.name);
-              const currentPriority = getAccountTypePriority(current.AccountType.name);
-              // Compare priorities
-              return currentPriority < bestPriority ? current : best;
-            }, null);
-        
-            // Determine if the best account type is still valid
-            const isValid = bestAccountType.validTill > new Date(localISODate);
-            console.log("Je aktivní pořád ten typ účtu:", isValid);
-            console.log(bestAccountType.AccountType.name);
-        
-        
-      
-          
-              accountTypeName = bestAccountType.AccountType.name;
-            
-          } 
-          
-        
-          console.log("Jméno účtu, které budu vkládat do session:", accountTypeName);
-        } catch (error) {
-          console.error("Chyba při načítaní uživatelského typu účtu:", error);
-          // Handle errors as appropriate
-        }
+       accountTypeName = await getUserAccountTypeOnStripe(userToCreate.email)
+        console.log("jmeno uctu :",accountTypeName)
       
       
       // Use iron-session to set the session ID in a cookie

@@ -3,11 +3,11 @@ import React from 'react'
 import { getSession } from '../authentication/actions';
 import { openLoginModal } from '../components/modals/LoginModal';
 import NotLoggedIn from '../components/NotLoggedIn';
-import { getUserAccountType } from '../typeOfAccount/Methods';
+import { getUserAccountType, getUserAccountTypeOnStripe } from '../typeOfAccount/Methods';
 
 const page = async ()  => {
     const session = await getSession();
-    let accType = await getUserAccountType(session.userId)
+    let accType = await getUserAccountTypeOnStripe(session.email)
 
     if (!accType && session.isLoggedIn) redirect('/typeOfAccount');
   return (
