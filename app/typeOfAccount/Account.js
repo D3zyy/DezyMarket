@@ -1,10 +1,18 @@
 "use client";
 
 import Link from 'next/link';
-import { PaymentModal,openPaymentModal } from './modalForPayment';
+import { PaymentModal, openPaymentModal } from './modalForPayment';
 
 export function Account({ name, price, priceId, benefits, hasThisType }) {
   const isActive = hasThisType === name;
+  const isZákladní = name === 'Základní';
+  const hasOtherActive = hasThisType && hasThisType !== 'Základní';
+  
+  // Determine if the current button should be enabled or disabled
+  const shouldDisable = isZákladní || hasOtherActive || (isActive && !isZákladní);
+
+  // Determine if the "Zrušit předplatné" link should be shown
+  const showCancelLink = isActive && !isZákladní;
 
   const renderBenefitText = (text) => {
     const regex = /<Link href='([^']+)'>([^<]+)<\/Link>/g;
@@ -62,11 +70,16 @@ export function Account({ name, price, priceId, benefits, hasThisType }) {
       <button
         onClick={() => openPaymentModal(price)} // Pass the price to the function
         type="button"
-        className={`w-full btn ${isActive ? 'btn-disabled' : 'bg-[#8300ff] text-white hover:bg-[#8300ff] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50'} ${isActive ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-        disabled={isActive}
+        className={`w-full btn ${isActive ? 'bg-[#8300ff] text-white disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50'} ${shouldDisable ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+        disabled={shouldDisable} // Disable button based on condition
       >
         {isActive ? 'Vaše předplatné' : 'Zvolit'}
       </button>
+      {!isZákladní && showCancelLink && (
+        <Link href="/zrusit-predplatne" className="block mt-4 text-red-500 underline">
+          Zrušit předplatné
+        </Link>
+      )}
       <PaymentModal price={price} name={name} priceId={priceId} />
     </div>
   );
