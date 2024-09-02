@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
 
-export default function CheckoutForm(priceId) {
+export default function CheckoutForm(priceId,name) {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState();
@@ -44,7 +44,7 @@ export default function CheckoutForm(priceId) {
     const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
 
     // Confirm the Intent using the details collected by the Payment Element
-    const successAccountType = "Šikula"; // Store the account type name
+    const successAccountType = name; // Store the account type name
 const returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/typeOfAccount?success=${encodeURIComponent(successAccountType)}`; // Construct the URL and encode the parameter
 
 const { error } = await confirmIntent({

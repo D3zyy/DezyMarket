@@ -35,7 +35,7 @@ export function PaymentModal({ price,name ,priceId}) {
                         currency: "czk"
                     }}
                 >
-                    <CheckoutForm priceId={priceId} />
+                    <CheckoutForm priceId={priceId} name={name} />
                     
                 </Elements>
                 

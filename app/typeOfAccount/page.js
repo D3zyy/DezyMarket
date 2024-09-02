@@ -19,9 +19,44 @@ const Page = async ({ searchParams }) => {
       {session.isLoggedIn ? (
         <>
           {successMessage ? (
-            <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold", color: "green", marginTop: "20px" }}>
-              Úspěšně jste aktivovali {successMessage} účet
-            </h3>
+         <div
+        
+      style={{
+        display: 'flex',
+        justifyContent: 'center', // Center horizontally
+        alignItems: 'center', // Center vertically if needed
+        padding: '20px', // Add padding around the content
+      }}
+    >
+      <div
+        className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-200 dark:bg-gray-800 dark:text-green-400"
+        role="alert"
+        style={{
+          display: 'flex',
+          alignItems: 'center', // Align items vertically
+          gap: '10px', // Space between icon and text
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2} // Increase stroke width for bold effect
+          stroke="currentColor"
+          className="w-6 h-6"
+          style={{
+            strokeWidth: '2.5', // Make stroke bold
+          }}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+          />
+        </svg>
+        <span className="font-bold">Úspěch!</span> Vaše předplatné bylo aktivováno.
+      </div>
+    </div>
           ) : (
             <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold" }}>
               Zvolte typ účtu, který vám sedí..
