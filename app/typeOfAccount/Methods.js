@@ -63,7 +63,7 @@ export async function getUserAccountTypeOnStripe(email) {
     const subscriptionInfo = await stripe.subscriptions.retrieve(subscription.id);
     const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
 
-    console.log(`Nalezený produkt: ${product.name}`);
+
     return product.name;
 
   } catch (error) {

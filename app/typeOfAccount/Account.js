@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { PaymentModal, openPaymentModal } from './modalForPayment';
+import { SubscriptionInfo } from '../components/SubscriptionInfo';
 
 export function Account({ name, price, priceId, benefits, hasThisType }) {
   const isActive = hasThisType === name;
@@ -75,9 +76,10 @@ export function Account({ name, price, priceId, benefits, hasThisType }) {
         {isActive ? 'Vaše předplatné' : 'Zvolit'}
       </button>
       {showCancelLink && !isZákladní && (
-        <Link href="/zrusit-predplatne" className="block mt-4 text-red-500 underline">
-          Zrušit předplatné
-        </Link>
+        <div style={{marginTop: "15px"}}>
+           <SubscriptionInfo  />
+        </div>
+       
       )}
       <PaymentModal price={price} name={name} priceId={priceId} />
     </div>
