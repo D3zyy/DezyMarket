@@ -70,14 +70,19 @@ export async function POST(req) {
        let producName =product.name;
        console.log(producName)
        console.log("rovnaji se : ",producName === data.name)
-        //console.log("info sub :",subscriptionInfo)
-       //console.log("predplatne :",subscriptions)
-        console.log("Jsem rdy ho změnit na cancled ")
+       if(producName != data.name){
+        return new Response(JSON.stringify({
+        }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+        });
+       } else if(producName == data.name){
         await stripe.subscriptions.update(
             subscription.id,
             {cancel_at_period_end: true}
           );
-          
+       }
+       
         return new Response(JSON.stringify({
         }), {
             status: 200,

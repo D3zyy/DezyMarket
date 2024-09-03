@@ -71,17 +71,27 @@ export async function POST(req) {
        const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
        let producName =product.name;
        console.log(producName)
-       console.log("rovnaji se  a predplatne je nastaveno na konec: ",producName === data.name && subscriptions.data[0].cancel_at_period_end === true)
        
+       console.log("rovnaji se  a predplatne je nastaveno na konec: ",producName === data.name && subscriptions.data[0].cancel_at_period_end === true)
+       if(producName != data.name || subscriptions.data[0].cancel_at_period_end != true){
+        return new Response(JSON.stringify({
+        }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+        });
+       }
        //
 
         //console.log("info sub :",subscriptionInfo)
        //console.log("predplatne :",subscriptions)
         console.log("Jsem rdy ho změnit na obnovu zpatky ")
-        await stripe.subscriptions.update(
-            subscription.id,
-            {cancel_at_period_end: false}
-          );
+        if(producName === data.name && subscriptions.data[0].cancel_at_period_end === true){
+            await stripe.subscriptions.update(
+                subscription.id,
+                {cancel_at_period_end: false}
+              );
+        }
+       
           
         return new Response(JSON.stringify({
         }), {
