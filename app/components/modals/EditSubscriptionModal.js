@@ -3,11 +3,14 @@
 export function openEditSubscriptionModal() {
   document.getElementById('edit_modal').showModal();
 }
+export function closeEditSubscriptionModal() {
+  document.getElementById('edit_modal').close();
+}
 
 export const EditSubscriptionModal = ({ cancel, date }) => {
   return (
-    <dialog id="edit_modal" className="modal modal-bottom sm:modal-middle">
-      <div className="modal-box w-full max-w-lg p-6 flex flex-col items-center">
+    <dialog id="edit_modal" className="modal modal-bottom sm:modal-middle" style={{marginLeft: "0px"}}>
+      <div className="modal-box w-full p-6 flex flex-col items-center">
         <div className="text-center">
           {cancel ? (
             <>
@@ -64,7 +67,7 @@ export const EditSubscriptionModal = ({ cancel, date }) => {
                       d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636"
                     />
                   </svg>
-                  Výhody předplatného zůstanou aktivní pouze do  {date}
+                  Výhody předplatného zůstanou aktivní do {date}
                 </li>
                 <li className="flex items-center mb-3">
                   <svg
@@ -94,6 +97,14 @@ export const EditSubscriptionModal = ({ cancel, date }) => {
           >
             {cancel ? 'Obnovit předplatné' : 'Deaktivovat předplatné'}
           </button>
+          <button
+                 onClick={closeEditSubscriptionModal}
+                 onTouchStart={closeEditSubscriptionModal}
+                 className='btn'
+                 style={{marginLeft: "15px"}}
+                 >
+                    Zavřít
+                 </button>
         </div>
       </div>
     </dialog>

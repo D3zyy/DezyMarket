@@ -72,11 +72,10 @@ export function SubscriptionInfo() {
               </svg>
               
                 ) : ""}
-             
-
                 <button
                         onClick={openEditSubscriptionModal}
-                        className={`underline ${scheduledToCancel ? 'text-green-500' : 'text-red-400'}`}
+                        onTouchStart={openEditSubscriptionModal}
+                        className={`underline ${scheduledToCancel ? 'text-green-500' : 'text-gray-400'}`}
                         >
                         {formattedDate ? (scheduledToCancel ? 'Obnovit předplatné' : 'Zrušit předplatné') : ""}
 
