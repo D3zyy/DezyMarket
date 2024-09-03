@@ -34,9 +34,11 @@ export async function POST(request) {
 
         // Retrieve subscriptions for the customer
         const subscriptions = await stripe.subscriptions.list({
-            customer: customer.id
+            customer: customer.id,
+            status: "active"
         });
-
+        console.log("predplatne :",subscriptions)
+        console.log("ukoncene ale porad plati :",subscriptions.data[0].cancel_at_period_end)
         if (!subscriptions.data.length) {
             return new Response(JSON.stringify({
                 message: "Žádné předplatné nenalezeno pro tohoto zákazníka"
@@ -69,6 +71,7 @@ export async function POST(request) {
 
         return new Response(JSON.stringify({
             nextPayment: formattedDate,
+            scheduledToCancel: subscriptions.data[0].cancel_at_period_end
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
