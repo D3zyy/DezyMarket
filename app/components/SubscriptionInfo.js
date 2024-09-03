@@ -28,7 +28,7 @@ export function SubscriptionInfo() {
         fetchSubscriptionInfo();
     }, []);
     const formattedDate = nextPayment
-    ? new Date(nextPayment).toLocaleDateString('cs-CZ')
+    ? nextPayment
     : null;
     return (
         <>
