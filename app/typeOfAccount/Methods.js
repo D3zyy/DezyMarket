@@ -28,7 +28,6 @@ export async function getUserAccountTypeOnStripe(email) {
     const subscriptions = await stripe.subscriptions.list({
       customer: customer.id,
       status: 'active',
-      limit: 1, // Pokud chceme pouze první aktivní předplatné
     });
 
     // Zkontrolujeme, zda existuje aktivní předplatné

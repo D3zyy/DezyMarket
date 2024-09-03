@@ -1,15 +1,72 @@
 "use client";
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+async function deactivateSubscription(name) {
+  try {
+    const response = await fetch('/api/deactivate-subscription', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: name }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+   
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+async function reactivateSubscription(name) {
+  try {
+    const response = await fetch('/api/reactivate-subscription', { // Assuming a different endpoint for reactivation
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: name }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
 export function openEditSubscriptionModal() {
   document.getElementById('edit_modal').showModal();
 }
+
 export function closeEditSubscriptionModal() {
   document.getElementById('edit_modal').close();
 }
 
-export const EditSubscriptionModal = ({ cancel, date }) => {
+export const EditSubscriptionModal = ({ cancel, date, name }) => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false); // State for loading indicator
+
+  const handleSubscriptionChange = async () => {
+    setLoading(true); // Start loading
+    if (cancel) {
+      await reactivateSubscription(name);
+    } else {
+      await deactivateSubscription(name);
+    }
+    location.reload(); 
+  
+  };
+
   return (
-    <dialog id="edit_modal" className="modal modal-bottom sm:modal-middle" style={{marginLeft: "0px"}}>
+    <dialog id="edit_modal" className="modal modal-bottom sm:modal-middle" style={{ marginLeft: "0px" }}>
       <div className="modal-box w-full p-6 flex flex-col items-center">
         <div className="text-center">
           {cancel ? (
@@ -91,20 +148,23 @@ export const EditSubscriptionModal = ({ cancel, date }) => {
           )}
 
           <button
+            onClick={handleSubscriptionChange}
             className={`${
               cancel ? 'text-green-500' : 'text-red-400'
             } btn mt-6`}
+            disabled={loading} // Disable button while loading
           >
-            {cancel ? 'Obnovit předplatné' : 'Deaktivovat předplatné'}
+            {loading ? 'Načítání...' : (cancel ? 'Obnovit předplatné' : 'Deaktivovat předplatné')}
           </button>
           <button
-                 onClick={closeEditSubscriptionModal}
-                 onTouchStart={closeEditSubscriptionModal}
-                 className='btn'
-                 style={{marginLeft: "15px"}}
-                 >
-                    Zavřít
-                 </button>
+            onClick={closeEditSubscriptionModal}
+            onTouchStart={closeEditSubscriptionModal}
+            className='btn'
+            style={{ marginLeft: "15px" }}
+            disabled={loading} // Disable close button while loading
+          >
+            Zavřít
+          </button>
         </div>
       </div>
     </dialog>

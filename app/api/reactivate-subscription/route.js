@@ -1,15 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
-import moment from "moment";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-export async function POST(request) {
+export async function POST(req) {
     try {
+        let data 
+        try {
+            console.log("tady")
+             data = await req.json();
+            console.log("data ktery sem dostal od klienta :",data)
+          } catch (error) {
+            return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
+              status: 400,
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
         // Ensure the session is retrieved correctly
         const session = await getSession();
         if (!session || !session.isLoggedIn || !session.email) {
             return new Response(JSON.stringify({
-                message: "Chyba na serveru [POST] požadavek na získání informací o předplatném. Session nebyla nalezena"
+                message: "Chyba na serveru [POST] požadavek na deaktivaci předplatného . Session nebyla nalezena "
             }), {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' }
@@ -31,50 +41,49 @@ export async function POST(request) {
         }
 
         const customer = customers.data[0];
-
+        
         // Retrieve subscriptions for the customer
         const subscriptions = await stripe.subscriptions.list({
             customer: customer.id,
             status: "active"
         });
-        const subscriptionInfo = await stripe.subscriptions.retrieve(subscriptions.data[0].id);
-        const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
-
-
         if (!subscriptions.data.length) {
             return new Response(JSON.stringify({
                 message: "Žádné předplatné nenalezeno pro tohoto zákazníka"
             }), {
-                status: 404,
+                status: 403,
                 headers: { 'Content-Type': 'application/json' }
             });
         }
 
-        const subscription = subscriptions.data[0];
-
-        // Check if `current_period_end` is available
-        if (!subscription.current_period_end) {
+        if(!subscriptions.data[0].cancel_at_period_end){
             return new Response(JSON.stringify({
-                message: "Chyba: 'current_period_end' není k dispozici v předplatném"
+                message: "Žádné aktivní předplatné které je pozastavené nebylo nalezeno"
             }), {
-                status: 500,
+                status: 403,
                 headers: { 'Content-Type': 'application/json' }
             });
-        }
+           }
+       //pokud jsou tam dvě předplatné tak udělej tohle 
+       // 1. předplatné
+        const subscription = subscriptions.data[0];
+        const subscriptionInfo = await stripe.subscriptions.retrieve(subscription.id);
+       const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
+       let producName =product.name;
+       console.log(producName)
+       console.log("rovnaji se  a predplatne je nastaveno na konec: ",producName === data.name && subscriptions.data[0].cancel_at_period_end === true)
+       
+       //
 
-        // Convert the timestamp to a date
-        const date = new Date(subscription.current_period_end * 1000);
-        const day = date.getDate();
-        const month = date.getMonth() + 1; // Months are 0-indexed
-        const year = date.getFullYear();
-
-        // Format the date as day.month.year
-        const formattedDate = `${day}.${month}.${year}`;
-
+        //console.log("info sub :",subscriptionInfo)
+       //console.log("predplatne :",subscriptions)
+        console.log("Jsem rdy ho změnit na obnovu zpatky ")
+        await stripe.subscriptions.update(
+            subscription.id,
+            {cancel_at_period_end: false}
+          );
+          
         return new Response(JSON.stringify({
-            nextPayment: formattedDate,
-            scheduledToCancel: subscriptions.data[0].cancel_at_period_end,
-            name : product.name
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
