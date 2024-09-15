@@ -6,7 +6,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 export async function POST(request) {
 
     try {
-        console.log("tadyy")
+
         const session = await getSession();  
         if (!session.isLoggedIn)   return new NextResponse(
             JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na subscription. Session nebyla nalezena'}),
@@ -17,7 +17,15 @@ export async function POST(request) {
           );
 
    
-       const { priceId } = await request.json()
+       const { priceId , agreed} = await request.json()
+       console.log("souhlasil : ",agreed)
+       if (agreed != "on")   return new NextResponse(
+        JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na subscription. Uživatel nesouhlasil s obchodními podmínky'}),
+        {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
         const customer= await stripe.customers.list({
             email: session.email
           });
@@ -30,6 +38,7 @@ export async function POST(request) {
             payment_behavior: 'default_incomplete',
             payment_settings: { save_default_payment_method: 'on_subscription' },
             expand: ['latest_invoice.payment_intent', 'pending_setup_intent'],
+            
           });
 
 

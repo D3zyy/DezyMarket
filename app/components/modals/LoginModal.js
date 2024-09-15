@@ -239,7 +239,7 @@ const LoginModal = () => {
                 {loading ? <span className="loading loading-spinner loading-sm"></span>  : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
               </button>
             )}
-            <button type="button" className="btn" onClick={() => document.getElementById('login_modal').close()} onTouchStart={() => document.getElementById('login_modal').close()}>Zavřít</button>
+            <button disabled={loading} type="button" className="btn" onClick={() => document.getElementById('login_modal').close()} onTouchStart={() => document.getElementById('login_modal').close()}>Zavřít</button>
           </div>
         </form>
         {recoverPassword ? (

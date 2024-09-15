@@ -56,7 +56,7 @@ export function SubscriptionInfo() {
                 <span>{
                         formattedDate ? (
                         scheduledToCancel ? 
-                            `Platné do : ${formattedDate}` : 
+                            `Platné do: ${formattedDate}` : 
                             `Příští fakturace: ${formattedDate}`
                         ) : (
                             <span className="loading loading-spinner loading-sm"></span>

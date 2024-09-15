@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { PaymentModal, openPaymentModal } from './modalForPayment';
 import { SubscriptionInfo } from '../components/SubscriptionInfo';
 
-export function Account({ name, price, priceId, benefits, hasThisType }) {
+export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   const isActive = hasThisType === name;
   const isZákladní = name === 'Základní';
 
@@ -40,7 +40,7 @@ export function Account({ name, price, priceId, benefits, hasThisType }) {
 
   return (
     <div className="w-full max-w-sm p-4 bg-base-100 border border-base-200 rounded-lg shadow-sm sm:p-8 dark:bg-base-900 dark:border-base-700">
-      <h5 className="mb-4 text-xl font-medium text-base-content dark:text-base-content">{name}</h5>
+      <h5 className="mb-4 text-xl font-medium text-base-content dark:text-base-content" >{name}</h5>
       <div className="flex items-baseline text-base-content dark:text-base-content">
         <span className="text-5xl font-extrabold tracking-tight">{price === 0 ? "Zdarma" : price}</span>
         <span className="text-xl font-semibold">{price === 0 ? "" : "Kč"}</span>
@@ -76,7 +76,7 @@ export function Account({ name, price, priceId, benefits, hasThisType }) {
         {isActive ? 'Vaše předplatné' : 'Zvolit'}
       </button>
       {showCancelLink && !isZákladní && (
-        <div style={{marginTop: "15px"}}>
+        <div style={{marginTop: "15px"}}> 
            <SubscriptionInfo  />
         </div>
        

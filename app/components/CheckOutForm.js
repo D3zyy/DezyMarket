@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
-
+import Link from 'next/link';
 export default function CheckoutForm(priceId,name) {
   const stripe = useStripe();
   const elements = useElements();
@@ -31,14 +31,14 @@ export default function CheckoutForm(priceId,name) {
       handleError(submitError);
       return;
     }
-
+    let agreed = document.getElementById("agreeBusinessConditions").value
     // Create the subscription
     const res = await fetch('/api/create-subscription', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json' // Add the Content-Type header
         },
-        body: JSON.stringify({ priceId }) // Send as an object
+        body: JSON.stringify({ priceId,agreed }) // Send as an object
       });
     const {type, clientSecret} = await res.json();
     const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
@@ -70,7 +70,27 @@ const { error } = await confirmIntent({
     }
   return (
     <form onSubmit={handleSubmit}>
+      {errorMessage}
       <PaymentElement />
+      <div style={{ display: "flex", alignItems: "center" , marginTop: "10px"}}>
+  <span>
+    Souhlasím s 
+    <Link
+      style={{ textDecoration: "underline",marginLeft: "4px", marginRight: "15px" }}
+      href={"/BusinessConditions"}
+      target='_blank'
+    >
+      obchodními podmínky
+    </Link>
+  </span>
+  <input
+  required
+    type="checkbox"
+    className="checkbox"
+    name="agreeBusinessConditions"
+    id="agreeBusinessConditions"
+  />
+</div>
       <button 
              disabled={!stripe || loading}
              className='w-full btn bg-[#8300ff] text-white hover:bg-[#8300ff] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50 cursor-pointer' style={{ display: "block", margin: "20px auto" }}>

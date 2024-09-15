@@ -66,6 +66,7 @@ const Page = async ({ searchParams }) => {
             <Account
               hasThisType={accType}
               name="Základní"
+              emoji=""
               price={0}
               priceId={""}
               benefits={[
@@ -81,6 +82,7 @@ const Page = async ({ searchParams }) => {
             <Account
               hasThisType={accType}
               name="Šikula"
+              emoji="&#129303;"
               price={88}
               priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
               benefits={[
@@ -96,6 +98,7 @@ const Page = async ({ searchParams }) => {
             <Account
               hasThisType={accType}
               name="Profík"
+              emoji="&#129321;"
               price={128}
               priceId={"price_1PuH8JHvhgFZWc3Hdme1WQUf"}
               benefits={[

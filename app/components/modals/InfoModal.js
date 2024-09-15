@@ -265,6 +265,7 @@ const InfoModal = ({ defaultOpen, message }) => {
               </button>
             )}
                 <button 
+                disabled={loading}
                 type="button" 
                 className="btn" 
                 onClick={() => {
