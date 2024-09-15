@@ -102,7 +102,11 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
       className={`w-full btn ${isActive ? 'bg-[#8300ff] text-white disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50'} ${shouldDisable ? 'cursor-not-allowed' : 'cursor-pointer'}`}
       disabled={shouldDisable || loading} // Disable button based on condition
     >
-      {isActive ? 'Vaše předplatné' : 'Zvolit'}
+   {loading ? (
+        <span className="loading loading-spinner loading-sm"></span>
+      ) : (
+        <span>{isActive ? 'Vaše předplatné' : 'Zvolit'}</span>
+      )}
     </button>
       {showCancelLink && !isZákladní && (
         <div style={{marginTop: "15px"}}> 
