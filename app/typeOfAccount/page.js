@@ -70,13 +70,14 @@ const Page = async ({ searchParams }) => {
               price={0}
               priceId={""}
               benefits={[
-                ["Služba <Link href='/DezySafety'> DezySafety ochrana kupujícího i prodavajícího</Link>", true],
+                ["Pouze 5 inzerátů za měsíc", true],
                 ["1 fotka u inzerátu", true],
-                ["Pouze 3 inzeráty za měsíc", true],
-                ["Doporučované v kategorii", false],
-                ["Doporučované na hlavní stránce", false],
-                ["Přednost při řešení sporu", false],
-                ["Stránky bez reklam", false],
+                ["Topování v kategorii", false],
+                ["Topování na hlavní stránce", false],
+                ["Zvárazněné inzeráty", false],
+                ["Odznáček vedle jména", false],
+                ["Prioritní zákaznická podpora", false],
+                ["Statistiky inzerátu", false],
               ]}
             />
             <Account
@@ -86,29 +87,31 @@ const Page = async ({ searchParams }) => {
               price={88}
               priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
               benefits={[
-                ["Služba <Link href='/DezySafety'> DezySafety ochrana kupujícího i prodavajícího</Link>", true],
+                ["Zvárazněné inzeráty", true],
+                ["Odznáček vedle jména", true],
                 ["10 inzerátů za měsíc", true],
                 ["až 3 fotky u inzerátu", true],
-                ["Doporučované v kategorii", true],
-                ["Přednost při řešení sporu", true],
-                ["Doporučované na hlavní stránce", false],
-                ["Stránky bez reklam", false],
+                ["Topování v kategorii", true],
+                ["Prioritní zákaznická podpora", true],
+                ["Topování na hlavní stránce", false],
+                ["Statistiky inzerátu", false],
               ]}
             />
             <Account
               hasThisType={accType}
               name="Profík"
               emoji="&#129321;"
-              price={128}
-              priceId={"price_1PuH8JHvhgFZWc3Hdme1WQUf"}
+              price={98}
+              priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
               benefits={[
-                ["Služba <Link href='/DezySafety'> DezySafety ochrana kupujícího i prodavajícího</Link>", true],
+                ["Zvárazněné inzeráty", true],
+                ["Odznáček vedle jména", true],
                 ["Neomezený počet inzerátů za měsíc", true],
                 ["až 10 fotek u inzerátu", true],
-                ["Doporučované v kategorii", true],
-                ["Doporučované na hlavní stránce", true],
-                ["Přednost při řešení sporu", true],
-                ["Stránky bez reklam", true],
+                ["Topování v kategorii", true],
+                ["Topování na hlavní stránce", true],
+                ["Prioritní zákaznická podpora", true],
+                ["Statistiky inzerátu", true],
               ]}
             />
           </div>

@@ -18,7 +18,7 @@ export function openPaymentModal(price) {
 export function PaymentModal({ price, name, priceId }) {
     const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
     const stripePromise = loadStripe(publicKey);
-
+   
     return (
         <div>
             <dialog id={`payment_modal_${price}`} className="modal modal-bottom sm:modal-middle">
