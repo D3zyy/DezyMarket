@@ -3,7 +3,7 @@ import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckOut from '../components/CheckOut';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import CheckoutForm from '../components/CheckOutForm';
 
 // Function to open the modal
@@ -15,34 +15,29 @@ export function openPaymentModal(price) {
 }
 
 // PaymentModal Component
-export function PaymentModal({ price,name ,priceId}) {
+export function PaymentModal({ price, name, priceId }) {
     const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
     const stripePromise = loadStripe(publicKey);
 
-
-
     return (
-        
         <div>
             <dialog id={`payment_modal_${price}`} className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
-                    {name}
-                    {price >= 15 ?( 
-                    
-                    <Elements 
-                    stripe={stripePromise}
-                    options={{
-                        mode: "subscription",
-                        amount: price *100,
-                        currency: "czk"
-                    }}
-                >
-                    <CheckoutForm priceId={priceId} name={name} />
-                    
-                </Elements>
-                
+                    {/* Text center and bold */}
+                    <span className="block text-center font-bold mb-4">{name}</span>     
+                    {price >= 15 ? (
+                        <Elements 
+                            stripe={stripePromise}
+                            options={{
+                                mode: "subscription",
+                                amount: price * 100,
+                                currency: "czk"
+                            }}
+                        >
+                            <CheckoutForm priceId={priceId} name={name} />
+                        </Elements>
                     ) : (
-                        <p>Minimální částka pro platbu je 15 Kč.</p>
+                        <p className="text-center">Minimální částka pro platbu je 15 Kč.</p>
                     )}
                 </div>
                 <button 

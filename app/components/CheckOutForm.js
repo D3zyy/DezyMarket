@@ -70,7 +70,6 @@ const { error } = await confirmIntent({
     }
   return (
     <form onSubmit={handleSubmit}>
-      {errorMessage}
       <PaymentElement />
       <div style={{ display: "flex", alignItems: "center" , marginTop: "10px"}}>
   <span>
