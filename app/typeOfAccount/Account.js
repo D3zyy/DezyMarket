@@ -1,10 +1,14 @@
 "use client";
-
+import { useState } from 'react';
 import Link from 'next/link';
 import { PaymentModal, openPaymentModal } from './modalForPayment';
 import { SubscriptionInfo } from '../components/SubscriptionInfo';
 
+
+
+
 export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
+  const [loading, setLoading] = useState(false);
   const isActive = hasThisType === name;
   const isZákladní = name === 'Základní';
 
@@ -13,6 +17,25 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
 
   // Determine if the "Zrušit předplatné" link should be shown
   const showCancelLink = isActive && !isZákladní;
+
+  const setDefaultType = async () => {
+    setLoading(true);
+    try {
+        const res = await fetch('/api/setDefaultTypeAcc', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json' // Add the Content-Type header
+            },
+        });
+
+        // If successful, reload the page
+        location.reload();
+    } catch (error) {
+        // Catch and handle any other errors
+        console.error('An error occurred:', error);
+        // Optionally, show an error message to the user here
+    } 
+}
 
   const renderBenefitText = (text) => {
     const regex = /<Link href='([^']+)'>([^<]+)<\/Link>/g;
@@ -68,13 +91,19 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
         })}
       </ul>
       <button
-        onClick={() => openPaymentModal(price)} // Pass the price to the function
-        type="button"
-        className={`w-full btn ${isActive ? 'bg-[#8300ff] text-white disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50'} ${shouldDisable ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-        disabled={shouldDisable} // Disable button based on condition
-      >
-        {isActive ? 'Vaše předplatné' : 'Zvolit'}
-      </button>
+      onClick={() => {
+        if (price > 15) {
+          openPaymentModal(price); // Pass the price to the function
+        } else {
+          setDefaultType()
+        }
+      }}
+      type="button"
+      className={`w-full btn ${isActive ? 'bg-[#8300ff] text-white disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed' : 'bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50'} ${shouldDisable ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+      disabled={shouldDisable || loading} // Disable button based on condition
+    >
+      {isActive ? 'Vaše předplatné' : 'Zvolit'}
+    </button>
       {showCancelLink && !isZákladní && (
         <div style={{marginTop: "15px"}}> 
            <SubscriptionInfo  />
