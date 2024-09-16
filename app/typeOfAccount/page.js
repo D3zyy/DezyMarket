@@ -75,7 +75,7 @@ const Page = async ({ searchParams }) => {
                 ["Základní typ inzerátu", true],
                 ["Topování na hlavní stránce", false],
                 ["Topování v kategorii", false],
-                ["Statistiky inzerátu", false],   
+                ["Statistika zobrazení inzerátu", false],   
                 ["Odznáček vedle jména", false],
                 ["Prioritní zákaznická podpora", false],
               ]}
@@ -94,7 +94,7 @@ const Page = async ({ searchParams }) => {
                 ["Odznáček vedle jména", true],
                 ["Prioritní zákaznická podpora", true],
                 ["Topování na hlavní stránce", false],
-                ["Statistiky inzerátu", false],
+                ["Statistika zobrazení inzerátu", false],
               ]}
             />
             <Account
@@ -107,7 +107,7 @@ const Page = async ({ searchParams }) => {
                 ["Neomezený počet inzerátů za měsíc", true],
                 ["až 5 fotek u inzerátu", true],
                 ["Všechny typy inzerátu", true],
-                ["Statistiky inzerátu", true],
+                ["Statistika zobrazení inzerátu", true],
                 ["Topování na hlavní stránce", true],
                 ["Topování v kategorii", true],
                 ["Odznáček vedle jména", true],
