@@ -64,7 +64,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   return (
 <div
   className={`w-full max-w-sm p-4 bg-base-100 border ${
-    isActive&& !isZákladní ? "shadow-effect" : "border-base-200"
+    isActive && !isZákladní ? "shadow-effect border-0" : "border-base-200"
   } rounded-lg shadow-sm sm:p-8 dark:bg-base-900 dark:border-base-700`}
 >
 <style jsx>{`
