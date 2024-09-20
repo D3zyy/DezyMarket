@@ -62,7 +62,29 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   };
 
   return (
-    <div className="w-full max-w-sm p-4 bg-base-100 border border-base-200 rounded-lg shadow-sm sm:p-8 dark:bg-base-900 dark:border-base-700">
+<div
+  className={`w-full max-w-sm p-4 bg-base-100 border ${
+    isActive&& !isZákladní ? "shadow-effect" : "border-base-200"
+  } rounded-lg shadow-sm sm:p-8 dark:bg-base-900 dark:border-base-700`}
+>
+<style jsx>{`
+  @keyframes shadow {
+    0% {
+      box-shadow: 0 0 5px rgba(131, 0, 255, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(131, 0, 255, 1);
+    }
+    100% {
+      box-shadow: 0 0 5px rgba(131, 0, 255, 0.7);
+    }
+  }
+
+  .shadow-effect {
+    animation: shadow 3s infinite;
+  }
+`}</style>
+
       <h5 className="mb-4 text-xl font-medium text-base-content dark:text-base-content" >{name}</h5>
       <div className="flex items-baseline text-base-content dark:text-base-content">
         <span className="text-5xl font-extrabold tracking-tight">{price === 0 ? "Zdarma" : price}</span>

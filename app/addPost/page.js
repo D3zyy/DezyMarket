@@ -1,26 +1,32 @@
 import { redirect } from 'next/navigation';
-import React from 'react'
+import React from 'react';
 import { getSession } from '../authentication/actions';
-import { openLoginModal } from '../components/modals/LoginModal';
 import NotLoggedIn from '../components/NotLoggedIn';
-import { getUserAccountType, getUserAccountTypeOnStripe } from '../typeOfAccount/Methods';
+import { getUserAccountTypeOnStripe } from '../typeOfAccount/Methods';
 
-const page = async ()  => {
+const Page = async () => {
+
     const session = await getSession();
-    console.log(session)
-    let accType = await getUserAccountTypeOnStripe(session.email)
-    console.log("jmeno uctu pri zobrazeni AddPost:",accType)
-    if (!accType && session.isLoggedIn) redirect('/typeOfAccount');
-  return (
-    <div>
-        {session.isLoggedIn ? (
-        "prihlasen"
-      ) : (
-        <NotLoggedIn />
-      )}
-   
-    </div>
-  )
-}
+    if (session.isLoggedIn) {
+        let accType = await getUserAccountTypeOnStripe(session.email);
+        console.log("Typ účtu na /AddPost:", accType);
+        if (!accType) {
+           await redirect('/typeOfAccount');
+        }
+    }
 
-export default page
+
+
+    
+    return (
+        <div>
+            {session.isLoggedIn ? (
+                "Logged in"
+            ) : (
+                <NotLoggedIn />
+            )}
+        </div>
+    );
+};
+
+export default Page;

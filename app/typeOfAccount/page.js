@@ -4,7 +4,7 @@ import NotLoggedIn from '../components/NotLoggedIn';
 import { redirect } from 'next/navigation';
 import Account from './Account'; // Import Account properly
 import Link from 'next/link';
-import { getUserAccountType, getUserAccountTypeOnStripe } from './Methods';
+import {  getUserAccountTypeOnStripe } from './Methods';
 
 const Page = async ({ searchParams }) => {
   const session = await getSession();
@@ -57,10 +57,29 @@ const Page = async ({ searchParams }) => {
         <span className="font-bold">Úspěch!</span> Vaše předplatné bylo aktivováno.
       </div>
     </div>
-          ) : (
-            <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold" }}>
-              Zvolte typ účtu, který vám sedí..
-            </h3>
+          ) : (<>
+            {accType ? (
+              accType === "Základní" ? (
+                <>
+                  <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold" }}>
+                    Zvolte typ účtu, který vám sedí
+                  </h3>
+                  <h1 style={{ textAlign: "center", fontSize: "small", padding: "25px" }}>
+                    ..naše služby jsou zpoplatněny abychom potlačili riziko podvodníků a zajistili vám tak bezpečné prostředí pro Vaše inzeráty.
+                  </h1>
+                </>
+              ) : null
+            ) : (
+              <>
+                <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold" }}>
+                  Zvolte typ účtu, který vám sedí
+                </h3>
+                <h1 style={{ textAlign: "center", fontSize: "small", fontWeight: "italic" }}>
+                  ..naše služby jsou zpoplatněny abychom potlačili riziko podvodníků a zajistili vám tak bezpečné prostředí pro Vaše inzeráty.
+                </h1>
+              </>
+            )}
+          </>
           )}
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 p-4">
             <Account
