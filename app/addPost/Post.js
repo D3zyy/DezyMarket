@@ -7,7 +7,7 @@ import { SubscriptionInfo } from '../components/SubscriptionInfo';
 
 
 
-export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
+export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
   const [loading, setLoading] = useState(false);
   const isActive = hasThisType === name;
   const isZákladní = name === 'Základní';
@@ -18,24 +18,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   // Determine if the "Zrušit předplatné" link should be shown
   const showCancelLink = isActive && !isZákladní;
 
-  const setDefaultType = async () => {
-    setLoading(true);
-    try {
-        const res = await fetch('/api/setDefaultTypeAcc', {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json' // Add the Content-Type header
-            },
-        });
-
-        // If successful, reload the page
-        location.reload();
-    } catch (error) {
-        // Catch and handle any other errors
-        console.error('An error occurred:', error);
-        // Optionally, show an error message to the user here
-    } 
-}
+  
 
   const renderBenefitText = (text) => {
     const regex = /<Link href='([^']+)'>([^<]+)<\/Link>/g;
@@ -85,10 +68,9 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
     }
   `}</style>
 
-<h5 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-base-content dark:text-base-content">
-  {name} 
-  <span style={{marginLeft: "10px"}} dangerouslySetInnerHTML={{ __html: emoji }} />
-</h5>
+  <h5 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-base-content dark:text-base-content">
+    {name}
+  </h5>
 
   <div className="flex items-baseline text-base-content dark:text-base-content">
     <span className="text-4xl sm:text-5xl font-extrabold tracking-tight">
@@ -171,4 +153,4 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   );
 }
 
-export default Account;
+export default Post;

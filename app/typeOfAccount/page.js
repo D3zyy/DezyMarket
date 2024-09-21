@@ -84,8 +84,8 @@ const Page = async ({ searchParams }) => {
 <div style={{marginBottom:"40px"}} className="flex flex-col md:flex-row items-center justify-center gap-2 p-2">
   <Account
     hasThisType={accType}
-    name="Šikula"
-    emoji="&#129303;"
+    name=""
+    emoji="<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>Šikula</div>"
     price={88}
     priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
     benefits={[
@@ -98,11 +98,12 @@ const Page = async ({ searchParams }) => {
       ["Topování na hlavní stránce", false],
       ["Statistika zobrazení inzerátu", false],
     ]}
+    
   />
   <Account
     hasThisType={accType}
-    name="Profík"
-    emoji="&#129321;"
+    name=""
+    emoji="<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>"
     price={98}
     priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
     benefits={[
