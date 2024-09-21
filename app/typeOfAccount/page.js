@@ -119,8 +119,8 @@ const Page = async ({ searchParams }) => {
   />
   <Account
     hasThisType={accType}
-    name="Základní"
-    emoji=""
+    name=""
+    emoji="<div class='badge badge-outline'>Základní</div>"
     price={0}
     priceId={""}
     benefits={[
