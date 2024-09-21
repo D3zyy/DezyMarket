@@ -13,7 +13,10 @@ const Page = async ({ searchParams }) => {
   let accType = await getUserAccountTypeOnStripe(session.email);
 
   if (!session.isLoggedIn) redirect('/');
-
+    
+const emoji1 = `<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>${process.env.BEST_RANK}</div>`;
+const emoji2 = `<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>${process.env.MEDIUM_RANK}</div>`;
+const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`;
   return (
     <div>
       {session.isLoggedIn ? (
@@ -65,7 +68,7 @@ const Page = async ({ searchParams }) => {
                     Zvolte typ účtu, který vám sedí
                   </h3>
                   <h1 style={{ textAlign: "center", fontSize: "small", padding: "25px" }}>
-                    ..naše služby jsou zpoplatněny abychom potlačili riziko podvodníků a zajistili Vám tak bezpečné prostředí pro Vaše inzeráty.
+                    ..naše služby jsou zpoplatněny abychom potlačili riziko podvodníků a zajistili Vám tak bezpečné prostředí pro Vaše inzeráty <span style={{fontSize: "20px"}}>&#129321;</span>
                   </h1>
                 </>
               ) : null
@@ -75,66 +78,69 @@ const Page = async ({ searchParams }) => {
                   Zvolte typ účtu, který vám sedí
                 </h3>
                 <h1 style={{ textAlign: "center", fontSize: "small", padding: "25px" }}>
-                  ..naše služby jsou zpoplatněny abychom potlačili riziko podvodníků a zajistili Vám tak bezpečné prostředí pro Vaše inzeráty.
+                  ..naše služby jsou zpoplatněny abychom potlačili riziko podvodníků a zajistili Vám tak bezpečné prostředí pro Vaše inzeráty <span style={{fontSize: "20px"}}>&#129321;</span>
                 </h1>
               </>
             )}
           </>
           )}
 <div style={{marginBottom:"40px"}} className="flex flex-col md:flex-row items-center justify-center gap-2 p-2">
-  <Account
-    hasThisType={accType}
-    name=""
-    emoji="<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>Šikula</div>"
-    price={88}
-    priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
-    benefits={[
-      ["Neomezený počet inzerátů ", true],
-      ["až 3 fotky u inzerátu", true],
-      ["Všechny typy inzerátu", true],
-      ["Topování v kategorii", true],
-      ["Odznáček vedle jména", true],
-      ["Prioritní zákaznická podpora", true],
-      ["Topování na hlavní stránce", false],
-      ["Statistika zobrazení inzerátu", false],
-    ]}
-    
-  />
-  <Account
-    hasThisType={accType}
-    name=""
-    emoji="<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>"
-    price={98}
-    priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
-    benefits={[
-      ["Neomezený počet inzerátů", true],
-      ["až 5 fotek u inzerátu", true],
-      ["Všechny typy inzerátu", true],
-      ["Statistika zobrazení inzerátu", true],
-      ["Topování na hlavní stránce", true],
-      ["Topování v kategorii", true],
-      ["Odznáček vedle jména", true],
-      ["Prioritní zákaznická podpora", true],
-    ]}
-  />
-  <Account
-    hasThisType={accType}
-    name=""
-    emoji="<div class='badge badge-outline'>Základní</div>"
-    price={0}
-    priceId={""}
-    benefits={[
-      ["Pouze 5 inzerátů", true],
-      ["1 fotka u inzerátu", true],
-      ["Základní typ inzerátu", true],
-      ["Topování na hlavní stránce", false],
-      ["Topování v kategorii", false],
-      ["Statistika zobrazení inzerátu", false],
-      ["Odznáček vedle jména", false],
-      ["Prioritní zákaznická podpora", false],
-    ]}
-    className="order-last md:order-none" // Přidejte třídu pro mobilní zařízení
-  />
+
+
+<Account
+  hasThisType={accType}
+  name="Profík"
+  emoji={emoji1} // První účet
+  price={98}
+  priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
+  benefits={[
+    ["Neomezený počet inzerátů", true],
+    ["až 5 fotek u inzerátu", true],
+    ["Všechny typy inzerátu", true],
+    ["Statistika zobrazení inzerátu", true],
+    ["Topování na hlavní stránce", true],
+    ["Topování v kategorii", true],
+    ["Odznáček vedle jména", true],
+    ["Prioritní zákaznická podpora", true],
+  ]}
+/>
+
+<Account
+  hasThisType={accType}
+  name="Šikula"
+  emoji={emoji2} // Druhý účet
+  price={88}
+  priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
+  benefits={[
+    ["Neomezený počet inzerátů ", true],
+    ["až 3 fotky u inzerátu", true],
+    ["Všechny typy inzerátu", true],
+    ["Topování v kategorii", true],
+    ["Odznáček vedle jména", true],
+    ["Prioritní zákaznická podpora", true],
+    ["Topování na hlavní stránce", false],
+    ["Statistika zobrazení inzerátu", false],
+  ]}
+/>
+
+<Account
+  hasThisType={accType}
+  name="Základní"
+  emoji={""} // Třetí účet
+  price={0}
+  priceId={""}
+  benefits={[
+    ["Pouze 5 inzerátů", true],
+    ["1 fotka u inzerátu", true],
+    ["Základní typ inzerátu", true],
+    ["Topování na hlavní stránce", false],
+    ["Topování v kategorii", false],
+    ["Statistika zobrazení inzerátu", false],
+    ["Odznáček vedle jména", false],
+    ["Prioritní zákaznická podpora", false],
+  ]}
+  className="order-last md:order-none" // Přidejte třídu pro mobilní zařízení
+/>
 </div>
         </>
       ) : (

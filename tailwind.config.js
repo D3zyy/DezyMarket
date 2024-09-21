@@ -42,8 +42,12 @@ module.exports = {
           "error": "#ff246f",
           "error-content": "#160004",
         }, 
+        dim:{
+          ...require("daisyui/src/theming/themes")["dim"],
+          primary: "#8300ff",
+        }
       },
-      "dim"
+
  
     ],
     darkTheme: "dim",
