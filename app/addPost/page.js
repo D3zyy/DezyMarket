@@ -17,11 +17,11 @@ const Page = async () => {
 
 
 
-    
+
     return (
         <div>
             {session.isLoggedIn ? (
-                "Logged in"
+                "Prihlasen"
             ) : (
                 <NotLoggedIn />
             )}
