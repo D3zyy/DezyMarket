@@ -95,8 +95,8 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
   priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
   benefits={[
     ["Neomezený počet inzerátů", true],
-    ["až 5 fotek u inzerátu", true],
-    ["Všechny typy inzerátu", true],
+    ["až 5 fotografií u inzerátu", true],
+    ["Profík inzerát", true],
     ["Statistika zobrazení inzerátu", true],
     ["Topování na hlavní stránce", true],
     ["Topování v kategorii", true],
@@ -113,8 +113,8 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
   priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
   benefits={[
     ["Neomezený počet inzerátů ", true],
-    ["až 3 fotky u inzerátu", true],
-    ["Všechny typy inzerátu", true],
+    ["až 3 fotografie u inzerátu", true],
+    ["Šikula inzerát", true],
     ["Topování v kategorii", true],
     ["Odznáček vedle jména", true],
     ["Prioritní zákaznická podpora", true],
@@ -131,7 +131,7 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
   priceId={""}
   benefits={[
     ["Pouze 5 inzerátů", true],
-    ["1 fotka u inzerátu", true],
+    ["1 fotografie u inzerátu", true],
     ["Základní typ inzerátu", true],
     ["Topování na hlavní stránce", false],
     ["Topování v kategorii", false],

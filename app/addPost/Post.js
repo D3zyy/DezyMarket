@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
-import { PaymentModal, openPaymentModal } from './modalForPayment';
+import { PaymentModal, openPaymentModal } from '../typeOfAccount/modalForPayment';
 import { SubscriptionInfo } from '../components/SubscriptionInfo';
 
 
@@ -67,37 +67,50 @@ export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
       animation: shadow 3s infinite;
     }
   `}</style>
+  
 
-  <h5 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-base-content dark:text-base-content">
-    {name}
-  </h5>
+<h5 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-base-content dark:text-base-content">
+<span style={{ marginRight: name ? "15px" : "" }}>
+  {name}
+</span>
+  <span dangerouslySetInnerHTML={{ __html: emoji }} />
+</h5>
+<div className="flex items-baseline text-base-content dark:text-base-content">
+      <span className="text-4xl sm:text-5xl font-extrabold tracking-tight">
+        {price === 0 ? "Zdarma" : "Zdarma"}
+      </span>
+      <span className="text-lg sm:text-xl font-semibold">
+        {price === 0 ? "" : ""}
+      </span>
+  
+    </div>
 
-  <div className="flex items-baseline text-base-content dark:text-base-content">
-    <span className="text-4xl sm:text-5xl font-extrabold tracking-tight">
-      {price === 0 ? "Zdarma" : price}
-    </span>
-    <span className="text-lg sm:text-xl font-semibold">
-      {price === 0 ? "" : "Kč"}
-    </span>
-    <span className="ms-1 text-lg sm:text-xl font-normal text-base-content dark:text-base-content">
-      {price === 0 ? "" : "/měsíčně"}
-    </span>
-  </div>
 
-  <ul role="list" className="space-y-4 sm:space-y-5 my-6 sm:my-7">
+  <div style={{ position: 'relative' }}>
+  {/* Conditionally render badges on top of the blurred content */}
+  {!shouldDisable && (<>
+
+    <div style={{ position: 'absolute', top: '0', left: '0', display: 'flex', gap: '8px', padding: '8px', zIndex: '10' }}>
+   <Link className='btn btn-neutral btn-sm' href={"/typeOfAccount"}>Vylepšit předplatné</Link>
+    </div>
+    </>
+  )}
+  
+  {/* The benefits list */}
+  <ul
+    role="list"
+    className="space-y-4 sm:space-y-5 my-6 sm:my-7"
+    style={!shouldDisable ? { filter: 'blur(4px)', opacity: '0.5' } : {}}
+  >
     {benefits.map((benefit, index) => {
       const [text, active] = benefit;
       return (
         <li
           key={index}
-          className={`flex items-center ${
-            active ? "" : "line-through decoration-gray-500"
-          }`}
+          className={`flex items-center ${active ? "" : "line-through decoration-gray-500"}`}
         >
           <svg
-            className={`flex-shrink-0 w-3 h-3 sm:w-4 sm:h-4 ${
-              active ? "text-[#8300ff]" : "text-gray-400 dark:text-gray-500"
-            }`}
+            className={`flex-shrink-0 w-3 h-3 sm:w-4 sm:h-4 ${active ? "text-[#8300ff]" : "text-gray-400 dark:text-gray-500"}`}
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
@@ -118,6 +131,7 @@ export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
       );
     })}
   </ul>
+</div>
 
   <button
     onClick={() => {
@@ -132,13 +146,13 @@ export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
       isActive
         ? "bg-[#8300ff] text-white disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed"
         : "bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50"
-    } ${shouldDisable ? "cursor-not-allowed" : "cursor-pointer"}`}
-    disabled={shouldDisable || loading} // Disable button based on condition
+    } ${!shouldDisable ? "cursor-not-allowed" : "cursor-pointer"}`}
+    disabled={!shouldDisable || loading} // Disable button based on condition
   >
     {loading ? (
       <span className="loading loading-spinner loading-sm"></span>
     ) : (
-      <span>{isActive ? "Vaše předplatné" : "Zvolit"}</span>
+      <span>Zvolit</span>
     )}
   </button>
 
