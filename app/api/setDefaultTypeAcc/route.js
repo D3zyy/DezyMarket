@@ -45,7 +45,22 @@ export async function POST(request) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-
+        let isAlreadyAcc = await prisma.AccountType.findFirst({
+          where: {
+            name: "Základní",
+            userId: session.userId,
+          },
+        });
+        console.log("Již existuje :",isAlreadyAcc)
+        if (isAlreadyAcc) {
+          return new NextResponse(
+            JSON.stringify({ message: 'Základní účet již existuje pro tohoto uživatele' }),
+            {
+              status: 403,
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+        }
         await prisma.AccountType.create({
             data: {
               name : "Základní" ,

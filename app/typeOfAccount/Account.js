@@ -141,9 +141,9 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
 
   <button
     onClick={() => {
-      if (price > 15) {
+      if (price > 15 && !shouldDisable) {
         openPaymentModal(price); // Pass the price to the function
-      } else {
+      } else if(!shouldDisable){
         setDefaultType();
       }
     }}
