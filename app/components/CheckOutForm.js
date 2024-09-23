@@ -32,7 +32,6 @@ export default function CheckoutForm(priceId,name) {
       }
   
       let agreed = document.getElementById("agreeBusinessConditions").checked; // Use .checked for checkbox
-  
       // Create the subscription
       const res = await fetch('/api/create-subscription', {
         method: "POST",
@@ -80,7 +79,6 @@ export default function CheckoutForm(priceId,name) {
     }
   return (
     <form onSubmit={handleSubmit}>
-      {errorMessage}
       <PaymentElement 
        
       />
