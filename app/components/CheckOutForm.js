@@ -15,55 +15,60 @@ export default function CheckoutForm(priceId,name) {
   }
 
   const handleSubmit = async (event) => {
-    // We don't want to let default form submission happen here,
-    // which would refresh the page.
     event.preventDefault();
-
+  
     if (!stripe) {
-      // Stripe.js hasn't yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
-
+  
     setLoading(true);
-
-    // Trigger form validation and wallet collection
-    const {error: submitError} = await elements.submit();
-    if (submitError) {
-      handleError(submitError);
-      return;
-    }
-    let agreed = document.getElementById("agreeBusinessConditions").value
-    // Create the subscription
-    const res = await fetch('/api/create-subscription', {
+  
+    try {
+      // Trigger form validation and wallet collection
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        handleError(submitError);
+        return;
+      }
+  
+      let agreed = document.getElementById("agreeBusinessConditions").checked; // Use .checked for checkbox
+  
+      // Create the subscription
+      const res = await fetch('/api/create-subscription', {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json' // Add the Content-Type header
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ priceId,agreed }) // Send as an object
+        body: JSON.stringify({ priceId, agreed })
       });
-    const {type, clientSecret} = await res.json();
-    const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
-
-    // Confirm the Intent using the details collected by the Payment Element
-    const successAccountType = name; // Store the account type name
-const returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/typeOfAccount?success=${encodeURIComponent(successAccountType)}`; // Construct the URL and encode the parameter
-
-const { error } = await confirmIntent({
-  elements,
-  clientSecret,
-  confirmParams: {
-    return_url: returnUrl, // Use the constructed URL
-
-    },
-  })
-
-
-
-    if (error) {
-
+      
+      if (!res.ok) {
+        throw new Error('Nastala chyba při vytváření předplatného'); // Handle server error
+      }
+  
+      const { type, clientSecret } = await res.json();
+      const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
+  
+      const successAccountType = name;
+      const returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/typeOfAccount?success=${encodeURIComponent(successAccountType)}`;
+  
+      const { error } = await confirmIntent({
+        elements,
+        clientSecret,
+        confirmParams: {
+          return_url: returnUrl,
+        },
+      });
+  
+      if (error) {
+        handleError(error);
+      } else {
+        // Handle successful payment here (e.g., redirect, show success message)
+      }
+    } catch (error) {
       handleError(error);
-    } else {
+    } finally {
+      setLoading(false); // Ensure loading state is reset
     }
   };
   if(!stripe || !elements)
@@ -75,6 +80,7 @@ const { error } = await confirmIntent({
     }
   return (
     <form onSubmit={handleSubmit}>
+      {errorMessage}
       <PaymentElement 
        
       />
