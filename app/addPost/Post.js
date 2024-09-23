@@ -9,14 +9,30 @@ import { SubscriptionInfo } from '../components/SubscriptionInfo';
 
 export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
   const [loading, setLoading] = useState(false);
+
+  function toggleSteps() {
+    const steps = document.querySelectorAll('.steps .step');
+  
+    if (steps.length >= 2) {
+      // Check the first step's data-content attribute
+      if (steps[0].getAttribute('data-content') === '✓') {
+        // If data-content is '✓', remove it and remove 'step-primary' from the second step
+        steps[0].removeAttribute('data-content');
+        steps[1].classList.remove('step-primary');
+      } else {
+        // Otherwise, set data-content to '✓' and add 'step-primary' to the second step
+        steps[0].setAttribute('data-content', '✓');
+        steps[1].classList.add('step-primary');
+      }
+    }
+  }
   const isActive = hasThisType === name;
   const isZákladní = name === 'Základní';
 
   // Determine if the button should be disabled
   const shouldDisable = hasThisType && (isZákladní || hasThisType !== 'Základní');
 
-  // Determine if the "Zrušit předplatné" link should be shown
-  const showCancelLink = isActive && !isZákladní;
+
 
   
 
@@ -46,44 +62,18 @@ export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
 
   return (
 <div
-  className={`w-full max-w-xs sm:max-w-sm p-3 sm:p-8 bg-base-100 border ${
-    isActive && !isZákladní ? "shadow-effect border-0" : "border-base-200"
-  } rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700`}
+  className={`w-full max-w-xs sm:max-w-sm p-3 sm:p-8 bg-base-100 border border-base-200 rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700`}
 >
-  <style jsx>{`
-    @keyframes shadow {
-      0% {
-        box-shadow: 0 0 5px rgba(131, 0, 255, 0.7);
-      }
-      50% {
-        box-shadow: 0 0 15px rgba(131, 0, 255, 1);
-      }
-      100% {
-        box-shadow: 0 0 5px rgba(131, 0, 255, 0.7);
-      }
-    }
 
-    .shadow-effect {
-      animation: shadow 3s infinite;
-    }
-  `}</style>
   
 
 <h5 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-base-content dark:text-base-content">
-<span style={{ marginRight: name ? "15px" : "" }}>
+<span style={{ fontWeight: "bold",marginRight: name ? "15px" : "" }}>
   {name}
 </span>
   <span dangerouslySetInnerHTML={{ __html: emoji }} />
 </h5>
-<div className="flex items-baseline text-base-content dark:text-base-content">
-      <span className="text-4xl sm:text-5xl font-extrabold tracking-tight">
-        {price === 0 ? "Zdarma" : "Zdarma"}
-      </span>
-      <span className="text-lg sm:text-xl font-semibold">
-        {price === 0 ? "" : ""}
-      </span>
-  
-    </div>
+
 
 
   <div style={{ position: 'relative' }}>
@@ -100,7 +90,7 @@ export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
   <ul
     role="list"
     className="space-y-4 sm:space-y-5 my-6 sm:my-7"
-    style={!shouldDisable ? { filter: 'blur(4px)', opacity: '0.5' } : {}}
+    style={!shouldDisable ? { filter: 'blur(4px)', opacity: '1' } : {}}
   >
     {benefits.map((benefit, index) => {
       const [text, active] = benefit;
@@ -132,13 +122,10 @@ export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
     })}
   </ul>
 </div>
-
   <button
     onClick={() => {
-      if (price > 15) {
-        openPaymentModal(price); // Pass the price to the function
-      } else {
-        setDefaultType();
+      if (shouldDisable) {
+        toggleSteps()
       }
     }}
     type="button"
@@ -156,13 +143,7 @@ export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
     )}
   </button>
 
-  {showCancelLink && !isZákladní && (
-    <div className="mt-4 sm:mt-5">
-      <SubscriptionInfo />
-    </div>
-  )}
-
-  <PaymentModal price={price} name={name} priceId={priceId} />
+  
 </div>
   );
 }

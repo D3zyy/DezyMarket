@@ -3,7 +3,9 @@ import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
 import Link from 'next/link';
 export default function CheckoutForm(priceId,name) {
   const stripe = useStripe();
+
   const elements = useElements();
+
   const [errorMessage, setErrorMessage] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -52,8 +54,11 @@ const { error } = await confirmIntent({
   clientSecret,
   confirmParams: {
     return_url: returnUrl, // Use the constructed URL
-  },
-});
+
+    },
+  })
+
+
 
     if (error) {
 
@@ -70,7 +75,9 @@ const { error } = await confirmIntent({
     }
   return (
     <form onSubmit={handleSubmit}>
-      <PaymentElement />
+      <PaymentElement 
+       
+      />
       <div style={{ display: "flex", alignItems: "center" , marginTop: "10px"}}>
   <span>
     Souhlasím s 

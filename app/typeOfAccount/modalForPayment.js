@@ -27,15 +27,30 @@ export function PaymentModal({ price, name, priceId }) {
                     <span className="block text-center font-bold mb-4">{name}</span>     
                     {price >= 15 ? (
                         <Elements 
-                            stripe={stripePromise}
-                            options={{
-                                mode: "subscription",
-                                amount: price * 100,
-                                currency: "czk"
-                            }}
-                        >
-                            <CheckoutForm priceId={priceId} name={name} />
-                        </Elements>
+    stripe={stripePromise}
+    options={{
+        appearance: {
+            theme: 'flat'
+        },
+        layout: {
+            type: 'tabs',
+            defaultCollapsed: false,
+        },
+        mode: "subscription",
+        amount: price * 100,
+        currency: "czk",
+        fields: {
+            billingDetails: {
+                address: {
+                    country: 'never',
+                    postalCode: 'never'
+                }
+            }
+        },
+    }}
+>
+    <CheckoutForm priceId={priceId} name={name} />
+</Elements>
                     ) : (
                         <p className="text-center">Minimální částka pro platbu je 15 Kč.</p>
                     )}
