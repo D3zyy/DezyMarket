@@ -18,7 +18,7 @@ export async function POST(request) {
 
    
        const { priceId , agreed} = await request.json()
-       console.log("souhlasil : ",agreed)
+      
        if (agreed != "on")   return new NextResponse(
         JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na subscription. Uživatel nesouhlasil s obchodními podmínky'}),
         {
@@ -29,7 +29,19 @@ export async function POST(request) {
         const customer= await stripe.customers.list({
             email: session.email
           });
+          const subscriptions = await stripe.subscriptions.list({
+            customer: customer.id,
+            status: "active"
+        });
 
+        if (subscriptions.data.length > 0) {
+            return new Response(JSON.stringify({
+                message: "Zákazník má již aktivní předplatné. Nelze vytvořit nové."
+            }), {
+                status: 403,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
           const subscription = await stripe.subscriptions.create({
             customer:  customer.data[0].id,
             items: [{
