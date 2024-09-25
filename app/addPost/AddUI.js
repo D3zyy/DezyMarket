@@ -4,22 +4,26 @@ import React, { useEffect, useState } from 'react';
 const AddUI = () => {
   const [typeOfAccount, setTypeOfAccount] = useState(null);
 
-  // Funkce, která se spustí při zobrazení divu
   const handleVisibilityChange = () => {
     const divElement = document.querySelector('.addPostSecondStep');
-
-    // Zjistíme, zda je div zobrazen
     const isVisible = divElement && getComputedStyle(divElement).display === 'block';
 
     if (isVisible) {
-      // Načteme hodnotu z localStorage
       const storedTypeOfAccount = localStorage.getItem('typeOfAccount');
-      setTypeOfAccount(storedTypeOfAccount);
+
+      if (
+        storedTypeOfAccount === process.env.NEXT_PUBLIC_MEDIUM_RANK ||
+        storedTypeOfAccount === process.env.NEXT_PUBLIC_BASE_RANK ||
+        storedTypeOfAccount === process.env.NEXT_PUBLIC_BEST_RANK
+      ) {
+        setTypeOfAccount(storedTypeOfAccount);
+      } else {
+        setTypeOfAccount(process.env.NEXT_PUBLIC_BASE_RANK);
+      }
     }
   };
 
   useEffect(() => {
-    // Sledujeme změnu viditelnosti
     const observer = new MutationObserver(handleVisibilityChange);
     const targetNode = document.querySelector('.addPostSecondStep');
 
@@ -27,7 +31,6 @@ const AddUI = () => {
       observer.observe(targetNode, { attributes: true, attributeFilter: ['style'] });
     }
 
-    // Vyčistíme observer, když se komponenta odmontuje
     return () => {
       if (targetNode) observer.disconnect();
     };
