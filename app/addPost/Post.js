@@ -12,7 +12,26 @@ export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
 
   function toggleSteps() {
     const steps = document.querySelectorAll('.steps .step');
-  
+    const typeOfPosts = document.getElementsByClassName('typeOfPosts');
+   
+
+    if (typeOfPosts.length > 0) {
+      for (let i = 0; i < typeOfPosts.length; i++) {
+        typeOfPosts[i].style.display = 'none'; // Skrytí jednotlivých prvků
+      }
+    }
+
+    const secondStepDivs = document.getElementsByClassName('addPostSecondStep');
+for (let i = 0; i < secondStepDivs.length; i++) {
+    if (secondStepDivs[i].style.display === 'block') {
+        localStorage.removeItem('typeOfAccount'); 
+        secondStepDivs[i].style.display = 'none';
+    } else {
+        localStorage.setItem('typeOfAccount',name);  
+        secondStepDivs[i].style.display = 'block';
+    }
+}
+
     if (steps.length >= 2) {
       // Check the first step's data-content attribute
       if (steps[0].getAttribute('data-content') === '✓') {

@@ -130,7 +130,7 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
   price={0}
   priceId={""}
   benefits={[
-    ["Pouze 5 inzerátů", true],
+    ["Pouze 2 aktivní inzeráty naráz", true],
     ["1 fotografie u inzerátu", true],
     ["Základní typ inzerátu", true],
     ["Topování na hlavní stránce", false],

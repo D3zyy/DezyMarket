@@ -40,6 +40,7 @@ const handleLogin = async (event, setError, setLoading, setSuccess,setFirstLogin
       setFirstLogin(result.firstLoggin)
       setSuccess(true);
     } else {
+      setLoading(false);
       const errorData = await res.json();
       if (errorData.message.includes("Váš účet byl trvale zablokován")) {
         setError(
@@ -82,10 +83,11 @@ const handleLogin = async (event, setError, setLoading, setSuccess,setFirstLogin
       }
     }
   } catch (err) {
+    setLoading(false);
     setError('Nastala chyba při přihlašovaní, zkuste to prosím později.');
     console.error('Nastala chyba při přihlašování:', err);
   } finally {
-    setLoading(false);
+
   }
 };
 
@@ -133,9 +135,7 @@ const handleRecovery = async (event, setError, setLoading, setSuccess) => {
   } catch (err) {
     setError('Nastala chyba při odesílání požadavku na obnovení hesla, zkuste to prosím později.');
     console.error('Nastala chyba při odesílání požadavku na obnovení hesla:', err);
-  } finally {
-    setLoading(false);
-  }
+  } 
 };
 
 const RecoveryButton = ({ setRecoverPassword, setSuccess, setError }) => (

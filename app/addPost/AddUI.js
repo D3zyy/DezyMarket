@@ -1,98 +1,47 @@
-"use client"
-import React from 'react'
-import Post from './post'
+"use client";
+import React, { useEffect, useState } from 'react';
 
-const AddUI = ({accType}) => {
-    console.log(accType)
+const AddUI = () => {
+  const [typeOfAccount, setTypeOfAccount] = useState(null);
+
+  // Funkce, která se spustí při zobrazení divu
+  const handleVisibilityChange = () => {
+    const divElement = document.querySelector('.addPostSecondStep');
+
+    // Zjistíme, zda je div zobrazen
+    const isVisible = divElement && getComputedStyle(divElement).display === 'block';
+
+    if (isVisible) {
+      // Načteme hodnotu z localStorage
+      const storedTypeOfAccount = localStorage.getItem('typeOfAccount');
+      setTypeOfAccount(storedTypeOfAccount);
+    }
+  };
+
+  useEffect(() => {
+    // Sledujeme změnu viditelnosti
+    const observer = new MutationObserver(handleVisibilityChange);
+    const targetNode = document.querySelector('.addPostSecondStep');
+
+    if (targetNode) {
+      observer.observe(targetNode, { attributes: true, attributeFilter: ['style'] });
+    }
+
+    // Vyčistíme observer, když se komponenta odmontuje
+    return () => {
+      if (targetNode) observer.disconnect();
+    };
+  }, []);
 
   return (
-    <div>
-        <div
-                    style={{
-                    display: 'flex',
-                    justifyContent: 'center', // Center horizontally
-                    alignItems: 'center', // Center vertically if needed
-                    padding: '20px', // Add padding around the content
-                    }}>
+    <>
+      {typeOfAccount && (
+        <div>
+          Druhý krok přidání příspěvku pro účet: {typeOfAccount}
+        </div>
+      )}
+    </>
+  );
+};
 
-                    <ul className="steps">
-                            <li className="step step-primary">Vyberte typ inzerátu</li>
-                            <li className="step">Vytvořit inzerát</li>
-                    </ul>
-                </div>
-        <div style={{marginBottom:"40px"}} className="flex flex-col md:flex-row items-center justify-center gap-2 p-2">
-
-                    <Post
-                    hasThisType={accType}
-                    name={
-                        accType === process.env.BASE_RANK
-                        ? 'Topovaný'
-                        : accType === process.env.MEDIUM_RANK
-                        ? process.env.MEDIUM_RANK
-                        : accType === process.env.BEST_RANK
-                        ? process.env.BEST_RANK
-                        : ''
-                    }
-                    emoji={
-                    accType === process.env.BASE_RANK
-                    ? "<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>Šikula</div> <div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>"
-                    : accType === process.env.MEDIUM_RANK
-                    ? "<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>Šikula</div> "
-                    : accType === process.env.BEST_RANK
-                    ? " <div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>"
-                    : ''
-                    }
-                    price={
-                        accType === process.env.BASE_RANK
-                        ? 28
-                        : accType === process.env.MEDIUM_RANK
-                        ? 0
-                        : accType === process.env.BEST_RANK
-                        ? 0
-                        : 28
-
-
-                    }
-                    priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
-                    benefits={[
-                        [accType === process.env.BASE_RANK
-                            ? "až X fotografií"
-                            : accType === process.env.MEDIUM_RANK
-                            ? "až 3 fotografie"
-                            : accType === process.env.BEST_RANK
-                            ? "až 5 fotografií"
-                            : "až 5 fotografií"
-                            , true],
-                        ["Doba uložení 2 měsíce", true],
-                        ["Topovaný v kategorii ", true],
-                        ["Statistika zobrazení inzerátu", true],
-                        ["Topovaný na hlavní stránce", accType === process.env.BASE_RANK
-                            ? true
-                            : accType === process.env.MEDIUM_RANK
-                            ? false
-                            : accType === process.env.BEST_RANK
-                            ? process.env.BEST_RANK
-                            : true],
-
-                    ]}
-                />
-                <Post
-                    hasThisType={accType}
-                    name={process.env.BASE_RANK}
-                    emoji=""
-                    price={0}
-                    priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
-                    benefits={[
-                    ["1 fotografie ", true],
-                    ["Doba uložení 2 měsíce", true],
-                    ["Topovaný v kategorii ", false],
-                    ["Topovaný na hlavní stránce", false],
-                    ["Statistika zobrazení inzerátu", false],
-                    ]}
-                />
-    </div>
-    </div>
-  )
-}
-
-export default AddUI
+export default AddUI;

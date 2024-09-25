@@ -5,8 +5,10 @@ import NotLoggedIn from '../components/NotLoggedIn';
 import { getUserAccountTypeOnStripe } from '../typeOfAccount/Methods';
 import Account from '../typeOfAccount/Account';
 import Post from './post';
-const Page = async () => {
+import AddUI from './AddUI';
 
+const Page = async () => {
+    
     const session = await getSession();
 
     let accType = await getUserAccountTypeOnStripe(session.email);
@@ -38,9 +40,9 @@ const Page = async () => {
                             <li className="step">Vytvořit inzerát</li>
                     </ul>
                 </div>
-         <div style={{marginBottom:"40px"}} className="flex flex-col md:flex-row items-center justify-center gap-2 p-2">
-
-  <Post
+         <div  style={{marginBottom:"40px"}} className="typeOfPosts flex flex-col md:flex-row items-center justify-center gap-2 p-2">
+       
+        <Post 
     hasThisType={accType}
     name={
         accType === process.env.BASE_RANK
@@ -93,7 +95,9 @@ const Page = async () => {
             : true],
 
     ]}
+ 
   />
+     
    <Post
     hasThisType={accType}
     name={process.env.BASE_RANK}
@@ -108,9 +112,15 @@ const Page = async () => {
       ["Statistika zobrazení inzerátu", false],
     ]}
   />
-</div>
-     
+
+ </div>
+ 
+
+
          
+<div className='addPostSecondStep' style={{display: "none"}}>
+     <AddUI />
+</div> 
 
 
             </>
