@@ -1,24 +1,24 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 
-const AddUI = () => {
-  const [typeOfAccount, setTypeOfAccount] = useState(null);
+const AddUI = ({accType}) => {
+  const [typeOfPost, setTypeOfPost] = useState(null);
 
   const handleVisibilityChange = () => {
     const divElement = document.querySelector('.addPostSecondStep');
     const isVisible = divElement && getComputedStyle(divElement).display === 'block';
 
     if (isVisible) {
-      const storedTypeOfAccount = localStorage.getItem('typeOfAccount');
+      const storedTypeOfPost = localStorage.getItem('typeOfPost');
 
       if (
-        storedTypeOfAccount === process.env.NEXT_PUBLIC_MEDIUM_RANK ||
-        storedTypeOfAccount === process.env.NEXT_PUBLIC_BASE_RANK ||
-        storedTypeOfAccount === process.env.NEXT_PUBLIC_BEST_RANK
+        storedTypeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK && storedTypeOfPost === accType||
+        storedTypeOfPost === process.env.NEXT_PUBLIC_BASE_RANK  && storedTypeOfPost === accType ||
+        storedTypeOfPost === process.env.NEXT_PUBLIC_BEST_RANK  && storedTypeOfPost === accType
       ) {
-        setTypeOfAccount(storedTypeOfAccount);
+        setTypeOfPost(storedTypeOfPost);
       } else {
-        setTypeOfAccount(process.env.NEXT_PUBLIC_BASE_RANK);
+        setTypeOfPost(process.env.NEXT_PUBLIC_BASE_RANK);
       }
     }
   };
@@ -38,9 +38,9 @@ const AddUI = () => {
 
   return (
     <>
-      {typeOfAccount && (
+      {typeOfPost && (
         <div>
-          Druhý krok přidání příspěvku pro účet: {typeOfAccount}
+          Druhý krok přidání příspěvku pro : {typeOfPost}
         </div>
       )}
     </>

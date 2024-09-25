@@ -119,7 +119,7 @@ const Page = async () => {
 
          
 <div className='addPostSecondStep' style={{display: "none"}}>
-     <AddUI />
+     <AddUI accType={accType} />
 </div> 
 
 

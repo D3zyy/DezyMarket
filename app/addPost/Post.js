@@ -24,10 +24,10 @@ export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
     const secondStepDivs = document.getElementsByClassName('addPostSecondStep');
 for (let i = 0; i < secondStepDivs.length; i++) {
     if (secondStepDivs[i].style.display === 'block') {
-        localStorage.removeItem('typeOfAccount'); 
+        localStorage.removeItem('typeOfPost'); 
         secondStepDivs[i].style.display = 'none';
     } else {
-        localStorage.setItem('typeOfAccount',name);  
+        localStorage.setItem('typeOfPost',name);  
         secondStepDivs[i].style.display = 'block';
     }
 }
