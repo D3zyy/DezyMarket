@@ -11,7 +11,6 @@ export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
   const [loading, setLoading] = useState(false);
 
   function toggleSteps() {
-    const steps = document.querySelectorAll('.steps .step');
     const typeOfPosts = document.getElementsByClassName('typeOfPosts');
    
 
@@ -31,19 +30,24 @@ for (let i = 0; i < secondStepDivs.length; i++) {
         secondStepDivs[i].style.display = 'block';
     }
 }
+const firstStep = document.querySelector('.firstStep');
+const secondStep = document.querySelector('.secondStep');
 
-    if (steps.length >= 2) {
-      // Check the first step's data-content attribute
-      if (steps[0].getAttribute('data-content') === '✓') {
-        // If data-content is '✓', remove it and remove 'step-primary' from the second step
-        steps[0].removeAttribute('data-content');
-        steps[1].classList.remove('step-primary');
-      } else {
-        // Otherwise, set data-content to '✓' and add 'step-primary' to the second step
-        steps[0].setAttribute('data-content', '✓');
-        steps[1].classList.add('step-primary');
-      }
+if (firstStep && secondStep) {
+    // Zkontrolovat, zda první krok má data-content atribut
+    if (firstStep.getAttribute('data-content') === '✓') {
+        // Pokud je data-content '✓', odstranit ho a odebrat 'step-primary' ze druhého kroku
+        firstStep.removeAttribute('data-content');
+        secondStep.classList.remove('step-primary');
+    } else {
+        // Jinak nastavit data-content na '✓' a přidat 'step-primary' k druhému kroku
+        firstStep.setAttribute('data-content', '✓');
+        secondStep.classList.add('step-primary');
     }
+}
+
+
+
   }
   const isActive = hasThisType === name;
   const isZákladní = name === 'Základní';

@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 const AddUI = ({ accType, userCategories }) => {
   const [typeOfPost, setTypeOfPost] = useState(null);
   const [isDisabled, setIsDisabled] = useState(false);
-  const [activeButton, setActiveButton] = useState(null);
+  const [activeButton, setActiveButton] = useState(null); // name of the current price it could be like not numeric 
+  const [price, setPrice] = useState('');
 
   const handleButtonClick = (buttonName) => {
     if (activeButton === buttonName) {
@@ -13,6 +14,7 @@ const AddUI = ({ accType, userCategories }) => {
     } else {
       setIsDisabled(true);
       setActiveButton(buttonName);
+      setPrice('');
     }
   };
 
@@ -99,28 +101,38 @@ const AddUI = ({ accType, userCategories }) => {
                 style={{ fontSize: '14px', padding: '8px' }}
               />
             </div>
-
+            <div className="py-2 w-full">
+              <label htmlFor="name" className="block" style={{ fontSize: '14px' }}>Popisek</label>
+              <input
+                type="text"
+                name="name"
+                className="input input-bordered w-full"
+                required
+                style={{ fontSize: '14px', padding: '8px' }}
+              />
+            </div>
             <div className="w-full">
               <div
-                className="flex items-center mb-4"
+                className="flex items-center "
                 style={{
-                  padding: "20px",
+                  padding: "12px",
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  gap: '5px',
+                  gap: '3px',
                 }}
               >
                 <label htmlFor="price" className="block" style={{ flex: "0 0 auto", fontSize: '14px' }}>Cena</label>
                 <input
-                  inputmode="numeric" 
+                  inputMode="numeric" 
                   type="number"
                   name="price"
                   className="input input-bordered"
                   required
+                  onChange={(e) => setPrice(e.target.value)}
                   disabled={isDisabled}
                   style={{
                     width: '35%',
-                    minWidth: '70px',
+                    minWidth: '5px',
                     fontSize: '12px',
                     padding: '6px',
                   }}

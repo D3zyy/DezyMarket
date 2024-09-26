@@ -48,9 +48,9 @@ const Page = async () => {
                     padding: '20px', // Add padding around the content
                     }}>
 
-                    <ul className="steps">
-                            <li className="step step-primary">Vyberte typ inzerátu</li>
-                            <li className="step">Vytvořit inzerát</li>
+                    <ul className="steps isolate">
+                            <li className="step step-primary firstStep">Vyberte typ inzerátu</li>
+                            <li className="step secondStep">Vytvořit inzerát</li>
                     </ul>
                 </div>
          <div  style={{marginBottom:"40px"}} className="typeOfPosts flex flex-col md:flex-row items-center justify-center gap-2 p-2">
