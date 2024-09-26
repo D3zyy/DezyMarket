@@ -6,9 +6,10 @@ import { getUserAccountTypeOnStripe } from '../typeOfAccount/Methods';
 import Account from '../typeOfAccount/Account';
 import Post from './post';
 import AddUI from './AddUI';
+import { prisma } from '../database/db';
+
 
 const Page = async () => {
-    
     const session = await getSession();
 
     let accType = await getUserAccountTypeOnStripe(session.email);
@@ -18,9 +19,21 @@ const Page = async () => {
     if (!accType && session.isLoggedIn) {
            await redirect('/typeOfAccount');
     }
-    
+    let userCategories = await prisma.userCategories.findMany({
+        where: {
+          userId: session.userId,
+        },
+        include: {
+          category: {
+            select: {
+              name: true,
+              logo: true,
+            },
+          },
+        },
+      });
 
-
+      console.log("kategorie uživatel : ",userCategories)
 
 
     return (
@@ -119,7 +132,7 @@ const Page = async () => {
 
          
 <div className='addPostSecondStep' style={{display: "none"}}>
-     <AddUI accType={accType} />
+     <AddUI accType={accType}  userCategories={userCategories}/>
 </div> 
 
 

@@ -1,12 +1,42 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 
-const AddUI = ({accType}) => {
+const AddUI = ({accType,userCategories}) => {
   const [typeOfPost, setTypeOfPost] = useState(null);
+  function decodeHTMLEntities(text) {
+    const textArea = document.createElement('textarea');
+    textArea.innerHTML = text;
+    return textArea.value;
+  }
+  function getRandomCategories(categories, count) {
+    const shuffled = [...categories].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }
+    const randomCategories = userCategories.length
+    ? getRandomCategories(userCategories, 3)
+    : [{ category: { name: 'Sluchátka', logo: '🎧' } }]; // Výchozí hodnota, pokud je pole prázdné
+
+    // Spojení názvů a log do jednoho stringu
+    const prefix = ".. "; // Text, který chceš přidat
+    const beforeText = randomCategories
+        .map(category => {
+          // Zkontroluj, jestli logo obsahuje HTML entitu a převedeme ji na emoji
+          const decodedLogo = category.category.logo.includes('&#')
+            ? String.fromCodePoint(category.category.logo.match(/\d+/)[0])
+            : category.category.logo;
+    
+          return `${category.category.name} ${decodedLogo}`;
+        })
+        .join(', ');
+    
+    // Přidání prefixu před všechny položky
+    const placeText = `${prefix}${beforeText}`;
 
   const handleVisibilityChange = () => {
     const divElement = document.querySelector('.addPostSecondStep');
     const isVisible = divElement && getComputedStyle(divElement).display === 'block';
+    
+
 
     if (isVisible) {
       const storedTypeOfPost = localStorage.getItem('typeOfPost');
@@ -57,11 +87,11 @@ const AddUI = ({accType}) => {
   <form action="">
     <div className="py-2 w-full"> {/* Make input full width of the container */}
       <label htmlFor="name"  className="block">Co nabízím</label>
-      <input type="text" placeholder='..Iphone 15&#128241; ..Dům&#127968; ..Čepici&#129506;' name="name" className="input input-bordered w-full email" required />
+      <input type="text" placeholder={placeText} name="name" className="input input-bordered w-full email" required />
     </div>
     <div className="w-full"> 
     <label htmlFor="price"  className="block">Cena</label>
-        <input type="number" name="price"  className="input input-bordered w-full email" required/> nebo 
+        <input type="number" name="price"  className="input input-bordered w-full email" required/> <span>nebo</span> 
     </div>
     
   </form>
