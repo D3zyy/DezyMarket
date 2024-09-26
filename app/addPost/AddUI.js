@@ -3,11 +3,24 @@ import React, { useEffect, useState } from 'react';
 
 const AddUI = ({accType,userCategories}) => {
   const [typeOfPost, setTypeOfPost] = useState(null);
-  function decodeHTMLEntities(text) {
-    const textArea = document.createElement('textarea');
-    textArea.innerHTML = text;
-    return textArea.value;
-  }
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [activeButton, setActiveButton] = useState(null); // Track which button is active
+  const [price, setPrice] = useState('');
+
+
+    const handleButtonClick = (buttonName) => {
+        if (activeButton === buttonName) {
+            // If the same button is clicked, deactivate it
+            setIsDisabled(false);
+            setActiveButton(null);
+        } else {
+            // Activate the new button, disable the input, and clear the input value
+            setIsDisabled(true);
+            setActiveButton(buttonName);
+            setPrice(''); // Clear the input value
+        }
+    };
+
   function getRandomCategories(categories, count) {
     const shuffled = [...categories].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
@@ -93,8 +106,56 @@ const AddUI = ({accType,userCategories}) => {
       <input type="text" placeholder={placeText} name="name" className="input input-bordered w-full email" required />
     </div>
     <div className="w-full"> 
-    <label htmlFor="price"  className="block">Cena</label>
-        <input type="number" name="price"  className="input input-bordered w-full email" required/> <span>nebo</span> 
+    <div className="flex items-center mb-4">
+                <label htmlFor="price" className="block mr-2">Cena</label>
+                <input 
+                    type="number" 
+                    name="price" 
+                    className="input input-bordered w-full email mr-2" 
+                    required 
+                    value={price} // Controlled input
+                    onChange={(e) => setPrice(e.target.value)} // Update state on input change
+                    disabled={isDisabled}
+                />
+                <span className="mx-2">|</span>
+                <button 
+                    type="button" 
+                    onClick={() => handleButtonClick('Dohodou')} 
+                    className="btn btn-primary"
+                    style={{
+                        transition: 'background-color 0.3s, box-shadow 0.3s',
+                        boxShadow: activeButton === 'Dohodou' ? 'rgba(0, 255, 0, 0.5) 0px 0px 10px' : 'none',
+                        border: activeButton === 'Dohodou' ? '2px solid rgb(13, 84, 8)' : 'none',
+                    }}
+                >
+                    Dohodou
+                </button>
+                <button 
+                    type="button" 
+                    onClick={() => handleButtonClick('V textu')} 
+                    className="btn btn-primary ml-2"
+                    style={{
+                        transition: 'background-color 0.3s, box-shadow 0.3s',
+                        boxShadow: activeButton === 'V textu' ? 'rgba(0, 255, 0, 0.5) 0px 0px 10px' : 'none',
+                        border: activeButton === 'V textu' ? '2px solid rgb(13, 84, 8)' : 'none',
+                    }}
+                >
+                    V textu
+                </button>
+                <button 
+                    type="button" 
+                    onClick={() => handleButtonClick('Zdarma')} 
+                    className="btn btn-primary ml-2"
+                    style={{
+                        transition: 'background-color 0.3s, box-shadow 0.3s',
+                        boxShadow: activeButton === 'Zdarma' ? 'rgba(0, 255, 0, 0.5) 0px 0px 10px' : 'none',
+                        border: activeButton === 'Zdarma' ? '2px solid rgb(13, 84, 8)' : 'none',
+                    }}
+                >
+                    Zdarma
+                </button>
+            </div>
+        
     </div>
     
   </form>
