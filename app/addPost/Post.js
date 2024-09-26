@@ -37,12 +37,16 @@ if (firstStep && secondStep) {
     // Zkontrolovat, zda první krok má data-content atribut
     if (firstStep.getAttribute('data-content') === '✓') {
         // Pokud je data-content '✓', odstranit ho a odebrat 'step-primary' ze druhého kroku
-        firstStep.removeAttribute('data-content');
         secondStep.classList.remove('step-primary');
+        secondStep.setAttribute('data-content', '1');
+        firstStep.removeAttribute('data-content');
+       
     } else {
         // Jinak nastavit data-content na '✓' a přidat 'step-primary' k druhému kroku
-        firstStep.setAttribute('data-content', '✓');
         secondStep.classList.add('step-primary');
+        secondStep.setAttribute('data-content', '2');
+        firstStep.setAttribute('data-content', '✓');
+
     }
 }
 

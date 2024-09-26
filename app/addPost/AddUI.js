@@ -27,7 +27,7 @@ const AddUI = ({ accType, userCategories }) => {
     ? getRandomCategories(userCategories, 3)
     : [
         { category: { name: 'Sluchátka', logo: '🎧' } },
-        { category: { name: 'Dům', logo: '&#127968;' } }
+        { category: { name: 'Dům', logo: '🏠' } }
       ];
 
   const prefix = "např. ";
@@ -104,6 +104,7 @@ const AddUI = ({ accType, userCategories }) => {
             <div className="py-2 w-full">
               <label htmlFor="name" className="block" style={{ fontSize: '14px' }}>Popisek</label>
               <input
+              placeholder='Nabízím..'
                 type="text"
                 name="name"
                 className="input input-bordered w-full"
@@ -123,7 +124,7 @@ const AddUI = ({ accType, userCategories }) => {
               >
                 <label htmlFor="price" className="block" style={{ flex: "0 0 auto", fontSize: '14px' }}>Cena</label>
                 <input
-                  inputMode="numeric" 
+                  inputMode="numeric"
                   type="number"
                   name="price"
                   className="input input-bordered"
@@ -189,8 +190,19 @@ const AddUI = ({ accType, userCategories }) => {
           </form>
         </div>
       )}
+      <style jsx>{`
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
 
-     
+        /* Firefox */
+        input[type='number'] {
+          -moz-appearance: textfield;
+        }
+      `}</style>
     </>
   );
 };
