@@ -103,14 +103,21 @@ const AddUI = ({ accType, userCategories }) => {
             </div>
             <div className="py-2 w-full">
               <label htmlFor="name" className="block" style={{ fontSize: '14px' }}>Popisek</label>
-              <input
-              placeholder='Nabízím..'
-                type="text"
-                name="name"
-                className="input input-bordered w-full"
-                required
-                style={{ fontSize: '14px', padding: '8px' }}
-              />
+              <textarea 
+
+  placeholder='Nabízím..'
+  name="name"
+  className="input input-bordered w-full"
+  required
+  minLength={15} // Minimální délka 5 znaků
+  maxLength={1500} // Maximální délka 500 znaků
+  style={{ 
+    fontSize: '14px', 
+    padding: '8px', 
+    height: '150px', // Počáteční výška
+    resize: 'none' // Zamezení změny velikosti
+  }}
+/>
             </div>
             <div className="w-full">
               <div
@@ -119,7 +126,7 @@ const AddUI = ({ accType, userCategories }) => {
                   padding: "12px",
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  gap: '3px',
+                  gap: '5px',
                 }}
               >
                 <label htmlFor="price" className="block" style={{ flex: "0 0 auto", fontSize: '14px' }}>Cena</label>
