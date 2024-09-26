@@ -99,14 +99,14 @@ const AddUI = ({accType,userCategories}) => {
   }}  
   className="typeOfPosts flex flex-col items-center justify-center gap-2 p-4"
 >
-  <h3 className="font-bold text-lg">{typeOfPost}</h3>
+  <h3 style={{padding: "20px"}} className="font-bold text-lg">{typeOfPost}</h3>
   <form action="">
     <div className="py-2 w-full"> {/* Make input full width of the container */}
       <label htmlFor="name"  className="block">Co nabízím</label>
       <input type="text" placeholder={placeText} name="name" className="input input-bordered w-full email" required />
     </div>
     <div className="w-full"> 
-    <div className="flex items-center mb-4">
+    <div style={{padding: "20px"}} className="flex items-center mb-4">
                 <label htmlFor="price" className="block mr-2">Cena</label>
                 <input 
                     type="number" 
@@ -119,41 +119,39 @@ const AddUI = ({accType,userCategories}) => {
                 />
                 <span className="mx-2">|</span>
                 <button 
-                    type="button" 
-                    onClick={() => handleButtonClick('Dohodou')} 
-                    className="btn btn-primary"
-                    style={{
-                        transition: 'background-color 0.3s, box-shadow 0.3s',
-                        boxShadow: activeButton === 'Dohodou' ? 'rgba(0, 255, 0, 0.5) 0px 0px 10px' : 'none',
-                        border: activeButton === 'Dohodou' ? '2px solid rgb(13, 84, 8)' : 'none',
-                    }}
-                >
-                    Dohodou
-                </button>
-                <button 
-                    type="button" 
-                    onClick={() => handleButtonClick('V textu')} 
-                    className="btn btn-primary ml-2"
-                    style={{
-                        transition: 'background-color 0.3s, box-shadow 0.3s',
-                        boxShadow: activeButton === 'V textu' ? 'rgba(0, 255, 0, 0.5) 0px 0px 10px' : 'none',
-                        border: activeButton === 'V textu' ? '2px solid rgb(13, 84, 8)' : 'none',
-                    }}
-                >
-                    V textu
-                </button>
-                <button 
-                    type="button" 
-                    onClick={() => handleButtonClick('Zdarma')} 
-                    className="btn btn-primary ml-2"
-                    style={{
-                        transition: 'background-color 0.3s, box-shadow 0.3s',
-                        boxShadow: activeButton === 'Zdarma' ? 'rgba(0, 255, 0, 0.5) 0px 0px 10px' : 'none',
-                        border: activeButton === 'Zdarma' ? '2px solid rgb(13, 84, 8)' : 'none',
-                    }}
-                >
-                    Zdarma
-                </button>
+    type="button" 
+    onClick={() => handleButtonClick('Dohodou')} 
+    className="btn btn-active"
+    style={{
+        transition: 'background-color 0.3s, box-shadow 0.3s',
+        boxShadow: activeButton === 'Dohodou' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none', // Updated with your color
+    }}
+>
+    Dohodou
+</button>
+<button 
+    type="button" 
+    onClick={() => handleButtonClick('V textu')} 
+    className="btn btn-active ml-2"
+    style={{
+        transition: 'background-color 0.3s, box-shadow 0.3s',
+        boxShadow: activeButton === 'V textu' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none', // Updated with your color
+    }}
+>
+    V textu
+</button>
+<button 
+    type="button" 
+    onClick={() => handleButtonClick('Zdarma')} 
+    className="btn btn-active ml-2"
+    style={{
+        transition: 'background-color 0.3s, box-shadow 0.3s',
+        boxShadow: activeButton === 'Zdarma' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none', // Updated with your color
+        
+    }}
+>
+    Zdarma
+</button>
             </div>
         
     </div>

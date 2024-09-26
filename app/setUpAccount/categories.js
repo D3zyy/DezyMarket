@@ -47,8 +47,8 @@ const Categories = ({ name, id, isChecked: initialIsChecked, logo }) => {
           alignItems: 'center',
           borderRadius: '5px',
           transition: 'background-color 0.3s, box-shadow 0.3s',
-          boxShadow: isChecked ? '0 0 10px rgba(0, 255, 0, 0.5)' : 'none', // Světelný efekt pokud je zaškrtnuto
-          border: isChecked ? '2px solid #0d5408' : '' // Zelený border pro zaškrtnutý stav, šedý pro ne
+          boxShadow: isChecked ? '0 0 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none', // Světelný efekt pokud je zaškrtnuto
+        // Zelený border pro zaškrtnutý stav, šedý pro ne
         }}
       >
         <span style={{ fontSize: "30px" }} dangerouslySetInnerHTML={{ __html: logo }} /> {name}
