@@ -12,9 +12,12 @@ const AddUI = ({accType,userCategories}) => {
     const shuffled = [...categories].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   }
-    const randomCategories = userCategories.length
-    ? getRandomCategories(userCategories, 3)
-    : [{ category: { name: 'Sluchátka', logo: '🎧' } }]; // Výchozí hodnota, pokud je pole prázdné
+  const randomCategories = userCategories.length
+  ? getRandomCategories(userCategories, 3)
+  : [
+      { category: { name: 'Sluchátka', logo: '🎧' } },
+      { category: { name: 'Dům', logo: '&#127968;;' } }
+    ]; // Výchozí hodnota, pokud je pole prázdné
 
     // Spojení názvů a log do jednoho stringu
     const prefix = "např. "; // Text, který chceš přidat
