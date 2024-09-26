@@ -17,7 +17,7 @@ const AddUI = ({accType,userCategories}) => {
     : [{ category: { name: 'Sluchátka', logo: '🎧' } }]; // Výchozí hodnota, pokud je pole prázdné
 
     // Spojení názvů a log do jednoho stringu
-    const prefix = ".. "; // Text, který chceš přidat
+    const prefix = "např. "; // Text, který chceš přidat
     const beforeText = randomCategories
         .map(category => {
           // Zkontroluj, jestli logo obsahuje HTML entitu a převedeme ji na emoji
