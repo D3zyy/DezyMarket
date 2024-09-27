@@ -34,7 +34,7 @@ const Page = async () => {
         },
       });
 
-    
+     
 
 
     return (
@@ -46,7 +46,7 @@ const Page = async () => {
                     display: 'flex',
                     justifyContent: 'center', // Center horizontally
                     alignItems: 'center', // Center vertically if needed
-                    padding: '20px', // Add padding around the content
+                    padding: '10px', // Add padding around the content
                     }}>
 
                     <ul className="steps isolate">
@@ -97,7 +97,15 @@ const Page = async () => {
             ? "až 5 fotografií"
             : "až 5 fotografií"
             , true],
-        ["Doba uložení 2 měsíce", true],
+        [
+          accType === process.env.BASE_RANK
+            ? "Doba uložení 2 měsíce"
+            : accType === process.env.MEDIUM_RANK
+            ? "Doba uložení 3 měsíce"
+            : accType === process.env.BEST_RANK
+            ? "Doba uložení 4 měsíce"
+            : "Doba uložení X měsíce"
+            , true],
         ["Topovaný v kategorii ", true],
         ["Statistika zobrazení inzerátu", true],
         ["Topovaný na hlavní stránce", accType === process.env.BASE_RANK
@@ -119,7 +127,7 @@ const Page = async () => {
     price={0}
     priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
     benefits={[
-      ["1 fotografie ", true],
+      ["2 fotografie ", true],
       ["Doba uložení 2 měsíce", true],
       ["Topovaný v kategorii ", false],
       ["Topovaný na hlavní stránce", false],
