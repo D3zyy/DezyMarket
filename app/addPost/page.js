@@ -49,7 +49,7 @@ const Page = async () => {
                     padding: '10px', // Add padding around the content
                     }}>
 
-                    <ul style={{paddingLeft: "30px",marginBottom: "20px"}} className="steps isolate">
+                    <ul style={{paddingLeft: "15px",marginBottom: "20px"}} className="steps isolate">
                             <li className="step step-primary firstStep">Vyberte typ inzerátu</li>
                             <li className="step secondStep">Vytvořit inzerát</li>
                     </ul>
