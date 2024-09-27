@@ -259,7 +259,7 @@ const AddUI = ({ accType, userCategories }) => {
         )
       }
     />
-    <div className="flex flex-col items-center justify-center mb-2 relative border-2 border-dotted border-gray-500 rounded-lg p-4">
+    <div style={{marginTop: "7px"}} className=" flex flex-col items-center justify-center mb-2 relative border-2 border-dotted border-gray-500 rounded-lg p-4">
       {/* Blur effect when input is disabled */}
       {images.length >= (
         typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
@@ -304,7 +304,7 @@ const AddUI = ({ accType, userCategories }) => {
     </div>
       ) : (
         // "Nahrát obrázky" text when the limit is not reached
-        <div  className="flex items-center justify-center relative z-10">
+        <div className="flex items-center justify-center relative z-10">
         <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
