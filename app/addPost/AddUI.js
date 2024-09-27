@@ -232,7 +232,7 @@ const AddUI = ({ accType, userCategories }) => {
 
 
 
-              <div className="w-full flex flex-col items-center">
+              <div className="w-full flex flex-col">
       {/* File count display */}
       
 
@@ -283,7 +283,7 @@ const AddUI = ({ accType, userCategories }) => {
           ? 10
           : 2
       ) ? (
-        <div className="flex items-center justify-center mb-1 relative z-10">
+        <div className="flex items-center justify-center  relative z-10">
         <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -304,7 +304,7 @@ const AddUI = ({ accType, userCategories }) => {
     </div>
       ) : (
         // "Nahrát obrázky" text when the limit is not reached
-        <div className="flex items-center justify-center mb-1 relative z-10">
+        <div  className="flex items-center justify-center relative z-10">
         <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -325,7 +325,7 @@ const AddUI = ({ accType, userCategories }) => {
     </div>
     </label>
       {/* Image preview */}
-      <div className="flex flex-wrap gap-4 justify-center items-center">
+      <div style={{marginTop: "20px"}} className="flex flex-wrap gap-6 justify-center items-center">
         {images.length > 0 &&
           images.map((image, index) => (
             <div key={index} className="relative">
