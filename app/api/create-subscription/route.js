@@ -27,7 +27,7 @@ export async function POST(request) {
             customer: customer.id,
             status: "active"
         });
-        console.log(subscriptions.data)
+   
         if (subscriptions.data.length > 0) {
             return new Response(JSON.stringify({
                 message: "Zákazník má již aktivní předplatné. Nelze vytvořit nové."

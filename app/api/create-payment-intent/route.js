@@ -5,9 +5,9 @@ import { getSession } from "@/app/authentication/actions";
 export async function POST(request) {
 
     try {
-      console.log("tady jeste predtim")
+
       const session = await getSession();  
-      console.log("tady po session")
+
       if (!session.isLoggedIn)   return new NextResponse(
         JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na subscription. Session nebyla nalezena'}),
         {
@@ -15,7 +15,7 @@ export async function POST(request) {
           headers: { 'Content-Type': 'application/json' }
         }
       );
-      console.log("email kam poslat uctenku :", session.email)
+     
      const { amount } = await request.json()
      const paymentIntent = await stripe.paymentIntents.create({
         amount : amount *10000,

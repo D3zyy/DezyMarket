@@ -14,7 +14,7 @@ const Page = async () => {
     const session = await getSession();
 
     let accType = await getUserAccountTypeOnStripe(session.email);
-    console.log("Typ účtu na /AddPost:", accType);
+
 
 
     if (!accType && session.isLoggedIn) {
@@ -34,7 +34,7 @@ const Page = async () => {
         },
       });
 
-      console.log("kategorie uživatel : ",userCategories)
+    
 
 
     return (

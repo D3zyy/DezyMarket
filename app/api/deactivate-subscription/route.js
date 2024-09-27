@@ -6,9 +6,9 @@ export async function POST(req) {
     try {
         let data 
         try {
-            console.log("tady")
+   
              data = await req.json();
-            console.log("data ktery sem dostal od klienta :",data)
+        
           } catch (error) {
             return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
               status: 400,
