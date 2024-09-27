@@ -325,7 +325,7 @@ const AddUI = ({ accType, userCategories }) => {
     </div>
     </label>
       {/* Image preview */}
-      <div className="flex flex-wrap gap-6 justify-center items-center">
+      <div  style={{marginTop: "10px"}} className="flex flex-wrap gap-6 justify-center items-center">
         {images.length > 0 &&
           images.map((image, index) => (
             <div key={index} className="relative">
