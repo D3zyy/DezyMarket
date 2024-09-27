@@ -113,10 +113,10 @@ const AddUI = ({ accType, userCategories }) => {
             marginBottom: "40px",
             padding: "16px",
             width: "100%",
-            maxWidth: "500px",
+            maxWidth: "618px",
             margin: "0 auto",
           }}
-          className="typeOfPosts flex flex-col items-center justify-center gap-2 p-4"
+          className="typeOfPosts flex flex-col  justify-center gap-2 p-4"
         >
           
           <form action="">
@@ -159,7 +159,7 @@ const AddUI = ({ accType, userCategories }) => {
                   padding: "12px",
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  gap: '5px',
+                  gap: '10px',
                 }}
               >
                 <label htmlFor="price" className="block" style={{ flex: "0 0 auto", fontSize: '14px' }}>Cena</label>
@@ -174,8 +174,8 @@ const AddUI = ({ accType, userCategories }) => {
                   onChange={(e) => setPrice(e.target.value)}
                   disabled={isDisabled}
                   style={{
-                    width: '35%',
-                    minWidth: '5px',
+                    width: '25%',
+                    minWidth: '40px',
                     fontSize: '12px',
                     padding: '6px',
                   }}
@@ -190,7 +190,6 @@ const AddUI = ({ accType, userCategories }) => {
                     className="btn btn-active"
                     style={{
                       transition: 'background-color 0.3s, box-shadow 0.3s',
-                      width: '60px',
                       fontSize: '12px',
                       padding: '6px 8px',
                       boxShadow: activeButton === 'Dohodou' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
@@ -204,7 +203,6 @@ const AddUI = ({ accType, userCategories }) => {
                     className="btn btn-active"
                     style={{
                       transition: 'background-color 0.3s, box-shadow 0.3s',
-                      width: '60px',
                       fontSize: '12px',
                       padding: '6px 8px',
                       boxShadow: activeButton === 'V textu' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
@@ -218,7 +216,6 @@ const AddUI = ({ accType, userCategories }) => {
                     className="btn btn-active"
                     style={{
                       transition: 'background-color 0.3s, box-shadow 0.3s',
-                      width: '60px',
                       fontSize: '12px',
                       padding: '6px 8px',
                       boxShadow: activeButton === 'Zdarma' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
