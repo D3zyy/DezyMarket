@@ -16,7 +16,7 @@ const AddUI = ({ accType, userCategories }) => {
     // Determine the maximum number of uploads based on typeOfPost
     const maxUploads = 
       typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-        ? 2
+        ? 3
         : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
         ? 5
         : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
@@ -247,7 +247,7 @@ const AddUI = ({ accType, userCategories }) => {
       disabled={
         images.length >= (
           typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-            ? 2
+            ? 3
             : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
             ? 5
             : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
@@ -260,7 +260,7 @@ const AddUI = ({ accType, userCategories }) => {
       {/* Blur effect when input is disabled */}
       {images.length >= (
         typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-          ? 2
+          ? 3
           : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
           ? 5
           : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
@@ -273,7 +273,7 @@ const AddUI = ({ accType, userCategories }) => {
       {/* Display the count above the blur when the limit is reached */}
       {images.length >= (
         typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-          ? 2
+          ? 3
           : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
           ? 5
           : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK

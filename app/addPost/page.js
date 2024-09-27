@@ -90,12 +90,12 @@ const Page = async () => {
     priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
     benefits={[
         [accType === process.env.BASE_RANK
-            ? "až 5 fotografií"
+            ? "X fotografií"
             : accType === process.env.MEDIUM_RANK
-            ? "až 3 fotografie"
+            ? "3 obrázky"
             : accType === process.env.BEST_RANK
-            ? "až 5 fotografií"
-            : "až 5 fotografií"
+            ? "10 obrázků"
+            : "X obrázků"
             , true],
         [
           accType === process.env.BASE_RANK
@@ -127,7 +127,7 @@ const Page = async () => {
     price={0}
     priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
     benefits={[
-      ["2 fotografie ", true],
+      ["3 obrázky ", true],
       ["Doba uložení 2 měsíce", true],
       ["Topovaný v kategorii ", false],
       ["Topovaný na hlavní stránce", false],
