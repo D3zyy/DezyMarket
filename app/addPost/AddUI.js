@@ -5,12 +5,14 @@ import React, { useEffect, useState } from 'react';
 const AddUI = ({ accType, userCategories , categories, sections}) => {
   const [typeOfPost, setTypeOfPost] = useState(null);
   const [isDisabled, setIsDisabled] = useState(false);
-  const [activeButton, setActiveButton] = useState(null); // name of the current price it could be like not numeric 
-  const [price, setPrice] = useState('');
+  const [activeButton, setActiveButton] = useState(null); 
+  const [price, setPrice] = useState(''); // name of the current price it could be like not numeric 
   const [images, setImages] = useState([]);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedSection, setSelectedSection] = useState('');
   const [filteredSections, setFilteredSections] = useState([]);
+
 
      // Sledování vybrané kategorie a filtrování sekcí
      useEffect(() => {
@@ -18,6 +20,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
             // Filtrujte sekce podle vybrané kategorie
             const filtered = sections.filter(section => section.categoryId === parseInt(selectedCategory));
             setFilteredSections(filtered);
+            setSelectedSection(''); // Reset selectedSection, když se změní kategorie
         } else {
             setFilteredSections([]); // Vymažte sekce, pokud není žádná kategorie vybrána
         }
@@ -25,6 +28,10 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
 
     const handleCategoryChange = (e) => {
         setSelectedCategory(e.target.value);
+    };
+
+    const handleSectionChange = (e) => {
+        setSelectedSection(e.target.value);
     };
 
 
@@ -168,8 +175,8 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
                   gap: '10px',
                 }}
               >
-                 <label htmlFor="kategory">Kategorie</label>
-            <select name="kategory" id="kategory" onChange={handleCategoryChange} value={selectedCategory}>
+            <label htmlFor="kategory">Kategorie</label>
+            <select required name="kategory" id="kategory" onChange={handleCategoryChange} value={selectedCategory}>
                 <option value="" disabled>Vybrat kategorii</option>
                 {categories.map(category => (
                     <option key={category.id} value={category.id}>
@@ -177,11 +184,9 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
                     </option>
                 ))}
             </select>
-    
-<span className="mx-2" style={{ fontSize: '20px' }}>&</span>
 
-<label htmlFor="section">Sekce</label>
-            <select name="section" id="section" disabled={!selectedCategory}>
+            <label htmlFor="section">Sekce</label>
+            <select required name="section" id="section" value={selectedSection} onChange={handleSectionChange} disabled={!selectedCategory}>
                 <option value="" disabled>Vybrat sekci</option>
                 {filteredSections.map(section => (
                     <option key={section.id} value={section.id}>
