@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 
-const AddUI = ({ accType, userCategories }) => {
+const AddUI = ({ accType, userCategories , categories}) => {
   const [typeOfPost, setTypeOfPost] = useState(null);
   const [isDisabled, setIsDisabled] = useState(false);
   const [activeButton, setActiveButton] = useState(null); // name of the current price it could be like not numeric 
@@ -135,6 +135,47 @@ const AddUI = ({ accType, userCategories }) => {
                 style={{ fontSize: '14px', padding: '8px' }}
               />
             </div>
+            
+
+
+
+            <div className="w-full">
+              <div
+                className="flex items-center "
+                style={{
+                  padding: "12px",
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: '10px',
+                }}
+              >
+                <label htmlFor="kategory" className="block" style={{ flex: "0 0 auto", fontSize: '14px' }}>Kategorie</label>
+            <select required name="kategory" id="kategory" defaultValue="">
+                <option value="" disabled>Vybrat kategorii</option>
+                {categories.map(category => (
+                    <option key={category.id} value={category.id}>
+                    <span dangerouslySetInnerHTML={{ __html: category.logo }} /> {category.name}
+                </option>
+                ))}
+            </select>
+    
+<span className="mx-2" style={{ fontSize: '20px' }}>&</span>
+
+<label htmlFor="section" className="block" style={{ flex: "0 0 auto", fontSize: '14px' }}>Sekce</label>
+<select required name="section" id="section" defaultValue="">
+    <option value="" disabled>Vybrat sekci</option>
+    <option value="firstSection">První sekce</option>
+    <option value="secondSection">Druhá sekce</option>
+</select>
+
+
+        
+
+              </div>
+</div>
+
+
+
             <div className="py-2 w-full">
               <label htmlFor="name" className="block" style={{ fontSize: '14px' }}>Popisek</label>
               <textarea 

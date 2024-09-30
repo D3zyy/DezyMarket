@@ -20,6 +20,9 @@ const Page = async () => {
     if (!accType && session.isLoggedIn) {
            await redirect('/typeOfAccount');
     }
+    let CategoriesFromDb = await prisma.Categories.findMany({});
+    console.log(CategoriesFromDb)
+
     let userCategories = await prisma.userCategories.findMany({
         where: {
           userId: session.userId,
@@ -141,7 +144,7 @@ const Page = async () => {
 
          
 <div className='addPostSecondStep' style={{display: "none"}}>
-     <AddUI accType={accType}  userCategories={userCategories}/>
+     <AddUI accType={accType}  userCategories={userCategories} categories={CategoriesFromDb}/>
 </div> 
 
 
