@@ -8,26 +8,28 @@ const AddUI = ({ accType, userCategories }) => {
   const [activeButton, setActiveButton] = useState(null); // name of the current price it could be like not numeric 
   const [price, setPrice] = useState('');
   const [images, setImages] = useState([]);
-
+  const [error, setError] = useState(null);
+  const maxUploads = 
+  typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
+    ? 5 // 5 obrázku základní rank
+    : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
+    ? 10 // 10 obrázku střední rank
+    : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
+    ? 15 // 15 obrázku nejlepší rank
+    : 5; 
   // Handle file input
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
   
     // Determine the maximum number of uploads based on typeOfPost
-    const maxUploads = 
-      typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-        ? 3
-        : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
-        ? 5
-        : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
-        ? 10
-        : 2; 
+
   
         if (selectedFiles.length + images.length > maxUploads) {
-            alert(`Maximální počet obrázků je: ${maxUploads}`);
+            setError(`Maximální počet obrázků je ${maxUploads}.
+                Zkuste to znovu`)
             return;
-          }
-  
+        }
+        setError(null)
     const validImages = selectedFiles.filter((file) =>
       file.type.startsWith("image/")
     );
@@ -230,7 +232,6 @@ const AddUI = ({ accType, userCategories }) => {
 
 
               <div className="w-full flex flex-col">
-      {/* File count display */}
       
 
       {/* Image input */}
@@ -244,42 +245,17 @@ const AddUI = ({ accType, userCategories }) => {
       multiple
       onChange={handleImageChange}
       className="mb-4"
-      disabled={
-        images.length >= (
-          typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-            ? 3
-            : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
-            ? 5
-            : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
-            ? 10
-            : 2
-        )
-      }
+      disabled={images.length >= ( maxUploads) }
     />
     <div style={{marginTop: "7px"}} className=" flex flex-col items-center justify-center mb-2 relative border-2 border-dotted border-gray-500 rounded-lg p-4">
       {/* Blur effect when input is disabled */}
-      {images.length >= (
-        typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-          ? 3
-          : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
-          ? 5
-          : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
-          ? 10
-          : 2
-      ) && (
+      {images.length >=  maxUploads
+       && (
         <div className="absolute inset-0 backdrop-blur-sm rounded-lg" />
       )}
-      
       {/* Display the count above the blur when the limit is reached */}
-      {images.length >= (
-        typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-          ? 3
-          : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
-          ? 5
-          : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
-          ? 10
-          : 2
-      ) ? (
+      {images.length >= 1
+       ? (
         <div className="flex items-center justify-center  relative z-10">
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -296,7 +272,7 @@ const AddUI = ({ accType, userCategories }) => {
             />
         </svg>
         <span className="text-gray-500 text-center">
-          Obrázky  {images.length}/{typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK ? 2 : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK ? 5 : 10}
+          Obrázky  {images.length}/{maxUploads}
         </span>
     </div>
       ) : (
@@ -319,10 +295,13 @@ const AddUI = ({ accType, userCategories }) => {
         <span className="text-center text-gray-500 relative z-10">Nahrát obrázky</span>
         </div>
       )}
+       <span className="text-red-400 text-center">
+       {error}
+        </span>
     </div>
     </label>
       {/* Image preview */}
-      <div  style={{marginTop: "10px"}} className="flex flex-wrap gap-6 justify-center items-center">
+      <div  style={{marginTop: "10px",marginBottom:"10px"}} className="flex flex-wrap gap-6 justify-center items-center">
         {images.length > 0 &&
           images.map((image, index) => (
             <div key={index} className="relative">
@@ -331,6 +310,23 @@ const AddUI = ({ accType, userCategories }) => {
                 alt={`Preview ${index + 1}`}
                 className="h-32 w-32 object-cover rounded shadow-md"
               />
+              <div
+                className="absolute bottom-0 left-1/2 bg-gray-500 text-white rounded-full p-1 hover:bg-gray-700"
+                style={{ transform: "translate(-50%, 50%)" }} // Center horizontally, slightly below the image
+                >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    viewBox="0 0 24 24"
+                >
+                    <text
+                    x="50%" y="50%" dominantBaseline="middle" textAnchor="middle"
+                    fontSize="12" fill="currentColor"
+                    >
+                    {index + 1}
+                    </text>
+                </svg>
+                </div>
               <button
                 onClick={() => handleDeleteImage(index)}
                 className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
