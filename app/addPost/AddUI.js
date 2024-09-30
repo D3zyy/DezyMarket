@@ -25,8 +25,7 @@ const AddUI = ({ accType, userCategories }) => {
 
   
         if (selectedFiles.length + images.length > maxUploads) {
-            setError(`Maximální počet obrázků je ${maxUploads}.
-                Zkuste to znovu`)
+            setError(`Maximální počet obrázků je ${maxUploads} Zkuste to znovu`)
             return;
         }
         setError(null)

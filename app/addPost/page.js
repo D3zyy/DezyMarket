@@ -127,7 +127,7 @@ const Page = async () => {
     price={0}
     priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
     benefits={[
-      ["3 obrázky ", true],
+      ["5 obrázků ", true],
       ["Doba uložení 2 měsíce", true],
       ["Topovaný v kategorii ", false],
       ["Topovaný na hlavní stránce", false],
