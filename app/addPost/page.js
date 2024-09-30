@@ -21,7 +21,9 @@ const Page = async () => {
            await redirect('/typeOfAccount');
     }
     let CategoriesFromDb = await prisma.Categories.findMany({});
+    let SectionsFromDb = await prisma.Sections.findMany({});
     console.log(CategoriesFromDb)
+    console.log(SectionsFromDb)
 
     let userCategories = await prisma.userCategories.findMany({
         where: {
@@ -144,7 +146,7 @@ const Page = async () => {
 
          
 <div className='addPostSecondStep' style={{display: "none"}}>
-     <AddUI accType={accType}  userCategories={userCategories} categories={CategoriesFromDb}/>
+     <AddUI accType={accType}  userCategories={userCategories} categories={CategoriesFromDb} sections={SectionsFromDb}/>
 </div> 
 
 

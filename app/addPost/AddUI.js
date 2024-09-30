@@ -2,13 +2,32 @@
 import React, { useEffect, useState } from 'react';
 
 
-const AddUI = ({ accType, userCategories , categories}) => {
+const AddUI = ({ accType, userCategories , categories, sections}) => {
   const [typeOfPost, setTypeOfPost] = useState(null);
   const [isDisabled, setIsDisabled] = useState(false);
   const [activeButton, setActiveButton] = useState(null); // name of the current price it could be like not numeric 
   const [price, setPrice] = useState('');
   const [images, setImages] = useState([]);
   const [error, setError] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [filteredSections, setFilteredSections] = useState([]);
+
+     // Sledování vybrané kategorie a filtrování sekcí
+     useEffect(() => {
+        if (selectedCategory) {
+            // Filtrujte sekce podle vybrané kategorie
+            const filtered = sections.filter(section => section.categoryId === parseInt(selectedCategory));
+            setFilteredSections(filtered);
+        } else {
+            setFilteredSections([]); // Vymažte sekce, pokud není žádná kategorie vybrána
+        }
+    }, [selectedCategory, sections]); // Závislosti na selectedCategory a sections
+
+    const handleCategoryChange = (e) => {
+        setSelectedCategory(e.target.value);
+    };
+
+
   const maxUploads = 
   typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
     ? 5 // 5 obrázku základní rank
@@ -149,24 +168,27 @@ const AddUI = ({ accType, userCategories , categories}) => {
                   gap: '10px',
                 }}
               >
-                <label htmlFor="kategory" className="block" style={{ flex: "0 0 auto", fontSize: '14px' }}>Kategorie</label>
-            <select required name="kategory" id="kategory" defaultValue="">
+                 <label htmlFor="kategory">Kategorie</label>
+            <select name="kategory" id="kategory" onChange={handleCategoryChange} value={selectedCategory}>
                 <option value="" disabled>Vybrat kategorii</option>
                 {categories.map(category => (
                     <option key={category.id} value={category.id}>
-                    <span dangerouslySetInnerHTML={{ __html: category.logo }} /> {category.name}
-                </option>
+                        <span dangerouslySetInnerHTML={{ __html: category.logo }} /> {category.name}
+                    </option>
                 ))}
             </select>
     
 <span className="mx-2" style={{ fontSize: '20px' }}>&</span>
 
-<label htmlFor="section" className="block" style={{ flex: "0 0 auto", fontSize: '14px' }}>Sekce</label>
-<select required name="section" id="section" defaultValue="">
-    <option value="" disabled>Vybrat sekci</option>
-    <option value="firstSection">První sekce</option>
-    <option value="secondSection">Druhá sekce</option>
-</select>
+<label htmlFor="section">Sekce</label>
+            <select name="section" id="section" disabled={!selectedCategory}>
+                <option value="" disabled>Vybrat sekci</option>
+                {filteredSections.map(section => (
+                    <option key={section.id} value={section.id}>
+                        {section.name}
+                    </option>
+                ))}
+            </select>
 
 
         
