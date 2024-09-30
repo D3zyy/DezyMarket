@@ -184,7 +184,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
                     </option>
                 ))}
             </select>
-
+            <span className="mx-2" style={{ fontSize: '20px' }}>&</span>
             <label htmlFor="section">Sekce</label>
             <select required name="section" id="section" value={selectedSection} onChange={handleSectionChange} disabled={!selectedCategory}>
                 <option value="" disabled>Vybrat sekci</option>
