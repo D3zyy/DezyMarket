@@ -176,7 +176,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
                 }}
               >
             <label htmlFor="kategory">Kategorie</label>
-            <select className="select select-md select-bordered w-full max-w-xs"  required name="kategory" id="kategory" onChange={handleCategoryChange} value={selectedCategory}>
+            <select className="select select-md select-bordered w-full"  required name="kategory" id="kategory" onChange={handleCategoryChange} value={selectedCategory}>
                 <option value="" disabled>Vybrat kategorii</option>
                 {categories.map(category => (
                     <option key={category.id} value={category.id}>
@@ -186,7 +186,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
             </select>
             <span className="mx-2" style={{ fontSize: '20px' }}>&</span>
             <label htmlFor="section">Sekce</label>
-            <select className="select select-md select-bordered w-full max-w-xs " required name="section" id="section" value={selectedSection} onChange={handleSectionChange} disabled={!selectedCategory}>
+            <select className="select select-md select-bordered w-full " required name="section" id="section" value={selectedSection} onChange={handleSectionChange} disabled={!selectedCategory}>
                 <option value="" disabled>Vybrat sekci</option>
                 {filteredSections.map(section => (
                     <option key={section.id} value={section.id}>
@@ -395,6 +395,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
                 </svg>
                 </div>
               <button
+                type="button"
                 onClick={() => handleDeleteImage(index)}
                 className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
                 style={{ transform: "translate(50%, -50%)" }} // Ensure button stays aligned
