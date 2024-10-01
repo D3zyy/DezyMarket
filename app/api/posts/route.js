@@ -125,6 +125,9 @@ export async function POST(req) {
          
             if (allowedTypeOfPost === formData.get('typeOfPost') ||  formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_BEST_RANK || formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_MEDIUM_RANK  ){
                
+
+
+                
                
                 console.log("je to dovoleny")
                 // pridat prispevek do db a vratit hlasku uspech
