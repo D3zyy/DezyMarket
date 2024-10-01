@@ -5,10 +5,11 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req) {
     try {
+        let allowedTypeOfPost
         let formData;
         try {
             formData = await req.formData();
-            console.log("data ktery sem dostal od klienta :",formData)
+           // console.log("data ktery sem dostal od klienta :",formData)
           } catch (error) {
             return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
               status: 400,
@@ -92,23 +93,71 @@ export async function POST(req) {
             });
           } else {
 
+            const customers = await stripe.customers.list({
+                email: session.email
+            });
 
+            const customer = customers.data[0];
+        
+            // Retrieve subscriptions for the customer
+            const subscriptions = await stripe.subscriptions.list({
+                customer: customer.id,
+                status: "active"
+            });
+            if (!subscriptions.data.length) {
+                allowedTypeOfPost = process.env.NEXT_PUBLIC_BASE_RANK
+            } else {
+                const subscription = subscriptions.data[0];
+                const subscriptionInfo = await stripe.subscriptions.retrieve(subscription.id);
+                const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
+                switch (product.name) {
+                    case process.env.NEXT_PUBLIC_MEDIUM_RANK:
+                        allowedTypeOfPost = process.env.NEXT_PUBLIC_MEDIUM_RANK;
+                        break;
+                    case process.env.NEXT_PUBLIC_BEST_RANK:
+                        allowedTypeOfPost = process.env.NEXT_PUBLIC_BEST_RANK;
+                        break;
+                    default:
+                        allowedTypeOfPost = process.env.NEXT_PUBLIC_BASE_RANK
+                        break;
+                }
+            }
+         
+            if (allowedTypeOfPost === formData.get('typeOfPost') ||  formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_BEST_RANK || formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_MEDIUM_RANK  ){
+               
+               
+                console.log("je to dovoleny")
+                // pridat prispevek do db a vratit hlasku uspech
 
-
-            console.log("Všechno je validní!");
+            } else {
+   
+                if(formData.get('typeOfPost') != process.env.NEXT_PUBLIC_BASE_RANK && formData.get('typeOfPost') != process.env.NEXT_PUBLIC_MEDIUM_RANK && formData.get('typeOfPost') != process.env.NEXT_PUBLIC_BEST_RANK ){
+                    console.log("neexistuje tento typ prispevku")
+                    return new Response(JSON.stringify({ message: "Tento typ příspěvku neexistuje." }), {
+                        status: 403,
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                }
+                console.log("neni to dovoleny")
+                return new Response(JSON.stringify({ message: "Na tento typ příspěvku nemáte opravnění." }), {
+                    status: 403,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+            
           }
 
 
 
        
-       
 
-        // Validation logic and Stripe integration...
 
         return new Response(JSON.stringify({ message: "Úspěšně zpracováno." }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
         });
+
+
     } catch (error) {
         console.error('Chyba na serveru [POST] požadavek vytvoření příspěvku: ', error);
         return new NextResponse(JSON.stringify({

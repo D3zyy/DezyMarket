@@ -18,6 +18,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
   const [filteredSections, setFilteredSections] = useState([]);
 
   const fieldTranslation = {
+    name: 'Co nabízím',
     description: 'Popisek',
     location: 'Místo',
     price: 'Cena',
@@ -59,7 +60,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
     formData.append('description', description);
     formData.append('location', location);
     formData.append('price', priceFromUseState);
-    formData.append('typeOfPost',typeOfPost)
+    formData.append('typeOfPost',"Šikula")
 
     console.log(name);
     console.log(section);
