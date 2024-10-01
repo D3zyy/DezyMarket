@@ -35,7 +35,7 @@ export async function POST(req) {
         console.log(price)
 
         const schema = z.object({
-            name: z.string()
+              name: z.string()
               .max(120, 'Název může mít maximálně 120 znaků.') 
               .min(5, 'Název musí mít alespoň 5 znaků.')
               .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Název nesmí obsahovat žádné speciální znaky.'),
@@ -49,11 +49,11 @@ export async function POST(req) {
                 .min(15, 'Popisek musí mít alespoň 15 znaků.')
                 .max(1500, 'Popisek může mít maximálně 1500 znaků.')
                 .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Popisek nesmí obsahovat žádné speciální znaky kromě tečky.'),
-                location: z.string()
+              location: z.string()
                 .min(3, 'Místo musí mít alespoň 3 znaky.')
                 .max(30, 'Místo může mít maximálně 30 znaků.')
                 .regex(/^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž]+)?|[A-Za-z0-9á-žÁ-Ž]+ [A-Za-z0-9á-žÁ-Ž.]+)$/, 'Místo musí mít tvar "Název Číslo", "Název Název", nebo pouze "Název".'),
-            price: z.union([
+              price: z.union([
                         z.number()
                           .min(1, 'Cena musí být minimálně 1.')
                           .max(5000000, 'Cena může být maximálně 5000000.'),
@@ -88,6 +88,10 @@ export async function POST(req) {
               headers: { 'Content-Type': 'application/json' }
             });
           } else {
+            
+
+
+
             console.log("Všechno je validní!");
           }
 
