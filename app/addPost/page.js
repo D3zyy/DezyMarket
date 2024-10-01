@@ -22,9 +22,7 @@ const Page = async () => {
     }
     let CategoriesFromDb = await prisma.Categories.findMany({});
     let SectionsFromDb = await prisma.Sections.findMany({});
-    console.log(CategoriesFromDb)
-    console.log(SectionsFromDb)
-
+    
     let userCategories = await prisma.userCategories.findMany({
         where: {
           userId: session.userId,

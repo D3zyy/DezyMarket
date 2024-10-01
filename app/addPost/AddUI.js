@@ -1,17 +1,71 @@
 "use client";
+import { image } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 
 
 const AddUI = ({ accType, userCategories , categories, sections}) => {
   const [typeOfPost, setTypeOfPost] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [activeButton, setActiveButton] = useState(null); 
   const [price, setPrice] = useState(''); // name of the current price it could be like not numeric 
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([]); // Store actual file objects
+  const [imagePreviews, setImagePreviews] = useState([]); // Store URLs for displaying previews
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
   const [filteredSections, setFilteredSections] = useState([]);
+
+
+  const handleSubmitPost = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const name = formData.get('name');
+    const section = formData.get('section');
+    const category = formData.get('category');
+    const description = formData.get('description');
+    const location = formData.get('location');
+    const priceFromUseState = activeButton || formData.get('price');
+
+    // Append the image files to FormData
+    images.forEach((image) => {
+        formData.append('images', image); // Use the file objects directly
+    });
+
+    // Append other fields to the FormData
+    formData.append('name', name);
+    formData.append('section', section);
+    formData.append('category', category);
+    formData.append('description', description);
+    formData.append('location', location);
+    formData.append('price', priceFromUseState);
+
+    console.log(name);
+    console.log(section);
+    console.log(category);
+    console.log(description);
+    console.log(location);
+    console.log(priceFromUseState);
+    console.log(images); // This will now be an array of File objects
+    console.log(typeOfPost);
+    setLoading(true);
+
+    const res = await fetch('/api/posts', {
+        method: 'POST',
+        body: formData, // Send the FormData directly
+    });
+
+    if (res.ok) {
+        let result = await res.json();
+        console.log("Odpověď od serveru :", result);
+        setLoading(false);
+    } else {
+        let result = await res.json();
+        console.log("Odpověď od serveru :", result);
+        setLoading(false);
+    }
+}
+
 
   function htmlToText(htmlString) {
     const div = document.createElement('div');
@@ -50,26 +104,30 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
   // Handle file input
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-  
+
     // Determine the maximum number of uploads based on typeOfPost
+    if (selectedFiles.length + images.length > maxUploads) {
+        setError(`Maximální počet obrázků je ${maxUploads}. Zkuste to znovu.`);
+        return;
+    }
+    setError(null);
 
-  
-        if (selectedFiles.length + images.length > maxUploads) {
-            setError(`Maximální počet obrázků je ${maxUploads} Zkuste to znovu`)
-            return;
-        }
-        setError(null)
-    const validImages = selectedFiles.filter((file) =>
-      file.type.startsWith("image/")
-    );
-    const newImages = validImages.map((file) => URL.createObjectURL(file));
-    setImages((prevImages) => [...prevImages, ...newImages]);
-  };
+    // Filter valid image files
+    const validImages = selectedFiles.filter((file) => file.type.startsWith("image/"));
 
-  // Handle image deletion
-  const handleDeleteImage = (index) => {
+    // Update the state for actual files and their previews
+    setImages((prevImages) => [...prevImages, ...validImages]);
+    setImagePreviews((prevImages) => [
+        ...prevImages,
+        ...validImages.map((file) => URL.createObjectURL(file)),
+    ]);
+};
+
+// Handle image deletion
+const handleDeleteImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-  };
+    setImagePreviews((prevImages) => prevImages.filter((_, i) => i !== index));
+};
   const handleButtonClick = (buttonName) => {
     if (activeButton === buttonName) {
       setIsDisabled(false);
@@ -150,7 +208,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
           className="typeOfPosts flex flex-col  justify-center gap-2 p-4"
         >
           
-          <form action="">
+          <form  onSubmit={handleSubmitPost} >
             <div className="py-2 w-full">
               <label htmlFor="name" className="block" style={{ fontSize: '14px' }}>Co nabízím</label>
               <input
@@ -179,8 +237,8 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
                   gap: '10px',
                 }}
               >
-            <label htmlFor="kategory">Kategorie</label>
-            <select className="select select-md select-bordered w-full"  required name="kategory" id="kategory" onChange={handleCategoryChange} value={selectedCategory}>
+            <label htmlFor="category">Kategorie</label>
+            <select className="select select-md select-bordered w-full"  required name="category" id="category" onChange={handleCategoryChange} value={selectedCategory}>
                 <option value="" disabled>Vybrat kategorii</option>
                 {categories.map(category => (
                     <option  key={category.id} value={category.id}>
@@ -208,11 +266,11 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
 
 
             <div className="py-2 w-full">
-              <label htmlFor="name" className="block" style={{ fontSize: '14px' }}>Popisek</label>
+              <label htmlFor="description" className="block" style={{ fontSize: '14px' }}>Popisek</label>
               <textarea 
 
   placeholder='Prodám.. Nabízím.. Daruji..'
-  name="name"
+  name="description"
   className="input input-bordered w-full"
   required
   minLength={15} // Minimální délka 5 znaků
@@ -311,7 +369,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
   }}
 >
   <span
-    htmlFor="name"
+    htmlFor="location"
     className="block"
     style={{ fontSize: '14px', flexGrow: 1 }}
   >
@@ -323,7 +381,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
     pattern="[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]+( [A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9]+)*" 
     type="text"
     placeholder={"např. Praha 8, Beroun nebo Pardubický kraj"}
-    name="name"
+    name="location"
     className="input input-bordered"
     required
     style={{
@@ -409,54 +467,50 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
     </label>
       {/* Image preview */}
       <div  style={{marginTop: "10px",marginBottom:"10px"}} className="flex flex-wrap gap-6 justify-center items-center">
-        {images.length > 0 &&
-          images.map((image, index) => (
-            <div key={index} className="relative">
-              <img
-                src={image}
+      {imagePreviews.length > 0 &&
+    imagePreviews.map((imagePreview, index) => (
+        <div key={index} className="relative">
+            <img
+                src={imagePreview}
                 alt={`Preview ${index + 1}`}
                 className="h-32 w-32 object-cover rounded shadow-md"
-              />
-              <div
+            />
+            <div
                 className="absolute bottom-0 left-1/2 bg-gray-500 text-white rounded-full p-1 hover:bg-gray-700"
                 style={{ transform: "translate(-50%, 50%)" }} // Center horizontally, slightly below the image
-                >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    viewBox="0 0 24 24"
-                >
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24">
                     <text
-                    x="50%" y="50%" dominantBaseline="middle" textAnchor="middle"
-                    fontSize="12" fill="currentColor"
+                        x="50%" y="50%" dominantBaseline="middle" textAnchor="middle"
+                        fontSize="12" fill="currentColor"
                     >
-                    {index + 1}
+                        {index + 1}
                     </text>
                 </svg>
-                </div>
-              <button
+            </div>
+            <button
                 type="button"
                 onClick={() => handleDeleteImage(index)}
                 className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
                 style={{ transform: "translate(50%, -50%)" }} // Ensure button stays aligned
-              >
+            >
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                    />
                 </svg>
-              </button>
-            </div>
-          ))}
+            </button>
+        </div>
+    ))}
       </div>
     </div>
                 
