@@ -12,10 +12,30 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
   const [images, setImages] = useState([]); // Store actual file objects
   const [imagePreviews, setImagePreviews] = useState([]); // Store URLs for displaying previews
   const [error, setError] = useState(null);
+  const [errorValidation, setErrorValidation] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
   const [filteredSections, setFilteredSections] = useState([]);
 
+  const fieldTranslation = {
+    description: 'Popisek',
+    location: 'Místo',
+  };
+
+  const printErrorValidation = () => {
+    if (!errorValidation || !errorValidation.errors) return null;
+
+    return Object.entries(errorValidation.errors).map(([field, messages]) => (
+      <div key={field}>
+        <strong>{fieldTranslation[field] || field}:</strong> {/* Překlad názvu pole */}
+        <ul>
+          {messages.map((msg, index) => (
+            <li key={index}>{msg}</li>
+          ))}
+        </ul>
+      </div>
+    ));
+  };
 
   const handleSubmitPost = async (event) => {
     event.preventDefault();
@@ -58,10 +78,12 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
     if (res.ok) {
         let result = await res.json();
         console.log("Odpověď od serveru :", result);
+        setErrorValidation(null)
         setLoading(false);
     } else {
         let result = await res.json();
         console.log("Odpověď od serveru :", result);
+        setErrorValidation(result)
         setLoading(false);
     }
 }
@@ -207,7 +229,7 @@ const handleDeleteImage = (index) => {
           }}
           className="typeOfPosts flex flex-col  justify-center gap-2 p-4"
         >
-          
+           {printErrorValidation()}
           <form  onSubmit={handleSubmitPost} >
             <div className="py-2 w-full">
               <label htmlFor="name" className="block" style={{ fontSize: '14px' }}>Co nabízím</label>

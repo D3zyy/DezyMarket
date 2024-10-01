@@ -52,8 +52,7 @@ export async function POST(req) {
              location: z.string()
                 .min(3, 'Místo musí mít alespoň 3 znaky.')
                 .max(30, 'Místo může mít maximálně 30 znaků.')
-                .regex(/^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž.]+)?|\d+)$|^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž.]+)+)$/, 
-                       'Místo musí mít tvar "Název Číslo" nebo "Název Název".'),
+                .regex(/^[A-Za-z0-9á-žÁ-Ž]+ [A-Za-z0-9á-žÁ-Ž.]+$/, 'Místo musí mít tvar "Název Číslo" nebo "Název Název".'),
             price: z.union([
                         z.number()
                           .min(1, 'Cena musí být minimálně 1.')
@@ -65,7 +64,7 @@ export async function POST(req) {
 
           let priceConverted = formData.get('price'); // Vždy vrací string
 
-            // Ověř, zda je hodnota celé číslo
+      
             if (!isNaN(priceConverted) && Number.isInteger(parseFloat(priceConverted))) {
                 priceConverted = parseInt(price, 10); // Převeď na celé číslo
             }
