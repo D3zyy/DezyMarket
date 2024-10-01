@@ -50,7 +50,7 @@ export async function POST(req) {
                 .max(1500, 'Popisek může mít maximálně 1500 znaků.')
                 .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Popisek nesmí obsahovat žádné speciální znaky kromě tečky.'),
               location: z.string()
-                .min(3, 'Místo musí mít alespoň 3 znaky.')
+                .min(2, 'Místo musí mít alespoň 2 znaky.')
                 .max(30, 'Místo může mít maximálně 30 znaků.')
                 .regex(/^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž]+)?|[A-Za-z0-9á-žÁ-Ž]+ [A-Za-z0-9á-žÁ-Ž.]+)$/, 'Místo musí mít tvar "Název Číslo", "Název Název", nebo pouze "Název".'),
               price: z.union([
@@ -88,7 +88,7 @@ export async function POST(req) {
               headers: { 'Content-Type': 'application/json' }
             });
           } else {
-            
+
 
 
 
