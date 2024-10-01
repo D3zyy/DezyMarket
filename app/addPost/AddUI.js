@@ -95,12 +95,12 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
 
   const maxUploads = 
   typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-    ? 5 // 5 obrázku základní rank
+    ? 20// 5 obrázku základní rank
     : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
-    ? 10 // 10 obrázku střední rank
+    ? 25 // 10 obrázku střední rank
     : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
-    ? 15 // 15 obrázku nejlepší rank
-    : 5; 
+    ? 30 // 15 obrázku nejlepší rank
+    : 20; 
   // Handle file input
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -214,7 +214,7 @@ const handleDeleteImage = (index) => {
               <input
                 minLength={5} // Minimální délka 5 znaků
                 maxLength={120}
-                pattern="[A-Za-z0-9\sÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž#%&'()*+,-./:=?[\]^_`{|}~]*"  
+                pattern="^[A-Za-z0-9á-žÁ-Ž. ]*$"
                 type="text"
                 placeholder={placeText}
                 name="name"
@@ -378,7 +378,7 @@ const handleDeleteImage = (index) => {
   <input
     minLength={2} // Minimální délka 5 znaků
     maxLength={25}
-    pattern="[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]+( [A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9]+)*" 
+    pattern="^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž.]+)?|\d+)$|^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž.]+)+)$"
     type="text"
     placeholder={"např. Praha 8, Beroun nebo Pardubický kraj"}
     name="location"

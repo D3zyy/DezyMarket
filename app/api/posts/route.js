@@ -62,6 +62,13 @@ export async function POST(req) {
                           .regex(/^(Dohodou|V textu|Zdarma)$/, 'Cena musí být "Dohodou", "V textu" nebo "Zdarma".'),
                       ]),
           });
+
+          let priceConverted = formData.get('price'); // Vždy vrací string
+
+            // Ověř, zda je hodnota celé číslo
+            if (!isNaN(priceConverted) && Number.isInteger(parseFloat(priceConverted))) {
+                priceConverted = parseInt(price, 10); // Převeď na celé číslo
+            }
           const validatedFields = schema.safeParse({
             name: formData.get('name'),
             category: parseInt(formData.get('category')),
@@ -69,7 +76,7 @@ export async function POST(req) {
             description: formData.get('description'),
             location: formData.get('location'),
             nickname: formData.get('nickname'), // Opraveno, aby to odpovídalo zadaným datům
-            price: formData.get('price'),
+            price: priceConverted,
           });
           
           if (!validatedFields.success) {
