@@ -13,7 +13,11 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
   const [selectedSection, setSelectedSection] = useState('');
   const [filteredSections, setFilteredSections] = useState([]);
 
-
+  function htmlToText(htmlString) {
+    const div = document.createElement('div');
+    div.innerHTML = htmlString;
+    return div.textContent || div.innerText || "";
+  }
      // Sledování vybrané kategorie a filtrování sekcí
      useEffect(() => {
         if (selectedCategory) {
@@ -152,7 +156,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
               <input
                 minLength={5} // Minimální délka 5 znaků
                 maxLength={120}
-                pattern="[A-Za-z0-9\s#%&'()*+,-./:;=?[\]^_`{|}~]*"
+                pattern="[A-Za-z0-9\sÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž#%&'()*+,-./:=?[\]^_`{|}~]*"  
                 type="text"
                 placeholder={placeText}
                 name="name"
@@ -179,8 +183,8 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
             <select className="select select-md select-bordered w-full"  required name="kategory" id="kategory" onChange={handleCategoryChange} value={selectedCategory}>
                 <option value="" disabled>Vybrat kategorii</option>
                 {categories.map(category => (
-                    <option key={category.id} value={category.id}>
-                        <span dangerouslySetInnerHTML={{ __html: category.logo }} /> {category.name}
+                    <option  key={category.id} value={category.id}>
+                     {htmlToText(category.logo)} {category.name}
                     </option>
                 ))}
             </select>
@@ -295,6 +299,42 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
                 </div>
 
               </div>
+                
+
+              <div
+  className="flex items-center"
+  style={{
+    padding: "12px",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '10px',
+  }}
+>
+  <span
+    htmlFor="name"
+    className="block"
+    style={{ fontSize: '14px', flexGrow: 1 }}
+  >
+    Místo (Město, Obec nebo kraj)
+  </span>
+  <input
+    minLength={2} // Minimální délka 5 znaků
+    maxLength={25}
+    pattern="[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]+( [A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9]+)*" 
+    type="text"
+    placeholder={"např. Praha 8, Beroun nebo Pardubický kraj"}
+    name="name"
+    className="input input-bordered"
+    required
+    style={{
+      fontSize: '14px',
+      padding: '8px',
+      width: '55%', // Adjust this percentage to control the input width
+    }}
+  />
+</div>
+      
+
 
 
 
