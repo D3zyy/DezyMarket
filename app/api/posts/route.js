@@ -46,9 +46,12 @@ export async function POST(req) {
               .int('Sekce musí být celé číslo.') 
               .positive('Sekce musí být kladné číslo.') ,
               description: z.string()
-                .min(15, 'Popisek musí mít alespoň 15 znaků.')
-                .max(1500, 'Popisek může mít maximálně 1500 znaků.')
-                .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Popisek nesmí obsahovat žádné speciální znaky kromě tečky.'),
+              .min(15, 'Popisek musí mít alespoň 15 znaků.')
+              .max(1500, 'Popisek může mít maximálně 1500 znaků.')
+              .transform((value) => value.replace(/[\r\n]/g, '')) // Remove \r and \n
+              .refine((value) => /^[A-Za-z0-9á-žÁ-Ž.!?&, -]*$/.test(value), {
+                message: 'Popisek nesmí obsahovat žádné speciální znaky kromě (. , ? ! & - ).'
+              }),
               location: z.string()
                 .min(2, 'Místo musí mít alespoň 2 znaky.')
                 .max(30, 'Místo může mít maximálně 30 znaků.')
