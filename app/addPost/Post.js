@@ -149,11 +149,16 @@ if (firstStep && secondStep) {
     })}
   </ul>
 </div>
-  <a
+<a
     href="#scrollHereAddPost"
-    onClick={() => {
+    onClick={(e) => {
+      e.preventDefault(); // Zabránit výchozímu chování odkazu
       if (shouldDisable) {
-        toggleSteps()
+        toggleSteps();
+        const scrollToElement = document.getElementById('scrollHereAddPost');
+        if (scrollToElement) {
+          scrollToElement.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll
+        }
       }
     }}
     type="button"
@@ -163,13 +168,13 @@ if (firstStep && secondStep) {
         : "bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50"
     } ${!shouldDisable ? "cursor-not-allowed" : "cursor-pointer"}`}
     disabled={!shouldDisable || loading} // Disable button based on condition
-  >
+>
     {loading ? (
       <span className="loading loading-spinner loading-sm"></span>
     ) : (
       <span>Zvolit</span>
     )}
-  </a>
+</a>
 
   
 </div>
