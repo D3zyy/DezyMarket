@@ -89,7 +89,7 @@ if (firstStep && secondStep) {
 
   return (
 <div
-  className={`w-full max-w-xs sm:max-w-sm p-3 sm:p-8 bg-base-100 border border-base-200 rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700`}
+  className={`w-full max-w-xs  p-3 sm:p-8 bg-base-100 border border-base-200 rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700`}
 >
 
   
