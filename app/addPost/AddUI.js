@@ -1,7 +1,7 @@
 "use client";
 import { image } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
-
+import Image from 'next/image';
 
 const AddUI = ({ accType, userCategories , categories, sections}) => {
   const [typeOfPost, setTypeOfPost] = useState(null);
@@ -494,11 +494,14 @@ const handleDeleteImage = (index) => {
       {imagePreviews.length > 0 &&
     imagePreviews.map((imagePreview, index) => (
         <div key={index} className="relative">
-            <img
-                src={imagePreview}
-                alt={`Preview ${index + 1}`}
-                className="h-32 w-32 object-cover rounded shadow-md"
-            />
+          <Image
+    src={imagePreview}
+    alt={`Preview ${index + 1}`}
+    width={128} // Replace with the actual width of your image
+    height={128} // Replace with the actual height of your image
+    className="h-32 w-32 object-cover rounded shadow-md"
+/>
+            
             <div
                 className="absolute bottom-0 left-1/2 bg-gray-500 text-white rounded-full p-1 hover:bg-gray-700"
                 style={{ transform: "translate(-50%, 50%)" }} // Center horizontally, slightly below the image

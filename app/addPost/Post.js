@@ -149,7 +149,8 @@ if (firstStep && secondStep) {
     })}
   </ul>
 </div>
-  <button
+  <a
+    href="#scrollHereAddPost"
     onClick={() => {
       if (shouldDisable) {
         toggleSteps()
@@ -168,7 +169,7 @@ if (firstStep && secondStep) {
     ) : (
       <span>Zvolit</span>
     )}
-  </button>
+  </a>
 
   
 </div>

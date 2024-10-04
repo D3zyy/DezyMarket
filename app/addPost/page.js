@@ -51,7 +51,7 @@ const Page = async () => {
             <div>
                 {session.isLoggedIn ? (
                     <>
-                        <div
+                        <div id='scrollHereAddPost'
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
