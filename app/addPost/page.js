@@ -70,9 +70,9 @@ const Page = async () => {
                                     accType === process.env.BASE_RANK
                                     ? 'Topovaný'
                                     : accType === process.env.MEDIUM_RANK
-                                    ? process.env.MEDIUM_RANK
+                                    ? `Topovaný - ${process.env.MEDIUM_RANK}`
                                     : accType === process.env.BEST_RANK
-                                    ? process.env.BEST_RANK
+                                    ? `Topovaný - ${process.env.BEST_RANK}`
                                     : ''
                                 }
                                 emoji={
@@ -95,7 +95,7 @@ const Page = async () => {
                                 }
                                 priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
                                 benefits={[
-                                    [accType === process.env.BASE_RANK ? "X fotografií" : accType === process.env.MEDIUM_RANK ? "3 obrázky" : accType === process.env.BEST_RANK ? "10 obrázků" : "X obrázků", true],
+                                    [accType === process.env.BASE_RANK ? "X fotografií" : accType === process.env.MEDIUM_RANK ? "až 25 obrázků" : accType === process.env.BEST_RANK ? "až 30 obrázků" : "X obrázků", true],
                                     [accType === process.env.BASE_RANK ? "Doba uložení 2 měsíce" : accType === process.env.MEDIUM_RANK ? "Doba uložení 3 měsíce" : accType === process.env.BEST_RANK ? "Doba uložení 4 měsíce" : "Doba uložení X měsíce", true],
                                     ["Topovaný v kategorii ", true],
                                     ["Statistika zobrazení inzerátu", true],
@@ -110,7 +110,7 @@ const Page = async () => {
                                 price={0}
                                 priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
                                 benefits={[
-                                    ["5 obrázků ", true],
+                                    ["až 20 obrázků ", true],
                                     ["Doba uložení 2 měsíce", true],
                                     ["Topovaný v kategorii ", false],
                                     ["Topovaný na hlavní stránce", false],

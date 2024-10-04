@@ -7,7 +7,7 @@ import { SubscriptionInfo } from '../components/SubscriptionInfo';
 
 
 
-export function Post({ name,emoji, price, priceId, benefits, hasThisType }) {
+export function Post({ name,emoji, benefits, hasThisType }) {
   const [loading, setLoading] = useState(false);
 
   function toggleSteps() {
@@ -26,7 +26,11 @@ for (let i = 0; i < secondStepDivs.length; i++) {
         localStorage.removeItem('typeOfPost'); 
         secondStepDivs[i].style.display = 'none';
     } else {
-        localStorage.setItem('typeOfPost',name);  
+      let nameToSave = 
+      name === "Topovaný - Šikula" ? process.env.NEXT_PUBLIC_MEDIUM_RANK :
+      name === "Topovaný - Profík" ? process.env.NEXT_PUBLIC_BEST_RANK :
+      process.env.NEXT_PUBLIC_BASE_RANK ;
+        localStorage.setItem('typeOfPost', nameToSave);
         secondStepDivs[i].style.display = 'block';
     }
 }
@@ -54,10 +58,10 @@ if (firstStep && secondStep) {
 
   }
   const isActive = hasThisType === name;
-  const isZákladní = name === 'Základní';
+  const isZákladní = name === process.env.NEXT_PUBLIC_BASE_RANK ;
 
   // Determine if the button should be disabled
-  const shouldDisable = hasThisType && (isZákladní || hasThisType !== 'Základní');
+  const shouldDisable = hasThisType && (isZákladní || hasThisType !== process.env.NEXT_PUBLIC_BASE_RANK );
 
 
 
