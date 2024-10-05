@@ -2,9 +2,10 @@
 import { image } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-
+import { useRouter } from 'next/navigation'
 const AddUI = ({ accType, userCategories , categories, sections}) => {
   const [typeOfPost, setTypeOfPost] = useState(null);
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [activeButton, setActiveButton] = useState(null); 
@@ -16,6 +17,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
   const [filteredSections, setFilteredSections] = useState([]);
+  const router = useRouter()
 
   const fieldTranslation = {
     name: 'Co nabízím',
@@ -82,6 +84,10 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
         console.log("Odpověď od serveru :", result);
         setErrorValidation(null)
         setLoading(false);
+        console.log("tady nad",result.id)
+        router.push(`/post/${result.id}`);
+        console.log("tady pod")
+
     } else {
         let result = await res.json();
         console.log("Odpověď od serveru :", result);
