@@ -68,15 +68,20 @@ model Posts {
   name        String
   description String
   price       String
-  imageUrl    String        
   categoryId  Int
   sectionId   Int
   location    String
   typeOfPost  String
   category    Categories    @relation(fields: [categoryId], references: [id])
   section     Sections      @relation(fields: [sectionId], references: [id])
+  images      Image[]      // Define a one-to-many relation
+}
 
-  @@index([imageUrl])
+model Image {
+  id       Int    @id @default(autoincrement())
+  url      String
+  postId   Int
+  post     Posts  @relation(fields: [postId], references: [id])
 }
 model UserCategories {
   userId       Int

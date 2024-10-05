@@ -2,15 +2,68 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 import { z } from 'zod';
 import { prisma } from "@/app/database/db";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import sharp from 'sharp';
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+let sessionGeneral
+
+const s3Client = new S3Client({
+  region :process.env.NEXT_PUBLIC_AWS_S3_REGION,
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_S3_SECRET_ACCESS_KEY
+  }
+})
+async function resizeImage(buffer) {
+  const resizedBuffer = await sharp(buffer)
+    .resize(1200, 1200, {
+      fit: sharp.fit.inside,
+      withoutEnlargement: true
+    })
+    .toBuffer();
+  
+  return resizedBuffer;
+}
+
+async function uploadImagesToS3(files,postId) {
+  const uploadResponses = await Promise.all(files.map(async (file, index) => {
+    const resizedImage = await resizeImage(file);
+
+    const params = {
+      Bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME,
+      Key: `${postId}/${Date.now()}-image-${index}.jpg`,
+      Body: resizedImage,
+      ContentType: "image/jpeg"
+    };
+
+    const command = new PutObjectCommand(params);
+    try {
+      let responseAWS = await s3Client.send(command);
+      console.log("AWS upload response:", responseAWS);
+
+      // Construct the URL of the uploaded image
+      const imageUrl = `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
+      return imageUrl; // Return the URL of the uploaded image
+    } catch (error) {
+      console.error("Error uploading to AWS:", error);
+      throw error;
+    }
+  }));
+  return uploadResponses
+}
+
 
 export async function POST(req) {
     try {
         let allowedTypeOfPost
         let formData;
+        let allImages
+ 
         try {
             formData = await req.formData();
-           // console.log("data ktery sem dostal od klienta :",formData)
+           console.log("data ktery sem dostal od klienta :",formData)
+           console.log(formData.getAll("images"))
+           allImages = formData.getAll("images")
           } catch (error) {
             return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
               status: 400,
@@ -26,7 +79,7 @@ export async function POST(req) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-        
+        sessionGeneral = session
 
 
 
@@ -62,10 +115,10 @@ export async function POST(req) {
           });
 
           let priceConverted = formData.get('price'); // Vždy vrací string
-
+          console.log("konver",priceConverted)
       
             if (!isNaN(priceConverted) && Number.isInteger(parseFloat(priceConverted))) {
-                priceConverted = parseInt(price, 10); // Převeď na celé číslo
+                priceConverted = parseInt(priceConverted, 10); // Převeď na celé číslo
             }
           const validatedFields = schema.safeParse({
             name: formData.get('name'),
@@ -141,27 +194,51 @@ export async function POST(req) {
                   headers: { 'Content-Type': 'application/json' }
                 });
               }
-              
+              const buffers = await Promise.all(allImages.map(async (image) => {
+                const arrayBuffer = await image.arrayBuffer(); // Convert each file to arrayBuffer
+                return Buffer.from(arrayBuffer);  // Convert arrayBuffer to Buffer
+              }));
               const newPost = await prisma.Posts.create({
                 data: {
                   name: validatedFields.data.name,
                   description: validatedFields.data.description,
-                  price: validatedFields.data.wě,
+                  price: toString(validatedFields.data.price),
                   location: validatedFields.data.location,
-                  imageUrl: "tady bude odkaz na obrázky",
                   typeOfPost: formData.get('typeOfPost'),
                   categoryId: validatedFields.data.category,
                   sectionId : validatedFields.data.section
                 }
               });
+              
+              const FilePath = await uploadImagesToS3(buffers,newPost.id)
+              console.log("Cesta k obrázům :", FilePath)
+              const imageUrls = FilePath; 
+
+              await Promise.all(
+                imageUrls.map(url => 
+                  prisma.image.create({
+                    data: {
+                      url,
+                      post: {
+                        connect: { id: newPost.id } // Link to the post
+                      }
+                    }
+                  })
+                )
+              );
+
+              
+        
+
+
+
 
               console.log(newPost)
               return new Response(JSON.stringify({ message: "Příspěvek úspěšně vytvořen" , id : newPost.id }), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' }
             });
-                console.log("je to dovoleny")
-                // pridat prispevek do db a vratit hlasku uspech
+               
 
             } else {
    
@@ -186,10 +263,7 @@ export async function POST(req) {
        
 
 
-        return new Response(JSON.stringify({ message: "Úspěšně zpracováno." }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        });
+       
 
 
     } catch (error) {
