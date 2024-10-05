@@ -43,12 +43,14 @@ model AccountType {
   @@index([userId])
 }
 
+
 model Sections {
   id          Int         @id @default(autoincrement())
   name        String
   categoryId  Int         // Cizí klíč na model Categories
   category    Categories   @relation(fields: [categoryId], references: [id]) // Vytvoření vazby na Categories
-  @@index([id])
+  posts Posts[]
+ @@index([id])
 }
 
 model Categories {
@@ -57,9 +59,25 @@ model Categories {
   logo        String
   user        UserCategories[]
   sections    Sections[]   // Odpovídající pole pro vztah
+  posts Posts[]
   @@index([id])
 }
 
+model Posts {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  price       String
+  imageUrl    String        
+  categoryId  Int
+  sectionId   Int
+  location    String
+  typeOfPost  String
+  category    Categories    @relation(fields: [categoryId], references: [id])
+  section     Sections      @relation(fields: [sectionId], references: [id])
+
+  @@index([imageUrl])
+}
 model UserCategories {
   userId       Int
   categoryId   Int

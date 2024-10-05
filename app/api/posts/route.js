@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 import { z } from 'zod';
+import { prisma } from "@/app/database/db";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req) {
@@ -27,13 +28,7 @@ export async function POST(req) {
         }
         
 
-      
-        const name = formData.get('name');
-        const category = formData.get('category');
-        const price = formData.get('price');
-        console.log(name)
-        console.log(category)
-        console.log(price)
+
 
         const schema = z.object({
               name: z.string()
@@ -124,11 +119,47 @@ export async function POST(req) {
             }
          
             if (allowedTypeOfPost === formData.get('typeOfPost') ||  formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_BEST_RANK || formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_MEDIUM_RANK  ){
-               
+               console.log(validatedFields)
+      
+               const categoryExist = await prisma.Categories.findUnique({
+                where: { id: parseInt(formData.get('category')) }
+              });
+              const sectionExist = await prisma.Sections.findUnique({
+                where: { id: parseInt(formData.get('section')) }
+              });
+              
+              if (!categoryExist) {
+                return new Response(JSON.stringify({ message: "Tato kategorie neexistuje." }), {
+                  status: 404,
+                  headers: { 'Content-Type': 'application/json' }
+                });
+              }
+              
+              if (!sectionExist) {
+                return new Response(JSON.stringify({ message: "Tato sekce neexistuje." }), {
+                  status: 404,
+                  headers: { 'Content-Type': 'application/json' }
+                });
+              }
+              
+              const newPost = await prisma.Posts.create({
+                data: {
+                  name: validatedFields.data.name,
+                  description: validatedFields.data.description,
+                  price: validatedFields.data.wě,
+                  location: validatedFields.data.location,
+                  imageUrl: "tady bude odkaz na obrázky",
+                  typeOfPost: formData.get('typeOfPost'),
+                  categoryId: validatedFields.data.category,
+                  sectionId : validatedFields.data.section
+                }
+              });
 
-
-                
-               
+              console.log(newPost)
+              return new Response(JSON.stringify({ message: "Příspěvek úspěšně vytvořen" , id : newPost.id }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            });
                 console.log("je to dovoleny")
                 // pridat prispevek do db a vratit hlasku uspech
 
