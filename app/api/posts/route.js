@@ -198,11 +198,14 @@ export async function POST(req) {
                 const arrayBuffer = await image.arrayBuffer(); // Convert each file to arrayBuffer
                 return Buffer.from(arrayBuffer);  // Convert arrayBuffer to Buffer
               }));
+              const price = validatedFields.data.price;
+              const validatedPrice = typeof price === 'number' && Number.isInteger(price) ? price.toString() : price;
+              
               const newPost = await prisma.Posts.create({
                 data: {
                   name: validatedFields.data.name,
                   description: validatedFields.data.description,
-                  price: toString(validatedFields.data.price),
+                  price: validatedPrice,
                   location: validatedFields.data.location,
                   typeOfPost: formData.get('typeOfPost'),
                   categoryId: validatedFields.data.category,
@@ -228,10 +231,6 @@ export async function POST(req) {
               );
 
               
-        
-
-
-
 
               console.log(newPost)
               return new Response(JSON.stringify({ message: "Příspěvek úspěšně vytvořen" , id : newPost.id }), {
