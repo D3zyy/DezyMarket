@@ -8,10 +8,10 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 let sessionGeneral
 
 const s3Client = new S3Client({
-  region :process.env.NEXT_PUBLIC_AWS_S3_REGION,
+  region :process.env.AWS_S3_REGION,
   credentials: {
-    accessKeyId: process.env.NEXT_PUBLIC_AWS_S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.NEXT_PUBLIC_AWS_S3_SECRET_ACCESS_KEY
+    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY
   }
 })
 async function resizeImage(buffer) {
@@ -30,7 +30,7 @@ async function uploadImagesToS3(files,postId) {
     const resizedImage = await resizeImage(file);
 
     const params = {
-      Bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME,
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: `${postId}/${Date.now()}-image-${index}.jpg`,
       Body: resizedImage,
       ContentType: "image/jpeg"
@@ -38,15 +38,16 @@ async function uploadImagesToS3(files,postId) {
 
     const command = new PutObjectCommand(params);
     try {
-      let responseAWS = await s3Client.send(command);
-      console.log("AWS upload response:", responseAWS);
+      let responseAWS = await s3Client.send(command)
 
       // Construct the URL of the uploaded image
       const imageUrl = `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
       return imageUrl; // Return the URL of the uploaded image
     } catch (error) {
-      console.error("Error uploading to AWS:", error);
-      throw error;
+      return new Response(JSON.stringify({ message: "Chyba při nahrávaní obrázků na cloud:",error }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+    });
     }
   }));
   return uploadResponses
