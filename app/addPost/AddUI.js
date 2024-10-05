@@ -547,12 +547,14 @@ const handleDeleteImage = (index) => {
               
               
               <div className="w-full flex">
-                <input
-                    style={{ marginTop: "10px" }}
-                    className="btn btn-block btn-primary"
-                    type="submit"
-                    value="Vytvořit"
-                />
+              <button
+              disabled={loading}
+              style={{ marginTop: "10px" }}
+              className="btn btn-block btn-primary"
+              type="submit"
+            >
+              {loading ? <span className="loading loading-spinner loading-sm"></span> : "Vytvořit"}
+            </button>
             </div>
             </div>
           </form>
