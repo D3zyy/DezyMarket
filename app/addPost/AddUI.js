@@ -165,29 +165,9 @@ const handleDeleteImage = (index) => {
     }
   };
 
-  function getRandomCategories(categories, count) {
-    const shuffled = [...categories].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  }
 
-  const randomCategories = userCategories.length
-    ? getRandomCategories(userCategories, 3)
-    : [
-        { category: { name: 'Sluchátka', logo: '🎧' } },
-        { category: { name: 'Dům', logo: '🏠' } }
-      ];
 
-  const prefix = "např. ";
-  const beforeText = randomCategories
-    .map(category => {
-      const decodedLogo = category.category.logo.includes('&#')
-        ? String.fromCodePoint(category.category.logo.match(/\d+/)[0])
-        : category.category.logo;
-      return `${category.category.name} ${decodedLogo}`;
-    })
-    .join(', ');
-
-  const placeText = `${prefix}${beforeText}`;
+ 
 
   const handleVisibilityChange = () => {
     const divElement = document.querySelector('.addPostSecondStep');
@@ -242,7 +222,7 @@ const handleDeleteImage = (index) => {
                 maxLength={200}
                 pattern="^[A-Za-z0-9á-žÁ-Ž. ]*$"
                 type="text"
-                placeholder={placeText}
+                placeholder={"např. Iphone 14, Kolo, Auto"}
                 name="name"
                 className="input input-bordered w-full"
                 required
