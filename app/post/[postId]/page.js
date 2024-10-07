@@ -43,6 +43,7 @@ const Page = async ({ params }) => {
       {/* Top: Reserved for images on mobile, left side on desktop */}
       <div className="flex-1 md:mr-4 mb-4 md:mb-0">
         Obrázky
+      </div>
   
       {/* Right Side: Post details split into two sections */}
       <div className="flex-1 p-4">
@@ -55,7 +56,7 @@ const Page = async ({ params }) => {
           <p><strong>Přezdívka:</strong> {session?.nickname}</p>
           <p><strong>Jméno:</strong> {session?.fullName}</p>
           <p><strong>Email:</strong> {session?.email}</p>
-          <p><strong>Telefon:</strong> {postRecord?.mobileNumber}</p>
+          <p><strong>Telefon:</strong> {postRecord?.phoneNumber}</p>
         </div>
   
         {/* Second Section */}
