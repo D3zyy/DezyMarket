@@ -22,7 +22,8 @@ model Users {
   image                    String           @default("default.png")
   roleId                   Int
   role                     Roles            @relation(fields: [roleId], references: [id])
-  bans                     Bans[]           // Establish one-to-many relationship with Bans
+  bans                     Bans[] 
+  posts                    Posts[]          
   sessions                 Sessions[]
   accountTypes             AccountType[]    // One-to-many relationship with AccountType
   termsOfUseAndPrivatePolicy Boolean        @default(false)
@@ -76,6 +77,8 @@ model Posts {
   category    Categories   @relation(fields: [categoryId], references: [id])
   section     Sections     @relation(fields: [sectionId], references: [id])
   images      Image[]      // Define a one-to-many relation
+  userId     Int  
+  user     Users  @relation(fields: [userId], references: [id])
 }
 model Image {
   id       Int    @id @default(autoincrement())

@@ -225,7 +225,8 @@ export async function POST(req) {
                     typeOfPost: formData.get('typeOfPost'),
                     categoryId: validatedFields.data.category,
                     sectionId : validatedFields.data.section,
-                    phoneNumber : validatedFields.data.phoneNumber
+                    phoneNumber : validatedFields.data.phoneNumber,
+                    userId : session.userId
                   }
                 });
                 
