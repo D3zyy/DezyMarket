@@ -9,29 +9,39 @@ import AddUI from './AddUI';
 import { prisma } from '../database/db';
 
 const Page = async () => {
-    try {
-        const session = await getSession();
-        if (!session) throw new Error('Session nebyla nalezena');
-
-        let accType = await getUserAccountTypeOnStripe(session.email);
-        if (!accType && session.isLoggedIn) {
-            await redirect('/typeOfAccount');
+    let session
+    let accType
+        try{
+            session = await getSession();
+            if (!session) {
+                throw new Error('Session nebyla nalezena');
+            }
+    
+             accType = await getUserAccountTypeOnStripe(session.email);
+            console.log("Account Type:", accType);
+    
+        }catch(error){
+            throw new Error('Session nebo získaní typu účtu error:',error);
         }
 
+        // Perform redirect if no account type is found and the user is logged in
+        if (!accType && session.isLoggedIn) {
+           await redirect('/typeOfAccount'); // Call redirect without await
+        }
+        try {
         // Fetching Categories and Sections with error handling
         let CategoriesFromDb, SectionsFromDb;
         try {
-          CategoriesFromDb = await prisma.Categories.findMany({});
-      } catch (dbError) {
-          throw new Error("Chyba při načítání kategorií na /addPost - přidání příspěvku : " + dbError.message);
-      }
+            CategoriesFromDb = await prisma.Categories.findMany({});
+        } catch (dbError) {
+            throw new Error("Chyba při načítání kategorií na /addPost - přidání příspěvku : " + dbError.message);
+        }
+
         try {
-          SectionsFromDb = await prisma.Sections.findMany({});
+            SectionsFromDb = await prisma.Sections.findMany({});
         } catch (dbError) {
             throw new Error("Chyba při načítání sekcí na /addPost - přidání příspěvku : " + dbError.message);
         }
-
-
 
         let userCategories = await prisma.userCategories.findMany({
             where: {
@@ -51,47 +61,42 @@ const Page = async () => {
             <div>
                 {session.isLoggedIn ? (
                     <>
-                        <div id='scrollHereAddPost'
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                padding: '10px',
-                            }}>
+                        <div id='scrollHereAddPost' style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
                             <ul style={{ paddingLeft: "15px", marginBottom: "20px" }} className="steps isolate">
                                 <li className="step step-primary firstStep">Vyberte typ inzerátu</li>
                                 <li className="step secondStep">Vytvořit inzerát</li>
                             </ul>
                         </div>
-                        
+
                         <div style={{ marginBottom: "40px" }} className="typeOfPosts flex flex-col md:flex-row items-center justify-center gap-2 p-2">
                             <Post
                                 hasThisType={accType}
                                 name={
                                     accType === process.env.BASE_RANK
-                                    ? 'Topovaný'
-                                    : accType === process.env.MEDIUM_RANK
-                                    ? `Topovaný - ${process.env.MEDIUM_RANK}`
-                                    : accType === process.env.BEST_RANK
-                                    ? `Topovaný - ${process.env.BEST_RANK}`
-                                    : ''
+                                        ? 'Topovaný'
+                                        : accType === process.env.MEDIUM_RANK
+                                            ? `Topovaný - ${process.env.MEDIUM_RANK}`
+                                            : accType === process.env.BEST_RANK
+                                                ? `Topovaný - ${process.env.BEST_RANK}`
+                                                : ''
                                 }
                                 emoji={
                                     accType === process.env.BASE_RANK
-                                    ? "<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>Šikula</div> <div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>"
-                                    : accType === process.env.MEDIUM_RANK
-                                    ? "<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>Šikula</div>"
-                                    : accType === process.env.BEST_RANK
-                                    ? " <div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>"
-                                    : ''
+                                        ? "<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>Šikula</div> <div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>"
+                                        : accType === process.env.MEDIUM_RANK
+                                            ? "<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>Šikula</div>"
+                                            : accType === process.env.BEST_RANK
+                                                ? "<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>"
+                                                : ''
                                 }
                                 price={
                                     accType === process.env.BASE_RANK
-                                    ? 28
-                                    : accType === process.env.MEDIUM_RANK
-                                    ? 0
-                                    : accType === process.env.BEST_RANK
-                                    ? 0
-                                    : 28
+                                        ? 28
+                                        : accType === process.env.MEDIUM_RANK
+                                            ? 0
+                                            : accType === process.env.BEST_RANK
+                                                ? 0
+                                                : 28
                                 }
                                 priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
                                 benefits={[
