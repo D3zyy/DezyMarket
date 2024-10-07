@@ -96,6 +96,10 @@ export async function POST(req) {
               .max(150, 'Název může mít maximálně 150 znaků.') 
               .min(5, 'Název musí mít alespoň 5 znaků.')
               .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Název nesmí obsahovat žádné speciální znaky.'),
+              phoneNumber: z.string()
+              .max(9, 'Telefoní číslo musí mít přesně 9 číslic.') 
+              .min(9, 'Telefoní číslo musí mít přesně 9 číslic.')
+              .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Telefoní číslo nesmí obsahovat žádné speciální znaky.'),
               category: z.number()
               .int('Kategorie musí být celé číslo.') 
               .positive('Kategorie musí být kladné číslo.'), 
@@ -136,9 +140,10 @@ export async function POST(req) {
             description: formData.get('description'),
             location: formData.get('location'),
             nickname: formData.get('nickname'), // Opraveno, aby to odpovídalo zadaným datům
+            phoneNumber: formData.get('phoneNumber'),
             price: priceConverted,
           });
-          console.log("tady po" )
+          console.log("tady po ")
           if (!validatedFields.success) {
             console.log("Nevalidní pole:", validatedFields.error.flatten().fieldErrors); // Vypiš chyby
             return new Response(JSON.stringify({
@@ -219,7 +224,8 @@ export async function POST(req) {
                     location: validatedFields.data.location,
                     typeOfPost: formData.get('typeOfPost'),
                     categoryId: validatedFields.data.category,
-                    sectionId : validatedFields.data.section
+                    sectionId : validatedFields.data.section,
+                    phoneNumber : validatedFields.data.phoneNumber
                   }
                 });
                 
@@ -238,10 +244,10 @@ export async function POST(req) {
                       }
                     })
                   )
-                );
+                );  
          
               } catch(error) {
-             
+                console.log("tady db problem ",error)
                 return new Response(JSON.stringify({ message: "Nastala chyba při přidávání příspěvku do db." }), {
                   status: 403,
                   headers: { 'Content-Type': 'application/json' }

@@ -43,7 +43,6 @@ const Page = async ({ params }) => {
       {/* Top: Reserved for images on mobile, left side on desktop */}
       <div className="flex-1 md:mr-4 mb-4 md:mb-0">
         Obrázky
-      </div>
   
       {/* Right Side: Post details split into two sections */}
       <div className="flex-1 p-4">

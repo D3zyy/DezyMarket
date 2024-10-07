@@ -70,10 +70,11 @@ model Posts {
   price       String       @db.VarChar(100)  // Pro cenu, pokud je to také string
   categoryId  Int
   sectionId   Int
-  location    String       @db.VarChar(50)  // Například pro lokaci
+  phoneNumber String       @db.VarChar(9)    // Telefonní číslo přesně s 9 číslicemi
+  location    String       @db.VarChar(50)   // Například pro lokaci
   typeOfPost  String       @db.VarChar(100)  // Typ příspěvku
-  category    Categories    @relation(fields: [categoryId], references: [id])
-  section     Sections      @relation(fields: [sectionId], references: [id])
+  category    Categories   @relation(fields: [categoryId], references: [id])
+  section     Sections     @relation(fields: [sectionId], references: [id])
   images      Image[]      // Define a one-to-many relation
 }
 model Image {

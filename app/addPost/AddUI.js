@@ -24,6 +24,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
     description: 'Popisek',
     location: 'Místo',
     price: 'Cena',
+    phoneNumber: 'Telefoní číslo',
   };
   const printErrorValidation = () => {
     if (!errorValidation || !errorValidation.errors) return null;
@@ -44,6 +45,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const name = formData.get('name');
+    const phoneNumber = formData.get('phonenumber');
     const section = formData.get('section');
     const category = formData.get('category');
     const description = formData.get('description');
@@ -63,15 +65,9 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
     formData.append('location', location);
     formData.append('price', priceFromUseState);
     formData.append('typeOfPost',typeOfPost)
+    formData.append('phoneNumber',phoneNumber)
 
-    console.log(name);
-    console.log(section);
-    console.log(category);
-    console.log(description);
-    console.log(location);
-    console.log(priceFromUseState);
-    console.log(images); // This will now be an array of File objects
-    console.log(typeOfPost);
+  
     setLoading(true);
 
     const res = await fetch('/api/posts', {
@@ -387,8 +383,6 @@ const handleDeleteImage = (index) => {
                 </div>
 
               </div>
-                
-
               <div
   className="flex items-center"
   style={{
@@ -398,6 +392,39 @@ const handleDeleteImage = (index) => {
     gap: '10px',
   }}
 >
+        <span
+    htmlFor="phonenumber"
+    className="block"
+    style={{ fontSize: '14px', flexGrow: 1 }}
+  >
+    Telefoní číslo (bez předvolby)
+  </span>
+  <input
+    minLength={9} // Minimální délka 5 znaků
+    maxLength={9}
+    inputMode="numeric"
+    type="number"
+    placeholder={"123456789"}
+    name="phonenumber"
+    className="input input-bordered"
+    required
+    style={{
+      fontSize: '14px',
+      padding: '8px',
+      width: '55%', // Adjust this percentage to control the input width
+    }}
+  />        
+</div>
+              <div
+  className="flex items-center"
+  style={{
+    padding: "12px",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '10px',
+  }}
+>
+
   <span
     htmlFor="location"
     className="block"
