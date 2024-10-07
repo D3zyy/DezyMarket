@@ -243,7 +243,7 @@ const handleDeleteImage = (index) => {
               <label htmlFor="name" className="block" style={{ fontSize: '14px' }}>Co nabízím</label>
               <input
                 minLength={5} // Minimální délka 5 znaků
-                maxLength={120}
+                maxLength={200}
                 pattern="^[A-Za-z0-9á-žÁ-Ž. ]*$"
                 type="text"
                 placeholder={placeText}
@@ -304,7 +304,7 @@ const handleDeleteImage = (index) => {
   className="input input-bordered w-full"
   required
   minLength={15} // Minimální délka 5 znaků
-  maxLength={1500} // Maximální délka 500 znaků
+  maxLength={2000} // Maximální délka 500 znaků
   style={{ 
     fontSize: '14px', 
     padding: '8px', 
@@ -407,7 +407,7 @@ const handleDeleteImage = (index) => {
   </span>
   <input
     minLength={2} // Minimální délka 5 znaků
-    maxLength={25}
+    maxLength={50}
     type="text"
     placeholder={"např. Praha 8, Beroun nebo Pardubický kraj"}
     name="location"

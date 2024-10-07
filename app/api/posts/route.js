@@ -44,6 +44,13 @@ async function uploadImagesToS3(files,postId) {
       const imageUrl = `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
       return imageUrl; // Return the URL of the uploaded image
     } catch (error) {
+      
+      await prisma.Posts.delete({
+        where: {
+          id: postId,
+        },
+      });
+
       return new Response(JSON.stringify({ message: "Chyba při nahrávaní obrázků na cloud:",error }), {
         status: 403,
         headers: { 'Content-Type': 'application/json' }
@@ -83,10 +90,10 @@ export async function POST(req) {
         sessionGeneral = session
 
 
-
+        
         const schema = z.object({
               name: z.string()
-              .max(120, 'Název může mít maximálně 120 znaků.') 
+              .max(150, 'Název může mít maximálně 150 znaků.') 
               .min(5, 'Název musí mít alespoň 5 znaků.')
               .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Název nesmí obsahovat žádné speciální znaky.'),
               category: z.number()
@@ -96,15 +103,16 @@ export async function POST(req) {
               .int('Sekce musí být celé číslo.') 
               .positive('Sekce musí být kladné číslo.') ,
               description: z.string()
-              .min(15, 'Popisek musí mít alespoň 15 znaků.')
-              .max(1500, 'Popisek může mít maximálně 1500 znaků.')
+              .min(15, 'Popis musí mít alespoň 15 znaků.')
+              .max(2000, 'Popis může mít maximálně 2000 znaků.')
               .transform((value) => value.replace(/[\r\n]/g, '')) // Remove \r and \n
-              .refine((value) => /^[A-Za-z0-9á-žÁ-Ž.!?&, -]*$/.test(value), {
-                message: 'Popisek nesmí obsahovat žádné speciální znaky kromě (. , ? ! & - ).'
-              }),
+              .refine((value) => !/[<>]/.test(value), {
+                message: 'Popis nesmí obsahovat znaky < a >.'
+              })
+              .transform((value) => value.replace(/['";]/g, '')), // Remove quotes and semicolons
               location: z.string()
                 .min(2, 'Místo musí mít alespoň 2 znaky.')
-                .max(30, 'Místo může mít maximálně 30 znaků.')
+                .max(50, 'Místo může mít maximálně 50 znaků.')
                 .regex(/^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž]+)?|[A-Za-z0-9á-žÁ-Ž]+ [A-Za-z0-9á-žÁ-Ž.]+)$/, 'Místo musí mít tvar "Název Číslo", "Název Název", nebo pouze "Název".'),
               price: z.union([
                         z.number()
@@ -116,11 +124,12 @@ export async function POST(req) {
           });
 
           let priceConverted = formData.get('price'); // Vždy vrací string
-          console.log("konver",priceConverted)
+ 
       
             if (!isNaN(priceConverted) && Number.isInteger(parseFloat(priceConverted))) {
                 priceConverted = parseInt(priceConverted, 10); // Převeď na celé číslo
             }
+            console.log("tady")
           const validatedFields = schema.safeParse({
             name: formData.get('name'),
             category: parseInt(formData.get('category')),
@@ -130,7 +139,7 @@ export async function POST(req) {
             nickname: formData.get('nickname'), // Opraveno, aby to odpovídalo zadaným datům
             price: priceConverted,
           });
-          
+          console.log("tady po" )
           if (!validatedFields.success) {
             console.log("Nevalidní pole:", validatedFields.error.flatten().fieldErrors); // Vypiš chyby
             return new Response(JSON.stringify({
@@ -233,6 +242,7 @@ export async function POST(req) {
                 );
                 console.log(newPost)
               } catch(error) {
+                console.log("db problem")
                 return new Response(JSON.stringify({ message: "Nastala chyba při přidávání příspěvku do db." }), {
                   status: 403,
                   headers: { 'Content-Type': 'application/json' }

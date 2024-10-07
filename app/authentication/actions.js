@@ -82,11 +82,9 @@ export const getSession = async () => {
     try {
       const now = new Date();
       now.setHours(now.getHours() + 2); // Add 2 hours to the current date for validFrom
-      
       const validTill = new Date(now); // Create a copy of the now date
       validTill.setDate(now.getDate() + 2); // Adds 7 days
       let userId = userToCreate.id
-      
       // Create session in the database
       await prisma.Sessions.create({
         data: {
@@ -112,6 +110,8 @@ export const getSession = async () => {
       // Use iron-session to set the session ID in a cookie
       const session = await getIronSession(cookies(), sessionOptions);
       session.userId = userId;
+      session.fullName = userToCreate.fullName
+      session.nickname = userToCreate.nickname
       session.email = userToCreate.email
       session.password = pass
       session.role = roleName 

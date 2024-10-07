@@ -25,7 +25,7 @@ const Navigation = async () => {
     <div className="navbar bg-base-100">
           <div className="flex-1">
           <Link href="/"className={`${babes.className} btn btn-ghost text-xl`}style={{ fontSize: "1.5rem" }}>Dezy</Link>
-          <span  className={pacifico.className} style={{ marginLeft: "5px"}}>„když chci být vidět.“</span> 
+          <span  className={pacifico.className} style={{ marginLeft: "5px"}}>„když chci něco víc.“</span> 
           </div>
           <div>
             <AuthenticateUser />

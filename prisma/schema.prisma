@@ -65,18 +65,17 @@ model Categories {
 
 model Posts {
   id          Int          @id @default(autoincrement())
-  name        String
-  description String
-  price       String
+  name        String       @db.VarChar(150)  // Například pro název
+  description String       @db.VarChar(2000) // Pro popis s maximální délkou 2000 znaků
+  price       String       @db.VarChar(100)  // Pro cenu, pokud je to také string
   categoryId  Int
   sectionId   Int
-  location    String
-  typeOfPost  String
+  location    String       @db.VarChar(50)  // Například pro lokaci
+  typeOfPost  String       @db.VarChar(100)  // Typ příspěvku
   category    Categories    @relation(fields: [categoryId], references: [id])
   section     Sections      @relation(fields: [sectionId], references: [id])
   images      Image[]      // Define a one-to-many relation
 }
-
 model Image {
   id       Int    @id @default(autoincrement())
   url      String
