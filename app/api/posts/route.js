@@ -78,16 +78,19 @@ export async function POST(req) {
               headers: { 'Content-Type': 'application/json' }
             });
           }
-        const session = await getSession();
-        if (!session || !session.isLoggedIn || !session.email) {
-            return new Response(JSON.stringify({
-                message: "Chyba na serveru [POST] požadavek na vytvoření příspěvku. Session nebyla nalezena "
-            }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-        sessionGeneral = session
+       // Inside your POST function
+const session = await getSession();
+if (!session || !session.isLoggedIn || !session.email) {
+    return new Response(JSON.stringify({
+        message: "Chyba na serveru [POST] požadavek na vytvoření příspěvku. Session nebyla nalezena "
+    }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+    });
+}
+
+// Now you can use session directly throughout your function
+const userId = session.userId; // Use userId directly from session
 
 
         
