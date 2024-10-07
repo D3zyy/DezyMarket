@@ -105,7 +105,6 @@ export async function POST(req) {
               description: z.string()
               .min(15, 'Popis musí mít alespoň 15 znaků.')
               .max(2000, 'Popis může mít maximálně 2000 znaků.')
-              .transform((value) => value.replace(/[\r\n]/g, '')) // Remove \r and \n
               .refine((value) => !/[<>]/.test(value), {
                 message: 'Popis nesmí obsahovat znaky < a >.'
               })
@@ -240,9 +239,9 @@ export async function POST(req) {
                     })
                   )
                 );
-                console.log(newPost)
+         
               } catch(error) {
-                console.log("db problem")
+             
                 return new Response(JSON.stringify({ message: "Nastala chyba při přidávání příspěvku do db." }), {
                   status: 403,
                   headers: { 'Content-Type': 'application/json' }

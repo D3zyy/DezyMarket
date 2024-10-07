@@ -56,7 +56,7 @@ const Page = async ({ params }) => {
           <p><strong>Přezdívka:</strong> {session?.nickname}</p>
           <p><strong>Jméno:</strong> {session?.fullName}</p>
           <p><strong>Email:</strong> {session?.email}</p>
-          <p><strong>Telefon:</strong> {postRecord?.description}</p>
+          <p><strong>Telefon:</strong> {postRecord?.mobileNumber}</p>
         </div>
   
         {/* Second Section */}
@@ -67,7 +67,9 @@ const Page = async ({ params }) => {
           <p>
           <strong>Cena:</strong> {Number.isInteger(Number(postRecord?.price)) ? `${postRecord.price} Kč` : postRecord.price}
         </p>
-        <p><strong>Popis:</strong> {postRecord?.description}</p>
+        <p style={{fontSize: "small", whiteSpace: 'pre-line' }}>
+  <strong style={{fontSize: "medium"}}>Popis:</strong> {postRecord?.description}
+</p>
           <p><strong>Kde:</strong> {postRecord?.location}</p>
         </div>
   
