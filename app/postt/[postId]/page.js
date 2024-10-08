@@ -64,21 +64,19 @@ const Page = async ({ params }) => {
 
   {accType === process.env.BEST_RANK ? (
     <div className="badge badge-md badge-secondary badge-outline" style={{ color: '#c792e9', borderColor: '#c792e9', fontSize: '0.875rem', padding: '0.25rem 0.5rem' }}>
-      {process.env.BEST_RANK}
-    </div>
-  ) : accType === process.env.MEDIUM_RANK ? (
-    <div className="badge badge-md badge-secondary badge-outline" style={{ color: '#ff7d5c', borderColor: '#ff7d5c', fontSize: '0.875rem', padding: '0.25rem 0.5rem' }}>
-      {process.env.MEDIUM_RANK}
-    </div>
-  ) : null}
-
-  {accType === process.env.BEST_RANK && (
-    <div className="badge ml-3" style={{ color: '#c792e9' }}>
       <Link href={session?.isLoggedIn ? `/typeOfAccount` : ``}>
         {process.env.BEST_RANK}
       </Link>
     </div>
-  )}
+  ) : accType === process.env.MEDIUM_RANK ? (
+    <div className="badge badge-md badge-secondary badge-outline" style={{ color: '#ff7d5c', borderColor: '#ff7d5c', fontSize: '0.875rem', padding: '0.25rem 0.5rem' }}>
+      <Link href={session?.isLoggedIn ? `/typeOfAccount` : ``}>
+        {process.env.MEDIUM_RANK}
+      </Link>
+    </div>
+  ) : null}
+
+  
 </div>
 
 
