@@ -45,7 +45,7 @@ const Page = async ({ params }) => {
     </div>
 
       {/* Right section - Information */}
-      <div className="lg:w-1/2 flex flex-col justify-between lg:pl-8">
+      <div className="lg:w-1/2   flex flex-col justify-between lg:pl-8">
       <h1 style={{ fontSize: "30px" }} className="text-xl font-bold mb-4 sm:mt-5 mt-5">
               {postRecord?.name}
             </h1>
@@ -139,8 +139,7 @@ const Page = async ({ params }) => {
           {/* Second part of the right section - Description */}
           <div className="mt-5 md:mt-0 lg:mt-0 relative overflow-hidden">{/* Add overflow-hidden to the parent */}
   <strong className="text-xl">Popis</strong>
-  <div className="mt-2 overflow-y-auto max-h-[310px] min-w-[2
-  350px]"> {/* Wrap in a div for better overflow handling */}
+  <div className="mt-2 overflow-y-auto max-h-[310px] lg:max-w-[648px] md:max-w-[900px]"> {/* Wrap in a div for better overflow handling */}
     <p style={{ whiteSpace: 'pre-line' }} className="text-base mb-4 break-words">
       {description}
     </p>
