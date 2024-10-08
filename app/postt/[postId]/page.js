@@ -44,40 +44,48 @@ const Page = async ({ params }) => {
 
       {/* Right section - Information */}
       <div className="lg:w-1/2 flex flex-col justify-between lg:pl-8">
-      <h1 style={{ fontSize: "30px" }} className="text-xl font-bold mb-4">
+      <h1 style={{ fontSize: "30px" }} className="text-xl font-bold mb-4 sm:mt-0 mt-5">
               {postRecord?.name}
             </h1>
         <div className="flex flex-col lg:flex-row lg:space-x-8">
           {/* First part of the right section */}
           <div className="lg:w-1/2">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-5 h-10 w-10">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
-          </svg>
-            <strong>
-              <span className="mr-3">
-                <Link href={`/user/${postRecord?.user?.id}`}>
-          <strong>
-            <span className="mr-3">{postRecord?.user?.fullName}</span>
-            {accType === process.env.BEST_RANK ? (
-              <div className="badge badge-md badge-secondary badge-outline" style={{ color: '#c792e9', borderColor: '#c792e9', fontSize: '0.875rem', padding: '0.25rem 0.5rem' }}>
-                {process.env.BEST_RANK}
-              </div>
-            ) : accType === process.env.MEDIUM_RANK ? (
-              <div className="badge badge-md badge-secondary badge-outline" style={{ color: '#ff7d5c', borderColor: '#ff7d5c', fontSize: '0.875rem', padding: '0.25rem 0.5rem' }}>
-                {process.env.MEDIUM_RANK}
-              </div>
-            ) : null}
-          </strong>
-                </Link>
-              </span>
-              {accType === process.env.BEST_RANK && (
-                <div className="badge" style={{ color: '#c792e9' }}>
-                  <Link href={session?.isLoggedIn ? `/typeOfAccount` : ``}>
-                    {process.env.BEST_RANK}
-                  </Link>
-                </div>
-              )}
-            </strong>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-5 h-10 w-10">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
+            </svg>
+           
+
+            <div className="flex items-center">
+  <Link  href={`/user/${postRecord?.user?.id}`}>
+    <strong>
+      <span className="mr-3">{postRecord?.user?.fullName}</span>
+    </strong>
+  </Link>
+
+  {accType === process.env.BEST_RANK ? (
+    <div className="badge badge-md badge-secondary badge-outline" style={{ color: '#c792e9', borderColor: '#c792e9', fontSize: '0.875rem', padding: '0.25rem 0.5rem' }}>
+      {process.env.BEST_RANK}
+    </div>
+  ) : accType === process.env.MEDIUM_RANK ? (
+    <div className="badge badge-md badge-secondary badge-outline" style={{ color: '#ff7d5c', borderColor: '#ff7d5c', fontSize: '0.875rem', padding: '0.25rem 0.5rem' }}>
+      {process.env.MEDIUM_RANK}
+    </div>
+  ) : null}
+
+  {accType === process.env.BEST_RANK && (
+    <div className="badge ml-3" style={{ color: '#c792e9' }}>
+      <Link href={session?.isLoggedIn ? `/typeOfAccount` : ``}>
+        {process.env.BEST_RANK}
+      </Link>
+    </div>
+  )}
+</div>
+
+
+
+
+
+
             <p className="mt-3 mb-1 flex items-center">
             <strong>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -129,24 +137,24 @@ const Page = async ({ params }) => {
           <div className="border-l border-gray-300 mx-4"></div>
 
           {/* Second part of the right section - Description */}
-          <div className="lg:w-1/2">
-            <strong className="text-xl">Popis</strong>
-            <p className="overflow-y-auto text-base mb-4 break-words max-h-[200px]">
-              {description}
-            </p>
-            {isOverflowing && (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 absolute top-0 right-0"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-              </svg>
-            )}
-          </div>
+          <div className="sm:mt-0 mt-5 lg:w-1/2 relative">
+  <strong className="text-xl">Popis</strong>
+  <p style={{whiteSpace: 'pre-line'}} className="overflow-y-auto text-base mb-4 break-words max-h-[310px] min-w-[250]">
+    {description}
+  </p>
+  {isOverflowing && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="w-6 h-6 absolute top-0 right-0"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+    </svg>
+  )}
+</div>
         </div>
 
         {/* SVG Icons at the bottom */}
@@ -202,6 +210,7 @@ const Page = async ({ params }) => {
     </svg>
     <p>Ohodnotit uživatele</p>
   </div>
+  
 </div>
       </div>
     </div>
