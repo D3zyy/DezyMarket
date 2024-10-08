@@ -37,14 +37,14 @@ const Page = async ({ params }) => {
     <div className="flex flex-col lg:flex-row p-4 lg:p-8">
       {/* Left section - Images */}
       <div className="lg:w-1/2 flex justify-center">
-        <div className="bg-gray-100 w-full h-96 md:h-[30rem] lg:h-[30rem] flex items-center justify-center rounded-lg">
+        <div className="bg-gray-100 w-full h-96  lg:h-[30rem] flex items-center justify-center rounded-lg">
           <p className="text-lg text-gray-600">Obrázky zde</p>
         </div>
       </div>
 
       {/* Right section - Information */}
       <div className="lg:w-1/2 flex flex-col justify-between lg:pl-8">
-      <h1 style={{ fontSize: "30px" }} className="text-xl font-bold mb-4 sm:mt-0 mt-5">
+      <h1 style={{ fontSize: "30px" }} className="text-xl font-bold mb-4 sm:mt-5 mt-5">
               {postRecord?.name}
             </h1>
         <div className="flex flex-col lg:flex-row lg:space-x-8">
@@ -135,7 +135,7 @@ const Page = async ({ params }) => {
           <div className="border-l border-gray-300 mx-4"></div>
 
           {/* Second part of the right section - Description */}
-          <div className="sm:mt-0 mt-5 lg:w-1/2 relative">
+          <div className="sm:mt-5 mt-5 lg:w-1/2 relative">
   <strong className="text-xl">Popis</strong>
   <p style={{whiteSpace: 'pre-line'}} className="mt-2 overflow-y-auto text-base mb-4 break-words max-h-[310px] min-w-[250]">
     {description}
