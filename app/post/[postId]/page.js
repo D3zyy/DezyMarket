@@ -11,8 +11,6 @@ const Page = async ({ params }) => {
   let isOverflowing
   try {
     session = await getSession();
-    accType = await getUserAccountTypeOnStripe(session.email);
-    console.log("Account Type:", accType);
     console.log(session);
     
     // Fetch the post, including related category and section names
