@@ -139,7 +139,7 @@ const Page = async ({ params }) => {
           {/* Second part of the right section - Description */}
           <div className="sm:mt-0 mt-5 lg:w-1/2 relative">
   <strong className="text-xl">Popis</strong>
-  <p style={{whiteSpace: 'pre-line'}} className="overflow-y-auto text-base mb-4 break-words max-h-[310px] min-w-[250]">
+  <p style={{whiteSpace: 'pre-line'}} className="mt-2 overflow-y-auto text-base mb-4 break-words max-h-[310px] min-w-[250]">
     {description}
   </p>
   {isOverflowing && (
