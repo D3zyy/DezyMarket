@@ -36,20 +36,22 @@ const Page = async ({ params }) => {
   return (
     <div className="flex flex-col lg:flex-row p-4 lg:p-8">
       {/* Left section - Images */}
-      <div className="lg:w-1/2 flex justify-center">
-        <div className="bg-gray-100 w-full h-96  lg:h-[30rem] flex items-center justify-center rounded-lg">
-          <p className="text-lg text-gray-600">Obrázky zde</p>
-        </div>
-      </div>
+      <div className="bg-gray-100 lg:w-3/6  h-96 lg:h-[30rem] flex items-center justify-center rounded-lg overflow-hidden">
+      <img
+        src="https://www.bazos.cz/img/1t/688/192124688.jpg?t=1728305789"
+        alt="Random"
+        className="object-cover w-full h-full"
+      />
+    </div>
 
       {/* Right section - Information */}
       <div className="lg:w-1/2 flex flex-col justify-between lg:pl-8">
       <h1 style={{ fontSize: "30px" }} className="text-xl font-bold mb-4 sm:mt-5 mt-5">
               {postRecord?.name}
             </h1>
-        <div className="flex flex-col lg:flex-row lg:space-x-8">
+        <div className="flex flex-col lg:flex-row md:flex-row ">
           {/* First part of the right section */}
-          <div className="lg:w-1/2">
+          <div className="lg:w-3/4 md:w-1/2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="mb-5 h-10 w-10">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
             </svg>
@@ -107,9 +109,9 @@ const Page = async ({ params }) => {
 
 
 
-            <div className="mt-5">
+            <div className="mt-3">
               <strong className="text-sm">Cena</strong>
-              <span className="ml-1">{postRecord.price} Kč</span>
+              <span className="ml-1">{Number.isInteger(Number(postRecord.price)) ? `${postRecord.price} Kč` : postRecord.price}</span>
             </div>
             <div className="mt-3">
       <strong className="text-sm">Kategorie:</strong>
@@ -135,11 +137,14 @@ const Page = async ({ params }) => {
           <div className="border-l border-gray-300 mx-4"></div>
 
           {/* Second part of the right section - Description */}
-          <div className="sm:mt-5 mt-5 lg:w-1/2 relative">
+          <div className="mt-5 md:mt-0 lg:mt-0 relative overflow-hidden">{/* Add overflow-hidden to the parent */}
   <strong className="text-xl">Popis</strong>
-  <p style={{whiteSpace: 'pre-line'}} className="mt-2 overflow-y-auto text-base mb-4 break-words max-h-[310px] min-w-[250]">
-    {description}
-  </p>
+  <div className="mt-2 overflow-y-auto max-h-[310px] min-w-[2
+  350px]"> {/* Wrap in a div for better overflow handling */}
+    <p style={{ whiteSpace: 'pre-line' }} className="text-base mb-4 break-words">
+      {description}
+    </p>
+  </div>
   {isOverflowing && (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +152,7 @@ const Page = async ({ params }) => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-6 h-6 absolute top-0 right-0"
+      className="w-6 h-6 absolute top-2 right-2" // Adjusted to prevent overlapping with the text
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
     </svg>
