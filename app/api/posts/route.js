@@ -96,7 +96,7 @@ const userId = session.userId; // Use userId directly from session
         
         const schema = z.object({
               name: z.string()
-              .max(150, 'Název může mít maximálně 150 znaků.') 
+              .max(70, 'Název může mít maximálně 70 znaků.') 
               .min(5, 'Název musí mít alespoň 5 znaků.')
               .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Název nesmí obsahovat žádné speciální znaky.'),
               phoneNumber: z.string()

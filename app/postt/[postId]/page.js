@@ -38,11 +38,11 @@ const Page = async ({ params }) => {
       {/* Left section - Images */}
       <div className="max-w-md"> {/* Hlavní kontejner s maximální šířkou */}
   {/* Hlavní obrázek */}
-  <div className="bg-gray-100 h-4/5 flex items-center justify-center rounded-lg overflow-hidden">
+  <div className="bg-gray-100  h-96 flex items-center justify-center rounded-lg overflow-hidden">
     <img
-      src="	https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789"
+      src="https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789"
       alt="Random"
-      className="w-full h-full"
+      className=" w-full h-full"
     />
   </div>
 
@@ -80,7 +80,7 @@ const Page = async ({ params }) => {
 
       {/* Right section - Information */}
       <div className="lg:w-1/2   flex flex-col justify-between lg:pl-8">
-      <h1 style={{ fontSize: "30px" }} className="text-xl font-bold mb-4 sm:mt-5 mt-5">
+      <h1 style={{ fontSize: "25px" }} className="text-xl font-bold mb-4 sm:mt-5 mt-5">
               {postRecord?.name}
             </h1>
         <div className="flex flex-col lg:flex-row md:flex-row ">
