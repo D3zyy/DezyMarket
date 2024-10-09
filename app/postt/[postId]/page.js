@@ -38,11 +38,11 @@ const Page = async ({ params }) => {
       {/* Left section - Images */}
       <div className="max-w-md"> {/* Hlavní kontejner s maximální šířkou */}
   {/* Hlavní obrázek */}
-  <div className="bg-gray-100 w-full h-96 flex items-center justify-center rounded-lg overflow-hidden">
+  <div className="bg-gray-100 h-4/5 flex items-center justify-center rounded-lg overflow-hidden">
     <img
-      src="https://www.bazos.cz/img/1t/688/192124688.jpg?t=1728305789"
+      src="	https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789"
       alt="Random"
-      className="object-cover w-full h-full"
+      className="w-full h-full"
     />
   </div>
 
@@ -50,24 +50,24 @@ const Page = async ({ params }) => {
   <div className="grid grid-cols-3 gap-2 mt-4">
     <div className="w-full h-20">
       <img
-        src="https://www.bazos.cz/img/1t/688/192124688.jpg?t=1728305789"
+        src="	https://www.bazos.cz/img/2t/688/192124688.jpg?t=1728305789"
         alt="Thumbnail 1"
-        className="object-cover w-full h-full rounded-lg"
+        className="w-full h-full rounded-lg"
       />
     </div>
     <div className="w-full h-20">
       <img
-        src="https://www.bazos.cz/img/1t/688/192124688.jpg?t=1728305789"
+        src="	https://www.bazos.cz/img/3t/688/192124688.jpg?t=1728305789"
         alt="Thumbnail 2"
-        className="object-cover w-full h-full rounded-lg"
+        className="w-full h-full rounded-lg"
       />
     </div>
     
     <div className="w-full h-20 relative">
       <img
-        src="https://www.bazos.cz/img/1t/688/192124688.jpg?t=1728305789"
+        src="	https://www.bazos.cz/img/4t/688/192124688.jpg?t=1728305789"
         alt="Thumbnail 3"
-        className="object-cover w-full h-full rounded-lg opacity-50"
+        className="w-full h-full rounded-lg opacity-50"
       />
       <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white font-bold rounded-lg">
         +3
