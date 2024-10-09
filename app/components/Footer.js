@@ -4,7 +4,7 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <footer className="footer footer-center bg-base-200 text-base-content rounded p-10">
+    <footer className="footer footer-center bg-base-200 text-base-content rounded p-5">
   <nav className="grid grid-flow-col gap-4">
     <Link href="/about-us" className="link link-hover">O nás</Link>
     <Link href="/" className="link link-hover">Kontakty</Link>
@@ -13,7 +13,7 @@ const Footer = () => {
 
   </nav>
   <nav>
-    <div className="grid grid-flow-col gap-4">
+    <div className="grid grid-flow-col gap-6">
       <a>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@ const Footer = () => {
     </div>
   </nav>
   <aside>
-    <p>Copyright © {new Date().getFullYear()} - Všechny práva vyhrazena Dezy s.r.o</p>
+    <p>Copyright © {new Date().getFullYear()} - Všechny práva vyhrazena Dezy</p>
   </aside>
 </footer>
   )

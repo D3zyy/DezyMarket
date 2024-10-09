@@ -60,7 +60,7 @@ const Page = async ({ params }) => {
             <div className="flex items-center">
   <Link  href={`/user/${postRecord?.user?.id}`}>
     <strong>
-      <span className="mr-3">{postRecord?.user?.fullName}</span>
+      <span className="underline mr-3">{postRecord?.user?.fullName}</span>
     </strong>
   </Link>
 
