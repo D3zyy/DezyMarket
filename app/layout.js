@@ -6,7 +6,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="cs" style={{ height: '100%' }}>
       <head>
-        <title>Dezy - Inzeretový portál“</title>
+        <title>Dezy - Inzeretový portál</title>
         <meta name="description" content="Nakupujte, inzerujte a prodávejte své nepotřebné věci. Vše na jednom místě, přehledné a uživatelsky přívětivý portál, který Vás provede celým procesem ať už inzerujete či nakupujete." />
         <meta name="robots" content="index, follow" />
         <meta property="og:title" content='Dezy - Nakupuj, inzeruj a prodávej „de to i online.“' />
