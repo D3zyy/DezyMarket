@@ -61,27 +61,9 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
       </div>
     </div>
           ) : (<>
-            {accType ? (
-              accType === "Základní" ? (
-                <>
-                  <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold" }}>
-                    Zvolte typ účtu, který vám sedí
-                  </h3>
-                  <h1 style={{ textAlign: "center", fontSize: "small", padding: "25px" }}>
-                    ..naše služby jsou zpoplatněny abychom potlačili riziko podvodníků a zajistili Vám tak bezpečné prostředí pro Vaše inzeráty <span style={{fontSize: "20px"}}>&#129321;</span>
-                  </h1>
-                </>
-              ) : null
-            ) : (
-              <>
-                <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold" }}>
+             <h3 style={{ textAlign: "center", fontSize: "large", fontWeight: "bold" }}>
                   Zvolte typ účtu, který vám sedí
                 </h3>
-                <h1 style={{ textAlign: "center", fontSize: "small", padding: "25px" }}>
-                  ..naše služby jsou zpoplatněny abychom potlačili riziko podvodníků a zajistili Vám tak bezpečné prostředí pro Vaše inzeráty <span style={{fontSize: "20px"}}>&#129321;</span>
-                </h1>
-              </>
-            )}
           </>
           )}
 <div style={{marginBottom:"40px"}} className="flex flex-col md:flex-row items-center justify-center gap-2 p-2">
