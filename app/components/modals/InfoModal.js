@@ -182,7 +182,7 @@ const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessag
   </button>
 );
 
-const InfoModal = ({ defaultOpen, message }) => {
+const InfoModal = ({ defaultOpen, message , backToHome }) => {
   useEffect(() => {
     const dialog = document.getElementById('info_modal');
     
@@ -270,11 +270,16 @@ const InfoModal = ({ defaultOpen, message }) => {
                 className="btn" 
                 onClick={() => {
                     document.getElementById('info_modal').close(); 
-                    router.push("/");
+                    if(backToHome) {
+                      router.push("/");
+                    }
+                   
                 }}
                 onTouchStart={() => {
                   document.getElementById('info_modal').close(); 
-                  router.push("/");
+                  if(backToHome) {
+                    router.push("/");
+                  }
               }}
                 >
                 Zavřít

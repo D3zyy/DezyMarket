@@ -2,6 +2,7 @@ import { getPostFromDb } from "../methodsForPost";
 import { getSession } from "@/app/authentication/actions";
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 import Link from "next/link";
+import NotLoggedInButton from "@/app/components/NotLoggedInButton";
 
 const Page = async ({ params }) => {
   let session;
@@ -9,6 +10,7 @@ const Page = async ({ params }) => {
   let postRecord;
   let description;
   let isOverflowing;
+
 
   try {
     session = await getSession();
@@ -32,6 +34,11 @@ const Page = async ({ params }) => {
       </div>
     );
   }
+
+  const handleClick = () => {
+    isButtonClicked = true;
+  };
+
 
   return (
     <div
@@ -144,21 +151,19 @@ const Page = async ({ params }) => {
 
   {/* Right side with phone number and email */}
   <div className="relative flex flex-col justify-between w-full">
-    <div className={`mb-4 ${!session.isLoggedIn ? 'blur-md' : ''}`}>
+    <div className={`mb-4 ${!session.isLoggedIn ? 'blur-lg' : ''}`}>
       {session.isLoggedIn ? postRecord?.phoneNumber?.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3') : "Nepřihlášen"}
     </div>
-    <div className={`${!session.isLoggedIn ? 'blur-md' : ''}`}>
+    <div className={`${!session.isLoggedIn ? 'blur-lg' : ''}`}>
       {session.isLoggedIn ? postRecord?.user?.email : "Nepříhlašen"}
     </div>
 
     {/* Centered button when not logged in */}
     {!session.isLoggedIn && (
-      <div className="absolute inset-0 flex items-center ">
-        <button className="btn glass w-25 text-white-500 hover:underline">
-          Přihlásit se
-        </button>
+      <div className=" absolute inset-0 flex items-center ">
+        < NotLoggedInButton />
       </div>
-    )}
+    )} 
   </div>
 </div>
 
