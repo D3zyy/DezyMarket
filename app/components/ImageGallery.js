@@ -3,10 +3,13 @@ import { useState } from 'react';
 
 const ImageGallery = () => {
     const allImages = [
-        'https://loremflickr.com/200/200?random=3',
+        'https://loremflickr.com/200/200?random=1',
         'https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789',
+        'https://loremflickr.com/200/200?random=2',
         'https://loremflickr.com/200/200?random=3',
         'https://loremflickr.com/200/200?random=3',
+
+  
    
 
 
@@ -101,7 +104,7 @@ const ImageGallery = () => {
             </div>
 
             {/* Display all images in the gallery */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4"> {/* Ensure gallery can scroll */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> {/* Ensure gallery can scroll */}
               {allImages.map((image, index) => (
                 <img 
                   key={index} 
