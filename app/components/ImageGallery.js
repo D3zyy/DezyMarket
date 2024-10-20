@@ -5,11 +5,11 @@ const ImageGallery = () => {
     const allImages = [
         'https://loremflickr.com/200/200?random=3',
         'https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789',
-        'https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789',
-        'https://loremflickr.com/200/200?random=1',
-        'https://loremflickr.com/200/200?random=2',
-        'https://loremflickr.com/1200/200?random=3',
-        'https://loremflickr.com/2200/2200?random=3',
+        'https://loremflickr.com/200/200?random=3',
+        'https://loremflickr.com/200/200?random=3',
+   
+
+
         // Add more images as needed
       ];
   const [mainImage, setMainImage] = useState(allImages[0]);
@@ -45,7 +45,7 @@ const ImageGallery = () => {
         ))}
 
         {/* Last thumbnail with dynamic "+x" overlay if there are more than 4 images */}
-        {additionalCount > 0 && (
+        {additionalCount >= 0 && (
           <div className="relative w-full h-20">
             <div 
               className="absolute inset-0 rounded-lg bg-opacity-25 cursor-pointer"
@@ -60,7 +60,12 @@ const ImageGallery = () => {
                 <div className="flex items-center justify-center absolute inset-0 bg-black bg-opacity-50 text-white font-bold rounded-lg">
                   +{additionalCount}
                 </div>
-              ) : null}
+              ) : <div className="flex items-center justify-center absolute inset-0 bg-black bg-opacity-50 text-white font-bold rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
+            </svg>
+
+            </div>}
             </div>
           </div>
         )}
