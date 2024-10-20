@@ -61,13 +61,15 @@ const ImageGallery = () => {
       {/* Gallery Modal */}
       {isGalleryOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-75"> {/* Backdrop */}
-          <div className="bg-base-100  p-6 rounded-lg relative max-w-4xl w-full max-h-[90vh] overflow-visible"> {/* Modal with primary background color */}
+        <div className="bg-base-100 p-6 md:rounded-lg relative max-w-5xl w-full max-h-[100vh] overflow-auto  md:overflow-visible">
+
             {/* Close button using SVG */}
             <button
   type="button"
   onClick={() => setIsGalleryOpen(false)}
-className="absolute top-0 left-1/2 transform -translate-x-1/2 lg:left-auto lg:right-0 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
-  style={{ transform: "translate(50%, -50%)" }}
+   className="sm:mx-auto md:absolute md:top-0 md:transform md:translate-x-1/2 md:translate-y-[-50%] md:right-0 bg-red-500 text-white rounded-full p-1 hover:bg-red-700 text-center mb-5 md:m-0 "
+    
+
 >
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +88,7 @@ className="absolute top-0 left-1/2 transform -translate-x-1/2 lg:left-auto lg:ri
 </button>
 
             {/* Display all images in the gallery */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-auto"> {/* Ensure gallery can scroll */}
+            <div className=" grid grid-cols-1 md:grid-cols-3 md:grid-cols-3 gap-4 "> {/* Ensure gallery can scroll */}
               {allImages.map((image, index) => (
                 <img 
                   key={index} 
