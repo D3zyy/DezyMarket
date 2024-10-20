@@ -3,6 +3,8 @@ import { getSession } from "@/app/authentication/actions";
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 import Link from "next/link";
 import NotLoggedInButton from "@/app/components/NotLoggedInButton";
+import ImageGallery from "@/app/components/ImageGallery";
+
 
 const Page = async ({ params }) => {
   let session;
@@ -15,6 +17,7 @@ const Page = async ({ params }) => {
   try {
     session = await getSession();
     postRecord = await getPostFromDb(params.postId);
+    console.log(postRecord)
     accType = await getUserAccountTypeOnStripe(postRecord.user.email);
     description = postRecord?.description;
     isOverflowing = description.length >= 280;
@@ -35,9 +38,7 @@ const Page = async ({ params }) => {
     );
   }
 
-  const handleClick = () => {
-    isButtonClicked = true;
-  };
+
 
 
   return (
@@ -45,46 +46,7 @@ const Page = async ({ params }) => {
     className="flex flex-col lg:flex-row p-4 lg:p-8"
     style={{ boxShadow: '0 0 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' }}
   >
-      {/* Left section - Images */}
-      <div className="max-w-md"> {/* Hlavní kontejner s maximální šířkou */}
-  {/* Hlavní obrázek */}
-  <div className="bg-gray-100  h-96 flex items-center justify-center rounded-lg overflow-hidden">
-    <img
-      src="https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789"
-      alt="Random"
-      className=" w-full h-full"
-    />
-  </div>
-
-  {/* Kontejner pro malé obrázky */}
-  <div className="grid grid-cols-3 gap-2 mt-4">
-    <div className="w-full h-20">
-      <img
-        src="	https://www.bazos.cz/img/2t/688/192124688.jpg?t=1728305789"
-        alt="Thumbnail 1"
-        className="w-full h-full rounded-lg"
-      />
-    </div>
-    <div className="w-full h-20">
-      <img
-        src="	https://www.bazos.cz/img/3t/688/192124688.jpg?t=1728305789"
-        alt="Thumbnail 2"
-        className="w-full h-full rounded-lg"
-      />
-    </div>
-    
-    <div className="w-full h-20 relative">
-      <img
-        src="	https://www.bazos.cz/img/4t/688/192124688.jpg?t=1728305789"
-        alt="Thumbnail 3"
-        className="w-full h-full rounded-lg opacity-50"
-      />
-      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white font-bold rounded-lg">
-        +3
-      </div>
-    </div>
-  </div>
-</div>
+     <ImageGallery />
 
 
 
