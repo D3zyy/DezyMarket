@@ -592,10 +592,3 @@ const handleDeleteImage = (index) => {
 
 export default AddUI;
 
-
-
-
-
-
-
-className="absolute top-0 left-1/2 transform -translate-x-1/2 lg:left-auto lg:right-0 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"

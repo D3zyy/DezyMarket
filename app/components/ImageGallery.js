@@ -2,22 +2,25 @@
 import { useState } from 'react';
 
 const ImageGallery = () => {
-  const [mainImage, setMainImage] = useState('https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789');
+    const allImages = [
+        'https://loremflickr.com/200/200?random=3',
+        'https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789',
+        'https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789',
+        'https://loremflickr.com/200/200?random=1',
+        'https://loremflickr.com/200/200?random=2',
+        'https://loremflickr.com/1200/200?random=3',
+        'https://loremflickr.com/2200/2200?random=3',
+        // Add more images as needed
+      ];
+  const [mainImage, setMainImage] = useState(allImages[0]);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-  const allImages = [
-    'https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789',
-    'https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789',
-    'https://loremflickr.com/200/200?random=1',
-    'https://loremflickr.com/200/200?random=2',
-    'https://loremflickr.com/200/200?random=3',
-    // Add more images as needed
-  ];
+
 
   const additionalCount = allImages.length - 4; // Number of additional images
 
   return (
-    <div className="max-w-md mx-auto"> {/* Center the main container */}
+    <div className="max-w-md "> {/* Center the main container */}
       {/* Set the first image as the main image */}
       <div className="bg-gray-100 h-96 flex items-center justify-center rounded-lg overflow-hidden">
         <img
