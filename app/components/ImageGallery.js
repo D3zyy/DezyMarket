@@ -6,8 +6,8 @@ const ImageGallery = () => {
         'https://loremflickr.com/200/200?random=1',
         'https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789',
         'https://loremflickr.com/200/200?random=2',
-        'https://loremflickr.com/200/200?random=3',
-        'https://loremflickr.com/200/200?random=3',
+        
+      
 
   
    
@@ -43,6 +43,7 @@ const ImageGallery = () => {
               className="w-full h-full rounded-lg cursor-pointer"
               onMouseEnter={() => setMainImage(thumbnail)} // Set main image on hover
               onMouseLeave={() => setMainImage(allImages[0])} // Reset to first image when not hovering
+              onClick={() => setIsGalleryOpen(true)}
             />
           </div>
         ))}
