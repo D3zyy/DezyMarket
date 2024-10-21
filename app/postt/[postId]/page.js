@@ -19,7 +19,7 @@ const Page = async ({ params }) => {
   try {
     session = await getSession();
     postRecord = await getPostFromDb(params.postId);
-    
+    console.log(postRecord)
     if (!postRecord) {
       return (
         <div className="p-4 text-center">
@@ -66,12 +66,29 @@ const Page = async ({ params }) => {
       {/* Right section - Information */}
       
       <div className="lg:w-1/2   flex flex-col justify-between lg:pl-8">
-      <div className="badge badge-md  badge-outline text-red-600" style={{  fontSize: '0.875rem', padding: '0.25rem 0.5rem' }}>
-      <Link href={session?.isLoggedIn ? `/typeOfAccount` : ``}>
-        TOP
-      </Link>
-    </div>
-
+      {!(postRecord.typeOfPost === process.env.BASE_RANK) && (
+  <div
+  className="mt-3 lg:mt-0 badge badge-md badge-outline text-red-600"
+  style={{
+    fontSize: '0.875rem',
+    padding: '8px',
+    borderWidth: '1.2px',
+    borderStyle: 'solid',
+    color: postRecord.typeOfPost === process.env.BEST_RANK ? '#c792e9' : 
+           postRecord.typeOfPost === process.env.MEDIUM_RANK ? '#ff7d5c' : '#c792e9',
+    borderColor: postRecord.typeOfPost === process.env.BEST_RANK ? '#c792e9' : 
+                 postRecord.typeOfPost === process.env.MEDIUM_RANK ? '#ff7d5c' : '#c792e9',
+    height: '2rem', // Přidej pro větší výšku
+  }}
+>
+    <Link
+      href={session?.isLoggedIn ? `/typeOfAccount` : ``}
+      style={{ fontWeight: 'bold', fontSize: '1rem' }}
+    >
+      TOP
+    </Link>
+  </div>
+)}
       <h1 style={{ fontSize: "25px" }} className="text-xl font-bold mb-4 sm:mt-5 mt-5">
               {postRecord?.name}
             </h1>
