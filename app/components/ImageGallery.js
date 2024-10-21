@@ -3,9 +3,13 @@ import { useState } from 'react';
 
 const ImageGallery = () => {
     const allImages = [
-        'https://loremflickr.com/200/200?random=1',
-        'https://www.bazos.cz/img/1/688/192124688.jpg?t=1728305789',
-        'https://loremflickr.com/200/200?random=2',
+      'https://www.bazos.cz/img/10/169/192291169.jpg?t=1729016889',
+      'https://www.bazos.cz/img/10t/169/192291169.jpg?t=1729016889',
+        'https://www.bazos.cz/img/1/169/192291169.jpg?t=1729016889',
+        'https://www.bazos.cz/img/10t/169/192291169.jpg?t=1729016889',
+        'https://www.bazos.cz/img/2t/169/192291169.jpg?t=1729016889',
+        'https://www.bazos.cz/img/3t/169/192291169.jpg?t=1729016889',
+        'https://www.bazos.cz/img/10t/169/192291169.jpg?t=1729016889',
         
       
 
@@ -29,7 +33,7 @@ const ImageGallery = () => {
         <img
           src={mainImage} // Use the current main image
           alt="Main"
-          className="w-full h-full object-cover"
+          className="w-full h-full"
         />
       </div>
 
