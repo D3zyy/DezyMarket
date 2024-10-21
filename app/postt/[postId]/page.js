@@ -51,16 +51,27 @@ const Page = async ({ params }) => {
 
 
   return (
+  <div>
+    
+
     <div
     className="flex flex-col lg:flex-row p-4 lg:p-8"
     style={{ boxShadow: '0 0 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' }}
   >
+    
      <ImageGallery />
 
 
 
       {/* Right section - Information */}
+      
       <div className="lg:w-1/2   flex flex-col justify-between lg:pl-8">
+      <div className="badge badge-md  badge-outline text-red-600" style={{  fontSize: '0.875rem', padding: '0.25rem 0.5rem' }}>
+      <Link href={session?.isLoggedIn ? `/typeOfAccount` : ``}>
+        TOP
+      </Link>
+    </div>
+
       <h1 style={{ fontSize: "25px" }} className="text-xl font-bold mb-4 sm:mt-5 mt-5">
               {postRecord?.name}
             </h1>
@@ -104,6 +115,7 @@ const Page = async ({ params }) => {
 
 
 <div className="flex mt-5">
+  
   {/* Left side with two sections (top and bottom) */}
   <div className="flex flex-col justify-between mr-4">
     {/* Top section */}
@@ -253,6 +265,7 @@ const Page = async ({ params }) => {
   
 </div>
       </div>
+    </div>
     </div>
   );
 };

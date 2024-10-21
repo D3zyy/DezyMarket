@@ -27,9 +27,9 @@ const ImageGallery = () => {
   const additionalCount = allImages.length - 4; // Number of additional images
 
   return (
-    <div className="max-w-md "> {/* Center the main container */}
+    <div className="lg:w-1/2  "> {/* Center the main container */}
       {/* Set the first image as the main image */}
-      <div className="bg-gray-100 h-96 flex items-center justify-center rounded-lg overflow-hidden">
+      <div className="bg-gray-100 h-5/6  flex items-center justify-center rounded-lg overflow-hidden">
         <img
           src={mainImage} // Use the current main image
           alt="Main"
