@@ -78,6 +78,7 @@ model Posts {
   section     Sections     @relation(fields: [sectionId], references: [id])
   images      Image[]      // Define a one-to-many relation
   userId     Int  
+  dateAndTime DateTime  @default(now())
   user     Users  @relation(fields: [userId], references: [id])
 }
 model Image {

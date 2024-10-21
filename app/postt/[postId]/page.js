@@ -68,16 +68,13 @@ const Page = async ({ params }) => {
       <div className="lg:w-1/2   flex flex-col justify-between lg:pl-8">
       {!(postRecord.typeOfPost === process.env.BASE_RANK) && (
   <div
-  className="mt-3 lg:mt-0 badge badge-md badge-outline text-red-600"
+  className="mt-3 lg:mt-0 badge badge-md badge-outline "
   style={{
     fontSize: '0.875rem',
     padding: '8px',
     borderWidth: '1.2px',
     borderStyle: 'solid',
-    color: postRecord.typeOfPost === process.env.BEST_RANK ? '#c792e9' : 
-           postRecord.typeOfPost === process.env.MEDIUM_RANK ? '#ff7d5c' : '#c792e9',
-    borderColor: postRecord.typeOfPost === process.env.BEST_RANK ? '#c792e9' : 
-                 postRecord.typeOfPost === process.env.MEDIUM_RANK ? '#ff7d5c' : '#c792e9',
+   
     height: '2rem', // Přidej pro větší výšku
   }}
 >
@@ -92,6 +89,14 @@ const Page = async ({ params }) => {
       <h1 style={{ fontSize: "25px" }} className="text-xl font-bold mb-4 sm:mt-5 mt-5">
               {postRecord?.name}
             </h1>
+
+ 
+
+ 
+  
+
+           
+
         <div className="flex flex-col lg:flex-row md:flex-row ">
           {/* First part of the right section */}
           <div className="lg:w-3/4 md:w-1/2">
@@ -181,6 +186,12 @@ const Page = async ({ params }) => {
               <span className="ml-1">{Number.isInteger(Number(postRecord.price)) ? `${postRecord.price} Kč` : postRecord.price}</span>
             </div>
             <div className="mt-3">
+              <strong className="text-sm">Zveřejněno</strong>
+              <span className="ml-1">
+  {new Date(postRecord.dateAndTime).toISOString().slice(0, 10).split('-').reverse().join('.')}
+</span>
+            </div>
+            <div className="mt-3">
       <strong className="text-sm">Kategorie:</strong>
       <span className="ml-1">
         <Link href={`/category?id=${postRecord?.categoryId}`}>
@@ -227,7 +238,8 @@ const Page = async ({ params }) => {
         </div>
 
         {/* SVG Icons at the bottom */}
-        <div className="flex justify-center space-x-4 mt-4 border-t pt-4">
+       
+<div className="flex justify-center space-x-4 mt-4 border-t pt-4">
   <div style={{textAlign: "center"}} className="flex items-center space-x-2">
     <svg
       xmlns="http://www.w3.org/2000/svg"

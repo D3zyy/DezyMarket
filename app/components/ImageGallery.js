@@ -40,7 +40,7 @@ const ImageGallery = () => {
       {/* Small images container */}
       <div className="grid grid-cols-3 gap-2 mt-4">
         {allImages.slice(1, 3).map((thumbnail, index) => (
-          <div key={index} className="relative w-full h-20">
+          <div key={index} className="relative w-full h-20 ">
             <img
               src={thumbnail}
               alt={`Thumbnail ${index + 1}`}
