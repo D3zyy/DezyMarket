@@ -4,6 +4,8 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+
+//Poznámka je nutné po incializaci vložit do AccountType tabulky základní druh účtu  s name : Základní
 generator client {
   provider = "prisma-client-js"
 }
@@ -22,17 +24,17 @@ model Users {
   image                    String           @default("default.png")
   roleId                   Int
   role                     Roles            @relation(fields: [roleId], references: [id])
-  bans                     Bans[] 
-  posts                    Posts[]          
+  bans                     Bans[]
+  posts                    Posts[]
   sessions                 Sessions[]
   accountTypes             AccountType[]    // One-to-many relationship with AccountType
   termsOfUseAndPrivatePolicy Boolean        @default(false)
   verifiedEmail            Boolean          @default(false) // New field to track email verification status
   verificationToken        VerificationTokens? // Optional relation to VerificationToken
-  numberOfTries            NumberOfTries?  
+  numberOfTries            NumberOfTries?
   categories               UserCategories[]
   firstLogin               Boolean          @default(true)
-  @@index([email, password])
+  postViews                PostViews[]      // One-to-many relationship with PostViews (zhlédnutí příspěvků)
 }
 
 model AccountType {
@@ -65,21 +67,33 @@ model Categories {
 }
 
 model Posts {
-  id          Int          @id @default(autoincrement())
-  name        String       @db.VarChar(150)  // Například pro název
-  description String       @db.VarChar(2000) // Pro popis s maximální délkou 2000 znaků
-  price       String       @db.VarChar(100)  // Pro cenu, pokud je to také string
-  categoryId  Int
-  sectionId   Int
-  phoneNumber String       @db.VarChar(9)    // Telefonní číslo přesně s 9 číslicemi
-  location    String       @db.VarChar(50)   // Například pro lokaci
-  typeOfPost  String       @db.VarChar(100)  // Typ příspěvku
-  category    Categories   @relation(fields: [categoryId], references: [id])
-  section     Sections     @relation(fields: [sectionId], references: [id])
-  images      Image[]      // Define a one-to-many relation
-  userId     Int  
-  dateAndTime DateTime  @default(now())
-  user     Users  @relation(fields: [userId], references: [id])
+  id           Int          @id @default(autoincrement())
+  name         String       @db.VarChar(150)
+  description  String       @db.VarChar(2000)
+  price        String       @db.VarChar(100)
+  categoryId   Int
+  sectionId    Int
+  phoneNumber  String       @db.VarChar(9)
+  location     String       @db.VarChar(50)
+  typeOfPost   String       @db.VarChar(100)
+  category     Categories   @relation(fields: [categoryId], references: [id])
+  section      Sections     @relation(fields: [sectionId], references: [id])
+  images       Image[]      // Define a one-to-many relation
+  userId       Int  
+  dateAndTime  DateTime     @default(now())
+  user         Users        @relation(fields: [userId], references: [id])
+  postViews    PostViews[]  // One-to-many relationship with PostViews
+}
+
+model PostViews {
+  id           Int      @id @default(autoincrement())
+  postId       Int      // Foreign key pointing to Posts
+  userId       Int      // Foreign key pointing to Users
+  viewedAt     DateTime @default(now()) // Timestamp for when the post was viewed
+  post         Posts    @relation(fields: [postId], references: [id], onDelete: Cascade) // Link to Posts table
+  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade) // Link to Users table
+  
+  @@unique([postId, userId])  // Ensure each user can only view a post once (optional)
 }
 model Image {
   id       Int    @id @default(autoincrement())
