@@ -73,7 +73,13 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   const [activeButton, setActiveButton] = useState(null); 
   const [isDisabled, setIsDisabled] = useState(false);
   const [errorValidation, setErrorValidation] = useState(null);
-
+  useEffect(() => {
+    const isPriceValid = typeof post.price === 'number' && Number.isInteger(post.price);
+    
+    if (!isPriceValid && activeButton !== post.price) {
+      setActiveButton(post.price);
+    }
+  }, [post.price]);
   const fieldTranslation = {
     name: 'Název',
     description: 'Popisek',
@@ -95,9 +101,10 @@ export const EditPostModal = ({ post, descriptionPost }) => {
       </div>
     ));
   };
-
-
+ 
+  
   useEffect(() => {
+   
     const fetchCategoriesAndSections = async () => {
       const categoriesData = await getCategories();
       const sectionsData = await getSections();
@@ -147,7 +154,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
     console.log("Odpověď od serveru :", result);
     setErrorValidation(result)
     setLoading(false);
-    console.log(result)
+
     if (result?.errors) {
       // If there are errors, do nothing (you can handle the display of errors as needed)
       setSuccess(false); // Optionally set success to false for error handling
