@@ -2,14 +2,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-async function updatedPost(name, price, category, section, description, postId) {
+async function updatedPost(name, price, category, section, description, postId, location) {
   
     const response = await fetch('/api/posts', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, price, category, section, description, postId }),
+      body: JSON.stringify({ name, price, category, section, description, postId ,location}),
     });
 
     console.log("Server response for post edit:", response);
@@ -60,6 +60,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   const [postDescription, setPostDescription] = useState(descriptionPost);
   const [categories, setCategories] = useState([]);
   const [sections, setSections] = useState([]);
+  const [location, setPostLocation] = useState(post?.location);
   const [selectedCategory, setSelectedCategory] = useState(post?.category?.id || "");
   const [selectedSection, setSelectedSection] = useState(post?.section?.id || "");
   const [filteredSections, setFilteredSections] = useState([]);
@@ -136,7 +137,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
     // Define price conditionally based on activeButton value
     const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton : postPrice;
   
-    let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId);
+    let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location);
     console.log("Odpověď od serveru :", result);
     setErrorValidation(result)
     setLoading(false);
@@ -241,6 +242,31 @@ export const EditPostModal = ({ post, descriptionPost }) => {
                 </div>
                 </div>
         </div>
+        <div className="w-full mt-4 flex items-center"> {/* Přidání items-center */}
+  <label
+    htmlFor="location"
+    className="block"
+    style={{ fontSize: '14px', flex: '1', marginRight: '8px' }}
+  >
+    Místo (Město, Obec nebo kraj)
+  </label>
+  <input
+    minLength={2}
+    value={location}
+    maxLength={50}
+    onChange={(e) => setPostLocation(e.target.value)}
+    type="text"
+    placeholder={"např. Praha 8, Beroun nebo Pardubický kraj"}
+    name="location"
+    className="input input-bordered"
+    required
+    style={{
+      fontSize: '14px',
+      padding: '8px',
+      flex: '1',
+    }}
+  />
+</div>
         <div className="w-full text-left mt-4">
           <label htmlFor="description" style={{ fontSize: '14px' }}>Popisek</label>
           <textarea

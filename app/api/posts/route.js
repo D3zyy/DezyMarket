@@ -37,8 +37,8 @@ const schema = z.object({
   location: z.string()
     .min(2, 'Místo musí mít alespoň 2 znaky.')
     .max(50, 'Místo může mít maximálně 50 znaků.')
-    .regex(/^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž]+)?|[A-Za-z0-9á-žÁ-Ž]+ [A-Za-z0-9á-žÁ-Ž.]+)$/, 'Místo musí mít tvar "Název Číslo", "Název Název", nebo pouze "Název".')
-    .optional(), // Make location optional
+    .regex(/^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž]+)?|[A-Za-z0-9á-žÁ-Ž]+ [A-Za-z0-9á-žÁ-Ž.]+)$/, 'Místo musí mít tvar "Název Číslo", "Název Název", nebo pouze "Název".'),
+   
 
   price: z.union([
     z.number()
@@ -368,6 +368,7 @@ export async function PUT(req) {
 
     const validatedFields = schema.safeParse({
       name: data.name,
+      location: data.location,
       category: parseInt(data.category),
       section: parseInt(data.section),
       description: data.description,
@@ -467,6 +468,7 @@ export async function PUT(req) {
 
     const validatedFields = schema.safeParse({
       name: data.name,
+      location: data.location,
       category: parseInt(data.category),
       section: parseInt(data.section),
       description: data.description,
@@ -548,6 +550,6 @@ async function updatePost(postId, data) {
 
   await prisma.posts.update({
     where: { id: postId },
-    data: { description: data.description, name: data.name, price: data.price, categoryId: parseInt(data.category), sectionId: parseInt(data.section) }  // Update fields as needed
+    data: { location: data.location,description: data.description, name: data.name, price: data.price, categoryId: parseInt(data.category), sectionId: parseInt(data.section) }  // Update fields as needed
   });
 }
