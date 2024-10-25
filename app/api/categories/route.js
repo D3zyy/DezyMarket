@@ -135,9 +135,9 @@ async function updateUserCategory(data, session) {
       );
   
     } catch (error) {
-      console.error('Chyba při editovaní kategorii :', error);
+      console.error('Chyba při získávání kategorii :', error);
       return new Response(
-        JSON.stringify({ message: 'Chyba na serveru [POST] získávání kategorií' }),
+        JSON.stringify({ message: 'Chyba na serveru [GET] získávání kategorií' }),
         {
           status: 500,
           headers: { 'Content-Type': 'application/json' }

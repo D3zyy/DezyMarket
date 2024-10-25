@@ -1,15 +1,15 @@
-"use client"
+"use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-async function updatedPost(name, price) {
+async function updatedPost(name, price, category) {
   try {
     const response = await fetch('/api/posts', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, price }),
+      body: JSON.stringify({ name, price, category }),
     });
 
     if (!response.ok) {
@@ -25,6 +25,7 @@ function htmlToText(htmlString) {
   div.innerHTML = htmlString;
   return div.textContent || div.innerText || "";
 }
+
 export function openEditPostModal() {
   document.getElementById('edit_post_modal').showModal();
 }
@@ -49,7 +50,8 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   const [postPrice, setPostPrice] = useState(post?.price);
   const [postDescription, setPostDescription] = useState(descriptionPost);
   const [categories, setCategories] = useState([]);
-  console.log("post:",post)
+  const [selectedCategory, setSelectedCategory] = useState(post?.category?.id || "");
+
   useEffect(() => {
     const fetchCategories = async () => {
       const data = await getCategories();
@@ -58,10 +60,18 @@ export const EditPostModal = ({ post, descriptionPost }) => {
 
     fetchCategories();
   }, []);
-console.log(categories)
+
+  useEffect(() => {
+    setSelectedCategory(post?.category?.id || "");
+  }, [post]);
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
   const handlePostChange = async () => {
     setLoading(true);
-    await updatedPost(postName, postPrice);
+    await updatedPost(postName, postPrice, selectedCategory);
     setLoading(false);
     location.reload();
   };
@@ -118,14 +128,21 @@ console.log(categories)
               resize: 'none'
             }}
           />
-          <select className="select select-md select-bordered w-full"  required name="category" id="category" value={post?.category?.id}>
-                <option value="" disabled>Vybrat kategorii</option>
-                {categories.map(category => (
-                    <option  key={category.id} value={category.id}>
-                     {htmlToText(category.logo)} {category.name}
-                    </option>
-                ))}
-            </select>
+          <select
+            className="select select-md select-bordered w-full"
+            required
+            name="category"
+            id="category"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+          >
+            <option value="" disabled>Vybrat kategorii</option>
+            {categories?.map(category => (
+              <option key={category.id} value={category.id}>
+                {htmlToText(category.logo)} {category.name}
+              </option>
+            ))}
+          </select>
           <button
             onClick={handlePostChange}
             className="btn btn-primary mt-4"
