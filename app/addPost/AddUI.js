@@ -93,7 +93,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
 }
 
 
-  function htmlToText(htmlString) {
+   function htmlToText(htmlString) {
     const div = document.createElement('div');
     div.innerHTML = htmlString;
     return div.textContent || div.innerText || "";
