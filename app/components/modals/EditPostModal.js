@@ -102,23 +102,23 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   return (
     <dialog id="edit_post_modal" className="modal modal-bottom sm:modal-middle" style={{ marginLeft: "0px" }}>
       <div className="modal-box w-full p-6 flex flex-col items-center">
-        <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-12 h-12 text-yellow-400"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-              />
-            </svg>
-          </div>
+        <div className="flex justify-center mb-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-12 h-12 text-yellow-400"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+            />
+          </svg>
+        </div>
+        <div className="w-full text-left">
           <label htmlFor="name">Co nazízím</label>
           <input
             type="text"
@@ -127,7 +127,9 @@ export const EditPostModal = ({ post, descriptionPost }) => {
             onChange={(e) => setPostName(e.target.value)}
             className="input input-bordered w-full"
           />
-          <label htmlFor="price" className="mt-4">Cena</label>
+        </div>
+        <div className="w-full text-left mt-4">
+          <label htmlFor="price">Cena</label>
           <input
             type="text"
             name="price"
@@ -135,7 +137,9 @@ export const EditPostModal = ({ post, descriptionPost }) => {
             onChange={(e) => setPostPrice(e.target.value)}
             className="input input-bordered w-full"
           />
-          <label htmlFor="description" className="block" style={{ fontSize: '14px' }}>Popisek</label>
+        </div>
+        <div className="w-full text-left mt-4">
+          <label htmlFor="description" style={{ fontSize: '14px' }}>Popisek</label>
           <textarea
             value={postDescription}
             name="description"
@@ -151,7 +155,9 @@ export const EditPostModal = ({ post, descriptionPost }) => {
               resize: 'none'
             }}
           />
-          <label htmlFor="category" className="block" style={{ fontSize: '14px' }}>Kategorie</label>
+        </div>
+        <div className="w-full text-left mt-4">
+          <label htmlFor="category" style={{ fontSize: '14px' }}>Kategorie</label>
           <select
             className="select select-md select-bordered w-full"
             required
@@ -167,8 +173,9 @@ export const EditPostModal = ({ post, descriptionPost }) => {
               </option>
             ))}
           </select>
-          
-          <label htmlFor="section" className="block mt-4" style={{ fontSize: '14px' }}>Sekce</label>
+        </div>
+        <div className="w-full text-left mt-4">
+          <label htmlFor="section" style={{ fontSize: '14px' }}>Sekce</label>
           <select
             className="select select-md select-bordered w-full"
             required
@@ -185,17 +192,18 @@ export const EditPostModal = ({ post, descriptionPost }) => {
               </option>
             ))}
           </select>
-
+        </div>
+        <div className="flex mt-4">
           <button
             onClick={handlePostChange}
-            className="btn btn-primary mt-4"
+            className="btn btn-primary mr-2"
             disabled={loading}
           >
             {loading ? 'Načítání...' : "Uložit"}
           </button>
           <button
             onClick={closeEditPostModal}
-            className="btn mt-4 ml-2"
+            className="btn"
             disabled={loading}
           >
             Zavřít
