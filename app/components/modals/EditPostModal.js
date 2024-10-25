@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-async function updatedPost(name, price, category, section, description, postId, location) {
+async function updatedPost(name, price, category, section, description, postId, location, setSuccess) {
   
     const response = await fetch('/api/posts', {
       method: 'PUT',
@@ -14,6 +14,11 @@ async function updatedPost(name, price, category, section, description, postId, 
 
     console.log("Server response for post edit:", response);
     
+    if (!response.ok) { 
+      setSuccess(false)
+    } else {
+      setSuccess(true)
+    }
    
     const result = await response.json();
     return result;
@@ -54,6 +59,7 @@ async function getSections() {
 export const EditPostModal = ({ post, descriptionPost }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [postId, setPostId] = useState(post?.id);
   const [postName, setPostName] = useState(post?.name);
   const [postPrice, setPostPrice] = useState(post?.price);
@@ -137,12 +143,20 @@ export const EditPostModal = ({ post, descriptionPost }) => {
     // Define price conditionally based on activeButton value
     const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton : postPrice;
   
-    let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location);
+    let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location,setSuccess);
     console.log("Odpověď od serveru :", result);
     setErrorValidation(result)
     setLoading(false);
-    router.refresh();
-    closeEditPostModal()
+    console.log(result)
+    if (result?.errors) {
+      // If there are errors, do nothing (you can handle the display of errors as needed)
+      setSuccess(false); // Optionally set success to false for error handling
+    } else {
+      // No errors, refresh and close the modal
+      router.refresh();
+      closeEditPostModal();
+    }
+
   };
 
   return (
