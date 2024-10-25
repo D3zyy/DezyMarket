@@ -20,7 +20,7 @@ const Page = async ({ params }) => {
   try {
     session = await getSession();
     postRecord = await getPostFromDb(params.postId);
-    console.log(postRecord)
+   // console.log(postRecord)
     if (!postRecord) {
       return (
         <div className="p-4 text-center">

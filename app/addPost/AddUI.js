@@ -20,7 +20,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
   const router = useRouter()
 
   const fieldTranslation = {
-    name: 'Co nabízím',
+    name: 'Název',
     description: 'Popisek',
     location: 'Místo',
     price: 'Cena',

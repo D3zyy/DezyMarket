@@ -6,7 +6,48 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import sharp from 'sharp';
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 let sessionGeneral
+const schema = z.object({
+  name: z.string()
+    .max(70, 'Název může mít maximálně 70 znaků.') 
+    .min(5, 'Název musí mít alespoň 5 znaků.')
+    .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Název nesmí obsahovat žádné speciální znaky.'),
+    
+  phoneNumber: z.string()
+    .max(9, 'Telefoní číslo musí mít přesně 9 číslic.') 
+    .min(9, 'Telefoní číslo musí mít přesně 9 číslic.')
+    .regex(/^[0-9]*$/, 'Telefoní číslo musí obsahovat pouze číslice.') // Fixed regex to only allow digits
+    .optional(), // Make phoneNumber optional
 
+  category: z.number()
+    .int('Kategorie musí být celé číslo.') 
+    .positive('Kategorie musí být kladné číslo.'), 
+    
+  section: z.number()
+    .int('Sekce musí být celé číslo.') 
+    .positive('Sekce musí být kladné číslo.'),
+    
+  description: z.string()
+    .min(15, 'Popis musí mít alespoň 15 znaků.')
+    .max(2000, 'Popis může mít maximálně 2000 znaků.')
+    .refine((value) => !/[<>]/.test(value), {
+      message: 'Popis nesmí obsahovat znaky < a >.'
+    })
+    .transform((value) => value.replace(/['";]/g, '')), // Remove quotes and semicolons
+
+  location: z.string()
+    .min(2, 'Místo musí mít alespoň 2 znaky.')
+    .max(50, 'Místo může mít maximálně 50 znaků.')
+    .regex(/^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž]+)?|[A-Za-z0-9á-žÁ-Ž]+ [A-Za-z0-9á-žÁ-Ž.]+)$/, 'Místo musí mít tvar "Název Číslo", "Název Název", nebo pouze "Název".')
+    .optional(), // Make location optional
+
+  price: z.union([
+    z.number()
+      .min(1, 'Cena musí být minimálně 1.')
+      .max(5000000, 'Cena může být maximálně 5000000.'),
+    z.string()
+      .regex(/^(Dohodou|V textu|Zdarma)$/, 'Cena musí být "Dohodou", "V textu" nebo "Zdarma".'),
+  ]),
+});
 const s3Client = new S3Client({
   region :process.env.AWS_S3_REGION,
   credentials: {
@@ -94,40 +135,7 @@ const userId = session.userId; // Use userId directly from session
 
 
         
-        const schema = z.object({
-              name: z.string()
-              .max(70, 'Název může mít maximálně 70 znaků.') 
-              .min(5, 'Název musí mít alespoň 5 znaků.')
-              .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Název nesmí obsahovat žádné speciální znaky.'),
-              phoneNumber: z.string()
-              .max(9, 'Telefoní číslo musí mít přesně 9 číslic.') 
-              .min(9, 'Telefoní číslo musí mít přesně 9 číslic.')
-              .regex(/^[A-Za-z0-9á-žÁ-Ž. ]*$/, 'Telefoní číslo nesmí obsahovat žádné speciální znaky.'),
-              category: z.number()
-              .int('Kategorie musí být celé číslo.') 
-              .positive('Kategorie musí být kladné číslo.'), 
-              section: z.number()
-              .int('Sekce musí být celé číslo.') 
-              .positive('Sekce musí být kladné číslo.') ,
-              description: z.string()
-              .min(15, 'Popis musí mít alespoň 15 znaků.')
-              .max(2000, 'Popis může mít maximálně 2000 znaků.')
-              .refine((value) => !/[<>]/.test(value), {
-                message: 'Popis nesmí obsahovat znaky < a >.'
-              })
-              .transform((value) => value.replace(/['";]/g, '')), // Remove quotes and semicolons
-              location: z.string()
-                .min(2, 'Místo musí mít alespoň 2 znaky.')
-                .max(50, 'Místo může mít maximálně 50 znaků.')
-                .regex(/^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž]+)?|[A-Za-z0-9á-žÁ-Ž]+ [A-Za-z0-9á-žÁ-Ž.]+)$/, 'Místo musí mít tvar "Název Číslo", "Název Název", nebo pouze "Název".'),
-              price: z.union([
-                        z.number()
-                          .min(1, 'Cena musí být minimálně 1.')
-                          .max(5000000, 'Cena může být maximálně 5000000.'),
-                        z.string()
-                          .regex(/^(Dohodou|V textu|Zdarma)$/, 'Cena musí být "Dohodou", "V textu" nebo "Zdarma".'),
-                      ]),
-          });
+       
 
           let priceConverted = formData.get('price'); // Vždy vrací string
  
@@ -194,19 +202,27 @@ const userId = session.userId; // Use userId directly from session
                const categoryExist = await prisma.Categories.findUnique({
                 where: { id: parseInt(formData.get('category')) }
               });
-              const sectionExist = await prisma.Sections.findUnique({
-                where: { id: parseInt(formData.get('section')) }
-              });
-              
               if (!categoryExist) {
                 return new Response(JSON.stringify({ message: "Tato kategorie neexistuje." }), {
                   status: 404,
                   headers: { 'Content-Type': 'application/json' }
                 });
               }
-              
+              const sectionExist = await prisma.Sections.findUnique({
+                where: { id: parseInt(formData.get('section')) }
+              });
+
               if (!sectionExist) {
                 return new Response(JSON.stringify({ message: "Tato sekce neexistuje." }), {
+                  status: 404,
+                  headers: { 'Content-Type': 'application/json' }
+                });
+              }
+              const categorySectionExist = await prisma.Sections.findUnique({
+                where: { id: parseInt(formData.get('section')) , category:  parseInt(formData.get('category'))}
+              });
+              if (!categorySectionExist) {
+                return new Response(JSON.stringify({ message: "Tato kategorie kombinace sekce neexistuje." }), {
                   status: 404,
                   headers: { 'Content-Type': 'application/json' }
                 });
@@ -300,4 +316,238 @@ const userId = session.userId; // Use userId directly from session
             headers: { 'Content-Type': 'application/json' }
         });
     }
+}
+
+
+
+
+
+
+
+
+export async function PUT(req) {
+  try {
+    const session = await getSession();
+    if (!session || !session.isLoggedIn || !session.email) {
+      return new Response(JSON.stringify({
+        message: "Chyba na serveru [PUT] požadavek na editaci příspěvku. Session nebyla nalezena "
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    const data = await req.json();
+    console.log("Received data:", data);
+
+    // Fetch the post and the creator's role
+    const post = await prisma.posts.findUnique({
+      where: { id: data.postId },
+      include: { user: { include: { role: true } } }  // Include the user and their role
+    });
+
+    if (!post) {
+      return new Response(JSON.stringify({
+        message: "Příspěvek nenalezen"
+      }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // If the session user is the post creator, allow editing
+    if (post.userId === session.userId) {
+
+      //validation starts here
+      let priceConverted = data.price // Vždy vrací string
+ 
+      
+      if (!isNaN(priceConverted) && Number.isInteger(parseFloat(priceConverted))) {
+          priceConverted = parseInt(priceConverted, 10); // Převeď na celé číslo
+      }
+
+    const validatedFields = schema.safeParse({
+      name: data.name,
+      category: parseInt(data.category),
+      section: parseInt(data.section),
+      description: data.description,
+     // location: formData.get('location'),
+      price: priceConverted,
+    });
+ 
+    if (!validatedFields.success) {
+      console.log("Nevalidní pole:", validatedFields.error.flatten().fieldErrors); // Vypiš chyby
+      return new Response(JSON.stringify({
+        message: 'Nevalidní vstupy.',
+        errors: validatedFields.error.flatten().fieldErrors // Vrátí konkrétní chyby jako součást odpovědi
+      }), {
+        status: 400, // Můžeš vrátit 400, pokud je něco špatně
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } 
+
+
+      const categoryExist = await prisma.Categories.findUnique({
+        where: { id: parseInt(data.category) }
+      });
+      if (!categoryExist) {
+        return new Response(JSON.stringify({ message: "Tato kategorie neexistuje." }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      const sectionExist = await prisma.Sections.findUnique({
+        where: { id: parseInt(data.section) }
+      });
+
+      if (!sectionExist) {
+        return new Response(JSON.stringify({ message: "Tato sekce neexistuje." }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      const categorySectionExist = await prisma.Sections.findUnique({
+        where: {
+          id: parseInt(data.section),
+          categoryId: parseInt(data.category),
+        },
+      });
+      if (!categorySectionExist) {
+        return new Response(JSON.stringify({ message: "Tato kategorie kombinace sekce neexistuje." }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+     //validation ends here
+
+
+
+
+      await updatePost(data.postId, data);
+      return new Response(JSON.stringify({
+        message: "Úspěšná aktualizace příspěvku"
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Fetch the session user's role and privileges only if they are not the creator
+    const sessionUser = await prisma.users.findUnique({
+      where: { id: session.userId },
+      include: { role: true }
+    });
+
+    if (!sessionUser) {
+      return new Response(JSON.stringify({
+        message: "Uživatel nenalezen"
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Check if the session user has strictly higher privileges than the post creator
+    if (sessionUser.role.privileges <= post.user.role.privileges) {
+      return new Response(JSON.stringify({
+        message: "Nemáte pravomoce k úpravě tohoto příspěvku"
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+      //validation starts here
+      let priceConverted = data.price // Vždy vrací string
+ 
+      
+      if (!isNaN(priceConverted) && Number.isInteger(parseFloat(priceConverted))) {
+          priceConverted = parseInt(priceConverted, 10); // Převeď na celé číslo
+      }
+
+    const validatedFields = schema.safeParse({
+      name: data.name,
+      category: parseInt(data.category),
+      section: parseInt(data.section),
+      description: data.description,
+     // location: formData.get('location'),
+      price: priceConverted,
+    });
+ 
+    if (!validatedFields.success) {
+      console.log("Nevalidní pole:", validatedFields.error.flatten().fieldErrors); // Vypiš chyby
+      return new Response(JSON.stringify({
+        message: 'Nevalidní vstupy.',
+        errors: validatedFields.error.flatten().fieldErrors // Vrátí konkrétní chyby jako součást odpovědi
+      }), {
+        status: 400, // Můžeš vrátit 400, pokud je něco špatně
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } 
+    const categoryExist = await prisma.Categories.findUnique({
+      where: { id: parseInt(data.category) }
+    });
+    if (!categoryExist) {
+      return new Response(JSON.stringify({ message: "Tato kategorie neexistuje." }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
+    const sectionExist = await prisma.Sections.findUnique({
+      where: { id: parseInt(data.section) }
+    });
+
+    if (!sectionExist) {
+      return new Response(JSON.stringify({ message: "Tato sekce neexistuje." }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    const categorySectionExist = await prisma.Sections.findUnique({
+      where: {
+        id: parseInt(data.section),
+        categoryId: parseInt(data.category),
+      },
+    });
+    if (!categorySectionExist) {
+      return new Response(JSON.stringify({ message: "Tato kategorie kombinace sekce neexistuje." }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+     //validation ends here
+
+
+
+    // Proceed with updating the post if privileges are higher
+    await updatePost(data.postId, data);
+    return new Response(JSON.stringify({
+      message: "Úspěšná aktualizace příspěvku"
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+  } catch (error) {
+    console.error('Chyba na serveru [PUT] požadavek na editaci příspěvku: ', error);
+    return new Response(JSON.stringify({
+      message: 'Chyba na serveru [PUT] požadavek na editaci příspěvku'
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
+// Function to update the post
+async function updatePost(postId, data) {
+
+
+
+
+  await prisma.posts.update({
+    where: { id: postId },
+    data: { description: data.description, name: data.name, price: data.price, categoryId: parseInt(data.category), sectionId: parseInt(data.section) }  // Update fields as needed
+  });
 }

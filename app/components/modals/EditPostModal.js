@@ -2,22 +2,23 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-async function updatedPost(name, price, category, section) {
-  try {
+async function updatedPost(name, price, category, section, description, postId) {
+  
     const response = await fetch('/api/posts', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, price, category, section }),
+      body: JSON.stringify({ name, price, category, section, description, postId }),
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
+    console.log("Server response for post edit:", response);
+    
+   
+    const result = await response.json();
+    return result;
+    
+  
 }
 
 function htmlToText(htmlString) {
@@ -53,6 +54,7 @@ async function getSections() {
 export const EditPostModal = ({ post, descriptionPost }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [postId, setPostId] = useState(post?.id);
   const [postName, setPostName] = useState(post?.name);
   const [postPrice, setPostPrice] = useState(post?.price);
   const [postDescription, setPostDescription] = useState(descriptionPost);
@@ -61,6 +63,32 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   const [selectedCategory, setSelectedCategory] = useState(post?.category?.id || "");
   const [selectedSection, setSelectedSection] = useState(post?.section?.id || "");
   const [filteredSections, setFilteredSections] = useState([]);
+  const [activeButton, setActiveButton] = useState(null); 
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [errorValidation, setErrorValidation] = useState(null);
+
+  const fieldTranslation = {
+    name: 'Název',
+    description: 'Popisek',
+    location: 'Místo',
+    price: 'Cena',
+    phoneNumber: 'Telefoní číslo',
+  };
+  const printErrorValidation = () => {
+    if (!errorValidation || !errorValidation.errors) return null;
+  
+    return Object.entries(errorValidation.errors).map(([field, messages]) => (
+      <div key={field} style={{ color: 'red' }}>
+        <strong>{fieldTranslation[field] || field}:</strong> {/* Překlad názvu pole */}
+        <ul>
+          {messages.map((msg, index) => (
+            <li key={index}>{msg}</li>
+          ))}
+        </ul>
+      </div>
+    ));
+  };
+
 
   useEffect(() => {
     const fetchCategoriesAndSections = async () => {
@@ -72,6 +100,16 @@ export const EditPostModal = ({ post, descriptionPost }) => {
 
     fetchCategoriesAndSections();
   }, []);
+  const handleButtonClick = (buttonName) => {
+    if (activeButton === buttonName) {
+      setIsDisabled(false);
+      setActiveButton(null);
+    } else {
+      setIsDisabled(true);
+      setActiveButton(buttonName);
+
+    }
+  };
 
   useEffect(() => {
     setSelectedCategory(post?.category?.id || "");
@@ -94,14 +132,20 @@ export const EditPostModal = ({ post, descriptionPost }) => {
 
   const handlePostChange = async () => {
     setLoading(true);
-    await updatedPost(postName, postPrice, selectedCategory, selectedSection);
+  
+    // Define price conditionally based on activeButton value
+    const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton : postPrice;
+  
+    let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId);
+    console.log("Odpověď od serveru :", result);
+    setErrorValidation(result)
     setLoading(false);
-    location.reload();
   };
 
   return (
     <dialog id="edit_post_modal" className="modal modal-bottom sm:modal-middle" style={{ marginLeft: "0px" }}>
       <div className="modal-box w-full p-6 flex flex-col items-center">
+      
         <div className="flex justify-center mb-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -119,6 +163,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
           </svg>
         </div>
         <div className="w-full text-left">
+        <div className='mb-5' style={{textAlign: "left"}}>{printErrorValidation()}</div>
           <label htmlFor="name">Co nazízím</label>
           <input
             type="text"
@@ -129,6 +174,17 @@ export const EditPostModal = ({ post, descriptionPost }) => {
           />
         </div>
         <div className="w-full text-left mt-4">
+
+        <div
+                className="flex items-center "
+                style={{
+                  padding: "12px",
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: '10px',
+                }}
+              >
+           
           <label htmlFor="price">Cena</label>
           <input
             min={1}
@@ -137,9 +193,53 @@ export const EditPostModal = ({ post, descriptionPost }) => {
             type="number"
             name="price"
             value={postPrice}
+            disabled={isDisabled}
             onChange={(e) => setPostPrice(e.target.value)}
             className="input input-bordered w-full"
           />
+           <span className="mx-2" style={{ fontSize: '20px' }}>|</span>
+          <div className="flex gap-2" style={{ flex: "0 1 auto", justifyContent: 'flex-end' }}>
+                  <button
+                    type="button"
+                    onClick={() => handleButtonClick('Dohodou')}
+                    className="btn btn-active"
+                    style={{
+                      transition: 'background-color 0.3s, box-shadow 0.3s',
+                      fontSize: '12px',
+                      padding: '6px 8px',
+                      boxShadow: activeButton === 'Dohodou' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
+                    }}
+                  >
+                    Dohodou
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleButtonClick('V textu')}
+                    className="btn btn-active"
+                    style={{
+                      transition: 'background-color 0.3s, box-shadow 0.3s',
+                      fontSize: '12px',
+                      padding: '6px 8px',
+                      boxShadow: activeButton === 'V textu' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
+                    }}
+                  >
+                    V textu
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleButtonClick('Zdarma')}
+                    className="btn btn-active"
+                    style={{
+                      transition: 'background-color 0.3s, box-shadow 0.3s',
+                      fontSize: '12px',
+                      padding: '6px 8px',
+                      boxShadow: activeButton === 'Zdarma' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
+                    }}
+                  >
+                    Zdarma
+                  </button>
+                </div>
+                </div>
         </div>
         <div className="w-full text-left mt-4">
           <label htmlFor="description" style={{ fontSize: '14px' }}>Popisek</label>
