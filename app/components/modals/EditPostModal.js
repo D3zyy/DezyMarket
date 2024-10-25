@@ -131,7 +131,10 @@ export const EditPostModal = ({ post, descriptionPost }) => {
         <div className="w-full text-left mt-4">
           <label htmlFor="price">Cena</label>
           <input
-            type="text"
+            min={1}
+            max={5000000}
+            inputMode="numeric"
+            type="number"
             name="price"
             value={postPrice}
             onChange={(e) => setPostPrice(e.target.value)}
