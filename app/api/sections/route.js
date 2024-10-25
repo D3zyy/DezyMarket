@@ -1,3 +1,5 @@
+import { prisma } from "@/app/database/db";
+import { getSession } from "@/app/authentication/actions";
 export async function GET(req) {
     try {
       const session = await getSession();

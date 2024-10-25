@@ -2,14 +2,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-async function updatedPost(name, price, category) {
+async function updatedPost(name, price, category, section) {
   try {
     const response = await fetch('/api/posts', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, price, category }),
+      body: JSON.stringify({ name, price, category, section }),
     });
 
     if (!response.ok) {
@@ -39,8 +39,15 @@ async function getCategories() {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
-  const categories = await res.json();
-  return categories;
+  return res.json();
+}
+
+async function getSections() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sections`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return res.json();
 }
 
 export const EditPostModal = ({ post, descriptionPost }) => {
@@ -50,28 +57,44 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   const [postPrice, setPostPrice] = useState(post?.price);
   const [postDescription, setPostDescription] = useState(descriptionPost);
   const [categories, setCategories] = useState([]);
+  const [sections, setSections] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(post?.category?.id || "");
+  const [selectedSection, setSelectedSection] = useState(post?.section?.id || "");
+  const [filteredSections, setFilteredSections] = useState([]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const data = await getCategories();
-      setCategories(data);
+    const fetchCategoriesAndSections = async () => {
+      const categoriesData = await getCategories();
+      const sectionsData = await getSections();
+      setCategories(categoriesData);
+      setSections(sectionsData);
     };
 
-    fetchCategories();
+    fetchCategoriesAndSections();
   }, []);
 
   useEffect(() => {
     setSelectedCategory(post?.category?.id || "");
+    setSelectedSection(post?.section?.id || "");
   }, [post]);
+
+  useEffect(() => {
+    const filtered = sections.filter(section => section.categoryId === parseInt(selectedCategory));
+    setFilteredSections(filtered);
+  }, [selectedCategory, sections]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
+    setSelectedSection(""); // Reset selected section when category changes
+  };
+
+  const handleSectionChange = (e) => {
+    setSelectedSection(e.target.value);
   };
 
   const handlePostChange = async () => {
     setLoading(true);
-    await updatedPost(postName, postPrice, selectedCategory);
+    await updatedPost(postName, postPrice, selectedCategory, selectedSection);
     setLoading(false);
     location.reload();
   };
@@ -128,6 +151,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
               resize: 'none'
             }}
           />
+          <label htmlFor="category" className="block" style={{ fontSize: '14px' }}>Kategorie</label>
           <select
             className="select select-md select-bordered w-full"
             required
@@ -143,6 +167,25 @@ export const EditPostModal = ({ post, descriptionPost }) => {
               </option>
             ))}
           </select>
+          
+          <label htmlFor="section" className="block mt-4" style={{ fontSize: '14px' }}>Sekce</label>
+          <select
+            className="select select-md select-bordered w-full"
+            required
+            name="section"
+            id="section"
+            value={selectedSection}
+            onChange={handleSectionChange}
+            disabled={!filteredSections.length}
+          >
+            <option value="" disabled>Vybrat sekci</option>
+            {filteredSections.map(section => (
+              <option key={section.id} value={section.id}>
+                {section.name}
+              </option>
+            ))}
+          </select>
+
           <button
             onClick={handlePostChange}
             className="btn btn-primary mt-4"
