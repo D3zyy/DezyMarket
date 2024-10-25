@@ -141,6 +141,8 @@ export const EditPostModal = ({ post, descriptionPost }) => {
     console.log("Odpověď od serveru :", result);
     setErrorValidation(result)
     setLoading(false);
+    router.refresh();
+    closeEditPostModal()
   };
 
   return (
