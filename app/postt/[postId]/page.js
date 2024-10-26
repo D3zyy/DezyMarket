@@ -61,7 +61,7 @@ const Page = async ({ params }) => {
     className="flex flex-col lg:flex-row p-4 lg:p-8"
     style={{ boxShadow: '0 0 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' }}
   >
-      {imageUrls.length > 0 ?  <ImageGallery allImages={imageUrls} /> : ""}
+     <ImageGallery allImages={imageUrls} /> 
     
 
 
