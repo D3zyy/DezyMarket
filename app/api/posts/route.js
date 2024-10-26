@@ -542,6 +542,89 @@ export async function PUT(req) {
   }
 }
 
+
+
+
+export async function DELETE(req) {
+  try {
+    const session = await getSession();
+    console.log(session)
+    if (!session || !session.isLoggedIn || !session.email) {
+      return new Response(JSON.stringify({
+        message: "Chyba na serveru [DELETE] požadavek na smazání  příspěvku. Session nebyla nalezena "
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    const data = await req.json();
+    console.log("Received data DELETE POST:", data);
+
+    // Fetch the post and the creator's role
+    const post = await prisma.posts.findUnique({
+      where: { id: data.postId },
+      include: { user: { include: { role: true } } }  // Include the user and their role
+    });
+
+    if (!post) {
+      return new Response(JSON.stringify({
+        message: "Příspěvek nenalezen"
+      }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+
+    // If the session user is the post creator, allow removing
+    if (post.userId === session.userId) {
+      await prisma.posts.delete({
+        where: { id: data.postId }
+      });
+      return new Response(JSON.stringify({
+        message: 'Příspěvek byl úspěšně smazán'
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+    }
+  
+
+    // Check if the session user has strictly higher privileges than the post creator
+    if (session.role.privileges <= post.user.role.privileges) {
+      return new Response(JSON.stringify({
+        message: "Nemáte pravomoce k úpravě tohoto příspěvku"
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    
+    await prisma.posts.delete({
+      where: { id: data.postId }
+    });
+    return new Response(JSON.stringify({
+      message: 'Příspěvek byl úspěšně smazán'
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+
+  } catch (error) {
+    console.error('Chyba na serveru [DELETE] požadavek na smazání příspěvku: ', error);
+    return new Response(JSON.stringify({
+      message: 'Chyba na serveru [DELETE] požadavek  na smazání příspěvku'
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
 // Function to update the post
 async function updatePost(postId, data) {
 

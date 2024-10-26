@@ -13,3 +13,14 @@ export async function getPostFromDb(postId) {
       });
       return postRecord
 }
+export async function getImageUrlsFromDb(postId) {
+  console.log(postId)
+  const urls = await prisma.Image.findFirst({
+       where: {
+         postId: parseInt(postId),
+       },
+
+     });
+     return urls
+
+}

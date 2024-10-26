@@ -99,7 +99,7 @@ model Image {
   id       Int    @id @default(autoincrement())
   url      String
   postId   Int
-  post     Posts  @relation(fields: [postId], references: [id])
+  post     Posts  @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 model UserCategories {
   userId       Int
