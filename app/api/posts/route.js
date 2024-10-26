@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 import { z } from 'zod';
 import { prisma } from "@/app/database/db";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand,ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import sharp from 'sharp';
+
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 let sessionGeneral
 const schema = z.object({
@@ -65,7 +67,38 @@ async function resizeImage(buffer) {
   
   return resizedBuffer;
 }
+async function deleteImagesByPostId(postId) {
+  const bucketName = process.env.AWS_S3_BUCKET_NAME;
+  const prefix = `${postId}/`; // Prefix for all images associated with this postId
+  
+  try {
+    // List all objects with the specific postId prefix
+    const listParams = {
+      Bucket: bucketName,
+      Prefix: prefix,
+    };
+    const listCommand = new ListObjectsV2Command(listParams);
+    const listedObjects = await s3Client.send(listCommand);
 
+    if (!listedObjects.Contents || listedObjects.Contents.length === 0) {
+      return `No images found for postId: ${postId}`;
+    }
+
+    // Map all found objects to be deleted
+    const deleteParams = {
+      Bucket: bucketName,
+      Delete: {
+        Objects: listedObjects.Contents.map((item) => ({ Key: item.Key })),
+      },
+    };
+    const deleteCommand = new DeleteObjectsCommand(deleteParams);
+    const deleteResponse = await s3Client.send(deleteCommand);
+
+    return deleteResponse;
+  } catch (error) {
+    throw new Error(`Failed to delete images for postId ${postId}: ${error}`);
+  }
+}
 async function uploadImagesToS3(files,postId) {
   const uploadResponses = await Promise.all(files.map(async (file, index) => {
     const resizedImage = await resizeImage(file);
@@ -219,7 +252,7 @@ const userId = session.userId; // Use userId directly from session
                 });
               }
               const categorySectionExist = await prisma.Sections.findUnique({
-                where: { id: parseInt(formData.get('section')) , category:  parseInt(formData.get('category'))}
+                where: { id: parseInt(formData.get('section')) , categoryId:  parseInt(formData.get('category'))}
               });
               if (!categorySectionExist) {
                 return new Response(JSON.stringify({ message: "Tato kategorie kombinace sekce neexistuje." }), {
@@ -579,9 +612,21 @@ export async function DELETE(req) {
 
     // If the session user is the post creator, allow removing
     if (post.userId === session.userId) {
+     let haveImages =  await prisma.Image.findMany({
+        where: { postId: data.postId }
+      });
       await prisma.posts.delete({
         where: { id: data.postId }
       });
+          //ještě z s3 deletnout
+          if(haveImages.length > 0){
+            console.log("Má obrázky")
+           let res =  await  deleteImagesByPostId(data.postId)
+                console.log("odpoved na vymazani obrazku z s3 :",res) 
+            } else {
+              console.log("Nemá obrázky")
+            }
+       
       return new Response(JSON.stringify({
         message: 'Příspěvek byl úspěšně smazán'
       }), {
@@ -601,11 +646,21 @@ export async function DELETE(req) {
         headers: { 'Content-Type': 'application/json' }
       });
     }
+    let haveImages =  await prisma.Image.findMany({
+      where: { postId: data.postId }
+    });
 
-    
     await prisma.posts.delete({
       where: { id: data.postId }
     });
+    if(haveImages.length > 0){
+      console.log("Má obrázky")
+      let res =  await  deleteImagesByPostId(data.postId)
+      console.log("odpoved na vymazani obrazku z s3 :",res) 
+     } else {
+        console.log("Nemá obrázky")
+      }
+    //ještě z s3 deletnout
     return new Response(JSON.stringify({
       message: 'Příspěvek byl úspěšně smazán'
     }), {

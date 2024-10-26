@@ -14,8 +14,8 @@ export async function getPostFromDb(postId) {
       return postRecord
 }
 export async function getImageUrlsFromDb(postId) {
-  console.log(postId)
-  const urls = await prisma.Image.findFirst({
+
+  const urls = await prisma.Image.findMany({
        where: {
          postId: parseInt(postId),
        },

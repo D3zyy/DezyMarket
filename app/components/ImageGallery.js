@@ -1,90 +1,66 @@
 "use client";
 import { useState } from 'react';
 
-const ImageGallery = () => {
-    const allImages = [
-      'https://www.bazos.cz/img/10/169/192291169.jpg?t=1729016889',
-      'https://www.bazos.cz/img/10t/169/192291169.jpg?t=1729016889',
-        'https://www.bazos.cz/img/1/169/192291169.jpg?t=1729016889',
-        'https://www.bazos.cz/img/10t/169/192291169.jpg?t=1729016889',
-        'https://www.bazos.cz/img/2t/169/192291169.jpg?t=1729016889',
-        'https://www.bazos.cz/img/3t/169/192291169.jpg?t=1729016889',
-        'https://www.bazos.cz/img/10t/169/192291169.jpg?t=1729016889',
-        
-      
-
-  
-   
-
-
-        // Add more images as needed
-      ];
-  const [mainImage, setMainImage] = useState(allImages[0]);
+const ImageGallery = ({ allImages }) => {
+  // Předpokládám, že allImages je pole objektů s url, nikoliv pole stringů
+  const [mainImage, setMainImage] = useState(allImages[0].url);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-
-
-  const additionalCount = allImages.length - 4; // Number of additional images
+  const additionalCount = allImages.length - 4; // Počet dalších obrázků
 
   return (
-    <div className="lg:w-1/2  "> {/* Center the main container */}
+    <div className="lg:w-1/2"> {/* Center the main container */}
       {/* Set the first image as the main image */}
-      <div className="bg-gray-100 h-5/6  flex items-center justify-center rounded-lg overflow-hidden">
+      <div className="bg-gray-100 h-5/6 flex items-center justify-center rounded-lg overflow-hidden">
         <img
-          src={mainImage} // Use the current main image
+          src={mainImage} // Použij aktuální hlavní obrázek
           alt="Main"
           className="w-full h-full"
         />
       </div>
 
-      {/* Small images container */}
+      {/* Malé obrázky */}
       <div className="grid grid-cols-3 gap-2 mt-4">
-        {allImages.slice(1, 3).map((thumbnail, index) => (
-          <div key={index} className="relative w-full h-20 ">
+        {allImages.slice(1, 4).map((thumbnail, index) => ( // Opraveno na 1, 4, aby se vzaly tři obrázky
+          <div key={index} className="relative w-full h-20">
             <img
-              src={thumbnail}
+              src={thumbnail.url} // Použij url z objektu thumbnail
               alt={`Thumbnail ${index + 1}`}
               className="w-full h-full rounded-lg cursor-pointer"
-              onMouseEnter={() => setMainImage(thumbnail)} // Set main image on hover
-              onMouseLeave={() => setMainImage(allImages[0])} // Reset to first image when not hovering
-              onClick={() => setIsGalleryOpen(true)}
+              onMouseEnter={() => setMainImage(thumbnail.url)} // Nastav hlavní obrázek při hoveru
+              onMouseLeave={() => setMainImage(allImages[0].url)} // Resetuj na první obrázek
+              onClick={() => setIsGalleryOpen(true)} // Otevři galeri
             />
           </div>
         ))}
 
-        {/* Last thumbnail with dynamic "+x" overlay if there are more than 4 images */}
-        {additionalCount >= 0 && (
+        {/* Poslední miniatura s dynamickým "+x" overlay, pokud jsou více než 4 obrázky */}
+        {additionalCount > 0 && (
           <div className="relative w-full h-20">
             <div 
               className="absolute inset-0 rounded-lg bg-opacity-25 cursor-pointer"
-              onClick={() => setIsGalleryOpen(true)} // Open gallery modal
+              onClick={() => setIsGalleryOpen(true)} // Otevři galeri
             >
               <img
-                src={allImages[3]} 
+                src={allImages[3].url} 
                 alt="Thumbnail 4"
                 className="w-full h-full rounded-lg"
               />
-              {additionalCount > 0 && additionalCount >= 1 ? (
+              {additionalCount > 0 && (
                 <div className="flex items-center justify-center absolute inset-0 bg-black bg-opacity-50 text-white font-bold rounded-lg">
                   +{additionalCount}
                 </div>
-              ) : <div className="flex items-center justify-center absolute inset-0 bg-black bg-opacity-50 text-white font-bold rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
-            </svg>
-
-            </div>}
+              )}
             </div>
           </div>
         )}
       </div>
 
-      {/* Gallery Modal */}
+      {/* Galerie Modal */}
       {isGalleryOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-75"> {/* Backdrop */}
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-75"> {/* Základ */}
           <div className="bg-base-100 p-6 md:rounded-lg relative max-w-4xl w-full max-h-[100vh] overflow-auto">
-
-            {/* Close button using SVG */}
+            {/* Tlačítko pro zavření pomocí SVG */}
             <div className='mx-auto text-center'>
               <button
                 type="button"
@@ -108,12 +84,12 @@ const ImageGallery = () => {
               </button>
             </div>
 
-            {/* Display all images in the gallery */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> {/* Ensure gallery can scroll */}
+            {/* Zobraz všechny obrázky v galerii */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> {/* Zajistí, že galerie může scrollovat */}
               {allImages.map((image, index) => (
                 <img 
                   key={index} 
-                  src={image} 
+                  src={image.url} // Použij url z objektu image
                   alt={`Gallery Image ${index + 1}`} 
                   className="w-full h-auto rounded-lg object-cover" 
                 />
