@@ -2,6 +2,40 @@
 import { useState } from 'react';
 
 const ImageGallery = ({ allImages }) => {
+  // only for not quering the real images so it does not count my GET reqest on AWS
+  // in real just delete it everything will work perfetctly
+  allImages = [
+    {
+      id: 3,
+      url: 'https://loremflickr.com/200/200?random=1',
+      postId: 11
+    },
+    {
+      id: 4,
+      url: 'https://loremflickr.com/550/550?random=3',
+      postId: 11
+    },
+    {
+      id: 5,
+      url: 'https://loremflickr.com/250/250?random=3',
+      postId: 11
+    },
+    {
+      id: 6,
+      url: 'https://loremflickr.com/1200/1200?random=2',
+      postId: 11
+    },
+    {
+      id: 7,
+      url: 'https://loremflickr.com/300/300?random=1',
+      postId: 11
+    },
+    {
+      id: 8,
+      url: 'https://loremflickr.com/400/400?random=2',
+      postId: 11
+    }
+  ];
   // Předpokládám, že allImages je pole objektů s url, nikoliv pole stringů
   const [mainImage, setMainImage] = useState(allImages[0].url);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
