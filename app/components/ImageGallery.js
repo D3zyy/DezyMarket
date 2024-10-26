@@ -21,7 +21,7 @@ const ImageGallery = ({ allImages }) => {
 
       {/* Malé obrázky */}
       <div className="grid grid-cols-3 gap-2 mt-4">
-        {allImages.slice(1, 4).map((thumbnail, index) => ( // Opraveno na 1, 4, aby se vzaly tři obrázky
+        {allImages.slice(1, 3).map((thumbnail, index) => ( // Opraveno na 1, 4, aby se vzaly tři obrázky
           <div key={index} className="relative w-full h-20">
             <img
               src={thumbnail.url} // Použij url z objektu thumbnail
