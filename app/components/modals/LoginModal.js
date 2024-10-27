@@ -118,6 +118,7 @@ const handleRecovery = async (event, setError, setLoading, setSuccess) => {
 
     if (res.ok) {
       setError(false);
+      setLoading(false)
       setSuccess(<div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <CheckCircleIcon className="h-8 w-8 text-green-500"  style={{marginRight: "10px"}}/>
         <div style={{ marginLeft: "5px" }}>{'Pokyny k obnovení hesla byli zaslány na uvedený email'}</div>
@@ -158,18 +159,20 @@ const RecoveryButton = ({ setRecoverPassword, setSuccess, setError }) => (
   </button>
 );
 
-const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError }) => (
+const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError, setLoading }) => (
   <button
     className="btn btn-link"
     onClick={() => {
       setRecoverPassword(false);
       setSuccess(false);
       setError(false);
+      setLoading(false);
     }}
     onTouchStart={() => {
       setRecoverPassword(false);
       setSuccess(false);
       setError(false);
+      setLoading(false);
     }}
 
     style={{ color: 'gray', marginLeft: 'auto' }}
@@ -247,6 +250,7 @@ const LoginModal = () => {
             setRecoverPassword={setRecoverPassword} 
             setSuccess={setSuccess} 
             setError={setError} 
+            setLoading={setLoading}
           />
         ) : (
           <RecoveryButton 

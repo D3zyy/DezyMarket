@@ -161,7 +161,7 @@ const RecoveryButton = ({ setRecoverPassword, setSuccess, setError, setMessagePr
   </button>
 );
 
-const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessageProp}) => (
+const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessageProp, setLoading}) => (
   <button
     className="btn btn-link"
     onClick={() => {
@@ -169,12 +169,14 @@ const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessag
       setSuccess(false);
       setError(false);
       setMessageProp(false);
+      setLoading(false)
     }}
     onTouchStart={() => {
       setRecoverPassword(true);
       setSuccess(false);
       setError(false);
       setMessageProp(false);
+      setLoading(false)
     }}
     style={{ color: 'gray', marginLeft: 'auto' }}
   >
@@ -293,6 +295,7 @@ const InfoModal = ({ defaultOpen, message , backToHome }) => {
             setSuccess={setSuccess} 
             setError={setError} 
             setMessageProp = {setMessageProp}
+            setLoading={setLoading}
           />
         ) : (
           <>
