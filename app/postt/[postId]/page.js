@@ -199,6 +199,12 @@ const Page = async ({ params }) => {
 </span>
             </div>
             <div className="mt-3">
+              <strong className="text-sm">Kde</strong>
+              <span className="ml-1">
+  {postRecord.location}
+</span>
+            </div>
+            <div className="mt-3">
       <strong className="text-sm">Kategorie:</strong>
       <span className="ml-1">
         <Link href={`/category?id=${postRecord?.categoryId}`}>

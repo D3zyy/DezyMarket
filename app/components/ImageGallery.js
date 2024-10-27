@@ -6,22 +6,27 @@ const ImageGallery = ({ allImages }) => {
   allImages = [
     {
       id: 3,
-      url: 'https://loremflickr.com/200/200?random=1',
+      url: 'https://www.bazos.cz/img/2/219/192980219.jpg?t=1729891332',
       postId: 11
     },
     {
       id: 4,
-      url: 'https://loremflickr.com/550/550?random=3',
+      url: 'https://www.bazos.cz/img/7/219/192980219.jpg?t=1729891332',
       postId: 11
     },
     {
       id: 5,
-      url: 'https://loremflickr.com/250/250?random=3',
+      url: 'https://www.bazos.cz/img/8/219/192980219.jpg?t=1729891332',
       postId: 11
     },
     {
       id: 6,
-      url: 'https://loremflickr.com/1200/1200?random=2',
+      url: 'https://www.bazos.cz/img/9/219/192980219.jpg?t=1729891332',
+      postId: 11
+    },
+    {
+      id: 7,
+      url: ' https://www.bazos.cz/img/10/219/192980219.jpg?t=1729891332',
       postId: 11
     },
 
