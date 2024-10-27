@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 async function updatedPost(name, price, category, section, description, postId, location, setSuccess) {
-  
+    if(!section){
+      return false
+    }
     const response = await fetch('/api/posts', {
       method: 'PUT',
       headers: {
@@ -158,7 +160,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
     setLoading(true);
   
     const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton  : postPrice;
-  
+    
     let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location,setSuccess);
     console.log("Odpověď od serveru :", result);
     setErrorValidation(result)
@@ -338,6 +340,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
         <div className="w-full text-left mt-4">
           <label htmlFor="section" style={{ fontSize: '14px' }}>Sekce</label>
           <select
+      
             className="select select-md select-bordered w-full"
             required
             name="section"
@@ -346,7 +349,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
             onChange={handleSectionChange}
             disabled={!filteredSections.length}
           >
-           
+            <option value="" disabled>Vybrat sekci</option>
             {filteredSections.map(section => (
               <option key={section.id} value={section.id}>
                 {section.name}
