@@ -82,15 +82,15 @@ export const EditPostModal = ({ post, descriptionPost }) => {
     console.log(post.price)
     console.log("aktive button hdonota :",activeButton)
     if (!isPriceValid ) {
-      console.log("1")
       setActiveButton(post.price);
       setIsDisabled(true)
     } else{
-      console.log("2")
       setIsDisabled(false)
     }
   }, [post.price]);
   const fieldTranslation = {
+    category: 'Kategorie',
+    section: 'Sekce',
     name: 'Název',
     description: 'Popisek',
     location: 'Místo',
@@ -346,7 +346,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
             onChange={handleSectionChange}
             disabled={!filteredSections.length}
           >
-            <option value="" disabled>Vybrat sekci</option>
+           
             {filteredSections.map(section => (
               <option key={section.id} value={section.id}>
                 {section.name}

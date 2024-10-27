@@ -19,11 +19,16 @@ const schema = z.object({
     .min(9, 'Telefoní číslo musí mít přesně 9 číslic.')
     .regex(/^[0-9]*$/, 'Telefoní číslo musí obsahovat pouze číslice.') // Fixed regex to only allow digits
     .optional(), // Make phoneNumber optional
-
-  category: z.number()
-    .int('Kategorie musí být celé číslo.') 
-    .positive('Kategorie musí být kladné číslo.'), 
-    
+    category: z
+    .preprocess(
+      (value) => (value === '' || isNaN(value) ? NaN : Number(value)), // Převede prázdné nebo nečíselné hodnoty na NaN
+      z.number({
+        required_error: 'Kategorie je povinná.',
+        invalid_type_error: 'Kategorie musí být číslo.',
+      })
+      .int('Kategorie musí být celé číslo.')
+      .positive('Kategorie musí být kladné číslo.')
+    ),
   section: z.number()
     .int('Sekce musí být celé číslo.') 
     .positive('Sekce musí být kladné číslo.'),
