@@ -148,7 +148,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   const handlePostChange = async () => {
     setLoading(true);
   
-    const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton && isDisabled = true : postPrice;
+    const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton  : postPrice;
   
     let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location,setSuccess);
     console.log("Odpověď od serveru :", result);
