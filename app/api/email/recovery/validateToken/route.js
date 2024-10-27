@@ -55,14 +55,17 @@ export async function POST(req) {
         }
       );
     }
-
     const currentDate = new Date();
-    const expirationDate = new Date(tokenRecord.expiresAt);
-    expirationDate.setTime(expirationDate.getTime() - 7200000);
-    console.log(currentDate);
-    console.log(expirationDate);
+    const newDate = new Date(currentDate.getTime());
 
-    if (currentDate > expirationDate) {
+    // Získání lokálního časového pásma (je třeba pro správnou časovou zónu)
+    const localOffset = newDate.getTimezoneOffset() * 60000;
+    const localISODate = new Date(newDate.getTime() - localOffset).toISOString();
+   
+    console.log("čas ted :",localISODate);
+    console.log("čas vypršení :",tokenRecord.expiresAt);
+
+    if (localISODate > tokenRecord.expiresAt) {
       return new Response(
         JSON.stringify({ message: 'Odkaz již vypršel' }),
         {
