@@ -26,102 +26,88 @@ const schema = z.object({
 });
 
 export const handleRegistration = async (formData) => {
-
-
   const validatedFields = schema.safeParse({
     email: formData.email,
     password: formData.password,
     fullName: formData.fullName,
     nickname: formData.nickname,
-    termsOfUseAndPrivatePolicy: formData.termsOfUseAndPrivatePolicy === 'on', // checkbox values are either 'on' or undefined
+    termsOfUseAndPrivatePolicy: formData.termsOfUseAndPrivatePolicy === 'on',
   });
 
   if (!validatedFields.success) {
-  
     return {
       message: JSON.stringify(validatedFields.error.flatten().fieldErrors),
     };
-  } else {
+  }
 
-    try {
-      // Check if the email already exists
-      const existingUser = await prisma.Users.findUnique({
-        where: {
-          email: validatedFields.data.email,
-        }
-      });
-
-      if (existingUser) {
-        return {
-          message: "Email již existuje.",
-        };
+  try {
+    // Zkontrolujte, zda uživatel s daným e-mailem již existuje
+    const existingUser = await prisma.Users.findUnique({
+      where: {
+        email: validatedFields.data.email,
       }
+    });
 
-      // Hash the password before saving it to the database
-      const hashedPassword = await bcrypt.hash(validatedFields.data.password, 10);
-
-      // Retrieve the role ID for the "regular" role
-      const role = await prisma.Roles.findUnique({
-        where: {
-          name: 'uživatel'
-        }
-      });
-      //const accountType = await prisma.accountType.findFirst({
-        //where: {
-          //name: 'základní'
-        //}
-      //});
-
-      if (!role) {
-        return {
-          message: "Chyba na serveru",
-        };
-      }
-
-      let registrationMail = validatedFields.data.email
-      // Add user to the database
-      await prisma.Users.create({
-        data: {
-          email: validatedFields.data.email,
-          password: hashedPassword,
-          fullName: validatedFields.data.fullName,
-          nickname: validatedFields.data.nickname,
-          termsOfUseAndPrivatePolicy: validatedFields.data.termsOfUseAndPrivatePolicy,
-          roleId: role.id,
-
-        }
-      });
-      const result = await sendVerificationEmail(validatedFields.data.email);
-
-      if (result) {
-      
-        
-        return {
-          message: "",
-          closeModal: true,
-        };
-        
-
-      } else {
-        await prisma.Users.delete({
-          where: {
-            email: registrationMail,
-          },
-        });
-        // Handle failure
-        console.error('Chyba při odesílaní verifikačního emailu. Registrace nebyla úspěšná');
-        return {
-          message: "Chyba při odesílaní verifikačního emailu.\n Registrace nebyla úspěšná.",
-        };
-       
-      }
-
-     
-    } catch (error) {
-      console.error("Database error:", error);
+    if (existingUser) {
       return {
-        message: "Chyba při registraci, zkuste to prosím znovu později.",
+        message: "Email již existuje.",
       };
     }
+
+    // Hash hesla
+    const hashedPassword = await bcrypt.hash(validatedFields.data.password, 10);
+
+    // Získejte ID role pro roli "uživatel"
+    const role = await prisma.Roles.findUnique({
+      where: {
+        name: 'uživatel'
+      }
+    });
+
+    if (!role) {
+      return {
+        message: "Chyba na serveru",
+      };
+    }
+
+    // Uložení uživatele do databáze
+    await prisma.Users.create({
+      data: {
+        email: validatedFields.data.email,
+        password: hashedPassword,
+        fullName: validatedFields.data.fullName,
+        nickname: validatedFields.data.nickname,
+        termsOfUseAndPrivatePolicy: validatedFields.data.termsOfUseAndPrivatePolicy,
+        roleId: role.id,
+      }
+    });
+
+    // Odeslání verifikačního emailu
+    const result = await sendVerificationEmail(validatedFields.data.email);
+
+    if (result) {
+      return {
+        message: "",
+        closeModal: true,
+      };
+    } else {
+      // Pokud selže odeslání emailu, smažte uživatele
+      await prisma.Users.delete({
+        where: {
+          email: validatedFields.data.email,
+        },
+      });
+      return {
+        message: "Chyba při odesílání verifikačního emailu.\n Registrace nebyla úspěšná.",
+      };
+    }
+
+  } catch (error) {
+    console.error("Database error:", error);
+    return {
+      message: "Chyba při registraci, zkuste to prosím znovu později.",
+    };
+  } finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
   }
 };
