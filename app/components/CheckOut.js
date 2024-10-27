@@ -64,7 +64,7 @@ const handleSubmit = async (event) => {
         elements,
         clientSecret,
         confirmParams:{
-            return_url: 'http://localhost:3000/addPost',
+            return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/addPost`,
            
         }
     })

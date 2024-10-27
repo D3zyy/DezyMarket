@@ -56,7 +56,7 @@ const localISODate = new Date(newDate.getTime() - localOffset).toISOString();
     });
 
     // Set up email data
-    const verificationLink = `http://localhost:3000/verify?token=${token}&email=${encodeURIComponent(email)}`;
+    const verificationLink =  `${process.env.NEXT_PUBLIC_BASE_URL}?token=${token}&email=${encodeURIComponent(email)}`;
     const mailOptions = {
       from: senderEmail,
       to: email,
