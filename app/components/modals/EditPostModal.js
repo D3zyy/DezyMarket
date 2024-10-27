@@ -78,6 +78,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
     
     if (!isPriceValid && activeButton !== post.price) {
       setActiveButton(post.price);
+      setIsDisabled(true)
     }
   }, [post.price]);
   const fieldTranslation = {
@@ -147,8 +148,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   const handlePostChange = async () => {
     setLoading(true);
   
-    // Define price conditionally based on activeButton value
-    const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton : postPrice;
+    const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton && isDisabled = true : postPrice;
   
     let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location,setSuccess);
     console.log("Odpověď od serveru :", result);

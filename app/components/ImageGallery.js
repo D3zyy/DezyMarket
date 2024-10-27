@@ -24,6 +24,7 @@ const ImageGallery = ({ allImages }) => {
       url: 'https://loremflickr.com/1200/1200?random=2',
       postId: 11
     },
+
     
   ];
 
