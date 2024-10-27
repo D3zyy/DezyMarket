@@ -49,7 +49,9 @@ export async function POST(req) {
         headers: { 'Content-Type': 'application/json' }
       }
     );
-  }
+  }finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 }
 
 async function updateUserCategory(data, session) {
@@ -109,7 +111,9 @@ async function updateUserCategory(data, session) {
     } catch (error) {
       console.error('Chyba při zpracování kategorie: ', error);
       throw error;
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
   }
 
   export async function GET(req) {
@@ -143,7 +147,9 @@ async function updateUserCategory(data, session) {
           headers: { 'Content-Type': 'application/json' }
         }
       );
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
   }
 export async function PUT(req) {
 
@@ -190,5 +196,7 @@ export async function PUT(req) {
           headers: { 'Content-Type': 'application/json' }
         }
       );
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
   }

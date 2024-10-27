@@ -71,7 +71,9 @@ export const getSession = async () => {
     } catch (error) {
       console.error("Chyba posílaní session:", error);
       return { message: "Chyba na serveru [GET metoda session]" }
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
   };
 
 
@@ -124,7 +126,9 @@ export const getSession = async () => {
     } catch (error) {
       console.error("Error creating session:", error);
       throw new Error("Failed to create session"); // Optionally, re-throw with a custom message
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
   };
 export const logOut = async (state,formData) => {
     try {
@@ -155,7 +159,9 @@ export const logOut = async (state,formData) => {
   
       // Return a 500 Internal Server Error response on exception
       return { success: false, message: "Chyba při odhlašování", status: 500 };
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
   };
   
   

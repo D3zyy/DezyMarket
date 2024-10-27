@@ -111,5 +111,7 @@ export async function POST(req) {
         headers: { 'Content-Type': 'application/json' },
       }
     );
-  }
+  }finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 }

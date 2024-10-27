@@ -75,9 +75,9 @@ const Page = async () => {
                                     accType === process.env.BASE_RANK
                                         ? 'Topovaný'
                                         : accType === process.env.MEDIUM_RANK
-                                            ? `Topovaný - ${process.env.MEDIUM_RANK}`
+                                            ? `Topovaný`
                                             : accType === process.env.BEST_RANK
-                                                ? `Topovaný - ${process.env.BEST_RANK}`
+                                                ? `Topovaný+ `
                                                 : ''
                                 }
                                 emoji={
@@ -103,8 +103,9 @@ const Page = async () => {
                                     [accType === process.env.BASE_RANK ? "X fotografií" : accType === process.env.MEDIUM_RANK ? "až 25 obrázků" : accType === process.env.BEST_RANK ? "až 30 obrázků" : "X obrázků", true],
                                     [accType === process.env.BASE_RANK ? "Doba uložení 2 měsíce" : accType === process.env.MEDIUM_RANK ? "Doba uložení 3 měsíce" : accType === process.env.BEST_RANK ? "Doba uložení 4 měsíce" : "Doba uložení X měsíce", true],
                                     ["Topovaný v kategorii ", true],
-                                    ["Statistika zobrazení inzerátu", true],
-                                    ["Topovaný na hlavní stránce", accType === process.env.BASE_RANK ? true : accType === process.env.MEDIUM_RANK ? false : accType === process.env.BEST_RANK ? process.env.BEST_RANK : true],
+                                    ["Kdo si zobrazil inzerát", true],
+                                    ["Počet zobrazení inzerátu", true],
+                                    ["Topovaný v sekci", accType === process.env.BASE_RANK ? true : accType === process.env.MEDIUM_RANK ? false : accType === process.env.BEST_RANK ? process.env.BEST_RANK : true],
                                 ]}
                             />
 
@@ -116,10 +117,12 @@ const Page = async () => {
                                 priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
                                 benefits={[
                                     ["až 20 obrázků ", true],
-                                    ["Doba uložení 2 měsíce", true],
+                                    ["Doba uložení  2 měsíce", true],
+                                    ["Počet zobrazení inzerátu", true],
+                                    ["Kdo si zobrazil inzerát", false],
                                     ["Topovaný v kategorii ", false],
-                                    ["Topovaný na hlavní stránce", false],
-                                    ["Statistika zobrazení inzerátu", false],
+                                    ["Topovaný v sekci", false],
+                             
                                 ]}
                             />
                         </div>
@@ -136,6 +139,8 @@ const Page = async () => {
     } catch (error) {
         console.error("Chyba:", error);
         return <div>Nastala chyba při načítání této stránky: {error.message}</div>;
+    }finally {
+        await prisma.$disconnect(); // Uzavřete připojení po dokončení
     }
 };
 

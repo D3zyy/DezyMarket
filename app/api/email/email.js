@@ -73,5 +73,7 @@ const localISODate = new Date(newDate.getTime() - localOffset).toISOString();
   } catch (error) {
     console.error('Chyba při posílání emailu:', error);
     return false;
-  }
+  }finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 }

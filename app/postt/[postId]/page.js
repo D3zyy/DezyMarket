@@ -85,7 +85,8 @@ const Page = async ({ params }) => {
       href={session?.isLoggedIn ? `/typeOfAccount` : ``}
       style={{ fontWeight: 'bold', fontSize: '1rem' }}
     >
-      TOP
+      {postRecord.typeOfPost === process.env.MEDIUM_RANK? "TOP" : "TOP+"}
+
     </Link>
   </div>
 )}

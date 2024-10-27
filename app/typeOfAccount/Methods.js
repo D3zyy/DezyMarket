@@ -36,7 +36,7 @@ export async function getUserAccountTypeOnStripe(email) {
 
     // If no active subscription is found, check local database
     let userAccountTypes = null;
-    try {
+    
       userAccountTypes = await prisma.users.findUnique({
         where: {
           email: email,
@@ -49,11 +49,7 @@ export async function getUserAccountTypeOnStripe(email) {
           },
         },
       });
-    } catch (error) {
-      console.error("Error fetching account types from database:", error);
-    } finally {
-      await prisma.$disconnect(); // Close the connection after finishing
-    }
+   
 
     // Return the account type from the local database if found
     if (userAccountTypes && userAccountTypes.accountTypes.length > 0) {
@@ -65,5 +61,7 @@ export async function getUserAccountTypeOnStripe(email) {
   } catch (error) {
     console.error("Chyba při získávání typu účtu ze Stripe:", error);
     throw error; // Re-throw error to be handled by caller
-  }
+  }finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 }
