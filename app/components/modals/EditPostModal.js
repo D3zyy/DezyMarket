@@ -74,11 +74,20 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [errorValidation, setErrorValidation] = useState(null);
   useEffect(() => {
-    const isPriceValid = typeof post.price === 'number' && Number.isInteger(post.price);
-    
-    if (!isPriceValid && activeButton !== post.price) {
+    const isPriceValid = !isNaN(post.price) && Number.isInteger(Number(post.price));
+    console.log(post.price) 
+    console.log(Number.isInteger(post.price))
+    console.log(typeof post.price === 'number')
+    console.log(isPriceValid)
+    console.log(post.price)
+    console.log("aktive button hdonota :",activeButton)
+    if (!isPriceValid ) {
+      console.log("1")
       setActiveButton(post.price);
       setIsDisabled(true)
+    } else{
+      console.log("2")
+      setIsDisabled(false)
     }
   }, [post.price]);
   const fieldTranslation = {
