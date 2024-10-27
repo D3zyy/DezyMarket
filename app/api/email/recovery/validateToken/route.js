@@ -2,8 +2,6 @@ import bcrypt from 'bcrypt';
 import { prisma } from '@/app/database/db';
 import { z } from 'zod';
 
-
-
 export async function POST(req) {
   try {
     const { token, newPassword } = await req.json();
@@ -17,20 +15,20 @@ export async function POST(req) {
         }
       );
     }
+
     const schema = z.object({
       password: z.string()
         .max(40, 'Heslo může mít maximálně 40 znaků')
-        .min(6, ' Heslo musí mít alespoň 6 znaků')
-        .regex(/[A-Z]/, ' Heslo musí obsahovat alespoň jedno velké písmeno')
-        .regex(/[a-z]/, ' Heslo musí obsahovat alespoň jedno malé písmeno')
-        .regex(/\d/, ' Heslo musí obsahovat alespoň jedno číslo'),
+        .min(6, 'Heslo musí mít alespoň 6 znaků')
+        .regex(/[A-Z]/, 'Heslo musí obsahovat alespoň jedno velké písmeno')
+        .regex(/[a-z]/, 'Heslo musí obsahovat alespoň jedno malé písmeno')
+        .regex(/\d/, 'Heslo musí obsahovat alespoň jedno číslo'),
     });
+
     const validatedFields = schema.safeParse({
       password: newPassword,
     });
   
-   
-
     // Retrieve the token record from the database using the token
     const tokenRecord = await prisma.VerificationTokens.findFirst({
       where: { token: token },
@@ -47,6 +45,7 @@ export async function POST(req) {
         }
       );
     }
+
     if (!validatedFields.success) {
       return new Response(
         JSON.stringify({ message: JSON.stringify(validatedFields.error.flatten().fieldErrors) }),
@@ -55,25 +54,26 @@ export async function POST(req) {
           headers: { 'Content-Type': 'application/json' },
         }
       );
-      
     }
+
     const currentDate = new Date();
     const expirationDate = new Date(tokenRecord.expiresAt);
     expirationDate.setTime(expirationDate.getTime() - 7200000);
-    console.log(currentDate)
-    console.log(expirationDate)
+    console.log(currentDate);
+    console.log(expirationDate);
+
     if (currentDate > expirationDate) {
-    
-        return new Response(
-            JSON.stringify({ message: 'Odkaz již vypršel' }),
-            {
-              status: 400,
-              headers: { 'Content-Type': 'application/json' },
-            }
-          );
+      return new Response(
+        JSON.stringify({ message: 'Odkaz již vypršel' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
+
     // Verify the token against the hashed token in the database
-    const isMatch = token === tokenRecord.token
+    const isMatch = token === tokenRecord.token;
 
     if (isMatch) {
       // Token is valid, update the user's password
@@ -89,7 +89,7 @@ export async function POST(req) {
       });
 
       return new Response(
-        JSON.stringify({ message: 'Heslo bylo úspěšně změněno.' , success: true}),
+        JSON.stringify({ message: 'Heslo bylo úspěšně změněno.', success: true }),
         {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
@@ -113,5 +113,7 @@ export async function POST(req) {
         headers: { 'Content-Type': 'application/json' },
       }
     );
+  } finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
   }
 }

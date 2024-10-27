@@ -34,6 +34,8 @@ const Page = async ({ params }) => {
         <h1 className="text-xl font-bold">Nastala chyba</h1>
       </div>
     );
+  }finally {
+    await prisma.$disconnect(); // Close the connection after finishing
   }
 
   // If no post was found, show a message

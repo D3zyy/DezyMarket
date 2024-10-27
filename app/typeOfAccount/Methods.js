@@ -35,18 +35,25 @@ export async function getUserAccountTypeOnStripe(email) {
     }
 
     // If no active subscription is found, check local database
-    const userAccountTypes = await prisma.users.findUnique({
-      where: {
-        email: email,
-      },
-      select: {
-        accountTypes: {
-          select: {
-            name: true,
+    let userAccountTypes = null;
+    try {
+      userAccountTypes = await prisma.users.findUnique({
+        where: {
+          email: email,
+        },
+        select: {
+          accountTypes: {
+            select: {
+              name: true,
+            },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      console.error("Error fetching account types from database:", error);
+    } finally {
+      await prisma.$disconnect(); // Close the connection after finishing
+    }
 
     // Return the account type from the local database if found
     if (userAccountTypes && userAccountTypes.accountTypes.length > 0) {

@@ -1,26 +1,40 @@
 import { prisma } from "../database/db";
 
 export async function getPostFromDb(postId) {
-   const postRecord = await prisma.Posts.findUnique({
-        where: {
-          id: parseInt(postId),
-        },
-        include: {
-          category: true,  
-          section: true,  
-          user: true,
-        },
-      });
-      return postRecord
+  let postRecord = null;
+  try {
+    postRecord = await prisma.Posts.findUnique({
+      where: {
+        id: parseInt(postId),
+      },
+      include: {
+        category: true,
+        section: true,
+        user: true,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    // Handle the error as needed, e.g., throw it or return null
+  } finally {
+    await prisma.$disconnect(); // Close the connection after finishing
+  }
+  return postRecord;
 }
+
 export async function getImageUrlsFromDb(postId) {
-
-  const urls = await prisma.Image.findMany({
-       where: {
-         postId: parseInt(postId),
-       },
-
-     });
-     return urls
-
+  let urls = [];
+  try {
+    urls = await prisma.Image.findMany({
+      where: {
+        postId: parseInt(postId),
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching image URLs:", error);
+    // Handle the error as needed
+  } finally {
+    await prisma.$disconnect(); // Close the connection after finishing
+  }
+  return urls;
 }

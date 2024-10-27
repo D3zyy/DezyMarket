@@ -58,5 +58,7 @@ export const checkUserBan = async (userId) => {
   } catch (error) {
     console.error('Chyba kontrolovaní banu uživatele:', error);
     throw error;
+  } finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
   }
 };
