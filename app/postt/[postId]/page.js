@@ -22,7 +22,7 @@ const Page = async ({ params }) => {
     session = await getSession();
     postRecord = await getPostFromDb(params.postId);
     imageUrls = await getImageUrlsFromDb(params.postId);
-    console.log(imageUrls)
+    
     if (!postRecord) {
       return (
         <div className="p-4 text-center">
@@ -251,24 +251,63 @@ const Page = async ({ params }) => {
         </div>
 
         {/* SVG Icons at the bottom */}
-       
+       {session.isLoggedIn ?   <>  <EditPostModal post={postRecord} descriptionPost={description}/>
+        <DeletePostModal post={postRecord} /> </> : "" }
         <div className="flex justify-center space-x-6 mt-4 border-t pt-4">
- 
- {postRecord.userId === session.userId ? <><div style={{textAlign: "center"}} className="flex items-center space-x-2">
+      
+        
+ {postRecord?.userId === session?.userId  || session?.role?.privileges > postRecord?.user?.role?.privileges? <>
   
-<EditPostModal post={postRecord} descriptionPost={description}/>
-<DeletePostModal post={postRecord} />
-<a className="btn" onClick={openEditPostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-yellow-300">
+{session?.role?.privileges > postRecord?.user?.role?.privileges? <div style={{ textAlign: "center" }} className="flex items-center space-x-2">
+
+<a className="btn">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+fill="none"
+viewBox="0 0 24 24"
+strokeWidth={1.5}
+stroke="currentColor"
+className="h-6 w-6 text-red-600"
+>
+<path
+ strokeLinecap="round"
+ strokeLinejoin="round"
+ d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"
+/>
+</svg>
+Nahlásit příspěvek</a>
+
+
+<a className="btn">
+<svg
+xmlns="http://www.w3.org/2000/svg"
+fill="none"
+viewBox="0 0 24 24"
+strokeWidth={1.5}
+stroke="currentColor"
+className="h-6 w-6 text-yellow-600"
+>
+<path
+ strokeLinecap="round"
+ strokeLinejoin="round"
+ d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+/>
+</svg>
+Ohodnotit uživatele</a>
+
+      
+    </div> : <> <div style={{textAlign: "center"}} className="flex items-center space-x-2"> <a className="btn" onClick={openEditPostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-yellow-300">
 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
 </svg> Upravit příspěvek</a>
 </div>
 <div style={{textAlign: "center"}} className="flex items-center space-x-2">
 
 
-<a className="btn" onClick={openDeletePostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-red-500">
+<a className="btn" onClick={openDeletePostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-red-500 ">
 <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
 </svg> Smazat příspěvek </a>
-</div>
+</div> </>}
+
 </> 
 : <>
 <div style={{textAlign: "center"}} className="flex items-center ">
@@ -289,7 +328,7 @@ className="h-6 w-6 text-red-600"
 </svg>
 Nahlásit příspěvek</a>
 </div>
-<div style={{textAlign: "center"}} className=" flex items-center">
+<div style={{textAlign: "center"}} className=" flex items-center ">
 <a className="btn">
 <svg
 xmlns="http://www.w3.org/2000/svg"
@@ -308,9 +347,26 @@ className="h-6 w-6 text-yellow-600"
 Ohodnotit uživatele</a>
 </div></> }
 
-
 </div>
+{session?.role?.privileges > postRecord?.user?.role?.privileges && 
+<div className="flex items-center justify-center space-x-4  mt-4 border border-dashed  border-red-500 p-4  rounded-md">
+<a className="btn" onClick={openEditPostModal} style={{ color: "red", borderColor: "red", borderWidth: "1px" }}>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+        </svg> 
+        Upravit příspěvek
+      </a>
+
+      <a className="btn" onClick={openDeletePostModal} style={{ color: "red", borderColor: "red", borderWidth: "1px" }}>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+        </svg> 
+        Smazat příspěvek
+      </a>
+  </div>
+}
       </div>
+
     </div>
     </div>
   );
