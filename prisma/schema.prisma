@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 
-//Poznámka je nutné po incializaci vložit do AccountType tabulky základní druh účtu  s name : Základní
+//    !!!!!!!!!!§!!!!!! Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel případně admin  s vetšími privilages !!!!!!!!!!!!!!!!!!!
+
 generator client {
   provider = "prisma-client-js"
 }

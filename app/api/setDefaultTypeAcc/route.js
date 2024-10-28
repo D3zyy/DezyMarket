@@ -49,7 +49,7 @@ export async function POST(request) {
 
     let isAlreadyAcc = await prisma.AccountType.findFirst({
       where: {
-        name: "Základní",
+        name: "zakladni",
         userId: session.userId,
       },
     });
@@ -67,7 +67,7 @@ export async function POST(request) {
 
     await prisma.AccountType.create({
       data: {
-        name: "Základní",
+        name: "zakladni",
         userId: session.userId,
       },
     });

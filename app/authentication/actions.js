@@ -80,7 +80,7 @@ export const getSession = async () => {
 
   export const createSession = async (userToCreate,pass) => {
     const sessionId = uuidv4(); // Generate a unique session ID
-  
+      console.log(userToCreate.roleId)
     try {
       const now = new Date();
       now.setHours(now.getHours() + 2); // Add 2 hours to the current date for validFrom

@@ -58,10 +58,10 @@ if (firstStep && secondStep) {
 
   }
   const isActive = hasThisType === name;
-  const isZákladní = name === process.env.NEXT_PUBLIC_BASE_RANK ;
+  const isZakladni = name === process.env.NEXT_PUBLIC_BASE_RANK ;
 
   // Determine if the button should be disabled
-  const shouldDisable = hasThisType && (isZákladní || hasThisType !== process.env.NEXT_PUBLIC_BASE_RANK );
+  const shouldDisable = hasThisType && (isZakladni || hasThisType !== process.env.NEXT_PUBLIC_BASE_RANK );
 
 
 

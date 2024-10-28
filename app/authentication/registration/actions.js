@@ -60,7 +60,7 @@ export const handleRegistration = async (formData) => {
     // Získejte ID role pro roli "uživatel"
     const role = await prisma.Roles.findUnique({
       where: {
-        name: 'uživatel'
+        name: 'uzivatel'
       }
     });
 

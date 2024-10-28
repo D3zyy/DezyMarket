@@ -10,13 +10,13 @@ import { SubscriptionInfo } from '../components/SubscriptionInfo';
 export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   const [loading, setLoading] = useState(false);
   const isActive = hasThisType === name;
-  const isZákladní = name === 'Základní';
+  const isZakladni = name === 'zakladni';
 
   // Determine if the button should be disabled
-  const shouldDisable = hasThisType && (isZákladní || hasThisType !== 'Základní');
+  const shouldDisable = hasThisType && (isZakladni || hasThisType !== 'zakladni');
 
   // Determine if the "Zrušit předplatné" link should be shown
-  const showCancelLink = isActive && !isZákladní;
+  const showCancelLink = isActive && !isZakladni;
 
   const setDefaultType = async () => {
     setLoading(true);
@@ -64,7 +64,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   return (
 <div
   className={`w-full max-w-xs sm:max-w-sm p-3 sm:p-8 bg-base-100 border ${
-    isActive && !isZákladní ? "shadow-effect border-0" : "border-base-200"
+    isActive && !isZakladni ? "shadow-effect border-0" : "border-base-200"
   } rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700`}
 >
   <style jsx>{`
@@ -162,7 +162,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
     )}
   </button>
 
-  {showCancelLink && !isZákladní && (
+  {showCancelLink && !isZakladni && (
     <div className="mt-4 sm:mt-5">
       <SubscriptionInfo />
     </div>

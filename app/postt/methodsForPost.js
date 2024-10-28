@@ -10,7 +10,11 @@ export async function getPostFromDb(postId) {
       include: {
         category: true,
         section: true,
-        user: true,
+        user: {
+          include: {
+            role: true
+          }
+        }
       },
     });
   } catch (error) {
