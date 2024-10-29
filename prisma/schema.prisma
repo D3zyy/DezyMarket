@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 
-//    !!!!!!!!!!§!!!!!! Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel případně admin  s vetšími privilages !!!!!!!!!!!!!!!!!!!
+//    !!!!!!!!!!§!!!!!! Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 !!!!!!!!!!!!!!!!!!!
 
 generator client {
   provider = "prisma-client-js"
