@@ -251,8 +251,8 @@ const Page = async ({ params }) => {
         </div>
 
         {/* SVG Icons at the bottom */}
-       {session.isLoggedIn ?   <>  <EditPostModal post={postRecord} descriptionPost={description}/>
-        <DeletePostModal post={postRecord} /> </> : "" }
+       {session.isLoggedIn ?   <> <div className="items-center align-middle"> <EditPostModal post={postRecord} descriptionPost={description}/>
+        <DeletePostModal post={postRecord} /> </div> </> : "" }
         <div className="flex justify-center space-x-6 mt-4 border-t pt-4">
       
         
