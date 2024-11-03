@@ -28,6 +28,7 @@ const ImageGallery = ({ allImages }) => {
       url: 'https://www.bazos.cz/img/6/708/192821708.jpg?t=1730578147',
       postId: 11
     },
+    
   ];
 
   const [mainImageIndex, setMainImageIndex] = useState(0);

@@ -120,12 +120,12 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
     console.log(process.env.NEXT_PUBLIC_MEDIUM_RANK)
   const maxUploads = 
   typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-    ? 20// 5 obrázku základní rank
+    ? 15// 5 obrázku základní rank
     : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
-    ? 25 // 25 obrázku střední rank
+    ? 20 // 25 obrázku střední rank
     : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
-    ? 30 // 30 obrázku nejlepší rank
-    : 20; 
+    ? 25 // 30 obrázku nejlepší rank
+    : 15; 
   // Handle file input
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);

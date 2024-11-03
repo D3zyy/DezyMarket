@@ -27,8 +27,8 @@ for (let i = 0; i < secondStepDivs.length; i++) {
         secondStepDivs[i].style.display = 'none';
     } else {
       let nameToSave = 
-      name === "Topovaný - Šikula" ? process.env.NEXT_PUBLIC_MEDIUM_RANK :
-      name === "Topovaný - Profík" ? process.env.NEXT_PUBLIC_BEST_RANK :
+      name === "Topovaný" ? process.env.NEXT_PUBLIC_MEDIUM_RANK :
+      name === "Topovaný+" ? process.env.NEXT_PUBLIC_BEST_RANK :
       process.env.NEXT_PUBLIC_BASE_RANK ;
         localStorage.setItem('typeOfPost', nameToSave);
         secondStepDivs[i].style.display = 'block';
