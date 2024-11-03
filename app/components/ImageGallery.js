@@ -5,7 +5,7 @@ const ImageGallery = ({ allImages }) => {
   allImages = [
     {
       id: 3,
-      url: 'https://www.bazos.cz/img/4/891/192020891.jpg?t=1730532473',
+      url: 'https://www.bazos.cz/img/1/891/192020891.jpg?t=1730532473',
       postId: 11
     },
     {
@@ -23,29 +23,11 @@ const ImageGallery = ({ allImages }) => {
       url: 'https://www.bazos.cz/img/4/708/192821708.jpg?t=1730578147',
       postId: 11
     },
-    
     {
       id: 7,
-      url: ' https://www.bazos.cz/img/6/708/192821708.jpg?t=1730578147',
+      url: 'https://www.bazos.cz/img/6/708/192821708.jpg?t=1730578147',
       postId: 11
     },
-
-    {
-      id: 8,
-      url: 'https://www.bazos.cz/img/3/891/192020891.jpg?t=1730532473',
-      postId: 11
-    },
-    {
-      id: 9,
-      url: 'https://www.bazos.cz/img/2/891/192020891.jpg?t=1730532473',
-      postId: 11
-    },
-    {
-      id: 10,
-      url: 'https://www.bazos.cz/img/1/891/192020891.jpg?t=1730532473',
-      postId: 11
-    },
-
   ];
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
@@ -64,7 +46,7 @@ const ImageGallery = ({ allImages }) => {
   };
 
   return (
-    <div className="lg:w-1/2  !mt-5"> {/* Center the main container */}
+    <div className="lg:w-1/2"> {/* Center the main container */}
       {allImages.length === 0 ? (
         <div className="relative flex items-center justify-center h-full"> {/* Center both horizontally and vertically */}
           <svg 
@@ -84,23 +66,27 @@ const ImageGallery = ({ allImages }) => {
         </div>
       ) : (
         <>
-          {/* Main image display with navigation arrows */}
-          <div className="relative bg-gray-100  max-h-[500px] h-5/6 flex items-center justify-center rounded-lg overflow-hidden">
-            <button
-              onClick={handlePreviousImage}
-              className="absolute left-0 p-2 m-2 bg-black bg-opacity-50 text-white rounded-full"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+          {/* Main image display with conditional navigation arrows */}
+          <div className="relative bg-gray-100 max-h-[500px] h-5/6 flex items-center justify-center rounded-lg overflow-hidden">
+            {allImages.length > 1 && (
+              <>
+                <button
+                  onClick={handlePreviousImage}
+                  className="absolute left-0 p-2 m-2 bg-black bg-opacity-50 text-white rounded-full"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              </>
+            )}
 
             <img
               src={allImages[mainImageIndex].url}
@@ -108,21 +94,25 @@ const ImageGallery = ({ allImages }) => {
               className="w-full h-full"
             />
 
-            <button
-              onClick={handleNextImage}
-              className="absolute right-0 p-2 m-2 bg-black bg-opacity-50 text-white rounded-full"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            {allImages.length > 1 && (
+              <>
+                <button
+                  onClick={handleNextImage}
+                  className="absolute right-0 p-2 m-2 bg-black bg-opacity-50 text-white rounded-full"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </>
+            )}
           </div>
 
           {/* Thumbnails */}
