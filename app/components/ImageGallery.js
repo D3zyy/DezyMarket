@@ -118,16 +118,20 @@ const ImageGallery = ({ allImages }) => {
           {/* Thumbnails */}
           <div className="grid grid-cols-3 gap-2 mt-4">
             {allImages.slice(1, 3).map((thumbnail, index) => (
-              <div key={index} className="relative w-full h-20">
-                <img
-                  src={thumbnail.url}
-                  alt={`Thumbnail ${index + 1}`}
-                  className="w-full h-full rounded-lg cursor-pointer"
-                  onMouseEnter={() => setMainImageIndex(index + 1)}
-                  onMouseLeave={() => setMainImageIndex(0)}
-                  onClick={() => setIsGalleryOpen(true)}
-                />
-              </div>
+             <div key={index} className="relative w-full h-20">
+             <img
+               src={thumbnail.url}
+               alt={`Thumbnail ${index + 1}`}
+               className="w-full h-full rounded-lg cursor-pointer"
+               onMouseEnter={() => {
+                 if (window.innerWidth >= 968) setMainImageIndex(index + 1);
+               }}
+               onMouseLeave={() => {
+                 if (window.innerWidth >= 968) setMainImageIndex(0);
+               }}
+               onClick={() => setIsGalleryOpen(true)}
+             />
+           </div>
             ))}
 
             {additionalCount >= 0 && (
