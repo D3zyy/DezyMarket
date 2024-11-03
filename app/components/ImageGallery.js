@@ -5,7 +5,7 @@ const ImageGallery = ({ allImages }) => {
   allImages = [
     {
       id: 3,
-      url: 'https://www.bazos.cz/img/1/891/192020891.jpg?t=1730532473',
+      url: 'https://www.bazos.cz/img/1/002/193135002.jpg?t=1730188023',
       postId: 11
     },
     {
@@ -46,7 +46,7 @@ const ImageGallery = ({ allImages }) => {
   };
 
   return (
-    <div className="lg:w-1/2"> {/* Center the main container */}
+    <div className="lg:w-1/2 !mt-5"> {/* Center the main container */}
       {allImages.length === 0 ? (
         <div className="relative flex items-center justify-center h-full"> {/* Center both horizontally and vertically */}
           <svg 
