@@ -2,11 +2,10 @@
 import { useState } from 'react';
 
 const ImageGallery = ({ allImages }) => {
-
   allImages = [
     {
       id: 3,
-      url: 'https://www.bazos.cz/img/1/708/192821708.jpg?t=1730578147',
+      url: 'https://loremflickr.com/2200/1200?random=1',
       postId: 11
     },
     {
@@ -29,92 +28,126 @@ const ImageGallery = ({ allImages }) => {
       url: ' https://www.bazos.cz/img/6/708/192821708.jpg?t=1730578147',
       postId: 11
     },
-
-    
   ];
 
-
-  const [mainImage, setMainImage] = useState(allImages[0]?.url || "");
+  const [mainImageIndex, setMainImageIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-  
+
   const additionalCount = allImages.length - 4;
 
-  return (
-    <div className="lg:w-1/2"> {/* Center the main container */}
-      {/* Conditional SVG display when there are no images */}
-      {allImages.length === 0 ? (
-        <>
-  <div className="relative flex items-center justify-center h-full"> {/* Center both horizontally and vertically */}
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      strokeWidth={1.5} 
-      stroke="currentColor" 
-      className="size-96"
-    >
-      <path 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" 
-      />
-    </svg>
+  const handleNextImage = () => {
+    setMainImageIndex((prevIndex) => (prevIndex + 1) % allImages.length);
+  };
 
-  </div>
-</>
-        
+  const handlePreviousImage = () => {
+    setMainImageIndex((prevIndex) => 
+      (prevIndex - 1 + allImages.length) % allImages.length
+    );
+  };
+
+  return (
+    <div className="lg:w-1/2  !mt-5"> {/* Center the main container */}
+      {allImages.length === 0 ? (
+        <div className="relative flex items-center justify-center h-full"> {/* Center both horizontally and vertically */}
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            strokeWidth={1.5} 
+            stroke="currentColor" 
+            className="size-96"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" 
+            />
+          </svg>
+        </div>
       ) : (
         <>
-          {/* Display the main image */}
-          <div className="bg-gray-100 h-4/6 flex items-center justify-center rounded-lg overflow-hidden">
+          {/* Main image display with navigation arrows */}
+          <div className="relative bg-gray-100  max-h-[500px] h-5/6 flex items-center justify-center rounded-lg overflow-hidden">
+            <button
+              onClick={handlePreviousImage}
+              className="absolute left-0 p-2 m-2 bg-black bg-opacity-50 text-white rounded-full"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
             <img
-              src={mainImage}
+              src={allImages[mainImageIndex].url}
               alt="Main"
               className="w-full h-full"
             />
+
+            <button
+              onClick={handleNextImage}
+              className="absolute right-0 p-2 m-2 bg-black bg-opacity-50 text-white rounded-full"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
 
           {/* Thumbnails */}
           <div className="grid grid-cols-3 gap-2 mt-4">
-            {allImages.slice(1, 3).map((thumbnail, index) => ( // Updated to take three images
+            {allImages.slice(1, 3).map((thumbnail, index) => (
               <div key={index} className="relative w-full h-20">
                 <img
                   src={thumbnail.url}
                   alt={`Thumbnail ${index + 1}`}
                   className="w-full h-full rounded-lg cursor-pointer"
-                  onMouseEnter={() => setMainImage(thumbnail.url)} // Set main image on hover
-                  onMouseLeave={() => setMainImage(allImages[0].url)} // Reset to first image
-                  onClick={() => setIsGalleryOpen(true)} // Open gallery
+                  onMouseEnter={() => setMainImageIndex(index + 1)}
+                  onMouseLeave={() => setMainImageIndex(0)}
+                  onClick={() => setIsGalleryOpen(true)}
                 />
               </div>
             ))}
 
-             {/* Last thumbnail with dynamic "+x" overlay if there are more than 4 images */}
-        {additionalCount >= 0 && (
-          <div className="relative w-full h-20">
-            <div 
-              className="absolute inset-0 rounded-lg bg-opacity-25 cursor-pointer"
-              onClick={() => setIsGalleryOpen(true)} // Open gallery modal
-            >
-              <img
-                src={allImages[3].url} 
-                alt="Thumbnail 4"
-                className="w-full h-full rounded-lg"
-              />
-              {additionalCount > 0 && additionalCount >= 1 ? (
-                <div className="flex items-center justify-center absolute inset-0 bg-black bg-opacity-50 text-white font-bold rounded-lg">
-                  +{additionalCount}
+            {additionalCount >= 0 && (
+              <div className="relative w-full h-20">
+                <div 
+                  className="absolute inset-0 rounded-lg bg-opacity-25 cursor-pointer"
+                  onClick={() => setIsGalleryOpen(true)}
+                >
+                  <img
+                    src={allImages[3].url} 
+                    alt="Thumbnail 4"
+                    className="w-full h-full rounded-lg"
+                  />
+                  {additionalCount > 0 ? (
+                    <div className="flex items-center justify-center absolute inset-0 bg-black bg-opacity-50 text-white font-bold rounded-lg">
+                      +{additionalCount}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center absolute inset-0 bg-black bg-opacity-50 text-white font-bold rounded-lg">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
-              ) : <div className="flex items-center justify-center absolute inset-0 bg-black bg-opacity-50 text-white font-bold rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
-            </svg>
-
-            </div>}
-            </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
           {/* Gallery Modal */}
           {isGalleryOpen && (
@@ -143,7 +176,6 @@ const ImageGallery = ({ allImages }) => {
                   </button>
                 </div>
 
-                {/* Display all images in the gallery */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {allImages.map((image, index) => (
                     <img 
