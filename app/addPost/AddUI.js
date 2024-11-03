@@ -79,7 +79,6 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
         let result = await res.json();
         console.log("Odpověď od serveru :", result);
         setErrorValidation(null)
-        setLoading(false);
         console.log("tady nad",result.id)
         router.push(`/post/${result.id}`);
         console.log("tady pod")

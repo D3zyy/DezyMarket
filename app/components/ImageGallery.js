@@ -6,27 +6,27 @@ const ImageGallery = ({ allImages }) => {
   allImages = [
     {
       id: 3,
-      url: 'https://www.bazos.cz/img/2/219/192980219.jpg?t=1729891332',
+      url: 'https://www.bazos.cz/img/1/708/192821708.jpg?t=1730578147',
       postId: 11
     },
     {
       id: 4,
-      url: 'https://www.bazos.cz/img/7/219/192980219.jpg?t=1729891332',
+      url: 'https://www.bazos.cz/img/2/708/192821708.jpg?t=1730578147',
       postId: 11
     },
     {
       id: 5,
-      url: 'https://www.bazos.cz/img/8/219/192980219.jpg?t=1729891332',
+      url: 'https://www.bazos.cz/img/3/708/192821708.jpg?t=1730578147',
       postId: 11
     },
     {
       id: 6,
-      url: 'https://www.bazos.cz/img/9/219/192980219.jpg?t=1729891332',
+      url: 'https://www.bazos.cz/img/4/708/192821708.jpg?t=1730578147',
       postId: 11
     },
     {
       id: 7,
-      url: ' https://www.bazos.cz/img/10/219/192980219.jpg?t=1729891332',
+      url: ' https://www.bazos.cz/img/6/708/192821708.jpg?t=1730578147',
       postId: 11
     },
 
@@ -66,7 +66,7 @@ const ImageGallery = ({ allImages }) => {
       ) : (
         <>
           {/* Display the main image */}
-          <div className="bg-gray-100 h-5/6 flex items-center justify-center rounded-lg overflow-hidden">
+          <div className="bg-gray-100 h-4/6 flex items-center justify-center rounded-lg overflow-hidden">
             <img
               src={mainImage}
               alt="Main"
