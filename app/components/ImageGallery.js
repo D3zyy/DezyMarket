@@ -5,7 +5,7 @@ const ImageGallery = ({ allImages }) => {
   allImages = [
     {
       id: 3,
-      url: 'https://loremflickr.com/2200/1200?random=1',
+      url: 'https://www.bazos.cz/img/4/891/192020891.jpg?t=1730532473',
       postId: 11
     },
     {
@@ -23,11 +23,29 @@ const ImageGallery = ({ allImages }) => {
       url: 'https://www.bazos.cz/img/4/708/192821708.jpg?t=1730578147',
       postId: 11
     },
+    
     {
       id: 7,
       url: ' https://www.bazos.cz/img/6/708/192821708.jpg?t=1730578147',
       postId: 11
     },
+
+    {
+      id: 8,
+      url: 'https://www.bazos.cz/img/3/891/192020891.jpg?t=1730532473',
+      postId: 11
+    },
+    {
+      id: 9,
+      url: 'https://www.bazos.cz/img/2/891/192020891.jpg?t=1730532473',
+      postId: 11
+    },
+    {
+      id: 10,
+      url: 'https://www.bazos.cz/img/1/891/192020891.jpg?t=1730532473',
+      postId: 11
+    },
+
   ];
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
