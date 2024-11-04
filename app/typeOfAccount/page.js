@@ -11,7 +11,7 @@ const Page = async ({ searchParams }) => {
   const successMessage = searchParams?.success; // Get the 'success' parameter from searchParams
 
   let accType = await getUserAccountTypeOnStripe(session.email);
-
+  console.log("ucet:",accType)
   if (!session.isLoggedIn) redirect('/');
     
 const emoji1 = `<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>${process.env.BEST_RANK}</div>`;
