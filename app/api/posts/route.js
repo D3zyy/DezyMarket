@@ -151,15 +151,14 @@ export async function POST(req) {
            console.log("data ktery sem dostal od klienta :",formData)
            console.log(formData.getAll("images"))
            allImages = formData.getAll("images")
-           console.log("počet obrázků :",allImages.length)
            if(allImages.length > 25) {
             return new Response(JSON.stringify({ message: "Chyba. Nahráno nedovolené množství obrázků!" }), {
               status: 400,
               headers: { 'Content-Type': 'application/json' }
             });
            }
-           allImages.length = 16
-           console.log("vypisu obrazky ",allImages)
+
+
            
           } catch (error) {
             return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
