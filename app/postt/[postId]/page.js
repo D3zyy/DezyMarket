@@ -61,7 +61,7 @@ const Page = async ({ params }) => {
     className="flex flex-col lg:flex-row p-4 lg:p-8"
     style={{ boxShadow: '0 0 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' }}
   >
-     <ImageGallery allImages={imageUrls} /> 
+     <ImageGallery  allImages={imageUrls} typeOfPost={postRecord.typeOfPost}/> 
     
 
 
@@ -71,13 +71,12 @@ const Page = async ({ params }) => {
       <div className="lg:w-1/2   flex flex-col justify-between lg:pl-8">
       {!(postRecord.typeOfPost === process.env.BASE_RANK) && (
   <div
-  className="mt-3 lg:mt-0 badge badge-md badge-outline "
+  className="mt-3 lg:mt-0 badge badge-md badge-outline mb-5"
   style={{
     fontSize: '0.875rem',
     padding: '8px',
     borderWidth: '1.2px',
     borderStyle: 'solid',
-   
     height: '2rem', // Přidej pro větší výšku
   }}
 >
@@ -90,7 +89,7 @@ const Page = async ({ params }) => {
     </Link>
   </div>
 )}
-      <h1 style={{ fontSize: "25px" }} className="text-xl font-bold mb-6  sm:mb-5 sm:mt-5 mt-5">
+      <h1 style={{ fontSize: "25px" }} className="text-xl font-bold mb-6  sm:mb-5 ">
               {postRecord?.name}
             </h1>
 

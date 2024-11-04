@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 
-const ImageGallery = ({ allImages }) => {
+const ImageGallery = ({ allImages, typeOfPost }) => {
   allImages = [
     {
       id: 3,
@@ -47,7 +47,8 @@ const ImageGallery = ({ allImages }) => {
   };
 
   return (
-    <div className="lg:w-1/2 !mt-5"> {/* Center the main container */}
+    <div
+    className={`lg:w-1/2 `}> {/* Center the main container */}
       {allImages.length === 0 ? (
         <div className="relative flex items-center justify-center h-full"> {/* Center both horizontally and vertically */}
           <svg 
