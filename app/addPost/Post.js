@@ -100,7 +100,7 @@ if (firstStep && secondStep) {
 
 <h5 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-base-content dark:text-base-content">
 <span style={{ fontWeight: "bold",marginRight: name ? "15px" : "" }}>
-  {name}
+  {name === "zakladni"? "Základní" : name}
 </span>
   <span dangerouslySetInnerHTML={{ __html: emoji }} />
 </h5>

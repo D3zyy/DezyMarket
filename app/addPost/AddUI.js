@@ -64,7 +64,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
     formData.append('description', description);
     formData.append('location', location);
     formData.append('price', priceFromUseState);
-    formData.append('typeOfPost',typeOfPost)
+    formData.append('typeOfPost',"zakladni")
     formData.append('phoneNumber',phoneNumber)
 
   

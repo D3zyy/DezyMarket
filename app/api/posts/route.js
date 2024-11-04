@@ -151,6 +151,16 @@ export async function POST(req) {
            console.log("data ktery sem dostal od klienta :",formData)
            console.log(formData.getAll("images"))
            allImages = formData.getAll("images")
+           console.log("počet obrázků :",allImages.length)
+           if(allImages.length > 25) {
+            return new Response(JSON.stringify({ message: "Chyba. Nahráno nedovolené množství obrázků!" }), {
+              status: 400,
+              headers: { 'Content-Type': 'application/json' }
+            });
+           }
+           allImages.length = 16
+           console.log("vypisu obrazky ",allImages)
+           
           } catch (error) {
             return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
               status: 400,
@@ -233,10 +243,19 @@ const userId = session.userId; // Use userId directly from session
                         break;
                 }
             }
-         
+            console.log("Povolený druh příspěvku :", allowedTypeOfPost)
+       
             if (allowedTypeOfPost === formData.get('typeOfPost') ||  formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_BEST_RANK || formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_MEDIUM_RANK  ){
                console.log(validatedFields)
-      
+               if (!( (allowedTypeOfPost === process.env.NEXT_PUBLIC_BASE_RANK && allImages.length <= 15) ||
+                      (allowedTypeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK && allImages.length <= 20) ||
+                      (allowedTypeOfPost === process.env.NEXT_PUBLIC_BEST_RANK && allImages.length <= 25) )) {
+                    console.log("Počet obrazku neni povolen pocet :",allImages.length)
+                  return new Response(JSON.stringify({ message: "Počet obrázků není povolen!" }), {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' }
+                  });
+                }
                const categoryExist = await prisma.Categories.findUnique({
                 where: { id: parseInt(formData.get('category')) }
               });
@@ -328,6 +347,7 @@ const userId = session.userId; // Use userId directly from session
                         headers: { 'Content-Type': 'application/json' }
                     });
                 }
+
                 console.log("neni to dovoleny")
                 return new Response(JSON.stringify({ message: "Na tento typ příspěvku nemáte opravnění." }), {
                     status: 403,
