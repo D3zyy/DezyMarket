@@ -23,7 +23,7 @@ export async function GET(req) {
     // Call the verifyToken function
 
     const result = await verifyToken(email, token);
-
+      
 
     // Return JSON response with appropriate status
     return new Response(

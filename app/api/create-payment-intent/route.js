@@ -6,6 +6,7 @@ export async function POST(request) {
 
     try {
 
+
       const session = await getSession();  
 
       if (!session.isLoggedIn)   return new NextResponse(
@@ -16,6 +17,7 @@ export async function POST(request) {
         }
       );
      
+
      const { amount } = await request.json()
      const paymentIntent = await stripe.paymentIntents.create({
         amount : amount *10000,

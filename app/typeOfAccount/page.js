@@ -21,6 +21,8 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
     <div>
       {session.isLoggedIn ? (
         <>
+
+   
           {successMessage ? (
          <div
         
@@ -124,6 +126,7 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
   className="order-last md:order-none" // Přidejte třídu pro mobilní zařízení
 />
 </div>
+
         </>
       ) : (
         <NotLoggedIn />

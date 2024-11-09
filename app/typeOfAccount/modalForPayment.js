@@ -15,7 +15,9 @@ export function openPaymentModal(price) {
 }
 
 // PaymentModal Component
+
 export function PaymentModal({ price, name, priceId }) {
+
     const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
     const stripePromise = loadStripe(publicKey);
    
@@ -23,6 +25,7 @@ export function PaymentModal({ price, name, priceId }) {
         <div>
             <dialog id={`payment_modal_${price}`} className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
+
                     {/* Text center and bold */}
                     <span className="block text-center font-bold mb-4">{name}</span>     
                     {price >= 15 ? (
@@ -51,6 +54,7 @@ export function PaymentModal({ price, name, priceId }) {
 >
     <CheckoutForm priceId={priceId} name={name} />
 </Elements>
+
                     ) : (
                         <p className="text-center">Minimální částka pro platbu je 15 Kč.</p>
                     )}

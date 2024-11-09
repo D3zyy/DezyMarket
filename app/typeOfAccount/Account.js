@@ -7,11 +7,13 @@ import { SubscriptionInfo } from '../components/SubscriptionInfo';
 
 
 
+
 export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   if(name === "Základní"){
     name = "zakladni"
   }
   const [loading, setLoading] = useState(false);
+
   const isActive = hasThisType === name;
   const isZakladni = name === 'zakladni';
 
@@ -65,6 +67,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   };
 
   return (
+
 <div
   className={`w-full max-w-xs sm:max-w-sm p-3 sm:p-8 bg-base-100 border ${
     isActive && !isZakladni ? "shadow-effect border-0" : "border-base-200"
@@ -168,6 +171,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   {showCancelLink && !isZakladni && (
     <div className="mt-4 sm:mt-5">
       <SubscriptionInfo />
+
     </div>
   )}
 

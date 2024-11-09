@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 import { custom } from "zod";
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 export async function POST(request) {
 
     try {
+
 
         const session = await getSession();  
         if (!session.isLoggedIn)   return new NextResponse(
@@ -80,6 +82,7 @@ export async function POST(request) {
               );
          
           }
+
 
 
 
