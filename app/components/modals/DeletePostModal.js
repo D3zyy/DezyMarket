@@ -48,7 +48,7 @@ export const DeletePostModal = ({ post }) => {
     return (
         <dialog 
             id="delete_post_modal" 
-            className="modal flex items-center justify-center modal-bottom sm:modal-middle" 
+            className="modal  modal-bottom sm:modal-middle" 
             style={{ marginLeft: "0px" }}
         >
             <div className="modal-box w-full p-6 flex flex-col items-center align-middle text-center">
