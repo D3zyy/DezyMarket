@@ -12,7 +12,7 @@ const NotLoggedIn = () => {
                     <div style={{textAlign: "center", marginBottom: "900px"}}>
                     <span className="loading loading-dots loading-lg"></span>
                     </div>
-                    <InfoModal defaultOpen={true} message="Pro pokračování se prosím přihlaste" />
+                    <InfoModal defaultOpen={true} message="Pro pokračování se přihlaste" backToHome={true}/>
                 </div>
         </>
   )

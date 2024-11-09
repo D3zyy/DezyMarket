@@ -2,6 +2,15 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+## Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 !!!!!!!!!!!!!!!!!!!
+## Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 !!!!!!!!!!!!!!!!!!!
+## Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 !!!!!!!!!!!!!!!!!!!
+## Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 !!!!!!!!!!!!!!!!!!!
+## Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 !!!!!!!!!!!!!!!!!!!
+## Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 !!!!!!!!!!!!!!!!!!!
+## Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 !!!!!!!!!!!!!!!!!!!
+## Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 !!!!!!!!!!!!!!!!!!!
+
 First, run the development server:
 
 ```bash

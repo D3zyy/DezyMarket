@@ -3,17 +3,29 @@ import React from 'react'
 import { useState , useEffect } from 'react'
 
 import {
+    elements,
     useStripe,
     useElements,
-    PaymentElement,
 } from "@stripe/react-stripe-js"
 
 
 
 
-const CheckOut = (amount,priceId) => {
+
+
+const CheckOut = (amount) => {
+    const elements = elements.create('payment', {
+        fields: {
+            billingDetails: {
+                address: {
+                    country: 'never'
+                }
+            }
+        },
+      });
+
     const stripe = useStripe()
-    const elements = useElements()
+
     const [errorMessage,setErrorMessage] = useState(false)
     const [clientSecret,setClientSecret] = useState("")
     const [loading,setLoading] = useState(false)
@@ -55,8 +67,9 @@ const handleSubmit = async (event) => {
         elements,
         clientSecret,
         confirmParams:{
-            return_url: 'http://localhost:3000/addPost'
-        },
+            return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/addPost`,
+           
+        }
     })
     if (!errorPayment) {
         setSuccessPayment(true);

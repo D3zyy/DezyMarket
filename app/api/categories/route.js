@@ -49,7 +49,9 @@ export async function POST(req) {
         headers: { 'Content-Type': 'application/json' }
       }
     );
-  }
+  }finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 }
 
 async function updateUserCategory(data, session) {
@@ -109,11 +111,46 @@ async function updateUserCategory(data, session) {
     } catch (error) {
       console.error('Chyba při zpracování kategorie: ', error);
       throw error;
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
   }
 
-
-
+  export async function GET(req) {
+    try {
+      const session = await getSession();
+      if (!session || !session.isLoggedIn) {
+        return new Response(
+          JSON.stringify({ message: 'Uživatel není přihlášen' }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+  
+      const Allcategory = await prisma.Categories.findMany();
+      return new Response(
+        JSON.stringify(Allcategory), // Make sure to JSON.stringify the data
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+  
+    } catch (error) {
+      console.error('Chyba při získávání kategorii :', error);
+      return new Response(
+        JSON.stringify({ message: 'Chyba na serveru [GET] získávání kategorií' }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
+  }
 export async function PUT(req) {
 
     try {
@@ -159,5 +196,7 @@ export async function PUT(req) {
           headers: { 'Content-Type': 'application/json' }
         }
       );
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
   }

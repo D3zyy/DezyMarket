@@ -1,75 +1,67 @@
 import { prisma } from "../database/db";
+import { getSession } from "../authentication/actions";
 
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-
-
-
-
-
-export async function getUserAccountType(userId) {
-  const currentDate = new Date();
-  const localISODate = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString();
-
+export async function getUserAccountTypeOnStripe(email) {
   try {
-    // Fetch existing UserAccountType records
-    const existingAccountTypes = await prisma.userAccountType.findMany({
-      where: {
-        userId: userId,
-        OR: [
-          {
-            validTill: {
-              gt: new Date(localISODate), // Ensure the accountType is still active
-            },
-          },
-          {
-            AccountType: {
-              name: "Základní", // Include 'Základní' as a fallback
-            },
-          },
-        ],
-      },
-      include: {
-        AccountType: true, // Ensure that AccountType details are fetched
-      },
-      orderBy: [
-        {
-          validTill: 'desc', // Prioritize active records based on validTill
-        },
-        {
-          AccountType: {
-            name: 'asc', // Secondary sort to ensure 'Základní' is last if there are active records
-          },
-        },
-      ],
+    if (!email) {
+      return null;
+    }
+
+    // Fetch customers with the given email from Stripe
+    const customers = await stripe.customers.list({
+      email: email,
+      limit: 1,
     });
 
-    // Define account type hierarchy
-    const hierarchy = ['Legend', 'Premium', 'Základní'];
+    // Check if customer exists
+    if (customers.data.length > 0) {
+      const customer = customers.data[0];
 
-    // Function to get the index of the account type in the hierarchy
-    const getAccountTypePriority = (name) => hierarchy.indexOf(name);
+      // Fetch subscriptions for the customer with expanded product details
+      const subscriptions = await stripe.subscriptions.list({
+        customer: customer.id,
+        status: 'active',
+        expand: ['data.plan.product'],
+        limit: 1, // Get only the first active subscription
+      });
 
-    let bestAccountType = null;
-
-    if (existingAccountTypes.length > 0) {
-      // Determine the best account type based on priority
-      bestAccountType = existingAccountTypes.reduce((best, current) => {
-        if (!best) return current;
-        const bestPriority = getAccountTypePriority(best.AccountType.name);
-        const currentPriority = getAccountTypePriority(current.AccountType.name);
-        // Compare priorities
-        return currentPriority < bestPriority ? current : best;
-      }, null);    
-      
-    
-      return bestAccountType.AccountType.name;
-      
-    } else {
-      return ;
+      // Check if there is an active subscription
+      if (subscriptions.data.length > 0) {
+        const subscription = subscriptions.data[0];
+        return subscription.plan.product.name; // Return the product name
+      }
     }
-  } catch (error) {
-    console.error("Error handling user account type:", error);
-    throw error; // Re-throw error to be handled by caller
-  }
-}
 
+    // If no active subscription is found, check local database
+    let userAccountTypes = null;
+    
+      userAccountTypes = await prisma.users.findUnique({
+        where: {
+          email: email,
+        },
+        select: {
+          accountTypes: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+   
+
+    // Return the account type from the local database if found
+    if (userAccountTypes && userAccountTypes.accountTypes.length > 0) {
+      return userAccountTypes.accountTypes[0].name;
+    } else {
+      return null; // No account type found in the local database
+    }
+
+  } catch (error) {
+    console.error("Chyba při získávání typu účtu ze Stripe:", error);
+    throw error; // Re-throw error to be handled by caller
+  }finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
+}

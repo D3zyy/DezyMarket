@@ -40,6 +40,7 @@ const handleLogin = async (event, setError, setLoading, setSuccess,setFirstLogin
       setFirstLogin(result.firstLoggin)
       setSuccess(true);
     } else {
+      setLoading(false);
       const errorData = await res.json();
       if (errorData.message.includes("Váš účet byl trvale zablokován")) {
         setError(
@@ -82,10 +83,11 @@ const handleLogin = async (event, setError, setLoading, setSuccess,setFirstLogin
       }
     }
   } catch (err) {
+    setLoading(false);
     setError('Nastala chyba při přihlašovaní, zkuste to prosím později.');
     console.error('Nastala chyba při přihlašování:', err);
   } finally {
-    setLoading(false);
+
   }
 };
 
@@ -116,6 +118,7 @@ const handleRecovery = async (event, setError, setLoading, setSuccess) => {
 
     if (res.ok) {
       setError(false);
+      setLoading(false)
       setSuccess(<div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <CheckCircleIcon className="h-8 w-8 text-green-500"  style={{marginRight: "10px"}}/>
         <div style={{ marginLeft: "5px" }}>{'Pokyny k obnovení hesla byli zaslány na uvedený email'}</div>
@@ -133,9 +136,7 @@ const handleRecovery = async (event, setError, setLoading, setSuccess) => {
   } catch (err) {
     setError('Nastala chyba při odesílání požadavku na obnovení hesla, zkuste to prosím později.');
     console.error('Nastala chyba při odesílání požadavku na obnovení hesla:', err);
-  } finally {
-    setLoading(false);
-  }
+  } 
 };
 
 const RecoveryButton = ({ setRecoverPassword, setSuccess, setError }) => (
@@ -158,18 +159,20 @@ const RecoveryButton = ({ setRecoverPassword, setSuccess, setError }) => (
   </button>
 );
 
-const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError }) => (
+const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError, setLoading }) => (
   <button
     className="btn btn-link"
     onClick={() => {
       setRecoverPassword(false);
       setSuccess(false);
       setError(false);
+      setLoading(false);
     }}
     onTouchStart={() => {
       setRecoverPassword(false);
       setSuccess(false);
       setError(false);
+      setLoading(false);
     }}
 
     style={{ color: 'gray', marginLeft: 'auto' }}
@@ -236,10 +239,10 @@ const LoginModal = () => {
           <div className="modal-action">
             {!success && (
               <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? 'Načítání...' : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
+                {loading ? <span className="loading loading-spinner loading-sm"></span>  : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
               </button>
             )}
-            <button type="button" className="btn" onClick={() => document.getElementById('login_modal').close()} onTouchStart={() => document.getElementById('login_modal').close()}>Zavřít</button>
+            <button disabled={loading} type="button" className="btn" onClick={() => document.getElementById('login_modal').close()} onTouchStart={() => document.getElementById('login_modal').close()}>Zavřít</button>
           </div>
         </form>
         {recoverPassword ? (
@@ -247,6 +250,7 @@ const LoginModal = () => {
             setRecoverPassword={setRecoverPassword} 
             setSuccess={setSuccess} 
             setError={setError} 
+            setLoading={setLoading}
           />
         ) : (
           <RecoveryButton 

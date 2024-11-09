@@ -42,6 +42,7 @@ const handleLogin = async (event, setError, setLoading, setSuccess,setMessagePro
       setFirstLogin(result.firstLoggin)
       setSuccess(true);
     } else {
+      setLoading(false);
       const errorData = await res.json();
       if (errorData.message.includes("Váš účet byl trvale zablokován")) {
         setError(
@@ -84,11 +85,10 @@ const handleLogin = async (event, setError, setLoading, setSuccess,setMessagePro
       }
     }
   } catch (err) {
+    setLoading(false);
     setError('Nastala chyba při přihlašovaní, zkuste to prosím později.');
     console.error('Nastala chyba při přihlašování:', err);
-  } finally {
-    setLoading(false);
-  }
+  } 
 };
 
 const handleRecovery = async (event, setError, setLoading, setSuccess) => {
@@ -161,7 +161,7 @@ const RecoveryButton = ({ setRecoverPassword, setSuccess, setError, setMessagePr
   </button>
 );
 
-const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessageProp}) => (
+const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessageProp, setLoading}) => (
   <button
     className="btn btn-link"
     onClick={() => {
@@ -169,12 +169,14 @@ const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessag
       setSuccess(false);
       setError(false);
       setMessageProp(false);
+      setLoading(false)
     }}
     onTouchStart={() => {
       setRecoverPassword(true);
       setSuccess(false);
       setError(false);
       setMessageProp(false);
+      setLoading(false)
     }}
     style={{ color: 'gray', marginLeft: 'auto' }}
   >
@@ -182,7 +184,7 @@ const BackToLoginButton = ({ setRecoverPassword, setSuccess, setError ,setMessag
   </button>
 );
 
-const InfoModal = ({ defaultOpen, message }) => {
+const InfoModal = ({ defaultOpen, message , backToHome }) => {
   useEffect(() => {
     const dialog = document.getElementById('info_modal');
     
@@ -261,19 +263,25 @@ const InfoModal = ({ defaultOpen, message }) => {
           <div className="modal-action">
             {!success && (
               <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? 'Načítání...' : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
+                {loading ? <span className="loading loading-spinner loading-sm"></span> : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
               </button>
             )}
                 <button 
+                disabled={loading}
                 type="button" 
                 className="btn" 
                 onClick={() => {
                     document.getElementById('info_modal').close(); 
-                    router.push("/");
+                    if(backToHome) {
+                      router.push("/");
+                    }
+                   
                 }}
                 onTouchStart={() => {
                   document.getElementById('info_modal').close(); 
-                  router.push("/");
+                  if(backToHome) {
+                    router.push("/");
+                  }
               }}
                 >
                 Zavřít
@@ -287,6 +295,7 @@ const InfoModal = ({ defaultOpen, message }) => {
             setSuccess={setSuccess} 
             setError={setError} 
             setMessageProp = {setMessageProp}
+            setLoading={setLoading}
           />
         ) : (
           <>
