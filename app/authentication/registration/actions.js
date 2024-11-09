@@ -66,29 +66,7 @@ export const handleRegistration = async (formData) => {
 
 
       let registrationMail = validatedFields.data.email
-      // Add user to the database
-      await prisma.Users.create({
-        data: {
-          email: validatedFields.data.email,
-          password: hashedPassword,
-          fullName: validatedFields.data.fullName,
-          nickname: validatedFields.data.nickname,
-          termsOfUseAndPrivatePolicy: validatedFields.data.termsOfUseAndPrivatePolicy,
-          roleId: role.id,
-
-        }
-      });
-      const result = await sendVerificationEmail(validatedFields.data.email);
-
-      if (result) {
-          
-        
-        return {
-          message: "",
-          closeModal: true,
-        };
-        
-
+  
     if (!role) {
       return {
         message: "Chyba na serveru",
