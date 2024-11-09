@@ -56,7 +56,7 @@ const Page = async ({ params }) => {
   return (
   <div>
     
-    <div className="pr-8b pl-8 breadcrumbs text-sm">
+    <div className="md:mt-0 mt-4 pr-4 pl-4 lg:pr-8 lg:pl-8 md:pl-4  md:pr-4 breadcrumbs text-sm">
   <ul>
     <li>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4  ">
@@ -98,7 +98,7 @@ const Page = async ({ params }) => {
       <div className="lg:w-1/2   flex flex-col justify-between lg:pl-8">
       {!(postRecord.typeOfPost === process.env.BASE_RANK) && (
   <div
-  className="mt-3 lg:mt-0 badge badge-md badge-outline mb-5"
+  className="mt-4 lg:mt-0 badge badge-md badge-outline mb-5"
   style={{
     fontSize: '0.875rem',
     padding: '8px',
@@ -286,7 +286,7 @@ const Page = async ({ params }) => {
   
 {session?.role?.privileges > postRecord?.user?.role?.privileges? <div style={{ textAlign: "center" }} className="flex items-center space-x-2">
 
-<a className="btn">
+<a className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -304,7 +304,7 @@ className="h-6 w-6 text-red-600"
 Nahlásit příspěvek</a>
 
 
-<a className="btn">
+<a className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -322,14 +322,14 @@ className="h-6 w-6 text-yellow-600"
 Ohodnotit uživatele</a>
 
       
-    </div> : <> <div style={{textAlign: "center"}} className="flex items-center space-x-2"> <a className="btn" onClick={openEditPostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-yellow-300">
+    </div> : <> <div style={{textAlign: "center"}} className="flex items-center space-x-2 "> <a className="btn flex-shrink" onClick={openEditPostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-yellow-300">
 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
 </svg> Upravit příspěvek</a>
 </div>
 <div style={{textAlign: "center"}} className="flex items-center space-x-2">
 
 
-<a className="btn" onClick={openDeletePostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-red-500 ">
+<a className="btn flex-shrink" onClick={openDeletePostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-red-500 ">
 <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
 </svg> Smazat příspěvek </a>
 </div> </>}
@@ -337,7 +337,7 @@ Ohodnotit uživatele</a>
 </> 
 : <>
 <div style={{textAlign: "center"}} className="flex items-center ">
-<a className="btn">
+<a className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -355,7 +355,7 @@ className="h-6 w-6 text-red-600"
 Nahlásit příspěvek</a>
 </div>
 <div style={{textAlign: "center"}} className=" flex items-center ">
-<a className="btn">
+<a className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -376,14 +376,14 @@ Ohodnotit uživatele</a>
 </div>
 {session?.role?.privileges > postRecord?.user?.role?.privileges && 
 <div className="flex items-center justify-center space-x-4  mt-4 border border-dashed  border-red-500 p-4  rounded-md">
-<a className="btn" onClick={openEditPostModal} style={{ color: "red", borderColor: "red", borderWidth: "1px" }}>
+<a className="btn flex-shrink" onClick={openEditPostModal} style={{ color: "red", borderColor: "red", borderWidth: "1px" }}>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
         </svg> 
         Upravit příspěvek
       </a>
 
-      <a className="btn" onClick={openDeletePostModal} style={{ color: "red", borderColor: "red", borderWidth: "1px" }}>
+      <a className="btn flex-shrink" onClick={openDeletePostModal} style={{ color: "red", borderColor: "red", borderWidth: "1px" }}>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
         </svg> 

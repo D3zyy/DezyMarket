@@ -50,7 +50,7 @@ model AccountType {
 
 model Sections {
   id          Int         @id @default(autoincrement())
-  name        String
+  name        String      @unique
   categoryId  Int         // Cizí klíč na model Categories
   category    Categories   @relation(fields: [categoryId], references: [id]) // Vytvoření vazby na Categories
   posts Posts[]
@@ -59,7 +59,7 @@ model Sections {
 
 model Categories {
   id          Int         @id @default(autoincrement())
-  name        String
+  name        String      @unique
   logo        String
   user        UserCategories[]
   sections    Sections[]   // Odpovídající pole pro vztah
