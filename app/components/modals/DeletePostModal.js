@@ -76,6 +76,7 @@ export const DeletePostModal = ({ post }) => {
                     <button
                         onClick={closeDeletePostModal}
                         className="btn"
+                        autoFocus
                         disabled={loading}
                     >
                         Zavřít
