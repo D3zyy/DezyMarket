@@ -82,6 +82,9 @@ const Page = async ({ params }) => {
         </Link>
 
     </li>
+    <li>
+    {postRecord?.name}
+    </li>
   </ul>
 </div>
     <div

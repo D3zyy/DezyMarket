@@ -6,7 +6,7 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
     
     {
       id: 31,
-      url: 'https://www.bazos.cz/img/1/352/193155352.jpg?t=1730564487',
+      url: 'https://www.bazos.cz/img/1/515/193724515.jpg?t=1731255580',
       postId: 11
     },
     {
@@ -75,7 +75,7 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
       ) : (
         <>
           {/* Main image display with conditional navigation arrows */}
-          <div className="relative bg-gray-100 max-h-[700px]  flex items-center justify-center rounded-lg overflow-hidden">
+          <div className="relative bg-gray-100 max-h-[600px]  flex items-center justify-center rounded-lg overflow-hidden">
             {allImages.length > 1 && (
               <>
                 <button
