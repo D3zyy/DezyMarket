@@ -118,7 +118,7 @@ const Page = async ({ params }) => {
 )}
        <h1
         style={{ fontSize: "25px" }}
-        className={`text-xl font-bold mb-6 sm:mb-5 ${postRecord.typeOfPost === process.env.BASE_RANK ? 'mt-10' : 'mt-0'} md:mt-0`}
+        className={`text-xl font-bold mb-6 sm:mb-5 ${postRecord.typeOfPost === process.env.BASE_RANK ? 'mt-10' : 'mt-0'} lg:mt-0`}
       >
               {postRecord?.name}
             </h1>

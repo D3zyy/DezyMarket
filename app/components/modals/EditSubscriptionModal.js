@@ -160,6 +160,7 @@ export const EditSubscriptionModal = ({ cancel, date, name }) => {
             onClick={closeEditSubscriptionModal}
             onTouchStart={closeEditSubscriptionModal}
             className='btn'
+            autoFocus
             style={{ marginLeft: "15px" }}
             disabled={loading} // Disable close button while loading
           >

@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
       <body style={{ display: 'flex', flexDirection: 'column', height: '100%', margin: '0' }}>
         <Navigation />
         <main style={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ width: '100%', maxWidth: '1200px', padding: '0 20px' }}>
+          <div style={{ width: '100%', maxWidth: '1400px', padding: '0 20px' }}>
             {children}
           </div>
         </main>
