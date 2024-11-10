@@ -22,7 +22,7 @@ const Page = async ({ params }) => {
     session = await getSession();
     postRecord = await getPostFromDb(params.postId);
     imageUrls = await getImageUrlsFromDb(params.postId);
-    console.log(postRecord)
+
     if (!postRecord) {
       return (
         <div className="p-4 text-center">
@@ -116,7 +116,10 @@ const Page = async ({ params }) => {
     </Link>
   </div>
 )}
-      <h1 style={{ fontSize: "25px" }} className="text-xl font-bold mb-6  sm:mb-5 ">
+       <h1
+        style={{ fontSize: "25px" }}
+        className={`text-xl font-bold mb-6 sm:mb-5 ${postRecord.typeOfPost === process.env.BASE_RANK ? 'mt-10' : 'mt-0'} md:mt-0`}
+      >
               {postRecord?.name}
             </h1>
 

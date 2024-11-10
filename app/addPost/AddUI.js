@@ -215,11 +215,11 @@ const handleDeleteImage = (index) => {
            {printErrorValidation()}
           <form  onSubmit={handleSubmitPost} >
             <div className="py-2 w-full">
-              <label htmlFor="name" className="block" style={{ fontSize: '14px' }}>Co nabízím</label>
+              <label htmlFor="name" className="block" style={{ fontSize: '14px'}}>Co nabízím</label>
               <input
                 minLength={5} // Minimální délka 5 znaků
                 maxLength={200}
-                pattern="^[A-Za-z0-9á-žÁ-Ž. ]*$"
+              pattern="^[A-Za-z0-9á-žÁ-Ž., /-]*(?![<>;])$"
                 type="text"
                 placeholder={"např. Iphone 14, Kolo, Auto"}
                 name="name"
