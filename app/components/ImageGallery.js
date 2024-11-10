@@ -3,29 +3,35 @@ import { useState } from 'react';
 
 const ImageGallery = ({ allImages, typeOfPost }) => {
   allImages = [
+    
+    {
+      id: 31,
+      url: 'https://www.bazos.cz/img/1/515/193724515.jpg?t=1731255580',
+      postId: 11
+    },
     {
       id: 3,
-      url: 'https://www.bazos.cz/img/1/002/193135002.jpg?t=1730188023',
+      url: 'https://www.bazos.cz/img/10/515/193724515.jpg?t=1731255580',
       postId: 11
     },
     {
       id: 4,
-      url: 'https://www.bazos.cz/img/2/708/192821708.jpg?t=1730578147',
+      url: 'https://www.bazos.cz/img/2/515/193724515.jpg?t=1731240618',
       postId: 11
     },
     {
       id: 5,
-      url: 'https://www.bazos.cz/img/3/708/192821708.jpg?t=1730578147',
+      url: 'https://www.bazos.cz/img/3/515/193724515.jpg?t=1731240618',
       postId: 11
     },
     {
       id: 6,
-      url: 'https://www.bazos.cz/img/4/708/192821708.jpg?t=1730578147',
+      url: 'https://www.bazos.cz/img/4/515/193724515.jpg?t=1731240618',
       postId: 11
     },
     {
       id: 7,
-      url: 'https://www.bazos.cz/img/6/708/192821708.jpg?t=1730578147',
+      url: 'https://www.bazos.cz/img/5/515/193724515.jpg?t=1731240618',
       postId: 11
     },
     
@@ -69,7 +75,7 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
       ) : (
         <>
           {/* Main image display with conditional navigation arrows */}
-          <div className="relative bg-gray-100 max-h-[500px] h-5/6 flex items-center justify-center rounded-lg overflow-hidden">
+          <div className="relative bg-gray-100 max-h-[500px]  flex items-center justify-center rounded-lg overflow-hidden">
             {allImages.length > 1 && (
               <>
                 <button
@@ -125,12 +131,6 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
                src={thumbnail.url}
                alt={`Thumbnail ${index + 1}`}
                className="w-full h-full rounded-lg cursor-pointer"
-               onMouseEnter={() => {
-                 if (window.innerWidth >= 968) setMainImageIndex(index + 1);
-               }}
-               onMouseLeave={() => {
-                 if (window.innerWidth >= 968) setMainImageIndex(0);
-               }}
                onClick={() => setIsGalleryOpen(true)}
              />
            </div>
