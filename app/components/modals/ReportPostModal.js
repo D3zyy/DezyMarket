@@ -142,7 +142,7 @@ export const ReportPostModal = ({ post }) => {
     className="collapse-content bg-base-300  peer-checked:bg-base-300">
 <p>
   Nahlášení uživatele je možné na jeho profilu{" "}
-  <Link className='underline' href={`/user/${post?.user?.id}`}>{post?.user?.fullName}</Link>
+  <Link className='underline' target="_blank" href={`/user/${post?.user?.id}`}>{post?.user?.fullName}</Link>
 </p>
   </div>
 </div>
@@ -157,7 +157,7 @@ export const ReportPostModal = ({ post }) => {
   <div
     className="collapse-content bg-base-300  peer-checked:bg-base-300">
 <p>
- Nahlašte podvod na Policii ČR. V případě že budete potřebovat dodatečné informace kontaktujte nás prostřednictvím  <Link className='underline' href={"/support"}>Podpory</Link>
+ Nahlašte podvod na Policii ČR. V případě že budete potřebovat dodatečné informace kontaktujte nás prostřednictvím  <Link className='underline' target="_blank" href={"/support"}>Podpory</Link>
 </p>
   </div>
 </div>
