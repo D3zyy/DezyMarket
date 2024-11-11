@@ -115,20 +115,55 @@ export const ReportPostModal = ({ post }) => {
         >
             <div className="modal-box w-full p-6 flex flex-col items-center text-center">
                 <div className="flex justify-center mb-4">
-                    <svg
+                
+     {!success && !alreadyReported.length >0  ?  <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
                         stroke="currentColor"
-                        className="size-12 text-red-600"
+                        className="size-16 text-red-600"
                     >
                         <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"
                         />
-                    </svg>
+                    </svg> : <>{success && (
+    <div role="alert" className="flex flex-col items-center text-green-500 mb-2 p-3  rounded-lg ">
+        <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            strokeWidth={1.5} 
+            stroke="currentColor" 
+            className="size-16 mb-2"
+        >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
+        <span className="text-sm font-medium text-center">{success}</span>
+    </div>
+)}
+{alreadyReported.length > 0 && (
+    <div role="alert" className="text-yellow-500 mb-2 p-3">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="size-16 mx-auto mb-2 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+        </svg>
+        <span className="text-sm font-medium block text-center">Již nahlášeno</span>
+    </div>
+)}
+</>}
+                   
                 </div>
                 {errorMessage && (
   <div className="flex items-center gap-2 px-4 py-2  border border-red-500 rounded-md text-red-600 font-semibold mt-2">
@@ -139,48 +174,19 @@ export const ReportPostModal = ({ post }) => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-6 h-6"
+      className="size-6"
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
     </svg>
   </div>
 )}
 
-{success && (
-  <div className="flex items-center gap-2 px-4 py-2  border border-green-500 rounded-md text-green-600 font-semibold mt-2">
-    <span>{success}</span>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="w-6 h-6"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-    </svg>
-  </div>
-)}
+
 
 
                 <div className="w-full p-4 rounded-lg">
                     <div className="w-full  relative mx-auto">
-                        {alreadyReported.length >0 && (
- <div role="alert" className="alert alert-warning mb-5 p-2">
- <svg
-   xmlns="http://www.w3.org/2000/svg"
-   className="h-9 w-9 shrink-0 stroke-current"
-   fill="none"
-   viewBox="0 0 24 24">
-   <path
-     strokeLinecap="round"
-     strokeLinejoin="round"
-     strokeWidth="2"
-     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
- </svg>
- <span>Již nahlášeno</span>
-</div>
-)}
+   
                         <button
                           
                             className="select select-bordered w-full !inline-block " // Light primary background with transparency
@@ -196,7 +202,7 @@ export const ReportPostModal = ({ post }) => {
     return (
         <label key={reason} className="flex items-center cursor-pointer p-2">
             <input
-                disabled={isAlreadyReported || success}
+                disabled={isAlreadyReported || success||alreadyReported.length > 0}
                 type="checkbox"
                 checked={selectedReasons.includes(reason) || isAlreadyReported}
                 onChange={() => handleReasonToggle(reason)}
@@ -211,7 +217,7 @@ export const ReportPostModal = ({ post }) => {
                     </div>
                     <div className="w-full mt-5 relative mx-auto">
                     <textarea
-    disabled={alreadyReported || success}
+    disabled={alreadyReported.length > 0 || success}
     maxLength="230"
     style={{ 
         fontSize: '14px', 
