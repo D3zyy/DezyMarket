@@ -87,24 +87,31 @@ export const ReportPostModal = ({ post }) => {
                 : [...prevReasons, reason]
         );
     };
-
     const handleReportChange = async () => {
         if (selectedReasons.length === 0) {
             setErrorMessage('Důvod je povinný.');
             return; // Prevent submission if no reason is selected
         }
-
+    
         setErrorMessage(''); // Clear error message if validation passes
         setLoading(true);
-       let resultsFromReport =  await reportPost(postId, selectedReasons, setSuccess, moreInfo);
-       console.log("co server odpovedel:",resultsFromReport)
-       if(resultsFromReport.success){
-        setSuccess(resultsFromReport.message)
-       } else{
-        setErrorFromServer(true)
-        setErrorMessage(resultsFromReport.message)
-       }
-        setLoading(false);
+    
+        try {
+            const resultsFromReport = await reportPost(postId, selectedReasons, setSuccess, moreInfo);
+            console.log("co server odpovedel:", resultsFromReport);
+    
+            if (resultsFromReport.success) {
+                setSuccess(resultsFromReport.message);
+            } else {
+                setErrorFromServer(true);
+                setErrorMessage(resultsFromReport.message);
+            }
+        } catch (error) {
+            console.error("An error occurred while reporting the post:", error);
+            setErrorMessage("Nastala chyba při odesílání. Zkuste to prosím znovu.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -230,7 +237,7 @@ export const ReportPostModal = ({ post }) => {
     value={alreadyReported[0]?.topic || moreInfo} // Use topic if available, otherwise moreInfo
     onChange={(e) => setMoreInfo(e.target.value)}
     className="input input-bordered w-full text-left" // Keep input text left-aligned
-    placeholder="Řekněte nám víc.." // Placeholder text
+    placeholder={"Řekněte nám víc.."} // Placeholder text
 />
                     </div>
                     <div className="bg-base-200 collapse mt-5 mx-auto">
