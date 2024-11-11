@@ -84,6 +84,17 @@ model Posts {
   dateAndTime  DateTime     @default(now())
   user         Users        @relation(fields: [userId], references: [id])
   postViews    PostViews[]  // One-to-many relationship with PostViews
+  postReport    PostReport[]  // One-to-many relationship with PostViews
+}
+
+model PostReport {
+  id           Int      @id @default(autoincrement())
+  postId       Int      // Foreign key pointing to Posts
+  userId       Int      // Foreign key pointing to Users
+  reason String?  @default("")
+  reportedAt     DateTime @default(now()) // Timestamp for when the post was viewed
+  post         Posts    @relation(fields: [postId], references: [id], onDelete: Cascade) // Link to Posts table
+  @@unique([postId, userId])  // Ensure each user can only view a post once (optional)
 }
 
 model PostViews {

@@ -8,6 +8,8 @@ import { isNotFoundError } from "next/dist/client/components/not-found";
 import NotFound from "@/app/not-found";
 import { EditPostModal,openEditPostModal,closeEditPostModal } from "@/app/components/modals/EditPostModal";
 import { DeletePostModal,openDeletePostModal } from "@/app/components/modals/DeletePostModal";
+import { ReportPostModal, openReportPostModal } from "@/app/components/modals/ReportPostModal";
+import { openLoginModal } from "@/app/components/modals/LoginModal";
 
 const Page = async ({ params }) => {
   let session;
@@ -22,7 +24,7 @@ const Page = async ({ params }) => {
     session = await getSession();
     postRecord = await getPostFromDb(params.postId);
     imageUrls = await getImageUrlsFromDb(params.postId);
-
+    console.log(postRecord)
     if (!postRecord) {
       return (
         <div className="p-4 text-center">
@@ -283,7 +285,7 @@ const Page = async ({ params }) => {
         </div>
 
         {/* SVG Icons at the bottom */}
-       {session.isLoggedIn ?   <> <div className="items-center align-middle"> <EditPostModal post={postRecord} descriptionPost={description}/>
+       {session.isLoggedIn ?   <> <div className="items-center align-middle"> <ReportPostModal post={postRecord} /> <EditPostModal post={postRecord} descriptionPost={description}/>
         <DeletePostModal post={postRecord} /> </div> </> : "" }
         <div className="flex justify-center space-x-6 mt-4 border-t pt-4">
       
@@ -292,7 +294,7 @@ const Page = async ({ params }) => {
   
 {session?.role?.privileges > postRecord?.user?.role?.privileges? <div style={{ textAlign: "center" }} className="flex items-center space-x-2">
 
-<a className="btn flex-shrink">
+<a onClick={session.isLoggedIn? openReportPostModal : openLoginModal} className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -310,7 +312,7 @@ className="h-6 w-6 text-red-600"
 Nahlásit příspěvek</a>
 
 
-<a className="btn flex-shrink">
+<a onClick={session.isLoggedIn? openReportPostModal : openLoginModal}  className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -343,7 +345,7 @@ Ohodnotit uživatele</a>
 </> 
 : <>
 <div style={{textAlign: "center"}} className="flex items-center ">
-<a className="btn flex-shrink">
+<a onClick={session.isLoggedIn? openReportPostModal : openLoginModal} className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -361,7 +363,7 @@ className="h-6 w-6 text-red-600"
 Nahlásit příspěvek</a>
 </div>
 <div style={{textAlign: "center"}} className=" flex items-center ">
-<a className="btn flex-shrink">
+<a onClick={session.isLoggedIn? openReportPostModal : openLoginModal} className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
