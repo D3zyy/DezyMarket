@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-async function reportPost(postId, selectedReasons, setSuccess) {
+async function reportPost(postId, selectedReasons, setSuccess, moreInfo) {
     const response = await fetch('/api/posts/report', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ postId, reasons: selectedReasons }),
+        body: JSON.stringify({ postId, reasons: selectedReasons ,extraInfo : moreInfo}),
     });
 
     console.log("Server response for post report:", response);
@@ -61,7 +61,7 @@ export const ReportPostModal = ({ post }) => {
 
     const handleReportChange = async () => {
         setLoading(true);
-        await reportPost(postId, selectedReasons, setSuccess);
+        await reportPost(postId, selectedReasons, setSuccess, moreInfo);
         setLoading(false);
     };
 
@@ -115,7 +115,7 @@ export const ReportPostModal = ({ post }) => {
                     </div>
                     <div className="w-full mt-5 relative mx-auto">
                         <textarea
-                   
+             
                         style={{ 
                             fontSize: '14px', 
                             padding: '8px', 
@@ -157,7 +157,7 @@ export const ReportPostModal = ({ post }) => {
   <div
     className="collapse-content bg-base-300  peer-checked:bg-base-300">
 <p>
- Nahlašte podvod na Policii ČR. V případě že budete potřebovat dodatečné informace kontaktujte nás prostřednictvím  <Link className='underline' target="_blank" href={"/support"}>Podpory</Link>
+Nahlašte podvod na Policii ČR. V případě, že budete potřebovat dodatečné informace, kontaktujte nás prostřednictvím <Link className='underline' target="_blank" href={"/support"}>Podpory</Link>
 </p>
   </div>
 </div>

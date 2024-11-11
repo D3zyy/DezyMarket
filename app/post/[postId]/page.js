@@ -24,7 +24,7 @@ const Page = async ({ params }) => {
     session = await getSession();
     postRecord = await getPostFromDb(params.postId);
     imageUrls = await getImageUrlsFromDb(params.postId);
-    console.log(postRecord)
+
     if (!postRecord) {
       return (
         <div className="p-4 text-center">

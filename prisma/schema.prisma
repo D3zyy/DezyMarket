@@ -36,6 +36,7 @@ model Users {
   categories               UserCategories[]
   firstLogin               Boolean          @default(true)
   postViews                PostViews[]      // One-to-many relationship with PostViews (zhlédnutí příspěvků)
+  postReport    PostReport[]
 }
 
 model AccountType {
@@ -90,11 +91,13 @@ model Posts {
 model PostReport {
   id           Int      @id @default(autoincrement())
   postId       Int      // Foreign key pointing to Posts
-  userId       Int      // Foreign key pointing to Users
-  reason String?  @default("")
-  reportedAt     DateTime @default(now()) // Timestamp for when the post was viewed
+  userId       Int
+  topic        String?
+  reason       String?  @default("")
+  reportedAt   DateTime @default(now()) // Timestamp for when the post was viewed
   post         Posts    @relation(fields: [postId], references: [id], onDelete: Cascade) // Link to Posts table
-  @@unique([postId, userId])  // Ensure each user can only view a post once (optional)
+  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade) 
+  @@index([postId]) // Ensure there is an index on postId if required
 }
 
 model PostViews {
