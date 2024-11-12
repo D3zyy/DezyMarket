@@ -268,6 +268,39 @@ export const ReportPostModal = ({ post }) => {
                         />
                     </div>
 
+                    <div className="bg-base-200 collapse mt-5 mx-auto">
+                        <input type="checkbox" className="peer " />
+                        <div className="collapse-title bg-base-200 peer-checked:bg-base-300 flex items-center ">
+                            Chci nahlásit uživatele
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
+                            </svg>
+                        </div>
+                        <div className="collapse-content bg-base-300  peer-checked:bg-base-300">
+                            <p>
+                                Nahlášení uživatele je možné na jeho profilu{" "}
+                                <Link className='underline' target="_blank" href={`/user/${post?.user?.id}`}>{post?.user?.fullName}</Link>
+                            </p>
+                        </div>
+                    </div>
+                    <div className="bg-base-200 collapse mt-5 mx-auto">
+                        <input type="checkbox" className="peer " />
+                        <div className="collapse-title bg-base-200 peer-checked:bg-base-300 flex items-center ">
+                            Byl jsem podveden
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
+                            </svg>
+                        </div>
+                        <div className="collapse-content bg-base-300  peer-checked:bg-base-300">
+                            <p>
+                                Nahlašte podvod na Policii ČR. V případě, že budete potřebovat dodatečné informace, kontaktujte nás prostřednictvím <Link className='underline' target="_blank" href={"/support"}>Podpory</Link>
+                            </p>
+                        </div>
+                    </div>
+                
+
+
+
                     <div className="modal-action mt-6 flex justify-center w-full">
                         {!errorFromServer && !success && !alreadyReported.length > 0 ? (
                             <button
