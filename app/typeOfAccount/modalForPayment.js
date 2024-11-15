@@ -24,6 +24,7 @@ export function PaymentModal({ price, name, priceId }) {
         mode: 'subscription',
         amount: 8800,
         currency: 'czk',
+        
       };
     const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
     const stripePromise = loadStripe(publicKey);

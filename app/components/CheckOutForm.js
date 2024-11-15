@@ -56,6 +56,7 @@ export default function CheckoutForm(priceId,name) {
         clientSecret,
         confirmParams: {
           return_url: returnUrl,
+          
           payment_method_data: {
             billing_details: {
               address: {    
@@ -68,6 +69,7 @@ export default function CheckoutForm(priceId,name) {
       });
   
       if (error) {
+        
         handleError(error);
       } else {
         // Handle successful payment here (e.g., redirect, show success message)

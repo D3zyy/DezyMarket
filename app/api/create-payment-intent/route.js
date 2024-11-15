@@ -24,6 +24,7 @@ export async function POST(request) {
         currency: "czk",
         automatic_payment_methods : { enabled: true},
         receipt_email: session.email,
+
      })
    
       return NextResponse.json({clientSecret : paymentIntent.client_secret})
