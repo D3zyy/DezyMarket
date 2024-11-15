@@ -56,7 +56,15 @@ export default function CheckoutForm(priceId,name) {
         clientSecret,
         confirmParams: {
           return_url: returnUrl,
+          payment_method_data: {
+            billing_details: {
+              address: {    
+                country: "CZ",  // Manually provide the country here
+              },
+            },
+          },
         },
+        
       });
   
       if (error) {
@@ -79,9 +87,18 @@ export default function CheckoutForm(priceId,name) {
     }
   return (
     <form onSubmit={handleSubmit}>
-      <PaymentElement 
+     <PaymentElement
+  options={{
+    fields: {
+      billingDetails: {
+        address: {
+          country: 'never',
+        },
        
-      />
+      },
+    },
+  }}
+/>
       <div style={{ display: "flex", alignItems: "center" , marginTop: "10px"}}>
   <span>
     Souhlasím s 

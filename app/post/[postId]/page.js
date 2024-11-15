@@ -8,8 +8,10 @@ import { isNotFoundError } from "next/dist/client/components/not-found";
 import NotFound from "@/app/not-found";
 import { EditPostModal,openEditPostModal,closeEditPostModal } from "@/app/components/modals/EditPostModal";
 import { DeletePostModal,openDeletePostModal } from "@/app/components/modals/DeletePostModal";
-import { ReportPostModal, openReportPostModal } from "@/app/components/modals/ReportPostModal";
+import { openReportPostModal } from "@/app/components/modals/ReportPostModal";
+import ReportPostModal from "@/app/components/modals/ReportPostModal";
 import { openLoginModal } from "@/app/components/modals/LoginModal";
+
 
 const Page = async ({ params }) => {
   let session;

@@ -66,11 +66,18 @@ const handleSubmit = async (event) => {
     const { errorPayment } = await stripe.confirmPayment({
         elements,
         clientSecret,
-        confirmParams:{
-            return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/addPost`,
-           
-        }
-    })
+        confirmParams: {
+          return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/addPost`,
+          payment_method_data: {
+            billing_details: {
+              address: {    
+                country: "CZ",  // Manually provide the country here
+              },
+            },
+          },
+        },
+      });
+      console.log('Confirm Params:', confirmParams);
     if (!errorPayment) {
         setSuccessPayment(true);
     } else {

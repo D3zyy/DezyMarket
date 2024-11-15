@@ -32,7 +32,7 @@ export function closeReportPostModal() {
     document.getElementById('report_post_modal').close();
 }
 
-export const ReportPostModal = ({ post }) => {
+ const ReportPostModal = ({ post }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -328,3 +328,4 @@ export const ReportPostModal = ({ post }) => {
         </dialog>
     );
 };
+export default ReportPostModal

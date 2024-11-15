@@ -17,7 +17,14 @@ export function openPaymentModal(price) {
 // PaymentModal Component
 
 export function PaymentModal({ price, name, priceId }) {
-
+    const options = {
+        appearance: {
+          theme: 'flat',
+        },
+        mode: 'subscription',
+        amount: 8800,
+        currency: 'czk',
+      };
     const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
     const stripePromise = loadStripe(publicKey);
    
@@ -29,29 +36,11 @@ export function PaymentModal({ price, name, priceId }) {
                     {/* Text center and bold */}
                     <span className="block text-center font-bold mb-4">{name}</span>     
                     {price >= 15 ? (
-                        <Elements 
-    stripe={stripePromise}
-    options={{
-        appearance: {
-            theme: 'flat'
-        },
-        layout: {
-            type: 'tabs',
-            defaultCollapsed: false,
-        },
-        mode: "subscription",
-        amount: price * 100,
-        currency: "czk",
-        fields: {
-            billingDetails: {
-                address: {
-                    country: 'never',
-                    postalCode: 'never'
-                }
-            }
-        },
-    }}
->
+                     <Elements stripe={stripePromise} options={options}>
+
+    {console.log('Elements options:', options)}
+
+
     <CheckoutForm priceId={priceId} name={name} />
 </Elements>
 
