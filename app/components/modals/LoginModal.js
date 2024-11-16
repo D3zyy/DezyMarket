@@ -121,7 +121,7 @@ const handleRecovery = async (event, setError, setLoading, setSuccess) => {
       setLoading(false)
       setSuccess(<div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <CheckCircleIcon className="h-8 w-8 text-green-500"  style={{marginRight: "10px"}}/>
-        <div style={{ marginLeft: "5px" }}>{'Pokyny k obnovení hesla byly odeslány, pokud je e-mail registrován'}</div>
+        <div style={{ marginLeft: "5px" }}>{'Pokyny byly odeslány, pokud je e-mail registrován'}</div>
       </div>);
     } else {
       const errorData = await res.json();
