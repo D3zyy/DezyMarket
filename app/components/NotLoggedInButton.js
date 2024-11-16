@@ -4,7 +4,8 @@ import { useState } from 'react';
 import InfoModal from './modals/InfoModal';
 import { openInfoModal } from './modals/InfoModal';
 
-export default function NotLoggedInButton() {
+export default function NotLoggedInButton({text}) {
+
   return (
     <div className="absolute inset-0 flex items-center ">
       <div className="  flex justify-center "> {/* Dashed circular border */}
@@ -17,7 +18,7 @@ export default function NotLoggedInButton() {
       </div>
 
       {/* Zobrazí komponentu NotLoggedIn, když bylo tlačítko kliknuto */}
-      <InfoModal defaultOpen={false} message="Pro zobrazení se přihlaste" backToHome={false} />
+      <InfoModal defaultOpen={false} message={text} backToHome={false} />
     </div>
   );
 }

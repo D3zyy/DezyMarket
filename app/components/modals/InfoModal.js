@@ -120,7 +120,7 @@ const handleRecovery = async (event, setError, setLoading, setSuccess) => {
       setError(false);
       setSuccess(<div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <CheckCircleIcon className="h-8 w-8 text-green-500"  style={{marginRight: "10px"}}/>
-        <div style={{ marginLeft: "5px" }}>{'Pokyny k obnovení hesla byli zaslány na uvedený email'}</div>
+        <div style={{ marginLeft: "5px" }}>{'Pokyny k obnovení hesla byly odeslány, pokud je e-mail registrován'}</div>
       </div>);
     } else {
       const errorData = await res.json();
@@ -237,8 +237,8 @@ const InfoModal = ({ defaultOpen, message , backToHome }) => {
         {error && <div style={{ color: 'red', marginBottom: "10px" }}>{error}</div>}
         {success && recoverPassword && <div style={{ color: 'green', marginBottom: "10px" }}>{success}</div>}
         {messageProp && (
-        <div style={{ display: 'flex', alignItems: 'center', color: '#676b1c', marginBottom: '10px' }}>
-            <LockClosedIcon className="h-10 w-10 text-yellow-500" style={{ marginRight: '10px' }} />
+        <div className='dark:text-[#dee80b] text-[#aeb528]' style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            <LockClosedIcon className="h-10 w-10 text-yellow-500" style={{ marginRight: '10px', color:"#dee80b" }} />
             <div>{messageProp}</div>
         </div>
         )}
@@ -312,7 +312,7 @@ const InfoModal = ({ defaultOpen, message , backToHome }) => {
     </span>
     <button
         className="btn btn-link"
-        style={{padding: "0px"}}
+        style={{padding: "0px", color: "#a063ff"}}
         onClick={ () => {
           router.push("/");
           document.getElementById('info_modal').close(); 

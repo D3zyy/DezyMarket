@@ -30,9 +30,9 @@ export async function POST(req) {
 
     if (!user) {
       return new Response(
-        JSON.stringify({ message: 'Tento email není registrován.' }),
+        JSON.stringify({ message: 'Pokyny k obnovení hesla byly odeslány, pokud je e-mail registrován.' }),
         {
-          status: 404,
+          status: 200,
           headers: { 'Content-Type': 'application/json' },
         }
       );
@@ -96,7 +96,7 @@ export async function POST(req) {
     await transporter.sendMail(mailOptions);
 
     return new Response(
-      JSON.stringify({ message: 'Pokyny k obnovení hesla byly odeslány na váš email.' }),
+      JSON.stringify({ message: 'Pokyny k obnovení hesla byly odeslány, pokud je e-mail registrován.' }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

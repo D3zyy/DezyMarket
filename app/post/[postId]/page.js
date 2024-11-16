@@ -11,6 +11,7 @@ import { DeletePostModal,openDeletePostModal } from "@/app/components/modals/Del
 import { openReportPostModal } from "@/app/components/modals/ReportPostModal";
 import ReportPostModal from "@/app/components/modals/ReportPostModal";
 import { openLoginModal } from "@/app/components/modals/LoginModal";
+import { openInfoModal } from "@/app/components/modals/InfoModal";
 
 
 const Page = async ({ params }) => {
@@ -209,7 +210,7 @@ const Page = async ({ params }) => {
     {/* Centered button when not logged in */}
     {!session.isLoggedIn && (
       <div className=" absolute inset-0 flex items-center ">
-        < NotLoggedInButton />
+        < NotLoggedInButton text={"Pro zobrazení se přihlaste"} />
       </div>
     )} 
   </div>
@@ -314,7 +315,7 @@ className="h-6 w-6 text-red-600"
 Nahlásit příspěvek</a>
 
 
-<a onClick={session.isLoggedIn? openReportPostModal : openLoginModal}  className="btn flex-shrink">
+<a onClick={session.isLoggedIn? openReportPostModal : openInfoModal}  className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -347,7 +348,7 @@ Ohodnotit uživatele</a>
 </> 
 : <>
 <div style={{textAlign: "center"}} className="flex items-center ">
-<a onClick={session.isLoggedIn? openReportPostModal : openLoginModal} className="btn flex-shrink">
+<a onClick={session.isLoggedIn? openReportPostModal : openInfoModal} className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -365,7 +366,7 @@ className="h-6 w-6 text-red-600"
 Nahlásit příspěvek</a>
 </div>
 <div style={{textAlign: "center"}} className=" flex items-center ">
-<a onClick={session.isLoggedIn? openReportPostModal : openLoginModal} className="btn flex-shrink">
+<a onClick={session.isLoggedIn? openReportPostModal : openInfoModal} className="btn flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
