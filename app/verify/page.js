@@ -80,7 +80,7 @@ const Page = ({ searchParams }) => {
       <dialog ref={dialogRef} id='verify_modal' className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <div className="modal-action">
-            <div className="flex items-center justify-center h-full w-full p-3">
+            <div className="flex items-center justify-center h-full w-full p-1">
               {loading ? (
                 <div className="flex items-center justify-center h-full w-full">
                   <span className="loading loading-spinner loading-lg"></span>
@@ -91,21 +91,21 @@ const Page = ({ searchParams }) => {
                     isSuccess ? (
                       <>
                         {message === "Email byl úspěšně ověřen." ? (
-                              <CheckCircleIcon className="h-12 w-12 text-green-500" />
+                              <CheckCircleIcon className="mb-3 h-12 w-12 text-green-500" />
                             ) : (
-                              <ShieldExclamationIcon className="h-12 w-12 text-yellow-500" />
+                              <ShieldExclamationIcon className="mb-3 h-12 w-12 text-yellow-500" />
                             )}
                         <span  className="ml-2 text-lg">{message}</span>
                       </>
                     ) : (
                       <>
-                        <XCircleIcon className="h-12 w-12 text-red-500" />
+                        <XCircleIcon className="mb-3 h-12 w-12 text-red-500" />
                         <span className="ml-2 text-lg">{message}</span>
                       </>
                     )
                   ) : (
                     <>
-                      <XCircleIcon className="h-12 w-12 text-red-500" />
+                      <XCircleIcon className="mb-3 h-12 w-12 text-red-500" />
                       <span className="ml-2 text-lg">{message}</span>
                     </>
                   )}

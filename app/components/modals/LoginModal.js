@@ -219,7 +219,17 @@ const LoginModal = () => {
 
   
         <h3 className="font-bold text-lg">{recoverPassword ? 'Obnovení hesla' : 'Přihlášení'}</h3>
-        <form onSubmit={(event) => recoverPassword ? handleRecovery(event, setError, setLoading, setSuccess) : handleLogin(event, setError, setLoading, setSuccess, setFirstLogin)}>
+        <form
+  onSubmit={(event) => {
+    if (success) {
+      event.preventDefault(); // Prevent the form from submitting if success is true
+      return;
+    }
+    recoverPassword
+      ? handleRecovery(event, setError, setLoading, setSuccess)
+      : handleLogin(event, setError, setLoading, setSuccess, setMessageProp, setFirstLogin);
+  }}
+>
           <div className="py-4">
             <label htmlFor="email" className="block">Email</label>
             <input type="email" name="email" className="input input-bordered w-full email" required />
@@ -238,7 +248,7 @@ const LoginModal = () => {
           )}
           <div className="modal-action">
             {!success && (
-              <button type="submit" className="btn btn-primary" disabled={loading}>
+              <button type="submit" className="btn btn-primary" disabled={loading || success}>
                 {loading ? <span className="loading loading-spinner loading-sm"></span>  : recoverPassword ? 'Odeslat' : 'Přihlásit se'}
               </button>
             )}
