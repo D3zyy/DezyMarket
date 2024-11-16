@@ -295,7 +295,7 @@ const InfoModal = ({ defaultOpen, message , backToHome }) => {
                   }
               }}
                 >
-                Zavříttt
+                Zavřít
                 </button>
           </div>
         </form>
