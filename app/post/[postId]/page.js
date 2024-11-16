@@ -103,7 +103,7 @@ const Page = async ({ params }) => {
 
       {/* Right section - Information */}
       
-      <div className="lg:w-1/2   flex flex-col justify-between lg:pl-8">
+      <div className="lg:w-1/2   min-h-[600px] flex flex-col justify-between lg:pl-8">
       {!(postRecord.typeOfPost === process.env.BASE_RANK) && (
   <div
   className="mt-4 lg:mt-0 badge badge-md badge-outline mb-5"
