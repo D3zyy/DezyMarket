@@ -62,7 +62,7 @@ const parseErrors = (message) => {
       );
     } else {
       return (
-        <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' , marginBottom: "3pxu"}}>
+        <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' , marginBottom: "3px"}}>
           <XCircleIcon className="h-8 w-8 text-red-500" style={{ marginRight: "10px" }} />
           <div style={{ marginLeft: "5px" }}>{message}</div>
         </div>

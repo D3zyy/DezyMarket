@@ -80,15 +80,13 @@ const handleLogin = async (event, setError, setLoading, setSuccess,setFirstLogin
             {console.error('Chyba při přihlašování:', errorData.message)}
           </div>
         );
-      }
+      } 
     }
   } catch (err) {
     setLoading(false);
     setError('Nastala chyba při přihlašovaní, zkuste to prosím později.');
     console.error('Nastala chyba při přihlašování:', err);
-  } finally {
-
-  }
+  } 
 };
 
 const handleRecovery = async (event, setError, setLoading, setSuccess) => {
@@ -228,7 +226,7 @@ const LoginModal = () => {
     }
     recoverPassword
       ? handleRecovery(event, setError, setLoading, setSuccess)
-      : handleLogin(event, setError, setLoading, setSuccess, setMessageProp, setFirstLogin);
+      : handleLogin(event, setError, setLoading, setSuccess, setFirstLogin);
   }}
 >
           <div className="py-4">
