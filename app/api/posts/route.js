@@ -180,7 +180,7 @@ const numberOfPostsOfUser = await prisma.Posts.findMany({
   where: { userId: session.userID}
 });
 console.log("počet příspěvků uživatele:",numberOfPostsOfUser.length)
-if(numberOfPostsOfUser.length < 50){
+if(numberOfPostsOfUser.length > 30){
   return new Response(JSON.stringify({ messageToDisplay: "Již jste nahráli maximální počet příspěvků." }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
