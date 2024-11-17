@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { handleRegistration } from '@/app/authentication/registration/actions';
 import { InboxArrowDownIcon } from '@heroicons/react/24/solid';
-
+import { CheckCircleIcon, XCircleIcon , LockClosedIcon} from '@heroicons/react/24/solid';
 const initialState = {
   message: null,
   closeModal: false,
@@ -43,6 +43,7 @@ const parseErrors = (message) => {
     if (message === "Email již existuje.") {
       return (
         <span>
+          <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>
           {message}
           <button
             style={{ color: "gray", textDecoration: "underline", marginLeft: "10px" }}
@@ -60,7 +61,12 @@ const parseErrors = (message) => {
         </span>
       );
     } else {
-      return <span>{message}</span>;
+      return (
+        <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' , marginBottom: "3pxu"}}>
+          <XCircleIcon className="h-8 w-8 text-red-500" style={{ marginRight: "10px" }} />
+          <div style={{ marginLeft: "5px" }}>{message}</div>
+        </div>
+      );
     }
   }
 };

@@ -153,11 +153,11 @@ export async function POST(req) {
            allImages = formData.getAll("images")
            if(allImages.length > 25) {
             return new Response(JSON.stringify({ message: "Chyba. Nahráno nedovolené množství obrázků!" }), {
-              status: 400,
+              status: 403,
               headers: { 'Content-Type': 'application/json' }
             });
            }
-
+      
 
            
           } catch (error) {
@@ -176,7 +176,16 @@ if (!session || !session.isLoggedIn || !session.email) {
         headers: { 'Content-Type': 'application/json' }
     });
 }
-
+const numberOfPostsOfUser = await prisma.Posts.findMany({
+  where: { userId: session.userID}
+});
+console.log("počet příspěvků uživatele:",numberOfPostsOfUser.length)
+if(numberOfPostsOfUser.length < 50){
+  return new Response(JSON.stringify({ messageToDisplay: "Již jste nahráli maximální počet příspěvků." }), {
+    status: 403,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
 // Now you can use session directly throughout your function
 const userId = session.userId; // Use userId directly from session
 
@@ -283,6 +292,7 @@ const userId = session.userId; // Use userId directly from session
                   headers: { 'Content-Type': 'application/json' }
                 });
               }
+              
               const buffers = await Promise.all(allImages.map(async (image) => {
                 const arrayBuffer = await image.arrayBuffer(); // Convert each file to arrayBuffer
                 return Buffer.from(arrayBuffer);  // Convert arrayBuffer to Buffer

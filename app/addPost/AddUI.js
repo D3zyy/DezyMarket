@@ -13,6 +13,7 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
   const [images, setImages] = useState([]); // Store actual file objects
   const [imagePreviews, setImagePreviews] = useState([]); // Store URLs for displaying previews
   const [error, setError] = useState(null);
+  const [errorFromServer, setErrorFromServer] = useState(null);
   const [errorValidation, setErrorValidation] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
@@ -84,11 +85,23 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
         console.log("tady pod")
 
     } else {
-        let result = await res.json();
-        console.log("Odpověď od serveru :", result);
-        setErrorValidation(result)
-        setLoading(false);
-    }
+      let result = await res.json();
+      console.log("Odpověďdd od serveru:", result);
+  
+      // Obecná kontrola, zda odpověď obsahuje klíč `message`
+      if (result?.messageToDisplay) {
+        console.log("1")
+          setErrorFromServer(result.messageToDisplay); // Nastaví konkrétní chybu podle `message`
+      } else if (result?.message) {
+        console.log("2")
+          setErrorFromServer("Nastala chyba na serveru. Zkuste to znovu"); // Nastaví konkrétní chybu podle `message`
+      } else {
+        console.log("3")
+          setErrorValidation(result); // Nastaví obecnou validační chybu
+      }
+  
+      setLoading(false); // Ukončení načítání
+  }
 }
 
 
@@ -212,6 +225,23 @@ const handleDeleteImage = (index) => {
           }}
           className="typeOfPosts flex flex-col  justify-center gap-2 p-4"
         >
+    {errorFromServer && (
+  <div className="flex items-center gap-3 px-5 py-3 border border-red-500 rounded-lg text-red-600 bg-red-50 shadow-md font-medium mt-4 transition-transform transform hover:scale-105">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={2}
+      stroke="currentColor"
+      className="w-6 h-6 text-red-500"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+    <span>{errorFromServer}</span>
+  </div>
+)}
+          
+            
            {printErrorValidation()}
           <form  onSubmit={handleSubmitPost} >
             <div className="py-2 w-full">

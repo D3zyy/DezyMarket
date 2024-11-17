@@ -131,6 +131,7 @@ const handleRecovery = async (event, setError, setLoading, setSuccess) => {
           {console.error('Chyba při odesílání požadavku na obnovení hesla.', errorData.message)}
         </div>
       );
+      setLoading(false)
     }
   } catch (err) {
     setError('Nastala chyba při odesílání požadavku na obnovení hesla, zkuste to prosím později.');
