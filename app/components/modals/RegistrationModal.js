@@ -42,10 +42,13 @@ const parseErrors = (message) => {
   } catch {
     if (message === "Email již existuje.") {
       return (
-        <span>
-          <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>
-          {message}
-          <button
+  
+
+
+<div style={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+            <XCircleIcon className="h-8 w-8 text-red-500"  style={{marginRight: "10px"}}/>
+            <div style={{ marginLeft: "5px" }}>{message}</div>
+            <button
             style={{ color: "gray", textDecoration: "underline", marginLeft: "10px" }}
             onClick={() => {
               document.getElementById('register_modal').close();
@@ -58,7 +61,10 @@ const parseErrors = (message) => {
           >
             Přihlásit se
           </button>
-        </span>
+          </div>
+
+  
+    
       );
     } else {
       return (
