@@ -6,7 +6,7 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
     
     {
       id: 31,
-      url: 'https://www.bazos.cz/img/2/872/194038872.jpg',
+      url: 'https://www.bazos.cz/img/1/515/193724515.jpg?t=1731255580',
       postId: 11
     },
     {

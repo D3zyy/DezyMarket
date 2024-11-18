@@ -120,7 +120,7 @@ async function uploadImagesToS3(files,postId) {
       let responseAWS = await s3Client.send(command)
 
       // Construct the URL of the uploaded image
-      const imageUrl = `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
+      const imageUrl = `https://d1zlv5gvfzbkrf.cloudfront.net/${params.Key}`;
       return imageUrl; // Return the URL of the uploaded image
     } catch (error) {
       
