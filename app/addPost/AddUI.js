@@ -226,7 +226,8 @@ const handleDeleteImage = (index) => {
           className="typeOfPosts flex flex-col  justify-center gap-2 p-4"
         >
     {errorFromServer && (
-  <div className="flex items-center gap-3 px-5 py-3 border border-red-500 rounded-lg text-red-600 bg-red-50 shadow-md font-medium mt-4 transition-transform transform hover:scale-105">
+      
+  <div className="flex items-start gap-3 py-3  text-red-600   font-medium mt-4 transition-transform transform hover:scale-105">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -409,20 +410,24 @@ const handleDeleteImage = (index) => {
     Telefoní číslo (bez předvolby)
   </span>
   <input
-    minLength={9} // Minimální délka 5 znaků
-    maxLength={9}
-    inputMode="numeric"
-    type="number"
-    placeholder={"123456789"}
-    name="phonenumber"
-    className="input input-bordered"
-    required
-    style={{
-      fontSize: '14px',
-      padding: '8px',
-      width: '55%', // Adjust this percentage to control the input width
-    }}
-  />        
+  type="number"
+  placeholder="123456789"
+  name="phonenumber"
+  className="input input-bordered"
+  required
+  min={100000000} // Minimum 9 číslic
+  max={999999999} // Maximum 9 číslic
+  onInput={(e) => {
+    if (e.target.value.length > 9) {
+      e.target.value = e.target.value.slice(0, 9); // Ořízne na 9 číslic
+    }
+  }}
+  style={{
+    fontSize: '14px',
+    padding: '8px',
+    width: '55%',
+  }}
+/>     
 </div>
               <div
   className="flex items-center"
