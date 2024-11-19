@@ -535,11 +535,11 @@ const handleDeleteImage = (index) => {
       {imagePreviews.length > 0 &&
     imagePreviews.map((imagePreview, index) => (
         <div key={index} className="relative">
-          <Image
+          <img
+          
     src={imagePreview}
-    alt={`Preview ${index + 1}`}
-    width={128} // Replace with the actual width of your image
-    height={128} // Replace with the actual height of your image
+    alt={`Náhled ${index + 1}`}
+    
     className="h-32 w-32 object-cover rounded shadow-md"
 />
             

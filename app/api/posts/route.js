@@ -64,12 +64,15 @@ const s3Client = new S3Client({
 })
 async function resizeImage(buffer) {
   const resizedBuffer = await sharp(buffer)
-    .resize(1200, 1200, {
+    .rotate() // Automaticky použije EXIF data k zachování orientace
+    .resize({
+      width: 1200,
+      height: 1200,
       fit: sharp.fit.inside,
-      withoutEnlargement: true
+      withoutEnlargement: true, // Zamezí zvětšování obrázku, pokud je menší
     })
     .toBuffer();
-  
+
   return resizedBuffer;
 }
 async function deleteImagesByPostId(postId) {
