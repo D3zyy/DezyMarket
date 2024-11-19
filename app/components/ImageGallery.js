@@ -2,7 +2,40 @@
 import { useState } from 'react';
 
 const ImageGallery = ({ allImages, typeOfPost }) => {
- 
+  allImages = [
+    
+    {
+      id: 31,
+      url: 'https://www.bazos.cz/img/1/515/193724515.jpg?t=1731255580',
+      postId: 11
+    },
+    {
+      id: 3,
+      url: 'https://www.bazos.cz/img/10/515/193724515.jpg?t=1731255580',
+      postId: 11
+    },
+    {
+      id: 4,
+      url: 'https://www.bazos.cz/img/2/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    {
+      id: 5,
+      url: 'https://www.bazos.cz/img/3/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    {
+      id: 6,
+      url: 'https://www.bazos.cz/img/4/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    {
+      id: 7,
+      url: 'https://www.bazos.cz/img/5/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    
+  ];
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);

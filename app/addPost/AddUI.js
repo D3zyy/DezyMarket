@@ -92,8 +92,8 @@ const AddUI = ({ accType, userCategories , categories, sections}) => {
       if (result?.messageToDisplay) {
         console.log("1")
           setErrorFromServer(result.messageToDisplay); // Nastaví konkrétní chybu podle `message`
-      } else if (result?.message) {
-        console.log("2")
+      } else if (result?.message && !result?.errors) {
+        console.log("22")
           setErrorFromServer("Nastala chyba na serveru. Zkuste to znovu"); // Nastaví konkrétní chybu podle `message`
       } else {
         console.log("3")
