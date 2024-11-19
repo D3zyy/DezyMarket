@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { prisma } from "@/app/database/db";
 import { S3Client, PutObjectCommand,ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import sharp from 'sharp';
-
+import { CloudFrontClient, CreateInvalidationCommand } from "@aws-sdk/client-cloudfront"
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 let sessionGeneral
@@ -74,6 +74,39 @@ async function resizeImage(buffer) {
     .toBuffer();
 
   return resizedBuffer;
+}
+async function invalidateImagesOnCloudFrontByPostId(postId) {
+console.log("číslo obrazku na invalidaci :",postId)
+  try {
+
+const cloudfront = new CloudFrontClient({
+  region :process.env.AWS_S3_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
+  }
+});
+const cfCommand = new CreateInvalidationCommand({
+  DistributionId: process.env.CLOUD_FRONT_DISTRIBUTION_ID,
+  InvalidationBatch: {
+    CallerReference: postId,
+    Paths: {
+      Quantity: 1,
+      Items: [
+        `/${postId}/*` 
+      ]
+    }
+  }
+})
+
+const response = await cloudfront.send(cfCommand)
+  console.log("odpoved nas ivalidaci obrazku na CloudFront :",response)
+ 
+
+    return response;
+  } catch (error) {
+    throw new Error(`Failed to delete images on CloudFront for postId  ${postId}: ${error}`);
+  }
 }
 async function deleteImagesByPostId(postId) {
   const bucketName = process.env.AWS_S3_BUCKET_NAME;
@@ -659,6 +692,7 @@ export async function DELETE(req) {
           if(haveImages.length > 0){
             console.log("Má obrázky")
            let res =  await  deleteImagesByPostId(data.postId)
+           let resCloudFront = await invalidateImagesOnCloudFrontByPostId(data.postId)
                 console.log("odpoved na vymazani obrazku z s3 :",res) 
             } else {
               console.log("Nemá obrázky")
