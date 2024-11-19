@@ -76,7 +76,7 @@ async function resizeImage(buffer) {
   return resizedBuffer;
 }
 async function invalidateImagesOnCloudFrontByPostId(postId) {
-console.log("číslo obrazku na invalidaci :",postId)
+
   try {
 
 const cloudfront = new CloudFrontClient({
@@ -692,7 +692,8 @@ export async function DELETE(req) {
           if(haveImages.length > 0){
             console.log("Má obrázky")
            let res =  await  deleteImagesByPostId(data.postId)
-           let resCloudFront = await invalidateImagesOnCloudFrontByPostId(data.postId)
+           // here invalidating path 1000 free per month
+          // let resCloudFront = await invalidateImagesOnCloudFrontByPostId(data.postId)
                 console.log("odpoved na vymazani obrazku z s3 :",res) 
             } else {
               console.log("Nemá obrázky")
