@@ -1,9 +1,69 @@
 "use client";
 import { useState } from 'react';
-
+import { useEffect } from 'react';
 const ImageGallery = ({ allImages, typeOfPost }) => {
   allImages = [
     
+    {
+      id: 31,
+      url: 'https://www.bazos.cz/img/1/515/193724515.jpg?t=1731255580',
+      postId: 11
+    },
+    {
+      id: 3,
+      url: 'https://www.bazos.cz/img/10/515/193724515.jpg?t=1731255580',
+      postId: 11
+    },
+    {
+      id: 4,
+      url: 'https://www.bazos.cz/img/2/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    {
+      id: 5,
+      url: 'https://www.bazos.cz/img/3/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    {
+      id: 6,
+      url: 'https://www.bazos.cz/img/4/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    {
+      id: 7,
+      url: 'https://www.bazos.cz/img/5/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    {
+      id: 31,
+      url: 'https://www.bazos.cz/img/1/515/193724515.jpg?t=1731255580',
+      postId: 11
+    },
+    {
+      id: 3,
+      url: 'https://www.bazos.cz/img/10/515/193724515.jpg?t=1731255580',
+      postId: 11
+    },
+    {
+      id: 4,
+      url: 'https://www.bazos.cz/img/2/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    {
+      id: 5,
+      url: 'https://www.bazos.cz/img/3/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    {
+      id: 6,
+      url: 'https://www.bazos.cz/img/4/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
+    {
+      id: 7,
+      url: 'https://www.bazos.cz/img/5/515/193724515.jpg?t=1731240618',
+      postId: 11
+    },
     {
       id: 31,
       url: 'https://www.bazos.cz/img/1/515/193724515.jpg?t=1731255580',
@@ -39,7 +99,19 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  useEffect(() => {
+    // Nastavení nebo odebrání inline stylu na `body`
+    if (isGalleryOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto"; // Vrácení scrollování
+    }
 
+    // Cleanup při unmountu
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isGalleryOpen]);
   const additionalCount = allImages.length - 4;
 
   const handleNextImage = () => {
@@ -75,7 +147,7 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
       ) : (
         <>
           {/* Main image display with conditional navigation arrows */}
-          <div className="relative bg-gray-100 max-h-[600px]  flex items-center justify-center rounded-lg overflow-hidden">
+          <div className="relative bg-gray-100 max-h-[600px]  flex items-center justify-center rounded-lg overflow-auto">
             {allImages.length > 1 && (
               <>
                 <button
@@ -166,12 +238,12 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
           {/* Gallery Modal */}
           {isGalleryOpen && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-75">
-              <div className="bg-base-100 p-6 md:rounded-lg relative max-w-4xl w-full max-h-[105vh] overflow-auto">
+              <div className="bg-base-100 p-6 md:rounded-lg relative max-w-4xl w-full max-h-[105vh] overflow-y-scroll">
                 <div className='mx-auto text-center'>
                   <button
                     type="button"
                     onClick={() => setIsGalleryOpen(false)}
-                    className="bg-red-500 text-white rounded-full p-1 hover:bg-red-700 text-center mb-5 sm:mt-0 mt-5"
+                    className="bg-red-500 text-white rounded-full p-1 hover:bg-red-700 text-center mb-5 sm:mt-1 mt-5"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
