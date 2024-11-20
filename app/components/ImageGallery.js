@@ -171,7 +171,7 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
                   <button
                     type="button"
                     onClick={() => setIsGalleryOpen(false)}
-                    className="bg-red-500 text-white rounded-full p-1 hover:bg-red-700 text-center mb-5"
+                    className="bg-red-500 text-white rounded-full p-1 hover:bg-red-700 text-center mb-5 sm:mt-0 mt-5"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
