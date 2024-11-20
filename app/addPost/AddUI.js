@@ -410,24 +410,16 @@ const handleDeleteImage = (index) => {
     Telefoní číslo (bez předvolby)
   </span>
   <input
-  type="number"
+  type="text"
   placeholder="123456789"
   name="phonenumber"
-  className="input input-bordered"
+  className="input input-bordered text-sm p-2 w-[55%]"
   required
-  min={100000000} // Minimum 9 číslic
-  max={999999999} // Maximum 9 číslic
+  maxLength={9}
   onInput={(e) => {
-    if (e.target.value.length > 9) {
-      e.target.value = e.target.value.slice(0, 9); // Ořízne na 9 číslic
-    }
+    e.target.value = e.target.value.replace(/[^0-9]/g, ''); // Povolené pouze číslice
   }}
-  style={{
-    fontSize: '14px',
-    padding: '8px',
-    width: '55%',
-  }}
-/>     
+/>  
 </div>
               <div
   className="flex items-center"
