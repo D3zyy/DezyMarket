@@ -69,20 +69,20 @@ const Page = async ({ params }) => {
 </svg>
 
        
-        <Link className="ml-2" href={"/"}>
+        <Link className="ml-2 underline" href={"/"}>
           Domů
         </Link>
     </li>
-    <li>
+    <li >
         
-      <Link href={`/category?categoryName=${postRecord?.category?.name}`}>
-          <span className="mr-2" dangerouslySetInnerHTML={{ __html: postRecord?.category?.logo }}></span>
-          <span className="">{postRecord?.category?.name}</span>
+      <Link   href={`/category?categoryName=${postRecord?.category?.name}`}>
+          <span className="mr-2 " dangerouslySetInnerHTML={{ __html: postRecord?.category?.logo }}></span>
+          <span className="underline">{postRecord?.category?.name}</span>
         </Link>
     </li>
     <li>
      
-        <Link href={`/section?categoryName=${postRecord?.category?.name}&sectionName=${postRecord?.section?.name}`}>
+        <Link className="underline" href={`/section?categoryName=${postRecord?.category?.name}&sectionName=${postRecord?.section?.name}`}>
           {postRecord?.section?.name}
         </Link>
 

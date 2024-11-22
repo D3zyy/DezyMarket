@@ -231,7 +231,7 @@ const ImageGallery = ({ allImages }) => {
           {/* Gallery Modal */}
           {isGalleryOpen && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-75">
-              <div className="bg-base-100 p-6 md:rounded-lg relative max-w-4xl w-full max-h-[105vh] overflow-y-scroll">
+              <div className="bg-base-100 p-6 md:rounded-lg relative  w-full max-h-[105vh] overflow-y-scroll">
                 <div className="mx-auto text-center">
                   <button
                     type="button"
