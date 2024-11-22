@@ -1,7 +1,9 @@
 "use client";
-import { useState } from 'react';
-import { useEffect } from 'react';
-const ImageGallery = ({ allImages, typeOfPost }) => {
+import { useState, useEffect } from "react";
+
+const ImageGallery = ({ allImages }) => {
+  const [mainImageIndex, setMainImageIndex] = useState(0);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   allImages = [
     
     {
@@ -97,10 +99,22 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
     
   ];
 
-  const [mainImageIndex, setMainImageIndex] = useState(0);
-  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  // Disable/enable scrolling on the main page when the gallery is opened/closed
+  useEffect(() => {
+    if (isGalleryOpen) {
+      document.body.style.overflow = "hidden"; // Disable scrolling
+      document.body.style.position = "fixed"
+    } else {
+      document.body.style.overflow = ""; // Enable scrolling
+          document.body.style.position = ""
+    }
 
-  const additionalCount = allImages.length - 4;
+    // Cleanup to reset scrolling if the component is unmounted
+    return () => {
+      document.body.style.overflow = "";
+        document.body.style.position = ""
+    };
+  }, [isGalleryOpen]);
 
   const handleNextImage = () => {
     setMainImageIndex((prevIndex) => (prevIndex + 1) % allImages.length);
@@ -112,11 +126,12 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
     );
   };
 
+  const additionalCount = allImages.length - 4;
+
   return (
-    <div
-    className={`lg:w-1/2 `}> {/* Center the main container */}
+    <div className="lg:w-1/2 ">
       {allImages.length === 0 ? (
-        <div className="relative flex items-center justify-center h-full"> {/* Center both horizontally and vertically */}
+        <div className="relative flex items-center justify-center h-full">
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             fill="none" 
@@ -134,26 +149,24 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
         </div>
       ) : (
         <>
-          {/* Main image display with conditional navigation arrows */}
-          <div className="relative bg-gray-100 max-h-[600px]  flex items-center justify-center rounded-lg overflow-auto">
+          {/* Main Image Display */}
+          <div className="relative bg-gray-100 max-h-[600px] flex items-center justify-center rounded-lg overflow-auto">
             {allImages.length > 1 && (
-              <>
-                <button
-                  onClick={handlePreviousImage}
-                  className="absolute left-0 p-2 m-2 bg-black bg-opacity-50 text-white rounded-full"
+              <button
+                onClick={handlePreviousImage}
+                className="absolute left-0 p-2 m-2 bg-black bg-opacity-50 text-white rounded-full"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-              </>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
             )}
 
             <img
@@ -163,42 +176,40 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
             />
 
             {allImages.length > 1 && (
-              <>
-                <button
-                  onClick={handleNextImage}
-                  className="absolute right-0 p-2 m-2 bg-black bg-opacity-50 text-white rounded-full"
+              <button
+                onClick={handleNextImage}
+                className="absolute right-0 p-2 m-2 bg-black bg-opacity-50 text-white rounded-full"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
             )}
           </div>
 
           {/* Thumbnails */}
           <div className="grid grid-cols-3 gap-2 mt-4">
             {allImages.slice(1, 3).map((thumbnail, index) => (
-             <div key={index} className="relative w-full h-20">
-             <img
-               src={thumbnail.url}
-               alt={`Obrázek ${index + 1}`}
-               className="w-full h-full rounded-lg cursor-pointer"
-               onClick={() => setIsGalleryOpen(true)}
-             />
-           </div>
+              <div key={index} className="relative w-full h-20">
+                <img
+                  src={thumbnail.url}
+                  alt={`Obrázek ${index + 1}`}
+                  className="w-full h-full rounded-lg cursor-pointer"
+                  onClick={() => setIsGalleryOpen(true)}
+                />
+              </div>
             ))}
 
             {additionalCount >= 0 && (
               <div className="relative w-full h-20">
-                <div 
+                <div
                   className="absolute inset-0 rounded-lg bg-opacity-25 cursor-pointer"
                   onClick={() => setIsGalleryOpen(true)}
                 >
@@ -207,15 +218,9 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
                     alt="Obrázek 4"
                     className="w-full h-full rounded-lg"
                   />
-                  {additionalCount > 0 ? (
+                  {additionalCount > 0 && (
                     <div className="flex items-center justify-center absolute inset-0 bg-black bg-opacity-50 text-white font-bold rounded-lg">
                       +{additionalCount}
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center absolute inset-0 bg-black bg-opacity-50 text-white font-bold rounded-lg">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
-                      </svg>
                     </div>
                   )}
                 </div>
@@ -227,11 +232,11 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
           {isGalleryOpen && (
             <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-75">
               <div className="bg-base-100 p-6 md:rounded-lg relative max-w-4xl w-full max-h-[105vh] overflow-y-scroll">
-                <div className='mx-auto text-center'>
+                <div className="mx-auto text-center">
                   <button
                     type="button"
                     onClick={() => setIsGalleryOpen(false)}
-                    className="bg-red-500 text-white rounded-full p-1 hover:bg-red-700 text-center mb-5 sm:mt-1 mt-5"
+                    className="bg-red-500 text-white rounded-full p-1 hover:bg-red-700 text-center mb-5 sm:mt-3 mt-16"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -252,11 +257,11 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {allImages.map((image, index) => (
-                    <img 
-                      key={index} 
+                    <img
+                      key={index}
                       src={image.url}
-                      alt={`Obrázek ${index + 1}`} 
-                      className="w-full h-auto rounded-lg object-cover" 
+                      alt={`Obrázek ${index + 1}`}
+                      className="w-full h-auto rounded-lg object-cover"
                     />
                   ))}
                 </div>
