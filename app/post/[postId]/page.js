@@ -103,7 +103,7 @@ const Page = async ({ params }) => {
 
       {/* Right section - Information */}
       
-      <div className="lg:w-1/2   min-h-[600px] flex flex-col justify-between lg:pl-8">
+      <div className="lg:w-1/2   min-h-[700px] flex flex-col justify-between lg:pl-8">
       {!(postRecord.typeOfPost === process.env.BASE_RANK) && (
   <div
   className="mt-4 lg:mt-0 badge badge-md badge-outline mb-5"
@@ -124,12 +124,18 @@ const Page = async ({ params }) => {
     </Link>
   </div>
 )}
-       <h1
-        style={{ fontSize: "25px" }}
-        className={`text-xl font-bold mb-6 sm:mb-5 ${postRecord.typeOfPost === process.env.BASE_RANK ? 'mt-10' : 'mt-0'} lg:mt-0`}
-      >
-              {postRecord?.name}
-            </h1>
+      <h1
+  style={{
+    fontSize: "25px",
+    wordWrap: "break-word", // Nebo použijte "overflowWrap: 'break-word'"
+    maxWidth: "100%", // Zajistí, že se text zalomí v rámci šířky rodiče
+  }}
+  className={`text-xl font-bold mb-6 sm:mb-5 ${
+    postRecord.typeOfPost === process.env.BASE_RANK ? "mt-10" : "mt-0"
+  } lg:mt-0`}
+>
+  {postRecord?.name}
+</h1>
 
             <div className="btn inline-block w-32 mb-5" style={{ display: 'flex', alignItems: 'center' }}>
            <span className="text-3xl">&#128064;</span>
@@ -333,7 +339,7 @@ className="h-6 w-6 text-yellow-600"
 Ohodnotit uživatele</a>
 
       
-    </div> : <> <div style={{textAlign: "center"}} className="flex items-center space-x-2 "> <a className="btn flex-shrink" onClick={openEditPostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-yellow-300">
+    </div> : <> <div style={{textAlign: "center"}} className="flex items-center space-x-2 "> <a className="btn   flex-shrink" onClick={openEditPostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-yellow-300">
 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
 </svg> Upravit příspěvek</a>
 </div>

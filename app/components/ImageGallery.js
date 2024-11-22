@@ -99,19 +99,7 @@ const ImageGallery = ({ allImages, typeOfPost }) => {
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-  useEffect(() => {
-    // Nastavení nebo odebrání inline stylu na `body`
-    if (isGalleryOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto"; // Vrácení scrollování
-    }
 
-    // Cleanup při unmountu
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isGalleryOpen]);
   const additionalCount = allImages.length - 4;
 
   const handleNextImage = () => {
