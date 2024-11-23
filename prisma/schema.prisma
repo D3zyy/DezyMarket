@@ -58,6 +58,7 @@ model IpAddressesOnUsers {
   id          Int          @id @default(autoincrement())
   userId      Int
   ipAddressId Int
+  usedForLogin Int          @default(0)
   user        Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
   ipAddress   IpAddresses  @relation(fields: [ipAddressId], references: [id], onDelete: Cascade)
 

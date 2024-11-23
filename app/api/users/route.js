@@ -140,8 +140,19 @@ export async function POST(req) {
         data: {
           ipAddressId: ipToRegister.id,
           userId: user.id,
+          usedForLogin: 1
         },
       });
+    } else {
+      await prisma.ipAddressesOnUsers.update({
+        where: {
+          id: ipToRegisterAlreadyExistWithThatUser.id, // Use the unique ID of the record
+        },
+        data: {
+          usedForLogin: ipToRegisterAlreadyExistWithThatUser.usedForLogin + 1,
+        },
+      });
+      
     }
 
     console.log("Již exstuje ip adresa :",ipToRegister)

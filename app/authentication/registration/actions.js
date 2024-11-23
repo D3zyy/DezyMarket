@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { prisma } from '@/app/database/db';
 import bcrypt from 'bcrypt';
 import { sendVerificationEmail } from '@/app/api/email/email';
+import { headers } from "next/headers";
 
 const schema = z.object({
   email: z.string()
@@ -15,7 +16,10 @@ const schema = z.object({
     .regex(/[a-z]/, 'Heslo musí obsahovat alespoň jedno malé písmeno.')
     .regex(/\d/, 'Heslo musí obsahovat alespoň jedno číslo.'),
     fullName: z.string()
-    .regex(/^[A-Za-z]{2,} [A-Za-z]{2,}$/, 'Celé jméno musí mít formát "Jméno Příjmení", kde obě části mají alespoň 2 znaky, obsahují pouze písmena a mezi nimi je jedna mezera.'),
+  .regex(
+    /^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]{2,} [A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]{2,}$/,
+    'Celé jméno musí mít formát "Jméno Příjmení", kde obě části mají alespoň 2 znaky, obsahují pouze písmena včetně českých znaků a mezi nimi je jedna mezera.'
+  ),
     nickname: z.string()
     .min(4, 'Přezdívka musí mít alespoň 4 znaky.')
     .max(10, 'Přezdívka může mít maximálně 10 znaků.')
@@ -85,10 +89,10 @@ export const handleRegistration = async (formData) => {
         roleId: role.id,
       }
     });
+    
     const rawIp =
-  req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
-  req.headers.get("x-real-ip") ||                      // Alternativní hlavička
-  req.socket?.remoteAddress ||                         // Lokální fallback
+  headers().get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  headers().get("x-real-ip") ||                      // Alternativní hlavička                   // Lokální fallback
   null;
 
 // Odstranění případného prefixu ::ffff:
