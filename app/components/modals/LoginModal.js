@@ -9,7 +9,7 @@ export function openLoginModal() {
   document.getElementById('login_modal').showModal();
 }
 
-const handleLogin = async (event, setError, setLoading, setSuccess,setFirstLogin) => {
+const handleLogin = async (event, setError, setLoading, setSuccess) => {
   event.preventDefault();
   
   setLoading(true);
@@ -37,7 +37,6 @@ const handleLogin = async (event, setError, setLoading, setSuccess,setFirstLogin
 
     if (res.ok) {
       let result = await res.json()
-      setFirstLogin(result.firstLoggin)
       setSuccess(true);
     } else {
       setLoading(false);
@@ -184,7 +183,6 @@ const LoginModal = () => {
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
-  const [firstLogin, setFirstLogin] = useState(null);
   const [loading, setLoading] = useState(false);
   const [recoverPassword, setRecoverPassword] = useState(false);
   const router = useRouter();
@@ -193,9 +191,9 @@ const LoginModal = () => {
   useEffect(() => {
 
     if (success && !recoverPassword) {
-      if(firstLogin){
+      
         router.push("/setUpAccount")
-      }
+      
       router.refresh();
     }
   }, [success, recoverPassword, router]);
@@ -226,7 +224,7 @@ const LoginModal = () => {
     }
     recoverPassword
       ? handleRecovery(event, setError, setLoading, setSuccess)
-      : handleLogin(event, setError, setLoading, setSuccess, setFirstLogin);
+      : handleLogin(event, setError, setLoading, setSuccess);
   }}
 >
           <div className="py-4">

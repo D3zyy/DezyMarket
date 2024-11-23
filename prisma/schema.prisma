@@ -16,34 +16,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model Users {
-  id                       Int              @id @default(autoincrement())
-  fullName                 String
-  nickname                 String?
-  email                    String           @unique
-  password                 String           @db.VarChar(255)
-  dateOfRegistration       DateTime         @default(now())
-  image                    String           @default("default.png")
-  roleId                   Int
-  role                     Roles            @relation(fields: [roleId], references: [id])
-  bans                     Bans[]
-  posts                    Posts[]
-  sessions                 Sessions[]
-  accountTypes             AccountType[]    // One-to-many relationship with AccountType
-  termsOfUseAndPrivatePolicy Boolean        @default(false)
-  verifiedEmail            Boolean          @default(false) // New field to track email verification status
-  verificationToken        VerificationTokens? // Optional relation to VerificationToken
-  numberOfTries            NumberOfTries?
-  categories               UserCategories[]
-  firstLogin               Boolean          @default(true)
-  postViews                PostViews[]      // One-to-many relationship with PostViews (zhlédnutí příspěvků)
-  postReport    PostReport[]
+  id                        Int                 @id @default(autoincrement())
+  fullName                  String
+  nickname                  String?
+  email                     String              @unique
+  password                  String              @db.VarChar(255)
+  dateOfRegistration        DateTime            @default(now())
+  roleId                    Int
+  role                      Roles               @relation(fields: [roleId], references: [id])
+  bans                      Bans[]
+  posts                     Posts[]
+  sessions                  Sessions[]
+  accountTypes              AccountType[]       // One-to-many relationship with AccountType
+  termsOfUseAndPrivatePolicy Boolean            @default(false)
+  verifiedEmail             Boolean             @default(false) // New field to track email verification status
+  verificationToken         VerificationTokens? // Optional relation to VerificationToken
+  numberOfTries             NumberOfTries?
+  postViews                 PostViews[]         // One-to-many relationship with PostViews
+  profilePicture            ProfilePicture[]    
+  postReport                PostReport[]
+  ipAddresses               IpAddressesOnUsers[] // Relation to join table
+}
+
+model ProfilePicture {
+  id       Int    @id @default(autoincrement())
+  url     String
+  userId   Int
+  user     Users  @relation(fields: [userId], references: [id], onDelete: Cascade)  // Foreign key for the one-to-many relationship
+  @@index([id])
+  @@index([userId])
+}
+
+
+model IpAddresses {
+  id          Int                 @id @default(autoincrement())
+  value       String
+  users       IpAddressesOnUsers[] // Relation to join table
+}
+
+model IpAddressesOnUsers {
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  ipAddressId Int
+  user        Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress   IpAddresses  @relation(fields: [ipAddressId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, ipAddressId]) // Ensures a unique combination of userId and ipAddressId
+  @@index([userId])
+  @@index([ipAddressId])
 }
 
 model AccountType {
   id       Int    @id @default(autoincrement())
   name     String
   userId   Int
-  user     Users  @relation(fields: [userId], references: [id])  // Foreign key for the one-to-many relationship
+  user     Users  @relation(fields: [userId], references: [id], onDelete: Cascade)  // Foreign key for the one-to-many relationship
   @@index([id])
   @@index([userId])
 }
@@ -53,7 +80,7 @@ model Sections {
   id          Int         @id @default(autoincrement())
   name        String      @unique
   categoryId  Int         // Cizí klíč na model Categories
-  category    Categories   @relation(fields: [categoryId], references: [id]) // Vytvoření vazby na Categories
+  category    Categories   @relation(fields: [categoryId], references: [id], onDelete: Cascade) // Vytvoření vazby na Categories
   posts Posts[]
  @@index([id])
 }
@@ -62,7 +89,6 @@ model Categories {
   id          Int         @id @default(autoincrement())
   name        String      @unique
   logo        String
-  user        UserCategories[]
   sections    Sections[]   // Odpovídající pole pro vztah
   posts Posts[]
   @@index([id])
@@ -78,12 +104,12 @@ model Posts {
   phoneNumber  String       @db.VarChar(9)
   location     String       @db.VarChar(50)
   typeOfPost   String       @db.VarChar(100)
-  category     Categories   @relation(fields: [categoryId], references: [id])
-  section      Sections     @relation(fields: [sectionId], references: [id])
+  category     Categories   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  section      Sections     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   images       Image[]      // Define a one-to-many relation
   userId       Int  
   dateAndTime  DateTime     @default(now())
-  user         Users        @relation(fields: [userId], references: [id])
+  user         Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
   postViews    PostViews[]  // One-to-many relationship with PostViews
   postReport    PostReport[]  // One-to-many relationship with PostViews
 }
@@ -116,13 +142,7 @@ model Image {
   postId   Int
   post     Posts  @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
-model UserCategories {
-  userId       Int
-  categoryId   Int
-  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category     Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  @@id([userId, categoryId])
-}
+
 
 
 model NumberOfTries {

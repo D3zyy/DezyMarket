@@ -11,7 +11,7 @@ export function openInfoModal() {
   document.getElementById('info_modal').showModal();
 }
 
-const handleLogin = async (event, setError, setLoading, setSuccess,setMessageProp,setFirstLogin) => {
+const handleLogin = async (event, setError, setLoading, setSuccess,setMessageProp) => {
   event.preventDefault();
   
   setLoading(true);
@@ -39,7 +39,6 @@ const handleLogin = async (event, setError, setLoading, setSuccess,setMessagePro
 
     if (res.ok) {
       let result = await res.json()
-      setFirstLogin(result.firstLoggin)
       setSuccess(true);
     } else {
       setLoading(false);
@@ -204,7 +203,6 @@ const InfoModal = ({ defaultOpen, message , backToHome }) => {
   }, []);
   const [success, setSuccess] = useState(false);
   const [messageProp, setMessageProp] = useState(message);
-  const [firstLogin, setFirstLogin] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [recoverPassword, setRecoverPassword] = useState(false);
@@ -215,9 +213,7 @@ const InfoModal = ({ defaultOpen, message , backToHome }) => {
       document.getElementById('info_modal').showModal();
     }
     if (success && !recoverPassword) {
-      if(firstLogin){
-        router.push("/setUpAccount")
-      }
+    
       router.refresh();
     }
   }, [success, recoverPassword, router ]);
@@ -252,7 +248,7 @@ const InfoModal = ({ defaultOpen, message , backToHome }) => {
     }
     recoverPassword
       ? handleRecovery(event, setError, setLoading, setSuccess)
-      : handleLogin(event, setError, setLoading, setSuccess, setMessageProp, setFirstLogin);
+      : handleLogin(event, setError, setLoading, setSuccess, setMessageProp);
   }}
 >
 
