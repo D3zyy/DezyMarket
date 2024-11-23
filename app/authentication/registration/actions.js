@@ -72,10 +72,10 @@ export const handleRegistration = async (formData) => {
         message: "Chyba na serveru",
       };
     }
-
+ 
 
     // Uložení uživatele do databáze
-    await prisma.Users.create({
+  const createdUser =   await prisma.Users.create({
       data: {
         email: validatedFields.data.email,
         password: hashedPassword,
@@ -85,6 +85,51 @@ export const handleRegistration = async (formData) => {
         roleId: role.id,
       }
     });
+    const rawIp =
+  req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  req.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+console.log("IP adresa :", ip);
+
+
+
+// Najít existující IP adresu v databázi
+let ipToRegister = await prisma.ipAddresses.findFirst({
+  where: { value: ip },
+});
+
+if (!ipToRegister) {
+  // Pokud IP adresa neexistuje, vytvoříme ji
+  ipToRegister = await prisma.ipAddresses.create({
+    data: { value: ip },
+  });
+}
+
+// Zkontrolovat, zda uživatel již má tuto IP přiřazenou
+const ipToRegisterAlreadyExistWithThatUser = await prisma.ipAddressesOnUsers.findFirst({
+  where: {
+    ipAddressId: ipToRegister.id,
+    userId: createdUser.id,
+  },
+});
+
+if (!ipToRegisterAlreadyExistWithThatUser) {
+  // Vytvoříme relaci mezi IP adresou a uživatelem, pokud neexistuje
+  await prisma.ipAddressesOnUsers.create({
+    data: {
+      ipAddressId: ipToRegister.id,
+      userId: createdUser.id,
+    },
+  });
+}
+console.log("IP:",ip)
+console.log("Již exstuje ip adresa :",ipToRegister)
+console.log("Již má uživatel tuto ip adresu",ipToRegisterAlreadyExistWithThatUser)
 
     // Odeslání verifikačního emailu
     const result = await sendVerificationEmail(validatedFields.data.email);

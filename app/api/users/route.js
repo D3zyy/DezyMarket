@@ -9,6 +9,7 @@ import { handleLoginAttempt, resetUserTries } from "./handleLoginAttempts";
 export async function POST(req) {
 
   try {
+   
     // Attempt to parse the request body
     let data;
     try {
@@ -97,7 +98,54 @@ export async function POST(req) {
       
 
      
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+    console.log("IP adresa :", ip);
+    
+    // Validace IP adresy (pro jistotu)
+    //if (!ip || !/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){2}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip)) {
+    //  throw new Error("Invalid IP address");
+  //  }
+    
+    // Najít existující IP adresu v databázi
+    let ipToRegister = await prisma.ipAddresses.findFirst({
+      where: { value: ip },
+    });
+    
+    if (!ipToRegister) {
+      // Pokud IP adresa neexistuje, vytvoříme ji
+      ipToRegister = await prisma.ipAddresses.create({
+        data: { value: ip },
+      });
+    }
+    
+    // Zkontrolovat, zda uživatel již má tuto IP přiřazenou
+    const ipToRegisterAlreadyExistWithThatUser = await prisma.ipAddressesOnUsers.findFirst({
+      where: {
+        ipAddressId: ipToRegister.id,
+        userId: user.id,
+      },
+    });
+    
+    if (!ipToRegisterAlreadyExistWithThatUser) {
+      // Vytvoříme relaci mezi IP adresou a uživatelem, pokud neexistuje
+      await prisma.ipAddressesOnUsers.create({
+        data: {
+          ipAddressId: ipToRegister.id,
+          userId: user.id,
+        },
+      });
+    }
 
+    console.log("Již exstuje ip adresa :",ipToRegister)
+    console.log("Již má uživatel tuto ip adresu",ipToRegisterAlreadyExistWithThatUser)
       await resetUserTries(user.id)
       await createSession(user,plainPassword);
       return new Response(JSON.stringify({ message: "Přihlášení úspěšné"}), {
