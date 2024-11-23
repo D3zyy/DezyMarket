@@ -206,7 +206,7 @@ const Page = async ({ params }) => {
 
   {/* Right side with phone number and email */}
   <div className="relative flex flex-col justify-between w-full">
-    <div className={`mb-4 ${!session.isLoggedIn ? 'blur-lg' : ''}`}>
+    <div className={`mb-4 ${!session.isLoggedIn ? 'blur-xl' : ''}`}>
       {session.isLoggedIn ? postRecord?.phoneNumber?.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3') : "Nepřihlášen"}
     </div>
     <div className={`${!session.isLoggedIn ? 'blur-lg' : ''}`}>

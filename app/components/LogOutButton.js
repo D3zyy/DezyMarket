@@ -11,7 +11,6 @@ const LogOutButton = () => {
     try {
       const res = await fetch('/api/session', { method: 'DELETE' });
       if (res.ok) {
-        router.push("/"); // Redirect after successful logout
         router.refresh();
       } else {
         console.error('Chyba při odhlašovaní :', res.statusText);
