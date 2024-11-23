@@ -170,6 +170,7 @@ const ImageGallery = ({ allImages }) => {
             )}
 
             <img
+              
               src={allImages[mainImageIndex].url}
               alt="Main"
               className="w-full h-full"
@@ -199,6 +200,8 @@ const ImageGallery = ({ allImages }) => {
             {allImages.slice(1, 3).map((thumbnail, index) => (
               <div key={index} className="relative w-full h-20">
                 <img
+                  loading="lazy"
+                  decoding="async"
                   src={thumbnail.url}
                   alt={`Obrázek ${index + 1}`}
                   className="w-full h-full rounded-lg cursor-pointer"
@@ -214,6 +217,8 @@ const ImageGallery = ({ allImages }) => {
                   onClick={() => setIsGalleryOpen(true)}
                 >
                   <img
+                    loading="lazy"
+                    decoding="async"
                     src={allImages[3].url} 
                     alt="Obrázek 4"
                     className="w-full h-full rounded-lg"
@@ -258,6 +263,8 @@ const ImageGallery = ({ allImages }) => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {allImages.map((image, index) => (
                     <img
+                      loading="lazy"
+                      decoding="async"
                       key={index}
                       src={image.url}
                       alt={`Obrázek ${index + 1}`}
