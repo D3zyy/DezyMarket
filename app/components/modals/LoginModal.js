@@ -192,7 +192,7 @@ const LoginModal = () => {
 
     if (success && !recoverPassword) {
       
-        router.push("/setUpAccount")
+       
       
       router.refresh();
     }

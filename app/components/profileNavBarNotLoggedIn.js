@@ -1,11 +1,23 @@
-import React from 'react';
-import LoginModal from './modals/LoginModal';
-import RegistrationModal from './modals/RegistrationModal';
-import {  openLoginModal } from './modals/LoginModal';
-import { openRegisterModal } from './modals/RegistrationModal';
-import AddOfferButton from './AddOfferButton';
-const ProfileNavBarNotLoggedIn = () => {
+"use client";
 
+import React, { useState } from "react";
+import LoginModal from "./modals/LoginModal";
+import RegistrationModal from "./modals/RegistrationModal";
+import { openLoginModal } from "./modals/LoginModal";
+import { openRegisterModal } from "./modals/RegistrationModal";
+import AddOfferButton from "./AddOfferButton";
+
+const ProfileNavBarNotLoggedIn = () => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleDropdownToggle = () => {
+    setDropdownOpen((prev) => !prev);
+  };
+
+  const handleDropdownClose = (action) => {
+    if (action) action(); // Zavolejte odpovídající akci (např. modal otevření)
+    setDropdownOpen(false);
+  };
 
   return (
     <>
@@ -38,9 +50,15 @@ const ProfileNavBarNotLoggedIn = () => {
         </button>
       </div>
 
+      {/* Mobilní menu */}
       <div className="sm:hidden">
         <div className="dropdown dropdown-end">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+          <div
+            tabIndex={0}
+            role="button"
+            className="btn btn-ghost btn-circle"
+            onClick={handleDropdownToggle}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -56,32 +74,38 @@ const ProfileNavBarNotLoggedIn = () => {
               />
             </svg>
           </div>
-          <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-            <li> <AddOfferButton /> </li>
-            <li>
-              <button style={{marginTop : "10px"}}
-                onClick={openLoginModal}
-                onTouchStart={openLoginModal}
-              >
-                Přihlásit se
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={openRegisterModal}
-                onTouchStart={openRegisterModal}
-              >
-                Registrace
-              </button>
-            </li>
-          </ul>
+          {dropdownOpen && (
+            <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+              <li>
+                <AddOfferButton />
+              </li>
+              <li>
+                <button
+                  style={{ marginTop: "10px" }}
+                  onClick={() => handleDropdownClose(openLoginModal)}
+                  onTouchStart={() => handleDropdownClose(openLoginModal)}
+                >
+                  Přihlásit se
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleDropdownClose(openRegisterModal)}
+                  onTouchStart={() => handleDropdownClose(openRegisterModal)}
+                >
+                  Registrace
+                </button>
+              </li>
+            </ul>
+          )}
         </div>
       </div>
-      
+
+      {/* Modály */}
       <LoginModal />
       <RegistrationModal />
     </>
   );
-}
+};
 
 export default ProfileNavBarNotLoggedIn;
