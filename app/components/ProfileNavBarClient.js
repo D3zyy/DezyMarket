@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import LogOutButton from "./LogOutButton";
 import AddOfferButton from "./AddOfferButton";
+import { useRouter } from "next/navigation";
 
 const ProfileNavBarClient = ({ session }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const router = useRouter();
   const handleDropdownToggle = () => {
     setDropdownOpen((prev) => !prev);
   };
@@ -61,20 +62,27 @@ const ProfileNavBarClient = ({ session }) => {
               {/* Zavřít dropdown při kliknutí na AddOfferButton */}
               <AddOfferButton onClick={() => handleDropdownClose()} />
             </li>
+            
             <li>
-              <a
-                style={{ marginTop: "10px" }}
-                className="justify-between"
-                onClick={() => handleDropdownClose()}
-              >
-                Profil
+               <a
+              className="mt-2 justify-between"
+              onClick={() => {
+                handleDropdownClose();
+                router.push("/posts");
+              }}
+             >
+                Moje príspěvky
                 <span className="badge">New</span>
               </a>
             </li>
+            <li>
+              <a onClick={() => {handleDropdownClose();  router.push("/profile");}}>Profil </a>
+            </li>
 
             <li>
-              <a onClick={() => handleDropdownClose()}>Nastavení</a>
+              <a onClick={() => {handleDropdownClose();  router.push("/settings");}}>Nastavení</a>
             </li>
+           
 
             <li>
               <LogOutButton
