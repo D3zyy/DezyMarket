@@ -27,7 +27,7 @@ const Page = async ({ params }) => {
     session = await getSession();
     postRecord = await getPostFromDb(params.postId);
     imageUrls = await getImageUrlsFromDb(params.postId);
-
+  
     if (!postRecord) {
       return (
         <div className="p-4 text-center">
@@ -287,7 +287,7 @@ const Page = async ({ params }) => {
         </div>
 
         {/* SVG Icons at the bottom */}
-       {session.isLoggedIn ?   <> <div className="items-center align-middle"> <ReportPostModal post={postRecord} /> <EditPostModal post={postRecord} descriptionPost={description}/>
+       {session.isLoggedIn ?   <> <div className="items-center align-middle"> <ReportPostModal  post={postRecord} imagesLength={imageUrls.length} /> <EditPostModal post={postRecord} descriptionPost={description}/>
         <DeletePostModal post={postRecord} /> </div> </> : "" }
         <div className="flex justify-center space-x-6 mt-4 border-t pt-4">
       

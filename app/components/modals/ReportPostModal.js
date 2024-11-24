@@ -32,7 +32,7 @@ export function closeReportPostModal() {
     document.getElementById('report_post_modal').close();
 }
 
- const ReportPostModal = ({ post }) => {
+ const ReportPostModal = ({ post,imagesLength }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -45,7 +45,7 @@ export function closeReportPostModal() {
     const [alreadyReported, setAlreadyReported] = useState('');
     const [loadingStatus, setLoadingStatus] = useState(true); // Track loading status
     const dropdownRef = useRef(null);  // Reference to the dropdown container
-
+    console.log(post)
     useEffect(() => {
     const checkReportStatus = async () => {
         setLoadingStatus(true); // Zobrazí spinner
@@ -94,11 +94,11 @@ export function closeReportPostModal() {
         'Nesprávná sekce',
         'Nevhodný inzerát',
         'Podvodný inzerát',
-        'Nevhodné fotografie',
+        ...(imagesLength > 0 ? ['Nevhodné fotografie'] : []),
         'Nevhodný obsah',
         'Jiné',
-    ];
-
+      ];
+      console.log("duvody:",reasons)
     const handleReasonToggle = (reason) => {
         setSelectedReasons((prevReasons) =>
             prevReasons.includes(reason)
