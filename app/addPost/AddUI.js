@@ -3,7 +3,7 @@ import { image } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation'
-const AddUI = ({ accType, userCategories , categories, sections}) => {
+const AddUI = ({ accType , categories, sections}) => {
   const [typeOfPost, setTypeOfPost] = useState(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);

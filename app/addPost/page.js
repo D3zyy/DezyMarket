@@ -43,20 +43,6 @@ const Page = async () => {
             throw new Error("Chyba při načítání sekcí na /addPost - přidání příspěvku : " + dbError.message);
         }
 
-        let userCategories = await prisma.userCategories.findMany({
-            where: {
-                userId: session.userId,
-            },
-            include: {
-                category: {
-                    select: {
-                        name: true,
-                        logo: true,
-                    },
-                },
-            },
-        });
-
         return (
             <div>
                 {session.isLoggedIn ? (
@@ -128,7 +114,7 @@ const Page = async () => {
                         </div>
 
                         <div className='addPostSecondStep' style={{ display: "none" }}>
-                            <AddUI accType={accType} userCategories={userCategories} categories={CategoriesFromDb} sections={SectionsFromDb} />
+                            <AddUI accType={accType} categories={CategoriesFromDb} sections={SectionsFromDb} />
                         </div>
                     </>
                 ) : (
