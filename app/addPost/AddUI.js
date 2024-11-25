@@ -210,7 +210,7 @@ const handleDeleteImage = (index) => {
     return () => {
       if (targetNode) observer.disconnect();
     };
-  }, []);
+  });
 
   return (
     <>

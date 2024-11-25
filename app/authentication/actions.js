@@ -11,18 +11,21 @@ export const getSession = async () => {
     try {
    
       // Retrieve the session using iron-session
+     console.log("cookies:",cookies())
       const session = await getIronSession(cookies(),sessionOptions);
-
+      console.log("vevnitr session ziskana:",session)
       if (session && session.sessionId) {
+        console.log("vevnitr session máme existuje ")
+        console.log("tohle checkuju zda existuje v db:",session.sessionId)
         // Check if the sessionId exists in the database
         const sessionRecord = await prisma.Sessions.findUnique({
           where: {
             sessionId: session.sessionId,
           },
         });
-  
+        console.log("vevnitr session máme existuje z db: ",sessionRecord)
         if (!sessionRecord) {
-            
+          console.log("vevnitr session  neexistuje  v db")
           // If sessionId is not found in the database, call logOut to clean up
           return {message: "Session nebyla nalezena"}
           // Optionally, you can return an error or handle it as needed
@@ -34,7 +37,7 @@ export const getSession = async () => {
        
       }
 
-
+      console.log("vevnitr session  existuje  v db pokracujeme dal ")
     let messageBan = false
     let ban = false
     let logOut = false
@@ -79,8 +82,9 @@ export const getSession = async () => {
 
 
   export const createSession = async (userToCreate,pass) => {
+    console.log("chci vytvorit novou sesion api hit")
     const sessionId = uuidv4(); // Generate a unique session ID
-      console.log(userToCreate.roleId)
+    console.log(userToCreate.roleId)
     try {
       const now = new Date();
       now.setHours(now.getHours() + 2); // Add 2 hours to the current date for validFrom
@@ -88,6 +92,7 @@ export const getSession = async () => {
       validTill.setDate(now.getDate() + 2); // Adds 7 days
       let userId = userToCreate.id
       // Create session in the database
+      console.log("ukladam tu seassion do db")
       await prisma.Sessions.create({
         data: {
           sessionId,
@@ -98,6 +103,7 @@ export const getSession = async () => {
       });
       let roleName
       let accountTypeName
+      console.log("hledam roli uživatele v db pro zakladni")
       if(userToCreate.roleId ){
          roleName = await prisma.Roles.findUnique({
           where: {
@@ -105,12 +111,15 @@ export const getSession = async () => {
           },
         });
       }
+      console.log("hledam roli uživatele na stripe ")
        accountTypeName = await getUserAccountTypeOnStripe(userToCreate.email)
        console.log("jmeno uctu pri login:",accountTypeName)
       
       
       // Use iron-session to set the session ID in a cookie
-      const session = await getIronSession(cookies(), sessionOptions);
+      const session = await getIronSession(await cookies(), sessionOptions);
+      console.log("nastaveni:",sessionOptions)
+      console.log(" ziskavam session: ",session)
       session.userId = userId;
       session.fullName = userToCreate.fullName
       session.nickname = userToCreate.nickname
@@ -120,7 +129,10 @@ export const getSession = async () => {
       session.accountType = accountTypeName 
       session.sessionId = sessionId; // Store session ID in session object
       session.isLoggedIn = true;
-      await session.save();
+      console.log("session pred ulozenim ")
+     let  resSa =await session.save();
+     console.log("odpoved na ulozeni:",resSa)
+      console.log("session by mela byt ulozena na klientovi :) ")
   
       return session; // Return the generated session
     } catch (error) {

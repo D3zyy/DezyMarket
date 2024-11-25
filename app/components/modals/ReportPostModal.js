@@ -98,7 +98,7 @@ export function closeReportPostModal() {
         'Nevhodný obsah',
         'Jiné',
       ];
-      console.log("duvody:",reasons)
+    //  console.log("duvody:",reasons)
     const handleReasonToggle = (reason) => {
         setSelectedReasons((prevReasons) =>
             prevReasons.includes(reason)

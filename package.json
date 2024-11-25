@@ -23,7 +23,7 @@
     "dotenv": "^16.4.5",
     "formidable": "^3.5.1",
     "framer-motion": "^11.3.20",
-    "iron-session": "^8.0.2",
+    "iron-session": "^8.0.4",
     "moment": "^2.30.1",
     "next": "^14.2.13",
     "nodemailer": "^6.9.14",

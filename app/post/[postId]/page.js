@@ -24,10 +24,16 @@ const Page = async ({ params }) => {
 
 
   try {
+   // console.log("1. jdeme pro session")
     session = await getSession();
+    //console.log("2. výsledek session callu na API :",session)
     postRecord = await getPostFromDb(params.postId);
+    //console.log("3, jdeme pro post do DB")
+    //console.log("4. výsledek callu na post do DB:",postRecord)
     imageUrls = await getImageUrlsFromDb(params.postId);
-  
+    //console.log("3, jdeme pro obrázky do DB")
+    //console.log("4. výsledek callu na obrázky do DB:",imageUrls)
+
     if (!postRecord) {
       return (
         <div className="p-4 text-center">
@@ -47,11 +53,14 @@ const Page = async ({ params }) => {
     }
   
     accType = await getUserAccountTypeOnStripe(postRecord.user.email);
+    //console.log("5. jdeme pro typ účtu na stripe ")
+   // console.log("6. výsledek callu na typ učtu na stripe:",accType)
     description = postRecord?.description;
     isOverflowing = description.length >= 280;
   
   } catch (error) {
-    throw Error("Nastala chyba při načítání příspěvku.")
+    console.log("chyba:",error)
+    //throw Error("Nastala chyba při načítání příspěvku.")
   }
 
 

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-
+import { z } from 'zod';
 async function updatedPost(name, price, category, section, description, postId, location, setSuccess) {
     if(!section){
       return false
@@ -47,6 +47,7 @@ async function getCategories() {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
+  console.log("odpoved na ziskani kategorii ze server :",res)
   return res.json();
 }
 
@@ -82,7 +83,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
     console.log(typeof post.price === 'number')
     console.log(isPriceValid)
     console.log(post.price)
-    console.log("aktive button hdonota :",activeButton)
+
     if (!isPriceValid ) {
       setActiveButton(post.price);
       setIsDisabled(true)
@@ -330,7 +331,8 @@ export const EditPostModal = ({ post, descriptionPost }) => {
             onChange={handleCategoryChange}
           >
             <option value="" disabled>Vybrat kategorii</option>
-            {categories?.map(category => (
+            {categories?.length > 0 &&
+            categories.map(category => (
               <option key={category.id} value={category.id}>
                 {htmlToText(category.logo)} {category.name}
               </option>

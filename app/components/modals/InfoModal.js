@@ -209,14 +209,20 @@ const InfoModal = ({ defaultOpen, message , backToHome }) => {
   const router = useRouter();
   
   useEffect(() => {
+    console.log("volam pred")
+    if (success && !recoverPassword) {
+
+      console.log("volam vevnitr refresh")
+      router.refresh();
+      console.log("volam vevnitr už po  refresh")
+    }
+  }, [success, recoverPassword, router]);
+
+useEffect(() => {
     if (defaultOpen) {
       document.getElementById('info_modal').showModal();
     }
-    if (success && !recoverPassword) {
-    
-      router.refresh();
-    }
-  }, [success, recoverPassword, router ]);
+  }); // Tato část se provede pouze jednou při prvním renderu
    
   return (
 

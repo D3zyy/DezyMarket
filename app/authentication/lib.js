@@ -6,7 +6,8 @@ export const sessionOptions = {
   cookieName: "Dezy",
   cookieOptions: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    sameSite: true,
+    secure: false,
     maxAge: 50 * 60 * 60, // 50 hours in seconds
   },
 };
