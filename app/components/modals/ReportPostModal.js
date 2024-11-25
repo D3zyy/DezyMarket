@@ -166,16 +166,23 @@ export function closeReportPostModal() {
                                 <>
                                     {success && (
                                         <div role="alert" className="flex flex-col items-center text-green-500 mb-2 p-3  rounded-lg ">
-                                            <svg 
-                                                xmlns="http://www.w3.org/2000/svg" 
-                                                fill="none" 
-                                                viewBox="0 0 24 24" 
-                                                strokeWidth={1.5} 
-                                                stroke="currentColor" 
-                                                className="size-16 mb-2"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                            </svg>
+                                            <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={2}
+                                            stroke="currentColor"
+                                            className="size-14 mb-3"
+                                            style={{
+                                              strokeWidth: '2.5',
+                                            }}
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                                            />
+                                          </svg>
                                             <span className="text-sm font-medium text-center">{success}</span>
                                         </div>
                                     )}
