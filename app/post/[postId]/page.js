@@ -12,7 +12,7 @@ import { openReportPostModal } from "@/app/components/modals/ReportPostModal";
 import ReportPostModal from "@/app/components/modals/ReportPostModal";
 import { openLoginModal } from "@/app/components/modals/LoginModal";
 import { openInfoModal } from "@/app/components/modals/InfoModal";
-
+import { RateUserModal , openRateUserModal} from "@/app/components/modals/RateUserModal";
 
 const Page = async ({ params }) => {
   let session;
@@ -296,7 +296,7 @@ const Page = async ({ params }) => {
         </div>
 
         {/* SVG Icons at the bottom */}
-       {session.isLoggedIn ?   <> <div className="items-center align-middle"> <ReportPostModal  post={postRecord} imagesLength={imageUrls.length} /> <EditPostModal post={postRecord} descriptionPost={description}/>
+       {session.isLoggedIn ?   <> <div className="items-center align-middle"> <RateUserModal userTorate={1} /> <ReportPostModal  post={postRecord} imagesLength={imageUrls.length} /> <EditPostModal post={postRecord} descriptionPost={description}/>
         <DeletePostModal post={postRecord} /> </div> </> : "" }
         <div className="flex justify-center space-x-6 mt-4 border-t pt-4">
       
@@ -323,7 +323,7 @@ className="h-6 w-6 text-red-600"
 Nahlásit příspěvek</a>
 
 
-<a onClick={session.isLoggedIn? openReportPostModal : openInfoModal}  className="btn sm:h-0 h-20 flex-shrink">
+<a onClick={session.isLoggedIn? openRateUserModal : openInfoModal}  className="btn sm:h-0 h-20 flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -374,7 +374,7 @@ className="h-6 w-6 text-red-600"
 Nahlásit příspěvek</a>
 </div>
 <div style={{textAlign: "center"}} className=" flex items-center ">
-<a onClick={session.isLoggedIn? openReportPostModal : openInfoModal} className="btn sm:h-0 h-20 flex-shrink">
+<a onClick={session.isLoggedIn? openRateUserModal : openInfoModal} className="btn sm:h-0 h-20 flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"

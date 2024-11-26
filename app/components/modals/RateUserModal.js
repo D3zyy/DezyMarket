@@ -2,13 +2,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-async function RateUser(postId, setSuccess) {
-    const response = await fetch('/api/posts/report', {
-        method: 'PUT',
+async function RateUser(userId, setSuccess) {
+    const response = await fetch('/api/posts/rate', {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ postId }),
+        body: JSON.stringify({ userId }),
     });
 
     console.log("Server response for post report:", response);
@@ -31,15 +31,51 @@ export function closeRateUserModal() {
     document.getElementById('rate_user_modal').close();
 }
 
-export const RateUserModal = ({ post }) => {
+export const RateUserModal = ({ userTorate }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [postId, setPostId] = useState(post?.id);
+    const [loadingStatus, setLoadingStatus] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [userId, setUserId] = useState(userTorate.id);
+    const [alreadyEnoughRating, setAlreadyEnoughRating] = useState('');
+    const [moreInfo, setMoreInfo] = useState('');
+    const [numberOfStars, setNumberOfStars] = useState(1);
+    useEffect(() => {
+    const checkRatetStatus = async () => {
+        setLoadingStatus(true); // Zobrazí spinner
+
+        try {
+            const response = await fetch('/api/posts/rate', {
+                method: 'PUT', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ postId }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setAlreadyReported(data.reported);
+            } else {
+                console.error('Failed to rate user:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error checking rate status:', error);
+        }
+
+        // Nastaví zpoždění, aby spinner byl zobrazen alespoň 2 sekundy
+        setTimeout(() => {
+            setLoadingStatus(false); // Skrývá spinner po zpoždění
+        }, 2000); // Zpoždění 2 sekundy (2000 ms)
+    };
+
+    checkRatetStatus();
+}, [userId]);
 
     const handleRateUser = async () => {
         setLoading(true);
-        await RateUser(postId, setSuccess);
+        await RateUser(userId, setSuccess);
         setLoading(false);
 
     };
@@ -52,28 +88,74 @@ export const RateUserModal = ({ post }) => {
         >
             <div className="modal-box w-full p-6 flex flex-col items-center align-middle text-center">
                 <div className="flex justify-center mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-12 text-red-600">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                    </svg>
+               
+
                 </div>
                 <div className="w-full p-4 rounded-lg">
-                    <p className="text-lg font-semibold text-red-500">
-                        Ohodnotit uzivatele
-                    </p>
-                    <span className="text-sm text-gray-500 mt-2 block">
-                        ohodnotte
-                    </span>
+                   
+                   {/* lg */}
+                   <div className="rating rating-lg">
+                <input
+                defaultChecked
+                    type="radio"
+                    name="rating-8"
+                    onChange={() => setNumberOfStars(1)}
+                    className="mask mask-star-2 bg-orange-400"
+                />
+                <input
+                    type="radio"
+                    name="rating-8"
+                    onChange={() => setNumberOfStars(2)}
+                    className="mask mask-star-2 bg-orange-400"
+                />
+                <input
+                    type="radio"
+                    name="rating-8"
+                    onChange={() => setNumberOfStars(3)}
+                    className="mask mask-star-2 bg-orange-400"
+                />
+                <input
+                    type="radio"
+                    name="rating-8"
+                    onChange={() => setNumberOfStars(4)}
+                    className="mask mask-star-2 bg-orange-400"
+                />
+                <input
+                    type="radio"
+                    name="rating-8"
+                    onChange={() => setNumberOfStars(5)}
+                    className="mask mask-star-2 bg-orange-400"
+                />
+                </div>
+<div className="w-full mt-5 relative mx-auto">
+                        <textarea
+                           disabled={alreadyEnoughRating.length > 0 || success}
+                            maxLength="230"
+                            style={{
+                                fontSize: '14px',
+                                padding: '8px',
+                                height: '150px',
+                                resize: 'none',
+                            }}
+                            name="moreInfo"
+                            id="moreInfo"
+                            value={alreadyEnoughRating[0]?.topic || moreInfo}
+                            onChange={(e) => setMoreInfo(e.target.value)}
+                            className="input input-bordered   w-full text-left"
+                            placeholder={"Komentář.."}
+                        />
+                    </div>
                 </div>
                 <div className="flex mt-4 justify-center">
                     <button
                         onClick={handleRateUser}
-                        className="btn mr-2 hover:bg-red-600 bg-red-500"
+                        className="btn mr-2 bg-orange-400 hover:bg-orange-400"
                         disabled={loading}
                     >
-                        {loading && !success ? 'Načítání...' : "Ohodnotit uživatele"}
+                        {loading && !success ? 'Hodnotím...' : "Ohodnotit uživatele"}
                     </button>
                     <button
-                        onClick={closeReportPostModal}
+                        onClick={closeRateUserModal}
                         className="btn"
                         autoFocus
                         disabled={loading}

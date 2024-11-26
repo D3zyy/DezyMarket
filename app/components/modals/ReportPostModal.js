@@ -187,7 +187,7 @@ export function closeReportPostModal() {
                                         </div>
                                     )}
                                     {alreadyReported.length > 0 && (
-                                        <div role="alert" className="text-yellow-500 mb-2 p-3">
+                                        <div role="alert" className="text-orange-400 mb-2 p-3">
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 className="size-16 mx-auto mb-2 stroke-current"
@@ -201,7 +201,7 @@ export function closeReportPostModal() {
                                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                                                 />
                                             </svg>
-                                            <span className="text-sm font-medium block text-center">Již nahlášeno</span>
+                                            <span className="text-sm font-medium text-orange-400 block text-center">Již nahlášeno</span>
                                         </div>
                                     )}
                                 </>
@@ -312,10 +312,10 @@ export function closeReportPostModal() {
                         {!errorFromServer && !success && !alreadyReported.length > 0 ? (
                             <button
                                 onClick={handleReportChange}
-                                className="btn btn-primary  "
+                                className="btn bg-red-500 hover:bg-red-600  "
                                 disabled={loading || selectedReasons.length === 0 || success || alreadyReported.length > 0}
                             >
-                                {loading && !success ? 'Odesílám...' : "Nahlásit"}
+                                {loading && !success ? 'Nahlašuji...' : "Nahlásit"}
                             </button>
                         ) : ""}
 
