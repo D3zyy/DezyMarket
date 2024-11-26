@@ -78,25 +78,25 @@ const AddUI = ({ accType , categories, sections}) => {
 
     if (res.ok) {
         let result = await res.json();
-        console.log("Odpověď od serveru :", result);
+       
         setErrorValidation(null)
-        console.log("tady nad",result.id)
+     
         router.push(`/post/${result.id}`);
-        console.log("tady pod")
+       
 
     } else {
       let result = await res.json();
-      console.log("Odpověďdd od serveru:", result);
+     
   
       // Obecná kontrola, zda odpověď obsahuje klíč `message`
       if (result?.messageToDisplay) {
-        console.log("1")
+      
           setErrorFromServer(result.messageToDisplay); // Nastaví konkrétní chybu podle `message`
       } else if (result?.message && !result?.errors) {
-        console.log("22")
+      
           setErrorFromServer("Nastala chyba na serveru. Zkuste to znovu"); // Nastaví konkrétní chybu podle `message`
       } else {
-        console.log("3")
+       
           setErrorValidation(result); // Nastaví obecnou validační chybu
       }
   
@@ -129,8 +129,8 @@ const AddUI = ({ accType , categories, sections}) => {
     const handleSectionChange = (e) => {
         setSelectedSection(e.target.value);
     };
-   console.log(typeOfPost)
-    console.log(process.env.NEXT_PUBLIC_MEDIUM_RANK)
+
+   
   const maxUploads = 
   typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
     ? 15// 5 obrázku základní rank

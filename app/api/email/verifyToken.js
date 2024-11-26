@@ -29,8 +29,8 @@ export async function verifyToken(email, token) {
         // Získání lokálního časového pásma (je třeba pro správnou časovou zónu)
         const localOffset = newDate.getTimezoneOffset() * 60000;
         const localISODate = new Date(newDate.getTime() - localOffset).toISOString();
-        console.log("teď čas : ", localISODate);
-        console.log("cas z db kdy vyprsi :",tokenRecord.expiresAt)
+
+  
 
         if (localISODate > tokenRecord.expiresAt) {
             return { message: 'Odkaz již vypršel.', success: false };

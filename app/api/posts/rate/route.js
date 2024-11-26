@@ -1,5 +1,6 @@
 import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
+import { DateTime } from 'luxon';
 
 function sanitizeInput(input) {
   const unsafeChars = /[<>;()&|]/g; // Add any other characters you want to block
@@ -18,44 +19,69 @@ export async function POST(req) {
           status: 403,
           headers: { 'Content-Type': 'application/json' }
         });
-      }
-    
+      } 
+
       const data = await req.json();
-      console.log("Received data ohodnocení POST:", data);
-      if (data.reasons.length < 1) {
+
+      console.log(session.userId)
+      console.log(data.userId)
+      console.log("Data  který sem dostal na ohodnocení uživatele :",data)
+      if (!Number.isInteger(data.userId)) {
+        return new Response(
+          JSON.stringify({
+            message: "Id uživatele je nesprávný datový typ.",
+            success: false,
+          }),
+          {
+            status: 403,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      }
+      if (data.moreInfo.length > 200) {
         return new Response(JSON.stringify({
-            message: "Žádný z důvodů nebyl nalezen",
+            message: "Dodatečné inforace jsou moc dlouhé.",
             success: false
           }), {
             status: 403,
             headers: { 'Content-Type': 'application/json' }
           });
       } 
+      if (data.userId == session.userId) {
+        return new Response(JSON.stringify({
+            message: "Nelze ohodnotit sám sebe.",
+            success: false
+          }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+          });
+      } 
+
+      if (data.numberOfStars != 5 && data.numberOfStars != 4 && data.numberOfStars != 3&& data.numberOfStars != 2 && data.numberOfStars !=1) {
+        return new Response(JSON.stringify({
+            message: "Chybný počet hvězdiček",
+            success: false
+          }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+          });
+      } 
+      console.log("Uspesna kontrola hvezdicek")
       // Sanitize input to remove unsafe characters
-      data.reasons = data.reasons.map(sanitizeInput);
-      data.extraInfo = sanitizeInput(data.extraInfo);
+      data.extraInfo = sanitizeInput(data.moreInfo);
 
-      const invalidReasons = data.reasons.filter(reason => !reasons.includes(reason));
-
-      if (invalidReasons.length > 0) {
-        return new Response(JSON.stringify({
-            message: "Nějaký z důvodů není platný",
-            success: false
-          }), {
-            status: 403,
-            headers: { 'Content-Type': 'application/json' }
-          });
-      } 
-
-      // Fetch the post and the creator's role
-      const post = await prisma.posts.findUnique({
-        where: { id: data.postId },
-        include: { user: { include: { role: true } } }  // Include the user and their role
+      //check if given user exists
+      const userExists = await prisma.Users.findFirst({
+        where: {
+          id: data.userId,
+        },
       });
+      console.log(userExists)
+     
   
-      if (!post) {
+      if (!userExists) {
         return new Response(JSON.stringify({
-          message: "Příspěvek nenalezen",
+          message: "Uživatel na hodnocení nenalezen",
           success: false
         }), {
           status: 404,
@@ -63,53 +89,46 @@ export async function POST(req) {
         });
       }
   
-      // If the session user is the post creator
-      if (post.userId === session.userId) {      
-        return new Response(JSON.stringify({
-            message: "Nelze nahlásit vlastnní příspěvek",
-            success: false
-          }), {
-            status: 403,
-            headers: { 'Content-Type': 'application/json' }
-          });
-      }
 
-      const alreadyReported = await prisma.postReport.findFirst({
-        where: {
-          postId: data.postId,
-          userId: session.userId,  // assuming session.userId contains the user's ID
-        },
-      });
 
-      if (alreadyReported) {
-        return new Response(JSON.stringify({
-            message: 'Příspěvek jste již nahlásili',
-            success: false
-          }), {
-            status: 403,
-            headers: { 'Content-Type': 'application/json' }
-          });
-      }
+
+   // Získání aktuálního českého času
+   const localISODateFixedOffset = DateTime.now()
+   .setZone('Europe/Prague') // Čas zůstane v českém pásmu
+   .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
+
+console.log(localISODateFixedOffset); // Např. "2024-11-26T23:10:30+00:00"
       
-      let insertedTopic = false;
 
-      for (const reason of data.reasons) {
-        await prisma.postReport.create({
-            data: {
-                postId: data.postId,
-                userId: session.userId,
-                reason: reason,
-                topic: !insertedTopic && data.extraInfo ? data.extraInfo : null,
-            },
-        });
+      const newRating = await prisma.UserRatings.create({
+        data: {
+            ratedAt: localISODateFixedOffset,
+            fromUserId: session.userId,
+            toUserId: data.userId,
+            extraInfo: data.moreInfo,
+            numberOfStars: data.numberOfStars,
+        },
+    });
 
-        if (data.extraInfo && !insertedTopic) {
-            insertedTopic = true;
-        }
-      }
+    const find = await prisma.UserRatings.findFirst({
+        where: {
+            id: newRating.id,
+           
+        },
+    });
+    console.log(find.ratedAt)
+
+
+
+
+       
+      
+
+
+
 
       return new Response(JSON.stringify({
-        message: 'Příspěvek byl úspěšně nahlášen',
+        message: 'Uživatel byl úspěšně ohodnocen',
         success: true
       }), {
         status: 200,
@@ -117,9 +136,9 @@ export async function POST(req) {
       });
   
     } catch (error) {
-      console.error('Chyba na serveru [POST] požadavek na report příspěvku: ', error);
+        console.log(error)
       return new Response(JSON.stringify({
-        message: 'Chyba na serveru [POST] požadavek na nahlášení příspěvku',
+        message: 'Chyba na serveru [POST] požadavek na hodnocení uživatele',
         success: false
       }), {
         status: 500,
@@ -153,7 +172,7 @@ export async function PUT(req) {
       }
       
       const data = await req.json();
-      console.log("Received data to check reported post on user PUT:", data);
+    
     
       
 
@@ -181,7 +200,7 @@ export async function PUT(req) {
               userId: session.userId,  // assuming session.userId contains the user's ID
             },
           });
-          console.log("Již reportnul:",alreadyReported)
+     
           return new Response(JSON.stringify({
            reported: alreadyReported,
            
@@ -196,6 +215,7 @@ export async function PUT(req) {
 
 
     } catch (error) {
+        console.log(error)
       console.error('Chyba na serveru [PUT] požadavek na zjištění zda byl příspěvek uživatel již nahlášen: ', error);
       return new Response(JSON.stringify({
         message: 'Chyba na serveru [PUT] požadavek na zjištění zda byl příspěvek uživatel již nahlášen:',

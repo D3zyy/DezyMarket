@@ -2,13 +2,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-async function RateUser(userId, setSuccess) {
+async function RateUser(userId, setSuccess,moreInfo,numberOfStars) {
     const response = await fetch('/api/posts/rate', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ userId ,moreInfo,numberOfStars}),
     });
 
     console.log("Server response for post report:", response);
@@ -37,7 +37,7 @@ export const RateUserModal = ({ userTorate }) => {
     const [success, setSuccess] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
-    const [userId, setUserId] = useState(userTorate.id);
+    const [userId, setUserId] = useState(userTorate);
     const [alreadyEnoughRating, setAlreadyEnoughRating] = useState('');
     const [moreInfo, setMoreInfo] = useState('');
     const [numberOfStars, setNumberOfStars] = useState(1);
@@ -75,7 +75,7 @@ export const RateUserModal = ({ userTorate }) => {
 
     const handleRateUser = async () => {
         setLoading(true);
-        await RateUser(userId, setSuccess);
+        await RateUser(userId, setSuccess,moreInfo,numberOfStars);
         setLoading(false);
 
     };
@@ -130,7 +130,7 @@ export const RateUserModal = ({ userTorate }) => {
 <div className="w-full mt-5 relative mx-auto">
                         <textarea
                            disabled={alreadyEnoughRating.length > 0 || success}
-                            maxLength="230"
+                            maxLength="200"
                             style={{
                                 fontSize: '14px',
                                 padding: '8px',

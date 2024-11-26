@@ -6,9 +6,9 @@ export async function POST(req) {
     try {
         let data 
         try {
-            console.log("tady")
+
              data = await req.json();
-            console.log("data ktery sem dostal od klienta :",data)
+          
           } catch (error) {
             return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
               status: 400,
@@ -70,7 +70,7 @@ export async function POST(req) {
         const subscriptionInfo = await stripe.subscriptions.retrieve(subscription.id);
        const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
        let producName =product.name;
-       console.log(producName)
+ 
        
        console.log("rovnaji se  a predplatne je nastaveno na konec: ",producName === data.name && subscriptions.data[0].cancel_at_period_end === true)
        if(producName != data.name || subscriptions.data[0].cancel_at_period_end != true){
@@ -82,9 +82,8 @@ export async function POST(req) {
        }
        //
 
-        //console.log("info sub :",subscriptionInfo)
-       //console.log("predplatne :",subscriptions)
-        console.log("Jsem rdy ho změnit na obnovu zpatky ")
+
+       
         if(producName === data.name && subscriptions.data[0].cancel_at_period_end === true){
             await stripe.subscriptions.update(
                 subscription.id,

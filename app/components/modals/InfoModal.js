@@ -212,9 +212,9 @@ const InfoModal = ({ defaultOpen, message , backToHome }) => {
     console.log("volam pred")
     if (success && !recoverPassword) {
 
-      console.log("volam vevnitr refresh")
+   
       router.refresh();
-      console.log("volam vevnitr už po  refresh")
+     
     }
   }, [success, recoverPassword, router]);
 

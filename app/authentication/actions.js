@@ -11,21 +11,20 @@ export const getSession = async () => {
     try {
    
       // Retrieve the session using iron-session
-     console.log("cookies:",cookies())
+
       const session = await getIronSession(cookies(),sessionOptions);
-      console.log("vevnitr session ziskana:",session)
+  
       if (session && session.sessionId) {
-        console.log("vevnitr session máme existuje ")
-        console.log("tohle checkuju zda existuje v db:",session.sessionId)
+       
         // Check if the sessionId exists in the database
         const sessionRecord = await prisma.Sessions.findUnique({
           where: {
             sessionId: session.sessionId,
           },
         });
-        console.log("vevnitr session máme existuje z db: ",sessionRecord)
+       
         if (!sessionRecord) {
-          console.log("vevnitr session  neexistuje  v db")
+          
           // If sessionId is not found in the database, call logOut to clean up
           return {message: "Session nebyla nalezena"}
           // Optionally, you can return an error or handle it as needed
@@ -37,7 +36,7 @@ export const getSession = async () => {
        
       }
 
-      console.log("vevnitr session  existuje  v db pokracujeme dal ")
+      
     let messageBan = false
     let ban = false
     let logOut = false

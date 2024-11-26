@@ -5,6 +5,7 @@ import { prisma } from '@/app/database/db';
 import bcrypt from 'bcrypt';
 import { sendVerificationEmail } from '@/app/api/email/email';
 import { headers } from "next/headers";
+import { DateTime } from 'luxon';
 
 const schema = z.object({
   email: z.string()
@@ -77,10 +78,17 @@ export const handleRegistration = async (formData) => {
       };
     }
  
+  // Získání aktuálního českého času
+  const localISODateFixedOffset = DateTime.now()
+  .setZone('Europe/Prague') // Čas zůstane v českém pásmu
+  .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
+
+console.log(localISODateFixedOffset); // Např. "2024-11-26T23:10:30+00:00"
 
     // Uložení uživatele do databáze
   const createdUser =   await prisma.Users.create({
       data: {
+        dateOfRegistration: localISODateFixedOffset,
         email: validatedFields.data.email,
         password: hashedPassword,
         fullName: validatedFields.data.fullName,

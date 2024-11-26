@@ -29,7 +29,27 @@ export async function POST(req) {
         'Jiné',
     ];
       const data = await req.json();
-      console.log("Received data report POST:", data);
+      if (!Number.isInteger(data.postId)) {
+        return new Response(
+          JSON.stringify({
+            message: "Id příspěvku je nesprávný datový typ.",
+            success: false,
+          }),
+          {
+            status: 403,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      }
+      if (data.extraInfo.length > 200) {
+        return new Response(JSON.stringify({
+            message: "Dodatečné informace jsou moc dlouhé.",
+            success: false
+          }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+          });
+      } 
       if (data.reasons.length < 1) {
         return new Response(JSON.stringify({
             message: "Žádný z důvodů nebyl nalezen",
@@ -161,7 +181,7 @@ export async function PUT(req) {
       }
       
       const data = await req.json();
-      console.log("Received data to check reported post on user PUT:", data);
+      
     
       
 
@@ -189,7 +209,7 @@ export async function PUT(req) {
               userId: session.userId,  // assuming session.userId contains the user's ID
             },
           });
-          console.log("Již reportnul:",alreadyReported)
+  
           return new Response(JSON.stringify({
            reported: alreadyReported,
            

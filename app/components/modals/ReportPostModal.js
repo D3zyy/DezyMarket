@@ -212,7 +212,6 @@ export function closeReportPostModal() {
 
                 {errorMessage && (
                     <div className="flex items-center gap-2 px-4 py-2  border border-red-500 rounded-md text-red-600 font-semibold mt-2">
-                        <span>{errorMessage}</span>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -223,6 +222,8 @@ export function closeReportPostModal() {
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
+                        <span>{errorMessage}</span>
+                        
                     </div>
                 )}
 
@@ -259,7 +260,7 @@ export function closeReportPostModal() {
                     <div className="w-full mt-5 relative mx-auto">
                         <textarea
                             disabled={alreadyReported.length > 0 || success}
-                            maxLength="230"
+                            maxLength="200"
                             style={{
                                 fontSize: '14px',
                                 padding: '8px',
@@ -309,7 +310,7 @@ export function closeReportPostModal() {
 
 
                     <div className="modal-action mt-6 flex justify-center w-full">
-                        {!errorFromServer && !success && !alreadyReported.length > 0 ? (
+                        {!success && !alreadyReported.length > 0 ? (
                             <button
                                 onClick={handleReportChange}
                                 className="btn bg-red-500 hover:bg-red-600  "

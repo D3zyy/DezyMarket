@@ -4,8 +4,8 @@ import ProfileNavBarClient from "./ProfileNavBarClient";
 
 const ProfileNavBar = async () => {
   const session = await getSession();
-
-  return <ProfileNavBarClient session={session} />;
+  const sessionParsed = JSON.parse(JSON.stringify(session))
+  return <ProfileNavBarClient session={sessionParsed} />;
 };
 
 export default ProfileNavBar;

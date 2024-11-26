@@ -62,8 +62,6 @@ export async function POST(req) {
     const localOffset = newDate.getTimezoneOffset() * 60000;
     const localISODate = new Date(newDate.getTime() - localOffset).toISOString();
    
-    console.log("čas ted :",localISODate);
-    console.log("čas vypršení :",tokenRecord.expiresAt);
 
     if (localISODate > tokenRecord.expiresAt) {
       return new Response(

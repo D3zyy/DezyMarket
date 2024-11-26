@@ -18,7 +18,7 @@ const Page = async () => {
             }
     
              accType = await getUserAccountTypeOnStripe(session.email);
-            console.log("Account Type:", accType);
+
     
         }catch(error){
             throw new Error('Session nebo získaní typu účtu error:',error);

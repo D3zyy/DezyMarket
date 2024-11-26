@@ -16,7 +16,7 @@ export async function POST(request) {
       );
     }
 
-    console.log(session);
+
     const customers = await stripe.customers.list({
       email: session.email
     });

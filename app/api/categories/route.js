@@ -3,13 +3,13 @@ import { prisma } from "@/app/database/db";
 import { getSession } from "@/app/authentication/actions";
 
 export async function POST(req) {
-  console.log("REQUEST POST NA KATEGORIE PŘED TRY")
+
   try {
-    console.log("REQUEST NA KATEGORIE PO TRY")
+
    let  data = await req.json();
-    console.log("DATA ktery se mdostal na ziskani kategories :",data)
+  
    if(!data) {
-    console.log("nebyly nalezeny data")
+    
     return new Response(
      
         JSON.stringify({ message: 'Uživatel nebyl nalezen' }),
@@ -120,13 +120,13 @@ async function updateUserCategory(data, session) {
   }
 
   export async function GET(req) {
-    console.log("REQUEST GET NA KATEGORIE PŘED TRY")
+ 
     try {
-      console.log("REQUEST GET NA KATEGORIE PO TRY")
+     
       const session = await getSession();
-      console.log("REQUEST GET NA KATEGORIE session:", session)
+      
       if (!session || !session.isLoggedIn) {
-        console.log("REQUEST GET NA KATEGORIE session nenalzena")
+       
         return new Response(
           JSON.stringify({ message: 'Uživatel není přihlášen' }),
           {
@@ -135,7 +135,7 @@ async function updateUserCategory(data, session) {
           }
         );
       }
-      console.log("REQUEST GET NA KATEGORIE session nalezena")
+     
       const Allcategory = await prisma.Categories.findMany();
       return new Response(
         JSON.stringify(Allcategory), // Make sure to JSON.stringify the data

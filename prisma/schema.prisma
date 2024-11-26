@@ -16,27 +16,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model Users {
-  id                        Int                 @id @default(autoincrement())
-  fullName                  String
-  nickname                  String?
-  email                     String              @unique
-  password                  String              @db.VarChar(255)
-  dateOfRegistration        DateTime            @default(now())
-  roleId                    Int
-  role                      Roles               @relation(fields: [roleId], references: [id])
-  bans                      Bans[]
-  posts                     Posts[]
-  sessions                  Sessions[]
-  accountTypes              AccountType[]       // One-to-many relationship with AccountType
-  termsOfUseAndPrivatePolicy Boolean            @default(false)
-  verifiedEmail             Boolean             @default(false) // New field to track email verification status
-  verificationToken         VerificationTokens? // Optional relation to VerificationToken
-  numberOfTries             NumberOfTries?
-  postViews                 PostViews[]         // One-to-many relationship with PostViews
-  profilePicture            ProfilePicture[]    
-  postReport                PostReport[]
-  ipAddresses               IpAddressesOnUsers[] // Relation to join table
+  id                          Int                 @id @default(autoincrement())
+  fullName                    String
+  nickname                    String?
+  email                       String              @unique
+  password                    String              @db.VarChar(255)
+  dateOfRegistration          DateTime          
+  roleId                      Int
+  role                        Roles               @relation(fields: [roleId], references: [id])
+  bans                        Bans[]
+  posts                       Posts[]
+  sessions                    Sessions[]
+  accountTypes                AccountType[]       // One-to-many relationship with AccountType
+  termsOfUseAndPrivatePolicy  Boolean             @default(false)
+  verifiedEmail               Boolean             @default(false) // New field to track email verification status
+  verificationToken           VerificationTokens? // Optional relation to VerificationToken
+  numberOfTries               NumberOfTries?
+  postViews                   PostViews[]         // One-to-many relationship with PostViews
+  profilePicture              ProfilePicture[]    
+  postReport                  PostReport[]
+  ipAddresses                 IpAddressesOnUsers[] // Relation to join table
+  userRatingsGiven            UserRatings[]       @relation("RatingsGiven")
+  userRatingsReceived         UserRatings[]       @relation("RatingsReceived")
 }
+
+model UserRatings {
+  id           Int      @id @default(autoincrement())
+  fromUserId   Int      // Foreign key for the user giving the rating
+  toUserId     Int      // Foreign key for the user receiving the rating
+  extraInfo    String?  // Optional topic of the rating
+  ratedAt      DateTime 
+  numberOfStars Int?
+  fromUser     Users    @relation("RatingsGiven", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser       Users    @relation("RatingsReceived", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@index([fromUserId])
+  @@index([toUserId])
+}
+
 
 model ProfilePicture {
   id       Int    @id @default(autoincrement())

@@ -100,7 +100,7 @@ const cfCommand = new CreateInvalidationCommand({
 })
 
 const response = await cloudfront.send(cfCommand)
-  console.log("odpoved nas ivalidaci obrazku na CloudFront :",response)
+
  
 
     return response;
@@ -184,8 +184,7 @@ export async function POST(req) {
  
         try {
             formData = await req.formData();
-           console.log("data ktery sem dostal od klienta :",formData)
-           console.log(formData.getAll("images"))
+
            allImages = formData.getAll("images")
            if(allImages.length > 25) {
             return new Response(JSON.stringify({ message: "Chyba. Nahráno nedovolené množství obrázků!" }), {
@@ -215,7 +214,7 @@ if (!session || !session.isLoggedIn || !session.email) {
 const numberOfPostsOfUser = await prisma.Posts.findMany({
   where: { userId: session.userID}
 });
-console.log("počet příspěvků uživatele:",numberOfPostsOfUser.length)
+
 if(numberOfPostsOfUser.length > 30){
   return new Response(JSON.stringify({ messageToDisplay: "Již jste nahráli maximální počet příspěvků." }), {
     status: 403,
@@ -235,7 +234,7 @@ const userId = session.userId; // Use userId directly from session
             if (!isNaN(priceConverted) && Number.isInteger(parseFloat(priceConverted))) {
                 priceConverted = parseInt(priceConverted, 10); // Převeď na celé číslo
             }
-            console.log("tady")
+           
           const validatedFields = schema.safeParse({
             name: formData.get('name'),
             category: parseInt(formData.get('category')),
@@ -246,9 +245,9 @@ const userId = session.userId; // Use userId directly from session
             phoneNumber: formData.get('phoneNumber'),
             price: priceConverted,
           });
-          console.log("tady po ")
+
           if (!validatedFields.success) {
-            console.log("Nevalidní pole:", validatedFields.error.flatten().fieldErrors); // Vypiš chyby
+          
             return new Response(JSON.stringify({
               message: 'Nevalidní vstupy.',
               errors: validatedFields.error.flatten().fieldErrors // Vrátí konkrétní chyby jako součást odpovědi
@@ -287,14 +286,14 @@ const userId = session.userId; // Use userId directly from session
                         break;
                 }
             }
-            console.log("Povolený druh příspěvku :", allowedTypeOfPost)
+           
        
             if (allowedTypeOfPost === formData.get('typeOfPost') ||  formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_BEST_RANK || formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_MEDIUM_RANK  ){
-               console.log(validatedFields)
+              
                if (!( (allowedTypeOfPost === process.env.NEXT_PUBLIC_BASE_RANK && allImages.length <= 15) ||
                       (allowedTypeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK && allImages.length <= 20) ||
                       (allowedTypeOfPost === process.env.NEXT_PUBLIC_BEST_RANK && allImages.length <= 25) )) {
-                    console.log("Počet obrazku neni povolen pocet :",allImages.length)
+                   
                   return new Response(JSON.stringify({ message: "Počet obrázků není povolen!" }), {
                     status: 400,
                     headers: { 'Content-Type': 'application/json' }
@@ -352,7 +351,7 @@ const userId = session.userId; // Use userId directly from session
                 });
                 
                 const FilePath = await uploadImagesToS3(buffers,newPost.id)
-                console.log("Cesta k obrázům :", FilePath)
+               
                 const imageUrls = FilePath; 
   
                 await Promise.all(
@@ -369,7 +368,7 @@ const userId = session.userId; // Use userId directly from session
                 );  
          
               } catch(error) {
-                console.log("tady db problem ",error)
+                
                 return new Response(JSON.stringify({ message: "Nastala chyba při přidávání příspěvku do db." }), {
                   status: 403,
                   headers: { 'Content-Type': 'application/json' }
@@ -386,14 +385,14 @@ const userId = session.userId; // Use userId directly from session
             } else {
    
                 if(formData.get('typeOfPost') != process.env.NEXT_PUBLIC_BASE_RANK && formData.get('typeOfPost') != process.env.NEXT_PUBLIC_MEDIUM_RANK && formData.get('typeOfPost') != process.env.NEXT_PUBLIC_BEST_RANK ){
-                    console.log("neexistuje tento typ prispevku")
+                   
                     return new Response(JSON.stringify({ message: "Tento typ příspěvku neexistuje." }), {
                         status: 403,
                         headers: { 'Content-Type': 'application/json' }
                     });
                 }
 
-                console.log("neni to dovoleny")
+        
                 return new Response(JSON.stringify({ message: "Na tento typ příspěvku nemáte opravnění." }), {
                     status: 403,
                     headers: { 'Content-Type': 'application/json' }
@@ -441,7 +440,7 @@ export async function PUT(req) {
     }
 
     const data = await req.json();
-    console.log("Received data:", data);
+
 
     // Fetch the post and the creator's role
     const post = await prisma.posts.findUnique({
@@ -480,7 +479,7 @@ export async function PUT(req) {
     });
  
     if (!validatedFields.success) {
-      console.log("Nevalidní pole:", validatedFields.error.flatten().fieldErrors); // Vypiš chyby
+
       return new Response(JSON.stringify({
         message: 'Nevalidní vstupy.',
         errors: validatedFields.error.flatten().fieldErrors // Vrátí konkrétní chyby jako součást odpovědi
@@ -580,7 +579,7 @@ export async function PUT(req) {
     });
  
     if (!validatedFields.success) {
-      console.log("Nevalidní pole:", validatedFields.error.flatten().fieldErrors); // Vypiš chyby
+
       return new Response(JSON.stringify({
         message: 'Nevalidní vstupy.',
         errors: validatedFields.error.flatten().fieldErrors // Vrátí konkrétní chyby jako součást odpovědi
@@ -651,7 +650,7 @@ export async function PUT(req) {
 export async function DELETE(req) {
   try {
     const session = await getSession();
-    console.log(session)
+
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(JSON.stringify({
         message: "Chyba na serveru [DELETE] požadavek na smazání  příspěvku. Session nebyla nalezena "
@@ -662,7 +661,7 @@ export async function DELETE(req) {
     }
 
     const data = await req.json();
-    console.log("Received data DELETE POST:", data);
+
 
     // Fetch the post and the creator's role
     const post = await prisma.posts.findUnique({
@@ -690,13 +689,13 @@ export async function DELETE(req) {
       });
           //ještě z s3 deletnout
           if(haveImages.length > 0){
-            console.log("Má obrázky")
+    
            let res =  await  deleteImagesByPostId(data.postId)
            // here invalidating path 1000 free per month
           // let resCloudFront = await invalidateImagesOnCloudFrontByPostId(data.postId)
-                console.log("odpoved na vymazani obrazku z s3 :",res) 
+               
             } else {
-              console.log("Nemá obrázky")
+        
             }
        
       return new Response(JSON.stringify({
@@ -726,11 +725,11 @@ export async function DELETE(req) {
       where: { id: data.postId }
     });
     if(haveImages.length > 0){
-      console.log("Má obrázky")
+ 
       let res =  await  deleteImagesByPostId(data.postId)
-      console.log("odpoved na vymazani obrazku z s3 :",res) 
+      
      } else {
-        console.log("Nemá obrázky")
+       
       }
     //ještě z s3 deletnout
     return new Response(JSON.stringify({

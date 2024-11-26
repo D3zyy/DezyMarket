@@ -68,8 +68,7 @@ export async function POST(req) {
         const subscriptionInfo = await stripe.subscriptions.retrieve(subscription.id);
        const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
        let producName =product.name;
-       console.log(producName)
-       console.log("rovnaji se : ",producName === data.name)
+
        if(producName != data.name){
         return new Response(JSON.stringify({
         }), {

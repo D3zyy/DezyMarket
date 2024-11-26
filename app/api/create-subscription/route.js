@@ -21,20 +21,18 @@ export async function POST(request) {
    
        const { priceId , agreed} = await request.json()
   
-       console.log("session email:",session.email)
+      
 
        const customer = await stripe.customers.search({
         query: `email:'${session.email}'`,
       });
        
-          console.log("zakaznik:",customer)
-          console.log("id zakazanika :",customer.data[0]?.id)
+        
           const subscriptions = await stripe.subscriptions.list({
             customer: customer.data[0]?.id,
             status: "active"
         });
-        console.log("predplatne zakaznika:",subscriptions)
-        console.log("tady")
+       
         if (subscriptions.data.length > 0) {
             return new Response(JSON.stringify({
                 message: "Zákazník má již aktivní předplatné. Nelze vytvořit nové."
@@ -43,7 +41,7 @@ export async function POST(request) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-        console.log("tady po")
+
           const subscription = await stripe.subscriptions.create({
             customer:  customer.data[0].id,
             items: [{
