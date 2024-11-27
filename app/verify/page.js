@@ -1,72 +1,51 @@
 "use client";
-import React, { useEffect, useRef, useState } from 'react';
-import { CheckCircleIcon, XCircleIcon , ShieldExclamationIcon} from '@heroicons/react/24/solid';
-import { useRouter } from 'next/navigation';
+
+import React, { useEffect, useRef, useState } from "react";
+import {
+  CheckCircleIcon,
+  XCircleIcon,
+  ShieldExclamationIcon,
+} from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
 
 async function fetchVerification(email, token) {
   try {
-    
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify?token=${token}&email=${email}`
     );
     return await res.json();
   } catch (error) {
-    console.error('Error fetching verification:', error);
-    return { message: '', success: false };
+    console.error("Error fetching verification:", error);
+    return { message: "", success: false };
   }
 }
 
-
-
 const Page = ({ searchParams }) => {
   const { token, email } = searchParams;
-  const [message, setMessage] = useState('');
-  
+  const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const dialogRef = useRef(null);
   const router = useRouter();
-  useEffect(() => {
-    const dialog = document.getElementById('verify_modal');
-    
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        event.preventDefault(); // Prevent closing the dialog on ESC key press
-      }
-    };
 
-    if (dialog) {
-      dialog.addEventListener('keydown', handleKeyDown);
-      return () => {
-        dialog.removeEventListener('keydown', handleKeyDown);
-      };
-    }
-  }, []);
+  // Ref pro kontrolu, zda už byl požadavek proveden
+  const hasVerified = useRef(false);
+
   useEffect(() => {
     const verify = async () => {
-      if (!token || !email) {
-        setMessage('Žádné parametry nebyly načteny');
-        setIsSuccess(false);
-        setLoading(false);
-        return;
-      }
+      if (!token || !email || hasVerified.current) return;
 
+      hasVerified.current = true; // Zabrání opakovanému provedení
       const result = await fetchVerification(email, token);
-      
-      setMessage(result.message || 'Nastala chyba.');
+
+      setMessage(result.message || "Nastala chyba.");
       setIsSuccess(result.success);
       setLoading(false);
     };
 
     verify();
-  }, [token, email]); 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tokenFromUrl = urlParams.get('token');
-    if (!tokenFromUrl) {
-      router.push('/'); 
-    } 
-  }, [router]);
+  }, [token, email]);
+
   useEffect(() => {
     if (dialogRef.current) {
       dialogRef.current.showModal();
@@ -75,9 +54,12 @@ const Page = ({ searchParams }) => {
 
   return (
     <>
-    <div style={{marginBottom: "900px"}}> </div>
-      {/* Include global styles to ensure the dialog backdrop styles are applied */}
-      <dialog ref={dialogRef} id='verify_modal' className="modal modal-bottom sm:modal-middle">
+      <div style={{ marginBottom: "900px" }}> </div>
+      <dialog
+        ref={dialogRef}
+        id="verify_modal"
+        className="modal modal-bottom sm:modal-middle"
+      >
         <div className="modal-box">
           <div className="modal-action">
             <div className="flex items-center justify-center h-full w-full p-1">
@@ -91,11 +73,11 @@ const Page = ({ searchParams }) => {
                     isSuccess ? (
                       <>
                         {message === "Email byl úspěšně ověřen." ? (
-                              <CheckCircleIcon className="mb-3 h-12 w-12 text-green-500" />
-                            ) : (
-                              <ShieldExclamationIcon className="mb-3 h-12 w-12 text-yellow-500" />
-                            )}
-                        <span  className="ml-2 text-lg">{message}</span>
+                          <CheckCircleIcon className="mb-3 h-12 w-12 text-green-500" />
+                        ) : (
+                          <ShieldExclamationIcon className="mb-3 h-12 w-12 text-yellow-500" />
+                        )}
+                        <span className="ml-2 text-lg">{message}</span>
                       </>
                     ) : (
                       <>
@@ -109,17 +91,17 @@ const Page = ({ searchParams }) => {
                       <span className="ml-2 text-lg">{message}</span>
                     </>
                   )}
-                     <button
-                     style={{marginTop: "15px"}}
-                      type="button"
-                      className="btn"
-                      onClick={() => {
-                        dialogRef.current.close();
-                        router.push('/');
-                      }}
-                    >
-                      Zavřít
-                    </button>
+                  <button
+                    style={{ marginTop: "15px" }}
+                    type="button"
+                    className="btn"
+                    onClick={() => {
+                      dialogRef.current.close();
+                      router.push("/");
+                    }}
+                  >
+                    Zavřít
+                  </button>
                 </div>
               )}
             </div>
