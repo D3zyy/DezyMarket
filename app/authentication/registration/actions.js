@@ -21,11 +21,6 @@ const schema = z.object({
     /^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]{2,} [A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]{2,}$/,
     'Celé jméno musí mít formát "Jméno Příjmení", kde obě části mají alespoň 2 znaky, obsahují pouze písmena včetně českých znaků a mezi nimi je jedna mezera.'
   ),
-    nickname: z.string()
-    .min(4, 'Přezdívka musí mít alespoň 4 znaky.')
-    .max(10, 'Přezdívka může mít maximálně 10 znaků.')
-    .regex(/^(?!.*Dezy).*$/, 'Tato přezdívka není dostupná.')
-    .regex(/^[A-Za-z0-9]+$/, 'Přezdívka smí obsahovat pouze písmena a čísla.'),
   termsOfUseAndPrivatePolicy: z.boolean()
     .refine(val => val === true, 'Musíte souhlasit s podmínkami použití a zásadami zpracování osobních údajů.')
 });
@@ -35,7 +30,6 @@ export const handleRegistration = async (formData) => {
     email: formData.email,
     password: formData.password,
     fullName: formData.fullName,
-    nickname: formData.nickname,
     termsOfUseAndPrivatePolicy: formData.termsOfUseAndPrivatePolicy === 'on',
   });
 
@@ -46,26 +40,15 @@ export const handleRegistration = async (formData) => {
   }
 
   try {
-    
-    //Kontorla zda již přezdvíka existuje
-    const existingNickname= await prisma.Users.findUnique({
-      where: {
-        nickname: validatedFields.data.nickname,
-      }
-    });
 
-    if (existingNickname) {
-      return {
-        message: "Přezdívka již existuje.",
-      };
-    }
+
     // Zkontrolujte, zda uživatel s daným e-mailem již existuje
     const existingUser = await prisma.Users.findUnique({
       where: {
         email: validatedFields.data.email,
       }
     });
-
+    console.log("uživael již exostuje",existingUser)
     if (existingUser) {
       return {
         message: "Email již existuje.",
@@ -106,7 +89,6 @@ console.log(localISODateFixedOffset); // Např. "2024-11-26T23:10:30+00:00"
         email: validatedFields.data.email,
         password: hashedPassword,
         fullName: validatedFields.data.fullName,
-        nickname: validatedFields.data.nickname,
         termsOfUseAndPrivatePolicy: validatedFields.data.termsOfUseAndPrivatePolicy,
         roleId: role.id,
       }

@@ -4,12 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { handleRegistration } from '@/app/authentication/registration/actions';
 import { InboxArrowDownIcon } from '@heroicons/react/24/solid';
 import { CheckCircleIcon, XCircleIcon , LockClosedIcon} from '@heroicons/react/24/solid';
-const initialState = {
-  message: null,
-  closeModal: false,
-  email: null,
-  password: null,
-};
+
 
 export function openRegisterModal() {
   document.getElementById('register_modal').showModal();
@@ -20,7 +15,6 @@ const translateField = (field) => {
     email: 'Email',
     password: 'Heslo',
     fullName: 'Celé jméno',
-    nickname: 'Přezdívka',
     termsOfUseAndPrivatePolicy: 'Podmínky použití a zásady ochrany osobních údajů'
   };
   return translations[field] || field;
@@ -133,10 +127,6 @@ const RegistrationModal = () => {
                 <div className="py-2">
                   <label htmlFor="fullName" className="block">Celé jméno</label>
                   <input type="text" id="fullName" name="fullName" className="input input-bordered w-full" required />
-                </div>
-                <div className="py-2">
-                  <label htmlFor="nickname" className="block">Přezdívka</label>
-                  <input type="text" id="nickname" name="nickname" className="input input-bordered w-full" required />
                 </div>
                 <div className="py-2">
                   <label htmlFor="email" className="block">Email</label>

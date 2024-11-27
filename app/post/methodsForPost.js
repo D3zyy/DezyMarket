@@ -31,7 +31,7 @@ export async function getImageUrlsFromDb(postId) {
   try {
     urls = await prisma.Image.findMany({
       where: {
-        postId: parseInt(postId),
+        postId: postId,
       },
     });
   } catch (error) {

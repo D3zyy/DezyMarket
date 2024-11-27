@@ -24,12 +24,12 @@ const Page = async ({ params }) => {
 
 
   try {
-    console.log("1. jdeme pro session")
+    //console.log("1. jdeme pro session")
     session = await getSession();
-    console.log("2. výsledek session callu na API :",session)
-    console.log("id postu:",params.postId)
+    //console.log("2. výsledek session callu na API :",session)
+    //console.log("id postu:",params.postId)
     postRecord = await getPostFromDb(params.postId);
-    console.log("3, jdeme pro post do DB")
+    //console.log("3, jdeme pro post do DB")
     //console.log("4. výsledek callu na post do DB:",postRecord)
     imageUrls = await getImageUrlsFromDb(params.postId);
     //console.log("3, jdeme pro obrázky do DB")

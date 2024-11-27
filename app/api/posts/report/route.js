@@ -1,13 +1,11 @@
 import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 
-function sanitizeInput(input) {
-  const unsafeChars = /[<>;()&|]/g; // Add any other characters you want to block
-  return input.replace(unsafeChars, ''); // Remove unsafe characters
-}
+
 
 export async function POST(req) {
     try {
+      console.log("tady")
       const session = await getSession();
     
       if (!session || !session.isLoggedIn || !session.email) {
@@ -29,18 +27,7 @@ export async function POST(req) {
         'Jiné',
     ];
       const data = await req.json();
-      if (!Number.isInteger(data.postId)) {
-        return new Response(
-          JSON.stringify({
-            message: "Id příspěvku je nesprávný datový typ.",
-            success: false,
-          }),
-          {
-            status: 403,
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-      }
+    console.log("data od klienta:",data)
       if (data.extraInfo.length > 200) {
         return new Response(JSON.stringify({
             message: "Dodatečné informace jsou moc dlouhé.",
@@ -59,9 +46,8 @@ export async function POST(req) {
             headers: { 'Content-Type': 'application/json' }
           });
       } 
-      // Sanitize input to remove unsafe characters
-      data.reasons = data.reasons.map(sanitizeInput);
-      data.extraInfo = sanitizeInput(data.extraInfo);
+
+
 
       const invalidReasons = data.reasons.filter(reason => !reasons.includes(reason));
 
@@ -74,11 +60,10 @@ export async function POST(req) {
             headers: { 'Content-Type': 'application/json' }
           });
       } 
-
+      console.log("id příspěvku:",data.postId)
       // Fetch the post and the creator's role
-      const post = await prisma.posts.findUnique({
+      const post = await prisma.Posts.findUnique({
         where: { id: data.postId },
-        include: { user: { include: { role: true } } }  // Include the user and their role
       });
   
       if (!post) {
@@ -172,7 +157,7 @@ export async function PUT(req) {
     
       if (!session || !session.isLoggedIn || !session.email) {
         return new Response(JSON.stringify({
-          message: "Chyba na serveru [PUT] požadavek na zjištění zda byl příspěvek uživatel již nahlášen:. Session nebyla nalezena ",
+          message: "Chyba na serveru [PUT] požadavek na zjištění zda byl příspěvek uživatelem již nahlášen:. Session nebyla nalezena ",
           success: false
         }), {
           status: 400,
@@ -183,14 +168,13 @@ export async function PUT(req) {
       const data = await req.json();
       
     
-      
 
-      // Fetch the post and the creator's role
-      const post = await prisma.posts.findUnique({
+
+     
+      const post = await prisma.Posts.findUnique({
         where: { id: data.postId },
-        include: { user: { include: { role: true } } }  // Include the user and their role
       });
-  
+
       if (!post) {
         return new Response(JSON.stringify({
           message: "Příspěvek nenalezen",
@@ -209,6 +193,7 @@ export async function PUT(req) {
               userId: session.userId,  // assuming session.userId contains the user's ID
             },
           });
+
   
           return new Response(JSON.stringify({
            reported: alreadyReported,

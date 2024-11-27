@@ -18,7 +18,6 @@ datasource db {
 model Users {
   id                          String                 @id @default(uuid()) @unique
   fullName                    String
-  nickname                    String              @unique
   email                       String              @unique
   password                    String              @db.VarChar(255)
   dateOfRegistration          DateTime          

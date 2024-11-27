@@ -6,7 +6,7 @@ import AddOfferButton from "./AddOfferButton";
 import { useRouter } from "next/navigation";
 
 const ProfileNavBarClient = ({ session }) => {
-  
+ // console.log(session)
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
   const handleDropdownToggle = () => {

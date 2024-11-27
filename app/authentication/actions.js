@@ -117,13 +117,11 @@ export const getSession = async () => {
       
       // Use iron-session to set the session ID in a cookie
       const session = await getIronSession(await cookies(), sessionOptions);
-      console.log("nastaveni:",sessionOptions)
-      console.log(" ziskavam session: ",session)
+
       session.userId = userId;
       session.fullName = userToCreate.fullName
       session.nickname = userToCreate.nickname
       session.email = userToCreate.email
-      session.password = pass
       session.role = roleName 
       session.accountType = accountTypeName 
       session.sessionId = sessionId; // Store session ID in session object

@@ -57,7 +57,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
 
             if (response.ok) {
                 const data = await response.json();
-                setAlreadyReported(data.reported);
+                setAlreadyEnoughRating(data.reported);
             } else {
                 console.error('Failed to rate user:', response.statusText);
             }
@@ -130,7 +130,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                 </div>
 <div className="w-full mt-5 relative mx-auto">
                         <textarea
-                           disabled={alreadyEnoughRating.length > 0 || success}
+                           disabled={alreadyEnoughRating || success}
                             maxLength="200"
                             style={{
                                 fontSize: '14px',

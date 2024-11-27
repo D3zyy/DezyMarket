@@ -2,10 +2,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from 'luxon';
 
-function sanitizeInput(input) {
-  const unsafeChars = /[<>;()&|]/g; // Add any other characters you want to block
-  return input.replace(unsafeChars, ''); // Remove unsafe characters
-}
+
 
 export async function POST(req) {
     try {
@@ -56,8 +53,8 @@ export async function POST(req) {
           });
       } 
       console.log("Uspesna kontrola hvezdicek")
-      // Sanitize input to remove unsafe characters
-      data.extraInfo = sanitizeInput(data.moreInfo);
+   
+     
 
       //check if given user exists
       const userExists = await prisma.Users.findFirst({
@@ -65,7 +62,6 @@ export async function POST(req) {
           id: data.userId,
         },
       });
-      console.log(userExists)
      
   
       if (!userExists) {
@@ -146,13 +142,17 @@ export async function POST(req) {
 
 
 
+
+
+
+
 export async function PUT(req) {
     try {
       const session = await getSession();
     
       if (!session || !session.isLoggedIn || !session.email) {
         return new Response(JSON.stringify({
-          message: "Chyba na serveru [PUT] požadavek na zjištění zda byl příspěvek uživatel již nahlášen:. Session nebyla nalezena ",
+          message: "Chyba na serveru [PUT] požadavek na zjištění zda byl příspěvek uživatel již ohodnocen:. Session nebyla nalezena ",
           success: false
         }), {
           status: 400,
@@ -161,14 +161,33 @@ export async function PUT(req) {
       }
       
       const data = await req.json();
-    
-    
+
+
+
+
+
+      const ratingsOfUser = await prisma.userRatings.findMany({
+        where: { fromUserId: session.userId },
+      });
+      let alreadyEnoughRating = ratingsOfUser.length > 0 ? true : false;
+    //Pak to doupravim tady dole
+      return new Response(JSON.stringify({
+       reported: alreadyEnoughRating
+      }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
       
+
+
+
+
+
+
 
       // Fetch the post and the creator's role
       const post = await prisma.posts.findUnique({
         where: { id: data.postId },
-        include: { user: { include: { role: true } } }  // Include the user and their role
       });
   
       if (!post) {

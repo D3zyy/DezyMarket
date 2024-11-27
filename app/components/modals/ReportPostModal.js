@@ -49,8 +49,9 @@ export function closeReportPostModal() {
     useEffect(() => {
     const checkReportStatus = async () => {
         setLoadingStatus(true); // Zobrazí spinner
-
+        console.log("id prispevku co bduu posilat na check sem na kientovi:",postId)
         try {
+            
             const response = await fetch('/api/posts/report', {
                 method: 'PUT', 
                 headers: {
@@ -60,9 +61,11 @@ export function closeReportPostModal() {
             });
 
             if (response.ok) {
+                console.log("Odpoved v poradku")
                 const data = await response.json();
                 setAlreadyReported(data.reported);
             } else {
+                console.log("Odpoved neni poradku")
                 console.error('Failed to report post:', response.statusText);
             }
         } catch (error) {
