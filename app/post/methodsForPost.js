@@ -5,7 +5,7 @@ export async function getPostFromDb(postId) {
   try {
     postRecord = await prisma.Posts.findUnique({
       where: {
-        id: parseInt(postId),
+        id: postId,
       },
       include: {
         category: true,

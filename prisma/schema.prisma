@@ -16,7 +16,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model Users {
-  id                          Int                 @id @default(autoincrement())
+  id                          String                 @id @default(uuid()) @unique
   fullName                    String
   nickname                    String              @unique
   email                       String              @unique
@@ -38,12 +38,13 @@ model Users {
   ipAddresses                 IpAddressesOnUsers[] // Relation to join table
   userRatingsGiven            UserRatings[]       @relation("RatingsGiven")
   userRatingsReceived         UserRatings[]       @relation("RatingsReceived")
+  @@index([verifiedEmail])
 }
 
 model UserRatings {
   id           Int      @id @default(autoincrement())
-  fromUserId   Int      // Foreign key for the user giving the rating
-  toUserId     Int      // Foreign key for the user receiving the rating
+  fromUserId   String      // Foreign key for the user giving the rating
+  toUserId     String      // Foreign key for the user receiving the rating
   extraInfo    String?  // Optional topic of the rating
   ratedAt      DateTime 
   numberOfStars Int?
@@ -58,7 +59,7 @@ model UserRatings {
 model ProfilePicture {
   id       Int    @id @default(autoincrement())
   url     String
-  userId   Int
+  userId   String
   user     Users  @relation(fields: [userId], references: [id], onDelete: Cascade)  // Foreign key for the one-to-many relationship
   @@index([id])
   @@index([userId])
@@ -73,7 +74,7 @@ model IpAddresses {
 
 model IpAddressesOnUsers {
   id          Int          @id @default(autoincrement())
-  userId      Int
+  userId      String
   ipAddressId Int
   usedForLogin Int          @default(0)
   user        Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -87,10 +88,11 @@ model IpAddressesOnUsers {
 model AccountType {
   id       Int    @id @default(autoincrement())
   name     String
-  userId   Int
+  userId   String
   user     Users  @relation(fields: [userId], references: [id], onDelete: Cascade)  // Foreign key for the one-to-many relationship
   @@index([id])
   @@index([userId])
+  @@index([name])
 }
 
 
@@ -101,6 +103,7 @@ model Sections {
   category    Categories   @relation(fields: [categoryId], references: [id], onDelete: Cascade) // Vytvoření vazby na Categories
   posts Posts[]
  @@index([id])
+ @@index([name])
 }
 
 model Categories {
@@ -110,10 +113,12 @@ model Categories {
   sections    Sections[]   // Odpovídající pole pro vztah
   posts Posts[]
   @@index([id])
+  @@index([name])
+  @@index([logo])
 }
 
 model Posts {
-  id           Int          @id @default(autoincrement())
+  id           String          @id @default(uuid()) @unique
   name         String       @db.VarChar(150)
   description  String       @db.VarChar(2000)
   price        String       @db.VarChar(100)
@@ -125,7 +130,7 @@ model Posts {
   category     Categories   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   section      Sections     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   images       Image[]      // Define a one-to-many relation
-  userId       Int  
+  userId       String 
   dateAndTime  DateTime     @default(now())
   user         Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
   postViews    PostViews[]  // One-to-many relationship with PostViews
@@ -134,8 +139,8 @@ model Posts {
 
 model PostReport {
   id           Int      @id @default(autoincrement())
-  postId       Int      // Foreign key pointing to Posts
-  userId       Int
+  postId       String      // Foreign key pointing to Posts
+  userId       String
   topic        String?
   reason       String?  @default("")
   reportedAt   DateTime @default(now()) // Timestamp for when the post was viewed
@@ -146,8 +151,8 @@ model PostReport {
 
 model PostViews {
   id           Int      @id @default(autoincrement())
-  postId       Int      // Foreign key pointing to Posts
-  userId       Int      // Foreign key pointing to Users
+  postId       String      // Foreign key pointing to Posts
+  userId       String      // Foreign key pointing to Users
   viewedAt     DateTime @default(now()) // Timestamp for when the post was viewed
   post         Posts    @relation(fields: [postId], references: [id], onDelete: Cascade) // Link to Posts table
   user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade) // Link to Users table
@@ -157,7 +162,7 @@ model PostViews {
 model Image {
   id       Int    @id @default(autoincrement())
   url      String
-  postId   Int
+  postId   String
   post     Posts  @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
@@ -167,7 +172,7 @@ model NumberOfTries {
   id     Int    @id @default(autoincrement())
   number Int
   round  Int    @default(0)
-  userId Int    @unique
+  userId String    @unique
   user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -176,7 +181,7 @@ model VerificationTokens {
   id         Int      @id @default(autoincrement())
   token      String
   expiresAt  DateTime
-  userId     Int      @unique
+  userId     String     @unique
   user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 model Roles {
@@ -192,14 +197,14 @@ model Bans {
   bannedTill DateTime? 
   pernament  Boolean @default(false)
   reason     String?
-  userId     Int
+  userId     String
   user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Sessions {
   id         Int      @id @default(autoincrement())
   sessionId  String   @unique
-  userId     Int
+  userId     String
   validFrom  DateTime @default(now())
   validTill  DateTime
   user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade) // Specify onDelete here
