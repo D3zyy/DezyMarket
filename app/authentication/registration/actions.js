@@ -46,6 +46,19 @@ export const handleRegistration = async (formData) => {
   }
 
   try {
+    
+    //Kontorla zda již přezdvíka existuje
+    const existingNickname= await prisma.Users.findUnique({
+      where: {
+        nickname: validatedFields.data.nickname,
+      }
+    });
+
+    if (existingNickname) {
+      return {
+        message: "Přezdívka již existuje.",
+      };
+    }
     // Zkontrolujte, zda uživatel s daným e-mailem již existuje
     const existingUser = await prisma.Users.findUnique({
       where: {
@@ -58,6 +71,7 @@ export const handleRegistration = async (formData) => {
         message: "Email již existuje.",
       };
     }
+    
 
     // Hash hesla
     const hashedPassword = await bcrypt.hash(validatedFields.data.password, 10);
