@@ -135,6 +135,7 @@ model Posts {
   user         Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
   postViews    PostViews[]  // One-to-many relationship with PostViews
   postReport    PostReport[]  // One-to-many relationship with PostViews
+@@index([id])
 }
 
 model PostReport {

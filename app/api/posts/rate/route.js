@@ -26,18 +26,7 @@ export async function POST(req) {
       console.log(session.userId)
       console.log(data.userId)
       console.log("Data  který sem dostal na ohodnocení uživatele :",data)
-      if (!Number.isInteger(data.userId)) {
-        return new Response(
-          JSON.stringify({
-            message: "Id uživatele je nesprávný datový typ.",
-            success: false,
-          }),
-          {
-            status: 403,
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-      }
+      
       if (data.moreInfo.length > 200) {
         return new Response(JSON.stringify({
             message: "Dodatečné inforace jsou moc dlouhé.",

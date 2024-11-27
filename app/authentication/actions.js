@@ -128,7 +128,7 @@ export const getSession = async () => {
       session.accountType = accountTypeName 
       session.sessionId = sessionId; // Store session ID in session object
       session.isLoggedIn = true;
-      console.log("session pred ulozenim ")
+      console.log("session pred ulozenim ",session)
      let  resSa =await session.save();
      console.log("odpoved na ulozeni:",resSa)
       console.log("session by mela byt ulozena na klientovi :) ")
