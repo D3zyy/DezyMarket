@@ -148,13 +148,14 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                     </div>
                 </div>
                 <div className="flex mt-4 justify-center">
-                    <button
+                    {!alreadyEnoughRating &&  <button
                         onClick={handleRateUser}
                         className="btn mr-2 bg-orange-400 hover:bg-orange-400"
-                        disabled={loading}
+                        disabled={loading || alreadyEnoughRating }
                     >
                         {loading && !success ? 'Hodnotím...' : "Ohodnotit uživatele"}
-                    </button>
+                    </button>}
+                   
                     <button
                         onClick={closeRateUserModal}
                         className="btn"
