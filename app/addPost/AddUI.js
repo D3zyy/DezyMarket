@@ -332,7 +332,8 @@ const handleDeleteImage = (index) => {
                 <label htmlFor="price" className="block" style={{ flex: "0 0 auto", fontSize: '14px' }}>Cena</label>
                 <input
                   min={1}
-                  max={5000000}
+                  max={50000000}
+                  step={1}
                   inputMode="numeric"
                   type="number"
                   name="price"

@@ -47,13 +47,25 @@ const schema = z.object({
     .regex(/^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž]+)?|[A-Za-z0-9á-žÁ-Ž]+ [A-Za-z0-9á-žÁ-Ž.]+)$/, 'Místo musí mít tvar "Název Číslo", "Název Název", nebo pouze "Název".'),
    
 
-  price: z.union([
-    z.number()
-      .min(1, 'Cena musí být minimálně 1.')
-      .max(5000000, 'Cena může být maximálně 5000000.'),
-    z.string()
-      .regex(/^(Dohodou|V textu|Zdarma)$/, 'Cena musí být "Dohodou", "V textu" nebo "Zdarma".'),
-  ]),
+    price: z.preprocess(
+      (value) => {
+        if (typeof value === 'string' && !isNaN(Number(value))) {
+          return parseFloat(value); // Převede řetězec čísla na číslo
+        }
+        return value;
+      },
+      z.union([
+        z.number()
+          .min(1, 'Cena musí být minimálně 1.')
+          .max(5000000, 'Cena může být maximálně 5000000.')
+          .refine(
+            (value) => Number.isInteger(value),
+            'Cena nemůže být desetinné číslo.'
+          ),
+        z.string()
+          .regex(/^(Dohodou|V textu|Zdarma)$/, 'Cena musí být "Dohodou", "V textu" nebo "Zdarma".'),
+      ])
+    ),
 });
 const s3Client = new S3Client({
   region :process.env.AWS_S3_REGION,

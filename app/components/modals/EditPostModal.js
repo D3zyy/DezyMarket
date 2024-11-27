@@ -223,8 +223,9 @@ export const EditPostModal = ({ post, descriptionPost }) => {
            
           <label htmlFor="price">Cena</label>
           <input
-            min={1}
-            max={5000000}
+           min={1}
+           max={50000000}
+           step={1}
             inputMode="numeric"
             type="number"
             name="price"

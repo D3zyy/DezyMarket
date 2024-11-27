@@ -235,7 +235,9 @@ const Page = async ({ params }) => {
 
             <div className="mt-3">
               <strong className="text-sm">Cena</strong>
-              <span className="ml-1">{Number.isInteger(Number(postRecord.price)) ? `${postRecord.price} Kč` : postRecord.price}</span>
+              <span className="ml-1">
+  {Number.isInteger(Number(postRecord.price)) ? `${Number(postRecord.price)} Kč` : postRecord.price}
+</span>
             </div>
             <div className="mt-3">
               <strong className="text-sm">Zveřejněno</strong>
