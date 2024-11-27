@@ -96,38 +96,43 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                   
                    {/* lg */}
                    <div className="rating rating-lg">
-                <input
-                defaultChecked
-                    type="radio"
-                    name="rating-8"
-                    onChange={() => setNumberOfStars(1)}
-                    className="mask mask-star-2 bg-orange-400"
-                />
-                <input
-                    type="radio"
-                    name="rating-8"
-                    onChange={() => setNumberOfStars(2)}
-                    className="mask mask-star-2 bg-orange-400"
-                />
-                <input
-                    type="radio"
-                    name="rating-8"
-                    onChange={() => setNumberOfStars(3)}
-                    className="mask mask-star-2 bg-orange-400"
-                />
-                <input
-                    type="radio"
-                    name="rating-8"
-                    onChange={() => setNumberOfStars(4)}
-                    className="mask mask-star-2 bg-orange-400"
-                />
-                <input
-                    type="radio"
-                    name="rating-8"
-                    onChange={() => setNumberOfStars(5)}
-                    className="mask mask-star-2 bg-orange-400"
-                />
-                </div>
+    <input
+        defaultChecked
+        type="radio"
+        name="rating-8"
+        onChange={() => setNumberOfStars(1)}
+        className="mask mask-star-2 bg-orange-400"
+        disabled={alreadyEnoughRating || success} // Disable the stars if alreadyEnoughRating is true
+    />
+    <input
+        type="radio"
+        name="rating-8"
+        onChange={() => setNumberOfStars(2)}
+        className="mask mask-star-2 bg-orange-400"
+        disabled={alreadyEnoughRating || success} // Disable the stars if alreadyEnoughRating is true
+    />
+    <input
+        type="radio"
+        name="rating-8"
+        onChange={() => setNumberOfStars(3)}
+        className="mask mask-star-2 bg-orange-400"
+        disabled={alreadyEnoughRating || success} // Disable the stars if alreadyEnoughRating is true
+    />
+    <input
+        type="radio"
+        name="rating-8"
+        onChange={() => setNumberOfStars(4)}
+        className="mask mask-star-2 bg-orange-400"
+        disabled={alreadyEnoughRating || success} // Disable the stars if alreadyEnoughRating is true
+    />
+    <input
+        type="radio"
+        name="rating-8"
+        onChange={() => setNumberOfStars(5)}
+        className="mask mask-star-2 bg-orange-400"
+        disabled={alreadyEnoughRating || success} // Disable the stars if alreadyEnoughRating is true
+    />
+</div>
 <div className="w-full mt-5 relative mx-auto">
                         <textarea
                            disabled={alreadyEnoughRating || success}
@@ -148,10 +153,10 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                     </div>
                 </div>
                 <div className="flex mt-4 justify-center">
-                    {!alreadyEnoughRating &&  <button
+                    {!alreadyEnoughRating  && !success &&  <button
                         onClick={handleRateUser}
                         className="btn mr-2 bg-orange-400 hover:bg-orange-400"
-                        disabled={loading || alreadyEnoughRating }
+                        disabled={loading }
                     >
                         {loading && !success ? 'Hodnotím...' : "Ohodnotit uživatele"}
                     </button>}
