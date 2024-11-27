@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ImageGallery = ({ allImages }) => {
   const [mainImageIndex, setMainImageIndex] = useState(0);
@@ -151,6 +152,20 @@ const ImageGallery = ({ allImages }) => {
         <>
           {/* Main Image Display */}
           <div className="relative bg-gray-100 max-h-[600px] flex items-center justify-center rounded-lg overflow-auto">
+           
+
+             <AnimatePresence mode="wait">
+              <motion.img
+                key={mainImageIndex}
+                src={allImages[mainImageIndex].url}
+                alt="Main"
+                className="w-full h-full "
+                initial={{ opacity: 0.8, filter: "blur(40px)" }}
+                animate={{ opacity: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0.9, filter: "blur(40px)" }}
+                transition={{ duration: 0.38 }}
+              />
+            </AnimatePresence>
             {allImages.length > 1 && (
               <button
                 onClick={handlePreviousImage}
@@ -168,13 +183,6 @@ const ImageGallery = ({ allImages }) => {
                 </svg>
               </button>
             )}
-
-            <img
-              
-              src={allImages[mainImageIndex].url}
-              alt="Main"
-              className="w-full h-full"
-            />
 
             {allImages.length > 1 && (
               <button
