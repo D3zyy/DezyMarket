@@ -97,7 +97,7 @@ export async function POST(req) {
    .setZone('Europe/Prague') // Čas zůstane v českém pásmu
    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
 
-console.log(localISODateFixedOffset); // Např. "2024-11-26T23:10:30+00:00"
+//console.log(localISODateFixedOffset); // Např. "2024-11-26T23:10:30+00:00"
       
 
       const newRating = await prisma.UserRatings.create({
@@ -116,7 +116,7 @@ console.log(localISODateFixedOffset); // Např. "2024-11-26T23:10:30+00:00"
            
         },
     });
-    console.log(find.ratedAt)
+    //console.log(find.ratedAt)
 
 
 

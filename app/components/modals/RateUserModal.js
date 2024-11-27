@@ -31,7 +31,8 @@ export function closeRateUserModal() {
     document.getElementById('rate_user_modal').close();
 }
 
-export const RateUserModal = ({ userTorate }) => {
+export const RateUserModal = ({ userTorate, nameOfUser }) => {
+    console.log("uzivatel:",userTorate)
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -51,7 +52,7 @@ export const RateUserModal = ({ userTorate }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ postId }),
+                body: JSON.stringify({ userTorate }),
             });
 
             if (response.ok) {
@@ -87,12 +88,12 @@ export const RateUserModal = ({ userTorate }) => {
             style={{ marginLeft: "0px" }}
         >
             <div className="modal-box w-full p-6 flex flex-col items-center align-middle text-center">
-                <div className="flex justify-center mb-4">
-               
+                <div className="flex justify-center mb-4 font-extrabold  text-xl mt-4">
+                {nameOfUser}
 
                 </div>
                 <div className="w-full p-4 rounded-lg">
-                   
+                  
                    {/* lg */}
                    <div className="rating rating-lg">
                 <input
