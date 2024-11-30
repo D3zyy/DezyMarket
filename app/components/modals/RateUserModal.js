@@ -88,13 +88,28 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
         >
             <div className="modal-box w-full p-6 flex flex-col items-center align-middle text-center">
             {loadingStatus ?   <span className="loading loading-spinner loading-lg"></span>  :  <>
-               
+                {errorMessage && (
+                    <div className="flex items-center gap-2 px-4 py-2  border border-red-500 rounded-md text-red-600 font-semibold mt-2">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-6"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span>{errorMessage}</span>
+                        
+                    </div>
+                )}
                 <div className="flex justify-center mb-4">
                   
                       
                    
                   <>
-                {!success && !alreadyEnoughRating  ? (
+                 {!success && !alreadyEnoughRating  ? (
                                <> </>
                             ) : (
                                 <>
@@ -135,22 +150,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
             
                 </div>
 
-                {errorMessage && (
-                    <div className="flex items-center gap-2 px-4 py-2  border border-red-500 rounded-md text-red-600 font-semibold mt-2">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="size-6"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        <span>{errorMessage}</span>
-                        
-                    </div>
-                )}
+               
 
 {!alreadyEnoughRating && <>
 <div className="flex justify-center mb-4 font-extrabold  text-xl mt-4">
