@@ -9,94 +9,55 @@ const ImageGallery = ({ allImages }) => {
     
     {
       id: 31,
-      url: 'https://www.bazos.cz/img/1/515/193724515.jpg?t=1731255580',
+      url: 'https://www.bazos.cz/img/1/496/194675496.jpg?t=1732886458',
       postId: 11
     },
     {
       id: 3,
-      url: 'https://www.bazos.cz/img/10/515/193724515.jpg?t=1731255580',
+      url: 'https://www.bazos.cz/img/2/496/194675496.jpg?t=1732886458',
       postId: 11
     },
     {
       id: 4,
-      url: 'https://www.bazos.cz/img/2/515/193724515.jpg?t=1731240618',
+      url: 'https://www.bazos.cz/img/3/496/194675496.jpg?t=1732886458',
       postId: 11
     },
     {
       id: 5,
-      url: 'https://www.bazos.cz/img/3/515/193724515.jpg?t=1731240618',
-      postId: 11
-    },
-    {
-      id: 6,
-      url: 'https://www.bazos.cz/img/4/515/193724515.jpg?t=1731240618',
-      postId: 11
-    },
-    {
-      id: 7,
-      url: 'https://www.bazos.cz/img/5/515/193724515.jpg?t=1731240618',
-      postId: 11
-    },
-    {
-      id: 31,
-      url: 'https://www.bazos.cz/img/1/515/193724515.jpg?t=1731255580',
-      postId: 11
-    },
-    {
-      id: 3,
-      url: 'https://www.bazos.cz/img/10/515/193724515.jpg?t=1731255580',
-      postId: 11
-    },
-    {
-      id: 4,
-      url: 'https://www.bazos.cz/img/2/515/193724515.jpg?t=1731240618',
+      url: 'https://www.bazos.cz/img/4/496/194675496.jpg?t=1732886458',
       postId: 11
     },
     {
       id: 5,
-      url: 'https://www.bazos.cz/img/3/515/193724515.jpg?t=1731240618',
-      postId: 11
-    },
-    {
-      id: 6,
-      url: 'https://www.bazos.cz/img/4/515/193724515.jpg?t=1731240618',
-      postId: 11
-    },
-    {
-      id: 7,
-      url: 'https://www.bazos.cz/img/5/515/193724515.jpg?t=1731240618',
-      postId: 11
-    },
-    {
-      id: 31,
-      url: 'https://www.bazos.cz/img/1/515/193724515.jpg?t=1731255580',
-      postId: 11
-    },
-    {
-      id: 3,
-      url: 'https://www.bazos.cz/img/10/515/193724515.jpg?t=1731255580',
-      postId: 11
-    },
-    {
-      id: 4,
-      url: 'https://www.bazos.cz/img/2/515/193724515.jpg?t=1731240618',
+      url: 'https://www.bazos.cz/img/6/496/194675496.jpg?t=1732886458',
       postId: 11
     },
     {
       id: 5,
-      url: 'https://www.bazos.cz/img/3/515/193724515.jpg?t=1731240618',
+      url: 'https://www.bazos.cz/img/5/496/194675496.jpg?t=1732886458',
       postId: 11
     },
     {
-      id: 6,
-      url: 'https://www.bazos.cz/img/4/515/193724515.jpg?t=1731240618',
+      id: 5,
+      url: 'https://www.bazos.cz/img/7/496/194675496.jpg?t=1732886458',
       postId: 11
     },
     {
-      id: 7,
-      url: 'https://www.bazos.cz/img/5/515/193724515.jpg?t=1731240618',
+      id: 5,
+      url: 'https://www.bazos.cz/img/8/496/194675496.jpg?t=1732886458',
       postId: 11
     },
+    {
+      id: 5,
+      url: 'https://www.bazos.cz/img/9/496/194675496.jpg?t=1732886458',
+      postId: 11
+    },
+    {
+      id: 5,
+      url: 'https://www.bazos.cz/img/10/496/194675496.jpg?t=1732886458',
+      postId: 11
+    },
+    
     
   ];
 

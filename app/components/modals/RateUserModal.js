@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 async function RateUser(userId, setSuccess,moreInfo,numberOfStars) {
     const response = await fetch('/api/posts/rate', {
@@ -43,36 +44,30 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
     const [moreInfo, setMoreInfo] = useState('');
     const [numberOfStars, setNumberOfStars] = useState(1);
     useEffect(() => {
-    const checkRatetStatus = async () => {
-        setLoadingStatus(true); // Zobrazí spinner
-
-        try {
-            const response = await fetch('/api/posts/rate', {
-                method: 'PUT', 
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userTorate }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setAlreadyEnoughRating(data.reported);
-            } else {
-                console.error('Failed to rate user:', response.statusText);
+        const checkRatetStatus = async () => {
+            setLoadingStatus(true); 
+            try {
+                const response = await fetch('/api/posts/rate', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userTorate }),
+                });
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    setAlreadyEnoughRating(data.reported);
+                } else {
+                    console.error('Failed to rate user:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error checking rate status:', error);
+            } finally {
+                setTimeout(() => setLoadingStatus(false), 2000);
             }
-        } catch (error) {
-            console.error('Error checking rate status:', error);
-        }
-
-        // Nastaví zpoždění, aby spinner byl zobrazen alespoň 2 sekundy
-        setTimeout(() => {
-            setLoadingStatus(false); // Skrývá spinner po zpoždění
-        }, 2000); // Zpoždění 2 sekundy (2000 ms)
-    };
-
-    checkRatetStatus();
-}, [userId]);
+        };
+    
+        checkRatetStatus();
+    }, [userTorate]); // <- Přidání závislosti
 
     const handleRateUser = async () => {
         setLoading(true);
@@ -88,8 +83,9 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
             style={{ marginLeft: "0px" }}
         >
             <div className="modal-box w-full p-6 flex flex-col items-center align-middle text-center">
+            {loadingStatus ?   <span className="loading loading-spinner loading-lg"></span>  :  <>
                 <div className="flex justify-center mb-4 font-extrabold  text-xl mt-4">
-                {nameOfUser}
+                <Link className='underline' target="_blank" href={`/user/${userTorate}`}>{nameOfUser}</Link>
 
                 </div>
                 <div className="w-full p-4 rounded-lg">
@@ -152,6 +148,35 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                         />
                     </div>
                 </div>
+                <div className="bg-base-200 collapse mt-5 mx-auto">
+                        <input type="checkbox" className="peer " />
+                        <div className="collapse-title bg-base-200 peer-checked:bg-base-300 flex items-center ">
+                            Kde najdu všechna hodnocení uživatele
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
+                            </svg>
+                        </div>
+                        <div className="collapse-content bg-base-300  peer-checked:bg-base-300">
+                            <p>
+                                Všechna hodnocení uživatele je možné zobrazit na jeho profilu{" "}
+                                <Link className='underline' target="_blank" href={`/user/${userTorate}`}>{nameOfUser}</Link>
+                            </p>
+                        </div>
+                    </div>
+                    <div className="bg-base-200 collapse mt-5 mx-auto">
+                        <input type="checkbox" className="peer " />
+                        <div className="collapse-title bg-base-200 peer-checked:bg-base-300 flex items-center ">
+                            Jsou hodnocení relevatní
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
+                            </svg>
+                        </div>
+                        <div className="collapse-content bg-base-300  peer-checked:bg-base-300">
+                            <p>
+                                Všechny hodnocení nejsou ověřená a jsou pouze od uživatelů platformy
+                            </p>
+                        </div>
+                    </div>
                 <div className="flex mt-4 justify-center">
                     {!alreadyEnoughRating  && !success &&  <button
                         onClick={handleRateUser}
@@ -169,8 +194,11 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                     >
                         Zavřít
                     </button>
+                    
                 </div>
+        </> }
             </div>
+
         </dialog>
     );
 };

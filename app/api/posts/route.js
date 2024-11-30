@@ -12,7 +12,7 @@ const schema = z.object({
   name: z.string()
   .max(70, 'Název může mít maximálně 70 znaků.') 
   .min(5, 'Název musí mít alespoň 5 znaků.')
-  .regex(/^[A-Za-z0-9á-žÁ-Ž., /-]*(?![<>;])$/, 'Název nesmí obsahovat < > nebo ;.'),
+  .regex(/^[A-Za-z0-9á-žÁ-Ž., /()/-]*(?![<>;])$/, 'Název nesmí obsahovat < > nebo ;.'),
     
   phoneNumber: z.string()
     .max(9, 'Telefoní číslo musí mít přesně 9 číslic.') 
