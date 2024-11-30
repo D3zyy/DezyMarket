@@ -66,7 +66,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
             } catch (error) {
                 console.error('Error checking rate status:', error);
             } finally {
-                setTimeout(() => setLoadingStatus(false), 2000);
+                setTimeout(() => setLoadingStatus(false), 1000);
             }
         };
     

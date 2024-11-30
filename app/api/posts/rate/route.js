@@ -205,7 +205,7 @@ export async function PUT(req) {
       const data = await req.json();
   
       const alreadyEnoughRating = await checkIfEnoughRatings(data.userTorate,session.userId)
-      console.log("Může hodnotit :",alreadyEnoughRating)
+      console.log("Již má dostatek hodnocení :",alreadyEnoughRating)
 
 
 

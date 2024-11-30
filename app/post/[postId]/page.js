@@ -299,8 +299,8 @@ const Page = async ({ params }) => {
         </div>
 
         {/* SVG Icons at the bottom */}
-       {session.isLoggedIn ?   <> <div className="items-center align-middle"> <RateUserModal userTorate={postRecord.user.id} nameOfUser={postRecord.user.fullName} /> <ReportPostModal  post={postRecord} imagesLength={imageUrls.length} /> <EditPostModal post={postRecord} descriptionPost={description}/>
-        <DeletePostModal post={postRecord} /> </div> </> : "" }
+       {session.isLoggedIn ?   <> <div className="items-center align-middle"> {postRecord?.userId === session?.userId  ? <> <EditPostModal post={postRecord} descriptionPost={description}/>  <DeletePostModal post={postRecord} /> </> : <><ReportPostModal  post={postRecord} imagesLength={imageUrls.length} /> <RateUserModal userTorate={postRecord.user.id} nameOfUser={postRecord.user.fullName} /> </>} 
+        </div> </> : "" }
         <div
   className={`flex justify-center space-x-6 border-t pt-4 ${
     isOverflowing ? "mt-4" : ""
