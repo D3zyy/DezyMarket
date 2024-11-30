@@ -74,16 +74,26 @@ export async function POST(req) {
         });
       }
   
+  const enoughRatingsAlread = await checkIfEnoughRatings(data.userId,session.userId)
+      console.log("Může hodnotit :",enoughRatingsAlread)
 
-
-
+    if(enoughRatingsAlread){
+        return new Response(JSON.stringify({
+          message: "Ohodnocení uživatele není možné. Zkuste to později",
+          success: false
+        }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      
    // Získání aktuálního českého času
    const localISODateFixedOffset = DateTime.now()
    .setZone('Europe/Prague') // Čas zůstane v českém pásmu
    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
 
 //console.log(localISODateFixedOffset); // Např. "2024-11-26T23:10:30+00:00"
-      
+  
 
       const newRating = await prisma.UserRatings.create({
         data: {
@@ -95,13 +105,6 @@ export async function POST(req) {
         },
     });
 
-    const find = await prisma.UserRatings.findFirst({
-        where: {
-            id: newRating.id,
-           
-        },
-    });
-    //console.log(find.ratedAt)
 
 
 
@@ -135,8 +138,47 @@ export async function POST(req) {
 
 
 
+async function checkIfEnoughRatings(userToRate,fromUser) {
+  const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd'); // Pouze datum, bez času
+console.log("Dnes je :", currentDate)
+  // 1. Získat počet hodnocení, která již daný uživatel poskytl tomuto uživateli ve stejný den
+  const ratingsForSameUserToday = await prisma.userRatings.count({
+    where: {
+      fromUserId: fromUser,
+      toUserId: userToRate,
+      ratedAt: {
+        gte: new Date(`${currentDate}T00:00:00.000Z`),
+        lt: new Date(`${currentDate}T23:59:59.999Z`),
+      },
+    },
+  });
+  console.log("Hodnocení na stejného uživatele počet :",ratingsForSameUserToday)
+  // Pokud už hodnotil tohoto uživatele dnes, není možné hodnotit znovu
+  if (ratingsForSameUserToday > 0) {
+    return true;
+  }
 
+  // 2. Získat počet všech hodnocení, která uživatel udělal během dne
+  const totalRatingsToday = await prisma.userRatings.count({
+    where: {
+      fromUserId: fromUser,
+      ratedAt: {
+        gte: new Date(`${currentDate}T00:00:00.000Z`),
+        lt: new Date(`${currentDate}T23:59:59.999Z`),
+      },
+    },
+  });
+  console.log("Hodnocení za dnešek celkově počet :",totalRatingsToday)
+  // Pokud uživatel dnes hodnotil 3 různé uživatele, další hodnocení není možné
+  if (totalRatingsToday >= 3) {
+    return true;
+  }
 
+  // Uživatel může hodnotit
+  return false;
+}
 
 
 
@@ -152,7 +194,7 @@ export async function PUT(req) {
     
       if (!session || !session.isLoggedIn || !session.email) {
         return new Response(JSON.stringify({
-          message: "Chyba na serveru [PUT] požadavek na zjištění zda byl příspěvek uživatel již ohodnocen:. Session nebyla nalezena ",
+          message: "Chyba na serveru [PUT] požadavek na zjištění zda uživatel může ohodnotit jiného uživatele:. Session nebyla nalezena ",
           success: false
         }), {
           status: 400,
@@ -161,15 +203,19 @@ export async function PUT(req) {
       }
       
       const data = await req.json();
+  
+      const alreadyEnoughRating = await checkIfEnoughRatings(data.userTorate,session.userId)
+      console.log("Může hodnotit :",alreadyEnoughRating)
+
+
+
+
+    
 
 
 
 
 
-      const ratingsOfUser = await prisma.userRatings.findMany({
-        where: { fromUserId: session.userId },
-      });
-      let alreadyEnoughRating = ratingsOfUser.length > 0 ? true : false;
     //Pak to doupravim tady dole
       return new Response(JSON.stringify({
        reported: alreadyEnoughRating
@@ -180,42 +226,6 @@ export async function PUT(req) {
       
 
 
-
-
-
-
-
-      // Fetch the post and the creator's role
-      const post = await prisma.posts.findUnique({
-        where: { id: data.postId },
-      });
-  
-      if (!post) {
-        return new Response(JSON.stringify({
-          message: "Příspěvek nenalezen",
-          success: false
-        }), {
-          status: 404,
-          headers: { 'Content-Type': 'application/json' }
-        });
-      }
-  
-      // If the session user is the post creator check whether the user has already reported the post
-
-        const alreadyReported = await prisma.postReport.findMany({
-            where: {
-              postId: data.postId,
-              userId: session.userId,  // assuming session.userId contains the user's ID
-            },
-          });
-     
-          return new Response(JSON.stringify({
-           reported: alreadyReported,
-           
-          }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-          });
       
      
     

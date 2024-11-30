@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-async function RateUser(userId, setSuccess,moreInfo,numberOfStars) {
+async function RateUser(userId, setErrorMessage, setSuccess,moreInfo,numberOfStars) {
     const response = await fetch('/api/posts/rate', {
         method: 'POST',
         headers: {
@@ -13,14 +13,16 @@ async function RateUser(userId, setSuccess,moreInfo,numberOfStars) {
     });
 
     console.log("Server response for post report:", response);
-
+    const result = await response.json();
     if (!response.ok) { 
         setSuccess(false);
+        setErrorMessage(result.message);
     } else {
-        setSuccess(true);
+        setSuccess(result.message);
+
     }
 
-    const result = await response.json();
+    
     return result;
 }
 
@@ -45,7 +47,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
     const [numberOfStars, setNumberOfStars] = useState(1);
     useEffect(() => {
         const checkRatetStatus = async () => {
-            setLoadingStatus(true); 
+            
             try {
                 const response = await fetch('/api/posts/rate', {
                     method: 'PUT',
@@ -57,7 +59,9 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                     const data = await response.json();
                     setAlreadyEnoughRating(data.reported);
                 } else {
-                    console.error('Failed to rate user:', response.statusText);
+                    const data = await response.json();
+                    setErrorMessage(data.message);
+                    
                 }
             } catch (error) {
                 console.error('Error checking rate status:', error);
@@ -71,7 +75,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
 
     const handleRateUser = async () => {
         setLoading(true);
-        await RateUser(userId, setSuccess,moreInfo,numberOfStars);
+        await RateUser(userId, setErrorMessage,setSuccess,moreInfo,numberOfStars);
         setLoading(false);
 
     };
@@ -84,10 +88,76 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
         >
             <div className="modal-box w-full p-6 flex flex-col items-center align-middle text-center">
             {loadingStatus ?   <span className="loading loading-spinner loading-lg"></span>  :  <>
-                <div className="flex justify-center mb-4 font-extrabold  text-xl mt-4">
+               
+                <div className="flex justify-center mb-4">
+                  
+                      
+                   
+                  <>
+                {!success && !alreadyEnoughRating  ? (
+                               <> </>
+                            ) : (
+                                <>
+                                    {success && (
+                                        <div role="alert" className="flex flex-col items-center text-green-500 mb-2 p-3  rounded-lg ">
+                                            <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={2}
+                                            stroke="currentColor"
+                                            className="size-14 mb-3"
+                                            style={{
+                                              strokeWidth: '2.5',
+                                            }}
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                                            />
+                                          </svg>
+                                            <span className="text-sm font-medium text-center">{success}</span>
+                                        </div>
+                                    )}
+                                    {alreadyEnoughRating&& (
+                         <div role="alert" className="flex flex-col items-center  mb-2 p-3  rounded-lg ">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="font-extrabold  text-orange-500 size-16">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                            </svg>
+
+                                            <span className="text-sm font-extrabold  mt-4 block text-center">Dejte si chvíli pauzu než udělíte další hodnocení</span>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </>
+            
+                </div>
+
+                {errorMessage && (
+                    <div className="flex items-center gap-2 px-4 py-2  border border-red-500 rounded-md text-red-600 font-semibold mt-2">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-6"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span>{errorMessage}</span>
+                        
+                    </div>
+                )}
+
+{!alreadyEnoughRating && <>
+<div className="flex justify-center mb-4 font-extrabold  text-xl mt-4">
                 <Link className='underline' target="_blank" href={`/user/${userTorate}`}>{nameOfUser}</Link>
 
                 </div>
+
                 <div className="w-full p-4 rounded-lg">
                   
                    {/* lg */}
@@ -148,6 +218,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                         />
                     </div>
                 </div>
+                </> }
                 <div className="bg-base-200 collapse mt-5 mx-auto">
                         <input type="checkbox" className="peer " />
                         <div className="collapse-title bg-base-200 peer-checked:bg-base-300 flex items-center ">
@@ -166,19 +237,19 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                     <div className="bg-base-200 collapse mt-5 mx-auto">
                         <input type="checkbox" className="peer " />
                         <div className="collapse-title bg-base-200 peer-checked:bg-base-300 flex items-center ">
-                            Jsou hodnocení relevatní
+                         Jsou hodnocení důvěryhodná
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 ml-2">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
                             </svg>
                         </div>
                         <div className="collapse-content bg-base-300  peer-checked:bg-base-300">
                             <p>
-                                Všechny hodnocení nejsou ověřená a jsou pouze od uživatelů platformy
+                            Veškerá hodnocení nejsou ověřena a vycházejí výhradně z názorů uživatelů platformy.
                             </p>
                         </div>
                     </div>
                 <div className="flex mt-4 justify-center">
-                    {!alreadyEnoughRating  && !success &&  <button
+                    {alreadyEnoughRating || !success &&  <button
                         onClick={handleRateUser}
                         className="btn mr-2 bg-orange-400 hover:bg-orange-400"
                         disabled={loading }
@@ -194,11 +265,13 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                     >
                         Zavřít
                     </button>
-                    
+                
                 </div>
+      
         </> }
+        
             </div>
-
+        
         </dialog>
     );
 };
