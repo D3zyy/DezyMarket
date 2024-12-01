@@ -117,7 +117,7 @@ const response = await cloudfront.send(cfCommand)
 
     return response;
   } catch (error) {
-    throw new Error(`Failed to delete images on CloudFront for postId  ${postId}: ${error}`);
+    throw new Error(`Failed to invalidate images on CloudFront for postId  ${postId}: ${error}`);
   }
 }
 async function deleteImagesByPostId(postId) {
@@ -431,6 +431,8 @@ const userId = session.userId; // Use userId directly from session
         });
     }
 }
+
+
 
 
 

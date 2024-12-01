@@ -43,6 +43,7 @@ export function closeReportPostModal() {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [alreadyReported, setAlreadyReported] = useState('');
+    const [alreadyEnoughReports, setAlreadyEnoughReports] = useState('');
     const [loadingStatus, setLoadingStatus] = useState(true); // Track loading status
     const dropdownRef = useRef(null);  // Reference to the dropdown container
     console.log(post)
@@ -64,6 +65,7 @@ export function closeReportPostModal() {
                 console.log("Odpoved v poradku")
                 const data = await response.json();
                 setAlreadyReported(data.reported);
+                setAlreadyEnoughReports(data.enoughReports);
             } else {
                 console.log("Odpoved neni poradku")
                 console.error('Failed to report post:', response.statusText);
@@ -150,6 +152,15 @@ export function closeReportPostModal() {
                       
                    
                         <>
+                        {alreadyEnoughReports && !alreadyReported.length > 0  ?(
+                         <div role="alert" className="flex flex-col items-center  mb-2 p-3  rounded-lg ">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="font-extrabold  text-orange-500 size-16">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                            </svg>
+
+                                            <span className="text-sm font-extrabold  mt-4 block text-center">Dejte si chvíli pauzu než nahlásíte další příspěvek</span>
+                                        </div>
+                                    ) : <> 
                             {!success && !alreadyReported.length > 0 ? (
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -207,8 +218,11 @@ export function closeReportPostModal() {
                                             <span className="text-sm font-medium text-orange-400 block text-center">Již nahlášeno</span>
                                         </div>
                                     )}
+                                    
                                 </>
+                            
                             )}
+                                </>}
                         </>
             
                 </div>
@@ -229,9 +243,11 @@ export function closeReportPostModal() {
                         
                     </div>
                 )}
-
+               
                 <div className="w-full p-4 rounded-lg">
+                {!alreadyEnoughReports  || alreadyReported.length > 0 ? (<>
                     <div className="w-full  relative mx-auto" ref={dropdownRef}>
+                    
                         <button
                             className="select select-bordered w-full !inline-block"
                             onClick={() => setDropdownOpen(!isDropdownOpen)}
@@ -241,14 +257,14 @@ export function closeReportPostModal() {
                         {isDropdownOpen && (
                             <div className="absolute bg-base-300 rounded-md top-full left-0 w-full mt-1 z-10">
                                 {reasons.map((reason) => {
-                                    const isAlreadyReported = alreadyReported.some((report) => report.reason === reason);
+                                    const isAlreadyReported = alreadyReported?.some((report) => report.reason === reason);
 
                                     return (
                                         <label key={reason} className="flex items-center cursor-pointer p-2">
                                             <input
-                                                disabled={isAlreadyReported || success || alreadyReported.length > 0}
+                                                disabled={isAlreadyReported || success || alreadyReported.length > 0 || alreadyEnoughReports}
                                                 type="checkbox"
-                                                checked={selectedReasons.includes(reason) || isAlreadyReported}
+                                                checked={selectedReasons?.includes(reason) || isAlreadyReported}
                                                 onChange={() => handleReasonToggle(reason)}
                                                 className="checkbox mr-2"
                                             />
@@ -262,7 +278,7 @@ export function closeReportPostModal() {
 
                     <div className="w-full mt-5 relative mx-auto">
                         <textarea
-                            disabled={alreadyReported.length > 0 || success}
+                            disabled={alreadyReported.length > 0 || success || alreadyEnoughReports}
                             maxLength="200"
                             style={{
                                 fontSize: '14px',
@@ -278,6 +294,8 @@ export function closeReportPostModal() {
                             placeholder={"Řekněte nám víc.."}
                         />
                     </div>
+
+                    </>) : ""}
 
                     <div className="bg-base-200 collapse mt-5 mx-auto">
                         <input type="checkbox" className="peer " />
@@ -306,22 +324,24 @@ export function closeReportPostModal() {
                             <p>
                                 Nahlašte podvod na Policii ČR. V případě, že budete potřebovat dodatečné informace, kontaktujte nás prostřednictvím <Link className='underline' target="_blank" href={"/support"}>Podpory</Link>
                             </p>
+                            
                         </div>
+                        
                     </div>
                 
 
 
 
                     <div className="modal-action mt-6 flex justify-center w-full">
-                        {!success && !alreadyReported.length > 0 ? (
-                            <button
-                                onClick={handleReportChange}
-                                className="btn bg-red-500 hover:bg-red-600  "
-                                disabled={loading || selectedReasons.length === 0 || success || alreadyReported.length > 0}
-                            >
-                                {loading && !success ? 'Nahlašuji...' : "Nahlásit"}
-                            </button>
-                        ) : ""}
+                    {!alreadyEnoughReports && alreadyReported.length === 0 && !success ? (
+    <button
+        onClick={handleReportChange}
+        className="btn bg-red-500 hover:bg-red-600"
+        disabled={loading || selectedReasons.length === 0 || success || alreadyReported.length > 0}
+    >
+        {loading && !success ? 'Nahlašuji...' : "Nahlásit"}
+    </button>
+) : null}
 
                         <button
                             onClick={closeReportPostModal}
@@ -333,6 +353,7 @@ export function closeReportPostModal() {
                         </button>
                     </div>
                 </div>
+      
                      </>  
 }
             </div>

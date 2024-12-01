@@ -1,6 +1,6 @@
 import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
-
+import { DateTime } from 'luxon';
 
 
 export async function POST(req) {
@@ -14,6 +14,16 @@ export async function POST(req) {
           success: false
         }), {
           status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      const enoughRep = await checkIfEnougReports(session.userId)
+      if(enoughRep){
+        return new Response(JSON.stringify({
+          message: "Dejte si chvíli pauzu než nahlásite další příspěvek..",
+          success: false
+        }), {
+          status: 403,
           headers: { 'Content-Type': 'application/json' }
         });
       }
@@ -143,7 +153,35 @@ export async function POST(req) {
 
 
 
+async function checkIfEnougReports(fromUser) {
+  const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd'); // Pouze datum, bez času
+console.log("Dnes je :", currentDate)
+  // 1. Získat počet hodnocení, která již daný uživatel poskytl tomuto uživateli ve stejný den
+  const uniqueReportsToday = await prisma.postReport.findMany({
+    where: {
+      userId: fromUser,
+      reportedAt: {
+        gte: new Date(`${currentDate}T00:00:00.000Z`),
+        lt: new Date(`${currentDate}T23:59:59.999Z`),
+      },
+    },
+    distinct: ['postId'],
+  });
+  
+  const uniqueReportCount = uniqueReportsToday.length;
+  console.log("Počet reportů dneska :",uniqueReportCount)
+  // Pokud už hodnotil tohoto uživatele dnes, není možné hodnotit znovu
+  if (uniqueReportCount > 4) {
+    return true;
+  }
 
+  
+
+  // Uživatel může hodnotit
+  return false;
+}
 
 
 
@@ -194,9 +232,12 @@ export async function PUT(req) {
             },
           });
 
+         const enoughReportss = await checkIfEnougReports(session.userId)
+
   
           return new Response(JSON.stringify({
            reported: alreadyReported,
+           enoughReports: enoughReportss
            
           }), {
             status: 200,

@@ -156,7 +156,7 @@ console.log("Dnes je :", currentDate)
   });
   console.log("Hodnocení na stejného uživatele počet :",ratingsForSameUserToday)
   // Pokud už hodnotil tohoto uživatele dnes, není možné hodnotit znovu
-  if (ratingsForSameUserToday > 0) {
+  if (ratingsForSameUserToday > 1) {
     return true;
   }
 
