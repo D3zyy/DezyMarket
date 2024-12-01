@@ -1,10 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from 'next/image';
 
 const ImageGallery = ({ allImages }) => {
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+
+
   allImages = [
     
     {
@@ -125,6 +128,7 @@ const ImageGallery = ({ allImages }) => {
                 animate={{ opacity: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0.9, filter: "blur(40px)" }}
                 transition={{ duration: 0.38 }}
+                loading="lazy"
               />
             </AnimatePresence>
             {allImages.length > 1 && (
