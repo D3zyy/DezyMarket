@@ -229,13 +229,8 @@ useEffect(() => {
     <>  
 
 
-    <style jsx global>{`
-      dialog::backdrop {
-        background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-        backdrop-filter: blur(2px); /* Apply blur effect */
-      }
-    `}</style>
-    <dialog id="info_modal" className="modal modal-bottom sm:modal-middle">
+   
+    <dialog id="info_modal" className="bg-slate-950/40  modal modal-bottom sm:modal-middle">
       <div className="modal-box">
         {error && <div style={{ color: 'red', marginBottom: "10px" }}>{error}</div>}
         {success && recoverPassword && <div style={{ color: 'green', marginBottom: "10px" }}>{success}</div>}
