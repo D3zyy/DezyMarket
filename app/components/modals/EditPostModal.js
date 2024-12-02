@@ -311,14 +311,12 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   <input
     type="text"
     placeholder="123456789"
-    name="phonenumber"
     value={phoneNumber}
     maxLength={9}
     onInput={(e) => {
       e.target.value = e.target.value.replace(/[^0-9]/g, ''); // Povolené pouze číslice
     }}
     onChange={(e) => setPhoneNumber(e.target.value)}
-    placeholder={"např. Praha 8, Beroun nebo Pardubický kraj"}
     name="phoneNumber"
     className="input input-bordered"
     required
