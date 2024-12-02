@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-async function updatedPost(name, price, category, section, description, postId, location, setSuccess) {
+async function updatedPost(name, price, category, section, description, postId, location, setSuccess,phoneNumber) {
     if(!section){
       return false
     }
@@ -11,7 +11,7 @@ async function updatedPost(name, price, category, section, description, postId, 
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, price, category, section, description, postId ,location}),
+      body: JSON.stringify({ name, price, category, section, description, postId ,location,phoneNumber}),
     });
 
     console.log("Server response for post edit:", response);
@@ -60,6 +60,8 @@ async function getSections() {
 }
 
 export const EditPostModal = ({ post, descriptionPost }) => {
+
+  console.log(post)
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -70,6 +72,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   const [categories, setCategories] = useState([]);
   const [sections, setSections] = useState([]);
   const [location, setPostLocation] = useState(post?.location);
+  const [phoneNumber, setPhoneNumber] = useState(post?.phoneNumber);
   const [selectedCategory, setSelectedCategory] = useState(post?.category?.id || "");
   const [selectedSection, setSelectedSection] = useState(post?.section?.id || "");
   const [filteredSections, setFilteredSections] = useState([]);
@@ -162,7 +165,7 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   
     const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton  : postPrice;
     
-    let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location,setSuccess);
+    let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location,setSuccess,phoneNumber);
     console.log("Odpověď od serveru :", result);
     setErrorValidation(result)
     setLoading(false);
@@ -278,6 +281,54 @@ export const EditPostModal = ({ post, descriptionPost }) => {
                 </div>
                 </div>
         </div>
+
+        <div className="w-full text-left mt-4">
+          <label htmlFor="description" style={{ fontSize: '14px' }}>Popisek</label>
+          <textarea
+            value={postDescription}
+            name="description"
+            onChange={(e) => setPostDescription(e.target.value)}
+            className="input input-bordered w-full"
+            required
+            minLength={15}
+            maxLength={2000}
+            style={{
+              fontSize: '14px',
+              padding: '8px',
+              height: '150px',
+              resize: 'none'
+            }}
+          />
+        </div>
+        <div className="w-full mt-4 flex items-center"> {/* Přidání items-center */}
+<label
+    htmlFor="location"
+    className="block"
+    style={{ fontSize: '14px', flex: '1', marginRight: '8px' }}
+  >
+    Telefoní číslo (bez předvolby)
+  </label>
+  <input
+    type="text"
+    placeholder="123456789"
+    name="phonenumber"
+    value={phoneNumber}
+    maxLength={9}
+    onInput={(e) => {
+      e.target.value = e.target.value.replace(/[^0-9]/g, ''); // Povolené pouze číslice
+    }}
+    onChange={(e) => setPhoneNumber(e.target.value)}
+    placeholder={"např. Praha 8, Beroun nebo Pardubický kraj"}
+    name="phoneNumber"
+    className="input input-bordered"
+    required
+    style={{
+      fontSize: '14px',
+      padding: '8px',
+      flex: '1',
+    }}
+  />
+  </div>
         <div className="w-full mt-4 flex items-center"> {/* Přidání items-center */}
   <label
     htmlFor="location"
@@ -302,25 +353,9 @@ export const EditPostModal = ({ post, descriptionPost }) => {
       flex: '1',
     }}
   />
+  
 </div>
-        <div className="w-full text-left mt-4">
-          <label htmlFor="description" style={{ fontSize: '14px' }}>Popisek</label>
-          <textarea
-            value={postDescription}
-            name="description"
-            onChange={(e) => setPostDescription(e.target.value)}
-            className="input input-bordered w-full"
-            required
-            minLength={15}
-            maxLength={2000}
-            style={{
-              fontSize: '14px',
-              padding: '8px',
-              height: '150px',
-              resize: 'none'
-            }}
-          />
-        </div>
+
         <div className="w-full text-left mt-4">
           <label htmlFor="category" style={{ fontSize: '14px' }}>Kategorie</label>
           <select

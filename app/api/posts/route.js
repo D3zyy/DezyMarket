@@ -481,14 +481,14 @@ export async function PUT(req) {
       if (!isNaN(priceConverted) && Number.isInteger(parseFloat(priceConverted))) {
           priceConverted = parseInt(priceConverted, 10); // Převeď na celé číslo
       }
-
+      console.log("data co dorazily na server na editaci:",data)
     const validatedFields = schema.safeParse({
       name: data.name,
       location: data.location,
       category: parseInt(data.category),
       section: parseInt(data.section),
       description: data.description,
-     // location: formData.get('location'),
+      phoneNumber : data.phoneNumber,
       price: priceConverted,
     });
  
@@ -588,7 +588,7 @@ export async function PUT(req) {
       category: parseInt(data.category),
       section: parseInt(data.section),
       description: data.description,
-     // location: formData.get('location'),
+      phoneNumber: data.phoneNumber,
       price: priceConverted,
     });
  
@@ -773,6 +773,6 @@ async function updatePost(postId, data) {
 
   await prisma.posts.update({
     where: { id: postId },
-    data: { location: data.location,description: data.description, name: data.name, price: data.price, categoryId: parseInt(data.category), sectionId: parseInt(data.section) }  // Update fields as needed
+    data: { phoneNumber: data.phoneNumber,location: data.location,description: data.description, name: data.name, price: data.price, categoryId: parseInt(data.category), sectionId: parseInt(data.section) }  // Update fields as needed
   });
 }
