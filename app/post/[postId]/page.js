@@ -115,6 +115,7 @@ const Page = async ({ params }) => {
       {/* Right section - Information */}
       
       <div className="lg:w-1/2   min-h-[700px] flex flex-col justify-between lg:pl-8">
+      {session?.isLoggedIn ? <> 
       {session?.role?.privileges > postRecord?.user?.role?.privileges && 
 <div className="flex space-x-4 mt-4 mb-4">
   <a 
@@ -149,7 +150,7 @@ const Page = async ({ params }) => {
   </a>
   <ReportsPostModalWrapperLazy postId={postRecord.id} />
 </div>
-}
+}</> : ""}
       {!(postRecord.typeOfPost === process.env.BASE_RANK) && (
   <div
   className="mt-4 lg:mt-0 badge badge-md badge-outline mb-5"
