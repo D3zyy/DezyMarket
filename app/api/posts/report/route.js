@@ -89,7 +89,7 @@ export async function POST(req) {
       // If the session user is the post creator
       if (post.userId === session.userId) {      
         return new Response(JSON.stringify({
-            message: "Nelze nahlásit vlastnní příspěvek",
+            message: "Nelze nahlásit vlastní příspěvek",
             success: false
           }), {
             status: 403,
