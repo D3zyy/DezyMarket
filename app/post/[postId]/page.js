@@ -299,8 +299,42 @@ const Page = async ({ params }) => {
         </div>
 
         {/* SVG Icons at the bottom */}
-       {session.isLoggedIn ?   <> <div className="items-center align-middle"> {postRecord?.userId === session?.userId  ||session?.role?.privileges > postRecord?.user?.role?.privileges ? <> <EditPostModal post={postRecord} descriptionPost={description}/>  <DeletePostModal post={postRecord} /> </> : <><ReportPostModal  post={postRecord} imagesLength={imageUrls.length} /> <RateUserModal userTorate={postRecord.user.id} nameOfUser={postRecord.user.fullName} /> </>} 
-        </div> </> : "" }
+        {session.isLoggedIn ? (
+  <>
+    <div className="items-center align-middle">
+      {/* Check if the logged-in user is the post owner or has higher privileges */}
+      {postRecord?.userId === session?.userId || 
+       session?.role?.privileges > postRecord?.user?.role?.privileges ? (
+        <>
+          {/* If the user is either the owner or has higher privileges, show Edit, Delete, and optionally Report & Rate */}
+          <EditPostModal post={postRecord} descriptionPost={description} />
+          <DeletePostModal post={postRecord} />
+          {/* Ensure report and rate options are available if higher privileges */}
+          {session?.role?.privileges > postRecord?.user?.role?.privileges && (
+            <>
+              <ReportPostModal post={postRecord} imagesLength={imageUrls.length} />
+              <RateUserModal 
+                userToRate={postRecord.user.id} 
+                nameOfUser={postRecord.user.fullName} 
+              />
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          {/* If not the owner or higher privileges, only allow reporting the post and rating the user */}
+          <ReportPostModal post={postRecord} imagesLength={imageUrls.length} />
+          <RateUserModal 
+            userToRate={postRecord.user.id} 
+            nameOfUser={postRecord.user.fullName} 
+          />
+        </>
+      )}
+    </div>
+  </>
+) : (
+  ""
+)}
         <div
   className={`flex justify-center space-x-6 border-t pt-4 ${
     isOverflowing ? "mt-4" : ""
