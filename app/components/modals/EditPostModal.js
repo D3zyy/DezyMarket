@@ -61,7 +61,7 @@ async function getSections() {
 
 export const EditPostModal = ({ post, descriptionPost }) => {
 
-  console.log(post)
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -81,11 +81,11 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   const [errorValidation, setErrorValidation] = useState(null);
   useEffect(() => {
     const isPriceValid = !isNaN(post.price) && Number.isInteger(Number(post.price));
-    console.log(post.price) 
+
     console.log(Number.isInteger(post.price))
     console.log(typeof post.price === 'number')
     console.log(isPriceValid)
-    console.log(post.price)
+
 
     if (!isPriceValid ) {
       setActiveButton(post.price);

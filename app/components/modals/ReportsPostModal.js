@@ -12,7 +12,7 @@ export function closeReportsPostModal() {
   document.getElementById("reports_post_modal").close();
 }
 
-export const ReportsPostModal = ({ postId }) => {
+ const ReportsPostModal = ({ postId }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState([]);
@@ -188,3 +188,5 @@ export const ReportsPostModal = ({ postId }) => {
     </dialog>
   );
 };
+
+export default ReportsPostModal

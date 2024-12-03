@@ -74,7 +74,7 @@ export async function POST(req) {
             topic: report.topic, // This might be `null` if not provided.
             reason: report.reason,
           }));
-          console.log(allReportsOfPost);
+         // console.log(allReportsOfPost);
    
 
        
