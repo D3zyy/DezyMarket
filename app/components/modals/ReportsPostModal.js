@@ -69,9 +69,17 @@ export const ReportsPostModal = ({ postId }) => {
 <p className="mb-3 text-sm font-medium text-gray-600">
   Poslední report: 
   <span className="ml-2 text-gray-500">
-    {reports.length > 0 ? 
-      new Date(Math.max(...reports.map(report => new Date(report.reportedAt).getTime()))).toLocaleString() 
-      : 'Žádný report'}
+  {reports.length > 0 ? 
+  (() => {
+    const latestReportDate = new Date(Math.max(...reports.map(report => new Date(report.reportedAt).getTime())));
+    const isoString = latestReportDate.toISOString();
+    const [year, month, day] = isoString.substring(0, 10).split('-'); // Rozebereme datum na rok, měsíc a den
+    const datePart = `${parseInt(day, 10)}.${parseInt(month, 10)}.${year}`; // Odstranění nul na začátku
+    const timePart = isoString.substring(11, 19); // HH:MM:SS
+    return `${datePart} ${timePart}`;
+  })()
+  : 'Žádný report'
+}
   </span>
 </p>
 </> : ""}
@@ -142,14 +150,16 @@ export const ReportsPostModal = ({ postId }) => {
 </svg>
 
 <span className="text-sm text-gray-600">
-  {new Date(group.reportedAt).toLocaleString('cs-CZ', {
-    day: 'numeric',
-    month: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  })}
+<span className="text-sm text-gray-600">
+{new Date(group.reportedAt).toISOString()
+    .replace('T', ' ') // Nahrazení 'T' mezerou pro lepší formát
+    .substring(0, 10) // Získá datum (YYYY-MM-DD)
+    .split('-') // Rozdělí na jednotlivé části (rok, měsíc, den)
+    .map((item, index) => index !== 0 ? parseInt(item, 10) : item) // Převede den a měsíc na čísla bez přední nuly
+    .reverse() // Obrátí pořadí na [den, měsíc, rok]
+    .join('.') // Spojí do požadovaného formátu s tečkou a mezerou
+    + ' ' + new Date(group.reportedAt).toISOString().substring(11, 19)} {/* Část pro čas */}
+</span>
 </span>
 </div>
                     <div className="space-y-2">

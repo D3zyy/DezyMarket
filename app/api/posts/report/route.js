@@ -115,10 +115,14 @@ export async function POST(req) {
       }
       
       let insertedTopic = false;
-
+      const localISODateFixedOffset = DateTime.now()
+      .setZone('Europe/Prague') // Čas zůstane v českém pásmu
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
+   
       for (const reason of data.reasons) {
         await prisma.postReport.create({
             data: {
+                reportedAt: localISODateFixedOffset,
                 postId: data.postId,
                 userId: session.userId,
                 reason: reason,
