@@ -47,7 +47,7 @@ export const ReportsPostModal = ({ postId }) => {
 
   return (
     <dialog id="reports_post_modal" className="modal modal-bottom sm:modal-middle sm:max-w-none max-w-none">
-      <div className="modal-box p-6 sm:max-w-[1100px] rounded-lg relative">
+      <div className="modal-box p-6  rounded-lg relative">
         {loading && (
           <div className="flex justify-center items-center w-full h-full absolute top-0 left-0 rounded-lg">
             <span className="loading loading-spinner loading-lg text-primary"></span>
@@ -55,7 +55,7 @@ export const ReportsPostModal = ({ postId }) => {
         )}
 
         <div className="flex flex-col items-center">
-          <h3 className="text-2xl font-semibold text-primary mb-4">Reporty Příspěvku</h3>
+          <h3 className="text-2xl font-semibold text-primary mb-4 mt-1">Reporty Příspěvku</h3>
 
           {reports.length > 0 ? (
             <div className="space-y-4 w-full">
