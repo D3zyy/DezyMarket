@@ -46,7 +46,7 @@ export function closeReportPostModal() {
     const [alreadyEnoughReports, setAlreadyEnoughReports] = useState('');
     const [loadingStatus, setLoadingStatus] = useState(true); // Track loading status
     const dropdownRef = useRef(null);  // Reference to the dropdown container
-    console.log(post)
+    
     useEffect(() => {
     const checkReportStatus = async () => {
         setLoadingStatus(true); // Zobrazí spinner
