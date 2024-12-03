@@ -50,7 +50,7 @@ export function closeReportPostModal() {
     useEffect(() => {
     const checkReportStatus = async () => {
         setLoadingStatus(true); // Zobrazí spinner
-        console.log("id prispevku co bduu posilat na check sem na kientovi:",postId)
+        
         try {
             
             const response = await fetch('/api/posts/report', {

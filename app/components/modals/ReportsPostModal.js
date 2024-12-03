@@ -5,11 +5,27 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export function openReportsPostModal() {
-  document.getElementById("reports_post_modal").showModal();
+  try {
+    const modal = document.getElementById("reports_post_modal");
+    if (modal) {
+      modal.showModal();
+    } 
+  } catch (error) {
+    console.error("Chyba otevírání modalu:", error);
+
+  }
 }
 
 export function closeReportsPostModal() {
-  document.getElementById("reports_post_modal").close();
+  try {
+    const modal = document.getElementById("reports_post_modal");
+    if (modal) {
+      modal.close();
+    } 
+  } catch (error) {
+    console.error("Chyba zavíraní modalu:", error);
+    
+  }
 }
 
  const ReportsPostModal = ({ postId }) => {
