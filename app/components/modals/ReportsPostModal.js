@@ -65,6 +65,14 @@ export const ReportsPostModal = ({ postId }) => {
     {[...new Set(reports.map(report => report.fromUser.id))].length}
   </span>
 </p>
+<p className="mb-3 text-sm font-medium text-gray-600">
+  Poslední report: 
+  <span className="ml-2 text-gray-500">
+    {reports.length > 0 ? 
+      new Date(Math.max(...reports.map(report => new Date(report.reportedAt).getTime()))).toLocaleString() 
+      : 'Žádný report'}
+  </span>
+</p>
 
             {reports.length > 0 ? (
               <div className="space-y-4 w-full">
@@ -76,6 +84,7 @@ export const ReportsPostModal = ({ postId }) => {
                         user: report.fromUser,
                         reports: [],
                         topic: report.topic,
+                        reportedAt: report.reportedAt,
                       };
                     }
                     groups[userId].reports.push(report);
@@ -123,8 +132,25 @@ export const ReportsPostModal = ({ postId }) => {
                           />
                         </svg>
                         <span className="text-sm text-gray-600">{group.topic}</span>
+                    
                       </div>
                     )}
+                     <div className="flex items-center  space-x-2">
+                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-orange-600">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+</svg>
+
+<span className="text-sm text-gray-600">
+  {new Date(group.reportedAt).toLocaleString('cs-CZ', {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  })}
+</span>
+</div>
                     <div className="space-y-2">
                       {group.reports.map((report, idx) => (
                         <div key={idx} className="p-4 rounded-lg bg-base-100">
