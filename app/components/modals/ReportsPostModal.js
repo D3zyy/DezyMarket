@@ -50,7 +50,7 @@ export const ReportsPostModal = ({ postId }) => {
       <div className="modal-box p-6 rounded-lg relative">
         {loading && (
           <div className="flex justify-center items-center  bg-opacity-75 p-1 z-10">
-            <span className="loading loading-spinner loading-lg text-primary"></span>
+            <span className="loading loading-spinner loading-lg "></span>
           </div>
         )}
 
