@@ -279,7 +279,7 @@ export function closeReportPostModal() {
                     <div className="w-full mt-5 relative mx-auto">
                         <textarea
                             disabled={alreadyReported.length > 0 || success || alreadyEnoughReports}
-                            maxLength="200"
+                            maxLength="150"
                             style={{
                                 fontSize: '14px',
                                 padding: '8px',
