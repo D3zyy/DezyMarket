@@ -28,10 +28,12 @@ const Page = async ({ params }) => {
 
 
   try {
-
-    session = await getSession();
-    postRecord = await getPostFromDb(params.postId);
-    imageUrls = await getImageUrlsFromDb(params.postId);
+   
+     [session, postRecord, imageUrls] = (await Promise.allSettled([
+      getSession(),
+      getPostFromDb(params.postId),
+      getImageUrlsFromDb(params.postId),
+    ])).map(result => result.status === 'fulfilled' ? result.value : null);
 
     if (!postRecord) {
       return (
