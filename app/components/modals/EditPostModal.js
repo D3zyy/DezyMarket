@@ -399,7 +399,7 @@ export const EditPostModal = ({ posttId,posttName,posttPrice,postPhoneNumber,pos
             className="btn btn-primary mr-2"
             disabled={loading}
           >
-            {loading ? 'Načítání...' : "Uložit"}
+            {loading ? 'Upravuji...' : "Uložit"}
           </button>
           <button
             onClick={closeEditPostModal}
