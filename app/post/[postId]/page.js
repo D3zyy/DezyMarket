@@ -34,7 +34,7 @@ const Page = async ({ params }) => {
       getPostFromDb(params.postId),
       getImageUrlsFromDb(params.postId),
     ])).map(result => result.status === 'fulfilled' ? result.value : null);
-
+   
     if (!postRecord) {
       return (
         <div className="p-4 text-center">
@@ -52,8 +52,8 @@ const Page = async ({ params }) => {
         </div>
       );
     }
-  
     accType = await getUserAccountTypeOnStripe(postRecord.user.email);
+
     //console.log("5. jdeme pro typ účtu na stripe ")
    // console.log("6. výsledek callu na typ učtu na stripe:",accType)
     description = postRecord?.description;
