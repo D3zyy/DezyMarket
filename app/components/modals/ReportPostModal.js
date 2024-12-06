@@ -32,12 +32,12 @@ export function closeReportPostModal() {
     document.getElementById('report_post_modal').close();
 }
 
- const ReportPostModal = ({ post,imagesLength }) => {
+ const ReportPostModal = ({posttId,postCreatorName, postCreatorId,imagesLength }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [errorFromServer, setErrorFromServer] = useState(false); 
-    const [postId, setPostId] = useState(post?.id);
+    const [postId, setPostId] = useState(posttId);
     const [selectedReasons, setSelectedReasons] = useState([]);
     const [moreInfo, setMoreInfo] = useState('');
     const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -308,7 +308,7 @@ export function closeReportPostModal() {
                         <div className="collapse-content bg-base-300  peer-checked:bg-base-300">
                             <p>
                                 Nahlášení uživatele je možné na jeho profilu{" "}
-                                <Link className='underline' target="_blank" href={`/user/${post?.user?.id}`}>{post?.user?.fullName}</Link>
+                                <Link className='underline' target="_blank" href={`/user/${postCreatorId}`}>{postCreatorName}</Link>
                             </p>
                         </div>
                     </div>

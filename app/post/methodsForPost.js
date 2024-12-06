@@ -4,6 +4,7 @@ export async function getPostFromDb(postId) {
   let postRecord = null;
   try {
     postRecord = await prisma.Posts.findUnique({
+      
       where: {
         id: postId,
       },

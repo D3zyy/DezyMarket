@@ -357,7 +357,7 @@ const Page = async ({ params }) => {
           {session?.role?.privileges > postRecord?.user?.role?.privileges && (
             <>
            
-              <ReportPostModal post={postRecord} imagesLength={imageUrls.length} />
+              <ReportPostModal posttId={postRecord.id} postCreatorName={postRecord.user.fullName} postCreatorId={postRecord.user.id} imagesLength={imageUrls.length} />
               <RateUserModal 
                 userToRate={postRecord.user.id} 
                 nameOfUser={postRecord.user.fullName} 
