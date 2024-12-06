@@ -346,33 +346,20 @@ const Page = async ({ params }) => {
         {session.isLoggedIn ? (
   <>
     <div className="items-center align-middle">
-      {/* Check if the logged-in user is the post owner or has higher privileges */}
-      {postRecord?.userId === session?.userId || 
-       session?.role?.privileges > postRecord?.user?.role?.privileges ? (
-        <>
-          {/* If the user is either the owner or has higher privileges, show Edit, Delete, and optionally Report & Rate */}
-          <EditPostModal post={postRecord} descriptionPost={description} />
-          <DeletePostModal post={postRecord} />
-          {/* Ensure report and rate options are available if higher privileges */}
-          {session?.role?.privileges > postRecord?.user?.role?.privileges && (
-            <>
-           
-              <ReportPostModal posttId={postRecord.id} postCreatorName={postRecord.user.fullName} postCreatorId={postRecord.user.id} imagesLength={imageUrls.length} />
-              <RateUserModal 
+    <ReportPostModal posttId={postRecord.id} postCreatorName={postRecord.user.fullName} postCreatorId={postRecord.user.id} imagesLength={imageUrls.length} />
+    <RateUserModal 
                 userToRate={postRecord.user.id} 
                 nameOfUser={postRecord.user.fullName} 
               />
-            </>
-          )}
+      {/* Check if the logged-in user is the post owner or has higher privileges */}
+      {postRecord?.userId === session?.userId || session?.role?.privileges > postRecord?.user?.role?.privileges ? (
+        <>
+           <EditPostModal post={postRecord} descriptionPost={description} />
+           <DeletePostModal post={postRecord} />      
         </>
       ) : (
         <>
-          {/* If not the owner or higher privileges, only allow reporting the post and rating the user */}
-          <ReportPostModal post={postRecord} imagesLength={imageUrls.length} />
-          <RateUserModal 
-            userToRate={postRecord.user.id} 
-            nameOfUser={postRecord.user.fullName} 
-          />
+          
         </>
       )}
     </div>
