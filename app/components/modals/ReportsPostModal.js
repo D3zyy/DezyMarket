@@ -54,7 +54,7 @@ export function closeReportsPostModal() {
         console.error("Error fetching reports:", error);
         setErrorMessage("An error occurred while fetching reports.");
       } finally {
-        setTimeout(() => setLoading(false), 1000); // Ensures smooth UI transition
+        setLoading(false)
       }
     };
 
