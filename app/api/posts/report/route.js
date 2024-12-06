@@ -229,12 +229,22 @@ export async function PUT(req) {
   
       // If the session user is the post creator check whether the user has already reported the post
 
-        const alreadyReported = await prisma.postReport.findMany({
-            where: {
-              postId: data.postId,
-              userId: session.userId,  // assuming session.userId contains the user's ID
-            },
-          });
+      const alreadyReported = await prisma.postReport.findMany({
+        where: {
+          postId: data.postId,
+          userId: session.userId, // assuming session.userId contains the user's ID
+        },
+        select: {
+         
+          reason: true,
+          topic : true
+       
+        },
+      });
+          if (alreadyReported.length > 0){
+            alreadyReported.id = "Neukážu"
+            alreadyReported.ratedAt = "Neukážu"
+          }
 
          const enoughReportss = await checkIfEnougReports(session.userId)
 

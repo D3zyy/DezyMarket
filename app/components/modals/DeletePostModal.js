@@ -31,11 +31,11 @@ export function closeDeletePostModal() {
     document.getElementById('delete_post_modal').close();
 }
 
-export const DeletePostModal = ({ post }) => {
+export const DeletePostModal = ({ posttId }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [postId, setPostId] = useState(post?.id);
+    const [postId, setPostId] = useState(posttId);
 
     const handlePostChange = async () => {
         setLoading(true);

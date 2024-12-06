@@ -355,7 +355,7 @@ const Page = async ({ params }) => {
       {postRecord?.userId === session?.userId || session?.role?.privileges > postRecord?.user?.role?.privileges ? (
         <>
            <EditPostModal descriptionPost={description} posttId={postRecord.id} posttName={postRecord.name} posttPrice={postRecord.price} postPhoneNumber={postRecord.phoneNumber} postLocation={postRecord.location} postCategoryId={postRecord.category?.id} postSectionId={postRecord.section?.id} />
-           <DeletePostModal post={postRecord} />      
+           <DeletePostModal posttId={postRecord.id} />      
         </>
       ) : (
         <>
