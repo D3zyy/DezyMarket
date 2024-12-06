@@ -59,41 +59,41 @@ async function getSections() {
   return res.json();
 }
 
-export const EditPostModal = ({ post, descriptionPost }) => {
+export const EditPostModal = ({ posttId,posttName,posttPrice,postPhoneNumber,postLocation,postCategoryId,postSectionId, descriptionPost }) => {
 
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [postId, setPostId] = useState(post?.id);
-  const [postName, setPostName] = useState(post?.name);
-  const [postPrice, setPostPrice] = useState(post?.price);
+  const [postId, setPostId] = useState(posttId);
+  const [postName, setPostName] = useState(posttName);
+  const [postPrice, setPostPrice] = useState(posttPrice);
   const [postDescription, setPostDescription] = useState(descriptionPost);
   const [categories, setCategories] = useState([]);
   const [sections, setSections] = useState([]);
-  const [location, setPostLocation] = useState(post?.location);
-  const [phoneNumber, setPhoneNumber] = useState(post?.phoneNumber);
-  const [selectedCategory, setSelectedCategory] = useState(post?.category?.id || "");
-  const [selectedSection, setSelectedSection] = useState(post?.section?.id || "");
+  const [location, setPostLocation] = useState(postLocation);
+  const [phoneNumber, setPhoneNumber] = useState(postPhoneNumber);
+  const [selectedCategory, setSelectedCategory] = useState(postCategoryId || "");
+  const [selectedSection, setSelectedSection] = useState(postSectionId || "");
   const [filteredSections, setFilteredSections] = useState([]);
   const [activeButton, setActiveButton] = useState(null); 
   const [isDisabled, setIsDisabled] = useState(false);
   const [errorValidation, setErrorValidation] = useState(null);
   useEffect(() => {
-    const isPriceValid = !isNaN(post.price) && Number.isInteger(Number(post.price));
+    const isPriceValid = !isNaN(posttPrice) && Number.isInteger(Number(posttPrice));
 
-    console.log(Number.isInteger(post.price))
-    console.log(typeof post.price === 'number')
+    console.log(Number.isInteger(posttPrice))
+    console.log(typeof posttPrice === 'number')
     console.log(isPriceValid)
 
 
     if (!isPriceValid ) {
-      setActiveButton(post.price);
+      setActiveButton(posttPrice);
       setIsDisabled(true)
     } else{
       setIsDisabled(false)
     }
-  }, [post.price]);
+  }, [posttPrice]);
   const fieldTranslation = {
     category: 'Kategorie',
     section: 'Sekce',
@@ -142,9 +142,9 @@ export const EditPostModal = ({ post, descriptionPost }) => {
   };
 
   useEffect(() => {
-    setSelectedCategory(post?.category?.id || "");
-    setSelectedSection(post?.section?.id || "");
-  }, [post]);
+    setSelectedCategory(postCategoryId || "");
+    setSelectedSection(postSectionId || "");
+  }, [postCategoryId,postSectionId]);
 
   useEffect(() => {
     const filtered = sections.filter(section => section.categoryId === parseInt(selectedCategory));

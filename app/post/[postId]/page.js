@@ -354,7 +354,7 @@ const Page = async ({ params }) => {
       {/* Check if the logged-in user is the post owner or has higher privileges */}
       {postRecord?.userId === session?.userId || session?.role?.privileges > postRecord?.user?.role?.privileges ? (
         <>
-           <EditPostModal post={postRecord} descriptionPost={description} />
+           <EditPostModal descriptionPost={description} posttId={postRecord.id} posttName={postRecord.name} posttPrice={postRecord.price} postPhoneNumber={postRecord.phoneNumber} postLocation={postRecord.location} postCategoryId={postRecord.category?.id} postSectionId={postRecord.section?.id} />
            <DeletePostModal post={postRecord} />      
         </>
       ) : (
