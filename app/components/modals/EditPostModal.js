@@ -211,11 +211,11 @@ export const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEdito
 <label
     htmlFor="location"
     className="block"
-    style={{ fontSize: '14px', flex: '1', marginRight: '2px' }}
+    style={{ fontSize: '14px', flex: '1', marginRight: '5px' }}
   >
     Typ příspěvku
   </label>
-  <select defaultValue={typeOfPostt} className="select select-bordered w-full max-w-xs">
+  <select defaultValue={typeOfPostt} className="ml-8 select select-bordered w-full max-w-xs">
   <option  value={typeOfPostt}>{typeOfPostt}</option>
   <option>Top</option>
   <option>Top+</option>
