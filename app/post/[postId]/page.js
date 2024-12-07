@@ -34,7 +34,7 @@ const Page = async ({ params }) => {
       getPostFromDb(params.postId),
       getImageUrlsFromDb(params.postId),
     ])).map(result => result.status === 'fulfilled' ? result.value : null);
-   
+
     if (!postRecord) {
       return (
         <div className="p-4 text-center">

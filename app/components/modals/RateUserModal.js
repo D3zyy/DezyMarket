@@ -34,14 +34,14 @@ export function closeRateUserModal() {
     document.getElementById('rate_user_modal').close();
 }
 
-export const RateUserModal = ({ userTorate, nameOfUser }) => {
-    console.log("uzivatel:",userTorate)
+export const RateUserModal = ({ userToRate, nameOfUser }) => {
+   
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
-    const [userId, setUserId] = useState(userTorate);
+    const [userId, setUserId] = useState(userToRate);
     const [alreadyEnoughRating, setAlreadyEnoughRating] = useState('');
     const [moreInfo, setMoreInfo] = useState('');
     const [numberOfStars, setNumberOfStars] = useState(1);
@@ -52,7 +52,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                 const response = await fetch('/api/posts/rate', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userTorate }),
+                    body: JSON.stringify({ userToRate }),
                 });
     
                 if (response.ok) {
@@ -71,7 +71,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
         };
     
         checkRatetStatus();
-    }, [userTorate]); // <- Přidání závislosti
+    }, [userToRate]); // <- Přidání závislosti
 
     const handleRateUser = async () => {
         setLoading(true);
@@ -154,7 +154,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
 
 {!alreadyEnoughRating && <>
 <div className="flex justify-center mb-4 font-extrabold  text-xl mt-4">
-                <Link className='underline' target="_blank" href={`/user/${userTorate}`}>{nameOfUser}</Link>
+                <Link className='underline' target="_blank" href={`/user/${userToRate}`}>{nameOfUser}</Link>
 
                 </div>
 
@@ -230,7 +230,7 @@ export const RateUserModal = ({ userTorate, nameOfUser }) => {
                         <div className="collapse-content bg-base-300  peer-checked:bg-base-300">
                             <p>
                                 Všechna hodnocení uživatele je možné zobrazit na jeho profilu{" "}
-                                <Link className='underline' target="_blank" href={`/user/${userTorate}`}>{nameOfUser}</Link>
+                                <Link className='underline' target="_blank" href={`/user/${userToRate}`}>{nameOfUser}</Link>
                             </p>
                         </div>
                     </div>

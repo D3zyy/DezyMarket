@@ -19,7 +19,7 @@ export async function POST(req) {
       } 
 
       const data = await req.json();
-
+      
       console.log(session.userId)
       console.log(data.userId)
       console.log("Data  který sem dostal na ohodnocení uživatele :",data)
