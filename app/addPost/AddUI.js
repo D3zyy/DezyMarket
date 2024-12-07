@@ -263,42 +263,65 @@ const handleDeleteImage = (index) => {
 
 
 
+
+
             <div className="w-full">
-              <div
-                className="flex items-center "
-                style={{
-                  padding: "12px",
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '10px',
-                }}
-              >
-            <label htmlFor="category">Kategorie</label>
-            <select className="select select-md select-bordered w-full"  required name="category" id="category" onChange={handleCategoryChange} value={selectedCategory}>
-                <option value="" disabled>Vybrat kategorii</option>
-                {categories.map(category => (
-                    <option  key={category.id} value={category.id}>
-                     {htmlToText(category.logo)} {category.name}
-                    </option>
-                ))}
-            </select>
-            <span className="mx-2" style={{ fontSize: '20px' }}>&</span>
-            <label htmlFor="section">Sekce</label>
-            <select className="select select-md select-bordered w-full " required name="section" id="section" value={selectedSection} onChange={handleSectionChange} disabled={!selectedCategory}>
-                <option value="" disabled>Vybrat sekci</option>
-                {filteredSections.map(section => (
-                    <option key={section.id} value={section.id}>
-                        {section.name}
-                    </option>
-                ))}
-            </select>
+  {/* Tento blok bude viditelný pouze na desktopech (md a výše) */}
+  <div
+    className="hidden md:flex items-center"
+    style={{
+      padding: "12px",
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: '10px',
+    }}
+  >
+    <label htmlFor="category">Kategorie</label>
+    <select className="select select-md select-bordered w-full" required name="category" id="category" onChange={handleCategoryChange} value={selectedCategory}>
+      <option value="" disabled>Vybrat kategorii</option>
+      {categories.map(category => (
+        <option key={category.id} value={category.id}>
+          {htmlToText(category.logo)} {category.name}
+        </option>
+      ))}
+    </select>
+    <span className="mx-2" style={{ fontSize: '20px' }}>&</span>
+    <label htmlFor="section">Sekce</label>
+    <select className="select select-md select-bordered w-full" required name="section" id="section" value={selectedSection} onChange={handleSectionChange} disabled={!selectedCategory}>
+      <option value="" disabled>Vybrat sekci</option>
+      {filteredSections.map(section => (
+        <option key={section.id} value={section.id}>
+          {section.name}
+        </option>
+      ))}
+    </select>
+  </div>
 
+  {/* Tento blok bude viditelný pouze na mobilních zařízeních (méně než md) */}
+  <div className="md:hidden w-full text-left mt-4">
+    <label htmlFor="category" style={{ fontSize: '14px' }}>Kategorie</label>
+    <select className="select select-md select-bordered w-full" required name="category" id="category" value={selectedCategory} onChange={handleCategoryChange}>
+      <option value="" disabled>Vybrat kategorii</option>
+      {categories?.length > 0 && categories.map(category => (
+        <option key={category.id} value={category.id}>
+          {htmlToText(category.logo)} {category.name}
+        </option>
+      ))}
+    </select>
+  </div>
 
-        
-
-              </div>
+  <div className="md:hidden w-full text-left mt-4">
+    <label htmlFor="section" style={{ fontSize: '14px' }}>Sekce</label>
+    <select className="select select-md select-bordered w-full" required name="section" id="section" value={selectedSection} onChange={handleSectionChange} disabled={!filteredSections.length}>
+      <option value="" disabled>Vybrat sekci</option>
+      {filteredSections.map(section => (
+        <option key={section.id} value={section.id}>
+          {section.name}
+        </option>
+      ))}
+    </select>
+  </div>
 </div>
-
 
 
             <div className="py-2 w-full">
