@@ -59,10 +59,11 @@ async function getSections() {
   return res.json();
 }
 
-export const EditPostModal = ({idUserOfEditor, idUserOfPost,roleOfEditor,posttId,posttName,posttPrice,postPhoneNumber,postLocation,postCategoryId,postSectionId, descriptionPost }) => {
+export const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,posttId,posttName,posttPrice,postPhoneNumber,postLocation,postCategoryId,postSectionId, descriptionPost }) => {
 
 
   const router = useRouter();
+  const [typeOfPostt, setTypeOfPostt] = useState(typePost);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [postId, setPostId] = useState(posttId);
@@ -205,6 +206,23 @@ export const EditPostModal = ({idUserOfEditor, idUserOfPost,roleOfEditor,posttId
           </svg>
         </div>
         <div className="w-full text-left">
+          { roleOfEditore > 1 && idUserOfEditor != idUserOfPost ? 
+        <div className="w-full mt-4 flex items-center"> {/* Přidání items-center */}
+<label
+    htmlFor="location"
+    className="block"
+    style={{ fontSize: '14px', flex: '1', marginRight: '2px' }}
+  >
+    Typ příspěvku
+  </label>
+  <select defaultValue={typeOfPostt} className="select select-bordered w-full max-w-xs">
+  <option  value={typeOfPostt}>{typeOfPostt}</option>
+  <option>Top</option>
+  <option>Top+</option>
+</select>
+
+  </div>
+   : ""}
         <div className='mb-5' style={{textAlign: "left"}}>{printErrorValidation()}</div>
           <label htmlFor="name">Co nazízím</label>
           <input
