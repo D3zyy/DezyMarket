@@ -340,7 +340,7 @@ const handleDeleteImage = (index) => {
 <div className="w-full">
   {/* Desktop layout */}
   <div
-    className="hidden lg:flex items-center"
+    className="hidden md:flex items-center"
     style={{
       padding: "12px",
       justifyContent: "space-between",
@@ -358,7 +358,7 @@ const handleDeleteImage = (index) => {
   inputMode="numeric"
   type="number"
   name="price"
-  className="input input-bordered hidden lg:flex"  // Skrytí na mobilních zařízeních, zobrazení na desktopu
+  className="input input-bordered hidden md:flex"  // Skrytí na mobilních zařízeních, zobrazení na desktopu
   onChange={(e) => setPrice(e.target.value)}
   disabled={isDisabled}
   style={{
@@ -413,7 +413,7 @@ const handleDeleteImage = (index) => {
   </div>
 
   {/* Mobile layout */}
-  <div className="flex flex-col items-center lg:hidden" style={{ padding: "12px", gap: "20px" }}>
+  <div className="flex flex-col items-center md:hidden" style={{ padding: "12px", gap: "20px" }}>
     <label
       htmlFor="price"
       style={{
