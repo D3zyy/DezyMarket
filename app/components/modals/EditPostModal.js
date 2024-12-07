@@ -59,13 +59,14 @@ async function getSections() {
   return res.json();
 }
 
-export const EditPostModal = ({ posttId,posttName,posttPrice,postPhoneNumber,postLocation,postCategoryId,postSectionId, descriptionPost }) => {
+export const EditPostModal = ({idUserOfEditor, idUserOfPost,roleOfEditor,posttId,posttName,posttPrice,postPhoneNumber,postLocation,postCategoryId,postSectionId, descriptionPost }) => {
 
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [postId, setPostId] = useState(posttId);
+  const [roleOfEditore, setRoleOfEditore] = useState(roleOfEditor);
   const [postName, setPostName] = useState(posttName);
   const [postPrice, setPostPrice] = useState(posttPrice);
   const [postDescription, setPostDescription] = useState(descriptionPost);
@@ -192,7 +193,9 @@ export const EditPostModal = ({ posttId,posttName,posttPrice,postPhoneNumber,pos
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-12 h-12 text-yellow-400"
+            className={`w-12 h-12 ${
+              roleOfEditore > 1 && idUserOfEditor != idUserOfPost ? "text-red-400" : "text-yellow-400"
+            }`}
           >
             <path
               strokeLinecap="round"
