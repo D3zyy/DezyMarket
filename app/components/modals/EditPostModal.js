@@ -235,72 +235,200 @@ export const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEdito
         </div>
         <div className="w-full text-left mt-4">
 
-        <div
-                className="flex items-center "
-                style={{
-                  padding: "12px",
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '10px',
-                }}
-              >
-           
-          <label htmlFor="price">Cena</label>
-          <input
-           min={1}
-           max={50000000}
-           step={1}
-            inputMode="numeric"
-            type="number"
-            name="price"
-            value={postPrice}
-            disabled={isDisabled}
-            onChange={(e) => setPostPrice(e.target.value)}
-            className="input input-bordered w-full"
-          />
-           <span className="mx-2" style={{ fontSize: '20px' }}>|</span>
-          <div className="flex gap-2" style={{ flex: "0 1 auto", justifyContent: 'flex-end' }}>
-                  <button
-                    type="button"
-                    onClick={() => handleButtonClick('Dohodou')}
-                    className="btn btn-active"
-                    style={{
-                      transition: 'background-color 0.3s, box-shadow 0.3s',
-                      fontSize: '12px',
-                      padding: '6px 8px',
-                      boxShadow: activeButton === 'Dohodou' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
-                    }}
-                  >
-                    Dohodou
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleButtonClick('V textu')}
-                    className="btn btn-active"
-                    style={{
-                      transition: 'background-color 0.3s, box-shadow 0.3s',
-                      fontSize: '12px',
-                      padding: '6px 8px',
-                      boxShadow: activeButton === 'V textu' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
-                    }}
-                  >
-                    V textu
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleButtonClick('Zdarma')}
-                    className="btn btn-active"
-                    style={{
-                      transition: 'background-color 0.3s, box-shadow 0.3s',
-                      fontSize: '12px',
-                      padding: '6px 8px',
-                      boxShadow: activeButton === 'Zdarma' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
-                    }}
-                  >
-                    Zdarma
-                  </button>
-                </div>
-                </div>
+        <div>
+  {/* Desktop layout */}
+  <div
+    className="hidden md:flex items-center"
+    style={{
+      padding: "12px",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: "10px",
+    }}
+  >
+    <label htmlFor="price">Cena</label>
+    <input
+      min={1}
+      max={50000000}
+      step={1}
+      inputMode="numeric"
+      type="number"
+      name="price"
+      value={postPrice}
+      disabled={isDisabled}
+      onChange={(e) => setPostPrice(e.target.value)}
+      className="input input-bordered w-full"
+    />
+    <span className="mx-2" style={{ fontSize: "20px" }}>
+      |
+    </span>
+    <div
+      className="flex gap-2"
+      style={{ flex: "0 1 auto", justifyContent: "flex-end" }}
+    >
+      <button
+        type="button"
+        onClick={() => handleButtonClick("Dohodou")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow:
+            activeButton === "Dohodou"
+              ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))"
+              : "none",
+        }}
+      >
+        Dohodou
+      </button>
+      <button
+        type="button"
+        onClick={() => handleButtonClick("V textu")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow:
+            activeButton === "V textu"
+              ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))"
+              : "none",
+        }}
+      >
+        V textu
+      </button>
+      <button
+        type="button"
+        onClick={() => handleButtonClick("Zdarma")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow:
+            activeButton === "Zdarma"
+              ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))"
+              : "none",
+        }}
+      >
+        Zdarma
+      </button>
+    </div>
+  </div>
+
+  {/* Mobile layout */}
+  <div
+    className="flex flex-col items-center md:hidden"
+    style={{
+      padding: "12px",
+      gap: "20px",
+    }}
+  >
+    <label
+      htmlFor="price"
+      style={{
+        textAlign: "center",
+        fontSize: "20px",
+      }}
+    >
+      Cena
+    </label>
+    <div className="flex items-center justify-center w-full">
+      <input
+        min={1}
+        max={50000000}
+        step={1}
+        inputMode="numeric"
+        type="number"
+        name="price"
+        value={postPrice}
+        disabled={isDisabled}
+        onChange={(e) => setPostPrice(e.target.value)}
+        className="input input-bordered"
+        style={{
+          width: "60%",
+          textAlign: "center",
+          padding: "8px",
+        }}
+      />
+    </div>
+    <span
+      className="flex items-center text-center"
+      style={{
+        fontSize: "14px",
+      }}
+    >
+      nebo
+    </span>
+    <div
+      className="flex flex-wrap w-full"
+      style={{
+        gap: "10px",
+        justifyContent: "center",
+      }}
+    >
+      <button
+        type="button"
+        onClick={() => handleButtonClick("Dohodou")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow:
+            activeButton === "Dohodou"
+              ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))"
+              : "none",
+        }}
+      >
+        Dohodou
+      </button>
+      <button
+        type="button"
+        onClick={() => handleButtonClick("V textu")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow:
+            activeButton === "V textu"
+              ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))"
+              : "none",
+        }}
+      >
+        V textu
+      </button>
+      <button
+        type="button"
+        onClick={() => handleButtonClick("Zdarma")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow:
+            activeButton === "Zdarma"
+              ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))"
+              : "none",
+        }}
+      >
+        Zdarma
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
         </div>
 
         <div className="w-full text-left mt-4">
