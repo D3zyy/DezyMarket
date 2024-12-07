@@ -43,6 +43,7 @@ const AddUI = ({ accType , categories, sections}) => {
   };
 
   const handleSubmitPost = async (event) => {
+    console.log("Zmačknuté odeslání")
     event.preventDefault();
     const formData = new FormData(event.target);
     const name = formData.get('name');
@@ -52,7 +53,7 @@ const AddUI = ({ accType , categories, sections}) => {
     const description = formData.get('description');
     const location = formData.get('location');
     const priceFromUseState = activeButton || formData.get('price');
-
+    console.log("Cena:",priceFromUseState)
     // Append the image files to FormData
     images.forEach((image) => {
         formData.append('images', image); // Use the file objects directly
@@ -64,7 +65,7 @@ const AddUI = ({ accType , categories, sections}) => {
     formData.append('category', category);
     formData.append('description', description);
     formData.append('location', location);
-    formData.append('price', priceFromUseState);
+    formData.append('price', priceFromUseState );
     formData.append('typeOfPost',typeOfPost)
     formData.append('phoneNumber',phoneNumber)
 
@@ -250,7 +251,7 @@ const handleDeleteImage = (index) => {
               <input
                 minLength={5} // Minimální délka 5 znaků
                 maxLength={200}
-              pattern="^[A-Za-z0-9á-žÁ-Ž., /-]*(?![<>;])$"
+              pattern="^[^<>;]*$"
                 type="text"
                 placeholder={"např. Iphone 14, Kolo, Auto"}
                 name="name"
@@ -341,110 +342,178 @@ const handleDeleteImage = (index) => {
     resize: 'none' // Zamezení změny velikosti
   }}
 />
-            </div>
-            <div className="w-full">
-              <div
-                className="flex items-center "
-                style={{
-                  padding: "12px",
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '10px',
-                }}
-              >
-                <label htmlFor="price" className="block" style={{ flex: "0 0 auto", fontSize: '14px' }}>Cena</label>
-                <input
-                  min={1}
-                  max={50000000}
-                  step={1}
-                  inputMode="numeric"
-                  type="number"
-                  name="price"
-                  className="input input-bordered"
-                  required
-                  onChange={(e) => setPrice(e.target.value)}
-                  disabled={isDisabled}
-                  style={{
-                    width: '25%',
-                    minWidth: '40px',
-                    fontSize: '12px',
-                    padding: '6px',
-                  }}
-                />
-
-                <span className="mx-2" style={{ fontSize: '20px' }}>|</span>
-
-                <div className="flex gap-2" style={{ flex: "0 1 auto", justifyContent: 'flex-end' }}>
-                  <button
-                    type="button"
-                    onClick={() => handleButtonClick('Dohodou')}
-                    className="btn btn-active"
-                    style={{
-                      transition: 'background-color 0.3s, box-shadow 0.3s',
-                      fontSize: '12px',
-                      padding: '6px 8px',
-                      boxShadow: activeButton === 'Dohodou' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
-                    }}
-                  >
-                    Dohodou
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleButtonClick('V textu')}
-                    className="btn btn-active"
-                    style={{
-                      transition: 'background-color 0.3s, box-shadow 0.3s',
-                      fontSize: '12px',
-                      padding: '6px 8px',
-                      boxShadow: activeButton === 'V textu' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
-                    }}
-                  >
-                    V textu
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleButtonClick('Zdarma')}
-                    className="btn btn-active"
-                    style={{
-                      transition: 'background-color 0.3s, box-shadow 0.3s',
-                      fontSize: '12px',
-                      padding: '6px 8px',
-                      boxShadow: activeButton === 'Zdarma' ? '0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' : 'none',
-                    }}
-                  >
-                    Zdarma
-                  </button>
-                </div>
-
-              </div>
-              <div
-  className="flex items-center"
-  style={{
-    padding: "12px",
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: '10px',
-  }}
->
-        <span
-    htmlFor="phonenumber"
-    className="block"
-    style={{ fontSize: '14px', flexGrow: 1 }}
+<div className="w-full">
+  {/* Desktop layout */}
+  <div
+    className="hidden lg:flex items-center"
+    style={{
+      padding: "12px",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: "10px",
+    }}
   >
-    Telefoní číslo (bez předvolby)
-  </span>
-  <input
-  type="text"
-  placeholder="123456789"
-  name="phonenumber"
-  className="input input-bordered text-sm p-2 w-[55%]"
-  required
-  maxLength={9}
-  onInput={(e) => {
-    e.target.value = e.target.value.replace(/[^0-9]/g, ''); // Povolené pouze číslice
+    <label htmlFor="price" className="block" style={{ flex: "0 0 auto", fontSize: "14px" }}>
+      Cena
+    </label>
+    <input
+  min={1}
+  max={50000000}
+  step={1}
+  inputMode="numeric"
+  type="number"
+  name="price"
+  className="input input-bordered hidden lg:flex"  // Skrytí na mobilních zařízeních, zobrazení na desktopu
+  onChange={(e) => setPrice(e.target.value)}
+  disabled={isDisabled}
+  style={{
+    width: "25%",
+    minWidth: "40px",
+    fontSize: "12px",
+    padding: "6px",
   }}
-/>  
+/>
+    <span className="mx-2" style={{ fontSize: "20px" }}>|</span>
+    <div className="flex gap-2" style={{ flex: "0 1 auto", justifyContent: "flex-end" }}>
+      <button
+        type="button"
+        onClick={() => handleButtonClick("Dohodou")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow: activeButton === "Dohodou" ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))" : "none",
+        }}
+      >
+        Dohodou
+      </button>
+      <button
+        type="button"
+        onClick={() => handleButtonClick("V textu")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow: activeButton === "V textu" ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))" : "none",
+        }}
+      >
+        V textu
+      </button>
+      <button
+        type="button"
+        onClick={() => handleButtonClick("Zdarma")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow: activeButton === "Zdarma" ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))" : "none",
+        }}
+      >
+        Zdarma
+      </button>
+    </div>
+  </div>
+
+  {/* Mobile layout */}
+  <div className="flex flex-col items-center lg:hidden" style={{ padding: "12px", gap: "20px" }}>
+    <label
+      htmlFor="price"
+      style={{
+        textAlign: "center",
+        fontSize: "20px",
+      }}
+    >
+      Cena
+    </label>
+    <div className="flex items-center justify-center w-full">
+    <input
+  min={1}
+  max={50000000}
+  step={1}
+  inputMode="numeric"
+  type="number"
+  name="price"
+  className="input input-bordered"
+
+  onChange={(e) => setPrice(e.target.value)}
+  disabled={isDisabled}  // Aktivujte/Deaktivujte input podle potřeby
+  style={{
+    width: "60%",
+    textAlign: "center",
+    padding: "8px",
+  }}
+/>
+    </div>
+    <span className="flex items-center text-center" style={{ fontSize: "14px" }}>
+      nebo
+    </span>
+    <div className="flex flex-wrap w-full" style={{ gap: "10px", justifyContent: "center" }}>
+      <button
+        type="button"
+        onClick={() => handleButtonClick("Dohodou")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow: activeButton === "Dohodou" ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))" : "none",
+        }}
+      >
+        Dohodou
+      </button>
+      <button
+        type="button"
+        onClick={() => handleButtonClick("V textu")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow: activeButton === "V textu" ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))" : "none",
+        }}
+      >
+        V textu
+      </button>
+      <button
+        type="button"
+        onClick={() => handleButtonClick("Zdarma")}
+        className="btn btn-active"
+        style={{
+          transition: "background-color 0.3s, box-shadow 0.3s",
+          fontSize: "12px",
+          padding: "6px 8px",
+          boxShadow: activeButton === "Zdarma" ? "0px 0px 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))" : "none",
+        }}
+      >
+        Zdarma
+      </button>
+    </div>
+  </div>
+
+  {/* Phone Number */}
+  <div className="flex items-center" style={{ padding: "12px", justifyContent: "space-between", alignItems: "center", gap: "10px" }}>
+    <span htmlFor="phoneNumber" className="block" style={{ fontSize: "14px", flexGrow: 1 }}>
+      Telefoní číslo (bez předvolby)
+    </span>
+    <input
+      type="text"
+      placeholder="123456789"
+      name="phoneNumber"
+      className="input input-bordered text-sm p-2 w-[55%]"
+      required
+      maxLength={9}
+      onInput={(e) => {
+        e.target.value = e.target.value.replace(/[^0-9]/g, ""); // Povolené pouze číslice
+      }}
+    />
+  </div>
 </div>
+
+
+
               <div
   className="flex items-center"
   style={{
@@ -466,7 +535,7 @@ const handleDeleteImage = (index) => {
     minLength={2} // Minimální délka 5 znaků
     maxLength={50}
     type="text"
-    placeholder={"např. Praha 8, Beroun nebo Pardubický kraj"}
+    placeholder={"např. Praha 8"}
     name="location"
     className="input input-bordered"
     required

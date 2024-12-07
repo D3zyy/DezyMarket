@@ -240,12 +240,20 @@ const userId = session.userId; // Use userId directly from session
         
        
 
-          let priceConverted = formData.get('price'); // Vždy vrací string
- 
-      
-            if (!isNaN(priceConverted) && Number.isInteger(parseFloat(priceConverted))) {
-                priceConverted = parseInt(priceConverted, 10); // Převeď na celé číslo
-            }
+
+// Získání všech hodnot pro 'price'
+let prices = formData.getAll('price');
+
+// Najděte první nenulovou hodnotu
+let priceConverted = prices.find(price => price !== '');
+
+// Pokud máme cenu a je platná, převedeme ji
+if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(priceConverted))) {
+    priceConverted = parseInt(priceConverted, 10); // Převeď na celé číslo
+    console.log('Valid price:', priceConverted);
+} else {
+    console.log('Invalid price or no price entered');
+}
            
           const validatedFields = schema.safeParse({
             name: formData.get('name'),
