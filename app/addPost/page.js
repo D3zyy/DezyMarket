@@ -32,16 +32,15 @@ const Page = async () => {
         // Fetching Categories and Sections with error handling
         let CategoriesFromDb, SectionsFromDb;
         try {
-            CategoriesFromDb = await prisma.Categories.findMany({});
+        [CategoriesFromDb, SectionsFromDb] = (await Promise.allSettled([
+            prisma.Categories.findMany({}),
+            prisma.Sections.findMany({}),
+          ])).map(result => result.status === 'fulfilled' ? result.value : null);
+       
         } catch (dbError) {
-            throw new Error("Chyba při načítání kategorií na /addPost - přidání příspěvku : " + dbError.message);
+            throw new Error("Chyba při načítání kategorií  a sekcí na /addPost - přidání příspěvku : " + dbError.message);
         }
 
-        try {
-            SectionsFromDb = await prisma.Sections.findMany({});
-        } catch (dbError) {
-            throw new Error("Chyba při načítání sekcí na /addPost - přidání příspěvku : " + dbError.message);
-        }
 
         return (
             <div>

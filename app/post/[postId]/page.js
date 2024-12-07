@@ -156,7 +156,9 @@ const Page = async ({ params }) => {
 
       {/* Right section - Information */}
       
-      <div className="lg:w-1/2   min-h-[700px] flex flex-col justify-between lg:pl-8">
+      <div 
+  className={`lg:w-1/2 ${!postRecord.typeOfPost === process.env.BASE_RANK ? 'min-h-[700px]' : 'min-h-[650px]'} flex flex-col justify-between lg:pl-8`}
+>
      
       {!(postRecord.typeOfPost === process.env.BASE_RANK) && (
   <div
