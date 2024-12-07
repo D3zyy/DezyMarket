@@ -59,15 +59,10 @@ const AddUI = ({ accType , categories, sections}) => {
         formData.append('images', image); // Use the file objects directly
     });
 
-    // Append other fields to the FormData
-    formData.append('name', name);
-    formData.append('section', section);
-    formData.append('category', category);
-    formData.append('description', description);
-    formData.append('location', location);
+
     formData.append('price', priceFromUseState );
     formData.append('typeOfPost',typeOfPost)
-    formData.append('phoneNumber',phoneNumber)
+
 
   
     setLoading(true);

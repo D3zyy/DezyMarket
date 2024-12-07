@@ -196,7 +196,7 @@ export async function POST(req) {
  
         try {
             formData = await req.formData();
-
+   
            allImages = formData.getAll("images")
            if(allImages.length > 25) {
             return new Response(JSON.stringify({ message: "Chyba. Nahráno nedovolené množství obrázků!" }), {
@@ -243,7 +243,7 @@ const userId = session.userId; // Use userId directly from session
 
 // Získání všech hodnot pro 'price'
 let prices = formData.getAll('price');
-
+console.log("data",formData)
 // Najděte první nenulovou hodnotu
 let priceConverted = prices.find(price => price !== '');
 
