@@ -210,12 +210,12 @@ export const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEdito
         <div className="w-full mt-4 flex items-center"> {/* Přidání items-center */}
 <label
     htmlFor="location"
-    className="block"
-    style={{ fontSize: '14px', flex: '1', marginRight: '5px' }}
+    className="block "
+    style={{ fontSize: '14px', flex: '1', marginRight: '20px' }}
   >
     Typ příspěvku
   </label>
-  <select defaultValue={typeOfPostt} className="ml-8 select select-bordered w-full max-w-xs">
+  <select defaultValue={typeOfPostt} className="ml-10 select select-bordered  w-full md:max-w-72 max-w-44">
   <option  value={typeOfPostt}>{typeOfPostt}</option>
   <option>Top</option>
   <option>Top+</option>
@@ -503,7 +503,90 @@ export const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEdito
   
 </div>
 
-        <div className="w-full text-left mt-4">
+<div>
+<div>
+
+
+
+
+<div>
+  </div>
+
+
+
+
+
+  {/* Desktop layout */}
+  <div
+    className="hidden md:block w-full"
+    style={{
+      padding: "12px",
+    }}
+  >
+    <div
+      className="flex items-center"
+      style={{
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "10px",
+      }}
+    >
+      <label htmlFor="category">Kategorie</label>
+      <select
+        className="select select-md select-bordered w-full"
+        required
+        name="category"
+        id="category"
+        value={selectedCategory}
+        onChange={handleCategoryChange}
+      >
+        <option value="" disabled>
+          Vybrat kategorii
+        </option>
+        {categories.map((category) => (
+          <option key={category.id} value={category.id}>
+            {htmlToText(category.logo)} {category.name}
+          </option>
+        ))}
+      </select>
+      <span className="mx-2" style={{ fontSize: "20px" }}>
+        &
+      </span>
+      <label htmlFor="section">Sekce</label>
+      <select
+        className="select select-md select-bordered w-full"
+        required
+        name="section"
+        id="section"
+        value={selectedSection}
+        onChange={handleSectionChange}
+        disabled={!selectedCategory}
+      >
+        <option value="" disabled>
+          Vybrat sekci
+        </option>
+        {filteredSections.map((section) => (
+          <option key={section.id} value={section.id}>
+            {section.name}
+          </option>
+        ))}
+      </select>
+    </div>
+  </div>
+
+
+
+
+
+</div>
+  
+
+
+
+
+
+</div>
+<div className="md:hidden  w-full text-left mt-4">
           <label htmlFor="category" style={{ fontSize: '14px' }}>Kategorie</label>
           <select
             className="select select-md select-bordered w-full"
@@ -522,7 +605,7 @@ export const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEdito
             ))}
           </select>
         </div>
-        <div className="w-full text-left mt-4">
+        <div className="md:hidden w-full text-left mt-4">
           <label htmlFor="section" style={{ fontSize: '14px' }}>Sekce</label>
           <select
       
