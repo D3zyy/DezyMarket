@@ -18,6 +18,7 @@ import {ReportsPostModalWrapperLazy, openReportsModalWrapper} from "@/app/compon
 import { ReportPostModalWrapperLazy } from "@/app/components/ReportPostModalWrapperLazy";
 import { handleOpenModalReportLazy } from "@/app/components/ReportPostModalWrapperLazy";
 import { EditPostModalWrapperLazy } from "@/app/components/EditPostModalWrapperLazy";
+import { RatePostModalWrapperLazy } from "@/app/components/RateUserModalWrapperLazy";
 
 
 const Page = async ({ params }) => {
@@ -333,10 +334,7 @@ const Page = async ({ params }) => {
   <>
     <div className="items-center align-middle">
     
-    <RateUserModal 
-                userToRate={postRecord.user.id} 
-                nameOfUser={postRecord.user.fullName} 
-              />
+    
       {/* Check if the logged-in user is the post owner or has higher privileges */}
       {postRecord?.userId === session?.userId || session?.role?.privileges > postRecord?.user?.role?.privileges ? (
         <>
@@ -387,7 +385,9 @@ className="h-6 w-6 text-red-600"
 />
 </svg>
 Nahlásit příspěvek </a> </>}
-       <a onClick={session.isLoggedIn? openRateUserModal : openInfoModal}  className="btn sm:h-0 h-20 flex-shrink">
+{session.isLoggedIn? <RatePostModalWrapperLazy userToRate={postRecord.user.id} 
+                nameOfUser={postRecord.user.fullName}  />  :  <a onClick={ openInfoModal}  className="btn sm:h-0 h-20 flex-shrink"> 
+       
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -404,7 +404,7 @@ className="h-6 w-6 text-yellow-600"
 </svg>
 Ohodnotit uživatele</a>
      
-       </>}
+        }  </>}
         
         
 

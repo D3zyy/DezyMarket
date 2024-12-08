@@ -27,14 +27,35 @@ async function RateUser(userId, setErrorMessage, setSuccess,moreInfo,numberOfSta
 }
 
 export function openRateUserModal() {
-    document.getElementById('rate_user_modal').showModal();
+    try{
+    const modal =   document.getElementById('rate_user_modal');
+    if (modal) {
+        modal.showModal();
+    }  
+
+}catch (error) {
+    console.error("Chyba otevírání modalu:", error);
+    
+  }
 }
+
+
 
 export function closeRateUserModal() {
-    document.getElementById('rate_user_modal').close();
+    const modal =  document.getElementById('rate_user_modal')
+    try{
+     
+        if (modal) {
+            modal.close();
+        }  
+    
+    }catch (error) {
+        console.error("Chyba otevírání modalu:", error);
+        
+      }
 }
 
-export const RateUserModal = ({ userToRate, nameOfUser }) => {
+ const RateUserModal = ({ userToRate, nameOfUser }) => {
    
     const router = useRouter();
     const [loading, setLoading] = useState(false);
@@ -275,3 +296,4 @@ export const RateUserModal = ({ userToRate, nameOfUser }) => {
         </dialog>
     );
 };
+export default RateUserModal
