@@ -59,7 +59,7 @@ async function getSections() {
   return res.json();
 }
 
-export const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,posttId,posttName,posttPrice,postPhoneNumber,postLocation,postCategoryId,postSectionId, descriptionPost }) => {
+const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,posttId,posttName,posttPrice,postPhoneNumber,postLocation,postCategoryId,postSectionId, descriptionPost }) => {
 
 
   const router = useRouter();
@@ -645,3 +645,6 @@ export const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEdito
     </dialog>
   );
 };
+
+
+export default EditPostModal
