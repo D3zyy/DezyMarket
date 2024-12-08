@@ -372,7 +372,7 @@ const Page = async ({ params }) => {
 
 
       </> : <>  
-       {session.isLoggedIn? <ReportPostModalWrapperLazy ppostId={postRecord.id} creator={postRecord.user.fullName} creatorId={postRecord.user.id} imagesLen={imageUrls.length} /> : <><a onClick={openLoginModal} className="btn sm:h-0 h-20 flex-shrink"> <svg
+       {session.isLoggedIn? <ReportPostModalWrapperLazy ppostId={postRecord.id} creator={postRecord.user.fullName} creatorId={postRecord.user.id} imagesLen={imageUrls.length} /> : <><a onClick={openInfoModal} className="btn sm:h-0 h-20 flex-shrink"> <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
 viewBox="0 0 24 24"
