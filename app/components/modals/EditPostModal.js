@@ -36,7 +36,7 @@ function htmlToText(htmlString) {
 
 export function openEditPostModal() {
   try {
-    document.getElementById('edit_post_modal').showModal();
+  const modal =  document.getElementById('edit_post_modal')
     if (modal) {
         modal.showModal();
     } 
@@ -48,15 +48,15 @@ export function openEditPostModal() {
 }
 
 export function closeEditPostModal() {
-  try {
-    document.getElementById('edit_post_modal').showModal();
-    if (modal) {
-        modal.close();
-    } 
-  } catch (error) {
-    console.error("Chyba otevírání modalu:", error);
-    
-  }
+  const modal =  document.getElementById('edit_post_modal')
+  try{
+  if (modal) {
+    modal.close();
+} 
+}catch (error) {
+  console.error("Chyba otevírání modalu:", error);
+  
+}
 }
 
 async function getCategories() {
