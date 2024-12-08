@@ -35,11 +35,28 @@ function htmlToText(htmlString) {
 }
 
 export function openEditPostModal() {
-  document.getElementById('edit_post_modal').showModal();
+  try {
+    document.getElementById('edit_post_modal').showModal();
+    if (modal) {
+        modal.showModal();
+    } 
+  } catch (error) {
+    console.error("Chyba otevírání modalu:", error);
+    
+  }
+ 
 }
 
 export function closeEditPostModal() {
-  document.getElementById('edit_post_modal').close();
+  try {
+    document.getElementById('edit_post_modal').showModal();
+    if (modal) {
+        modal.close();
+    } 
+  } catch (error) {
+    console.error("Chyba otevírání modalu:", error);
+    
+  }
 }
 
 async function getCategories() {
