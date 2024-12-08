@@ -15,7 +15,8 @@ import { openInfoModal } from "@/app/components/modals/InfoModal";
 import { RateUserModal , openRateUserModal} from "@/app/components/modals/RateUserModal";
 import { openReportsPostModal} from  "@/app/components/modals/ReportsPostModal";
 import {ReportsPostModalWrapperLazy, openReportsModalWrapper} from "@/app/components/ReportsPostModalWrapperLazy";
-
+import { ReportPostModalWrapperLazy } from "@/app/components/ReportPostModalWrapperLazy";
+import { handleOpenModalReportLazy } from "@/app/components/ReportPostModalWrapperLazy";
 
 
 const Page = async ({ params }) => {
@@ -348,7 +349,7 @@ const Page = async ({ params }) => {
         {session.isLoggedIn ? (
   <>
     <div className="items-center align-middle">
-    <ReportPostModal posttId={postRecord.id} postCreatorName={postRecord.user.fullName} postCreatorId={postRecord.user.id} imagesLength={imageUrls.length} />
+    
     <RateUserModal 
                 userToRate={postRecord.user.id} 
                 nameOfUser={postRecord.user.fullName} 
@@ -379,8 +380,7 @@ const Page = async ({ params }) => {
  {postRecord?.userId === session?.userId  || session?.role?.privileges > postRecord?.user?.role?.privileges? <>
   
 {session?.role?.privileges > postRecord?.user?.role?.privileges? <div style={{ textAlign: "center" }} className="flex items-center space-x-2">
-
-<a onClick={session.isLoggedIn? openReportPostModal : openLoginModal} className="btn sm:h-0 h-20 flex-shrink">
+  {session.isLoggedIn? <ReportPostModalWrapperLazy ppostId={postRecord.id} creator={postRecord.user.fullName} creatorId={postRecord.user.id} imagesLen={imageUrls.length} /> : <><a onClick={openLoginModal} className="btn sm:h-0 h-20 flex-shrink">
 <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
@@ -395,7 +395,9 @@ className="h-6 w-6 text-red-600"
  d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"
 />
 </svg>
-Nahlásit příspěvek</a>
+Nahlásit příspěvek</a></>}
+
+
 
 
 <a onClick={session.isLoggedIn? openRateUserModal : openInfoModal}  className="btn sm:h-0 h-20 flex-shrink">
