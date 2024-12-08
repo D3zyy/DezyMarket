@@ -25,11 +25,28 @@ async function reportPost(postId, selectedReasons, setSuccess, moreInfo) {
 }
 
 export function openReportPostModal() {
-    document.getElementById('report_post_modal').showModal();
+    try {
+        const modal =  document.getElementById('report_post_modal')
+        if (modal) {
+            modal.showModal();
+        } 
+      } catch (error) {
+        console.error("Chyba otevírání modalu:", error);
+        
+      }
+
 }
 
 export function closeReportPostModal() {
-    document.getElementById('report_post_modal').close();
+    try {
+        const modal =  document.getElementById('report_post_modal')
+        if (modal) {
+            modal.close();
+        } 
+      } catch (error) {
+        console.error("Chyba otevírání modalu:", error);
+        
+      }
 }
 
  const ReportPostModal = ({posttId,postCreatorName, postCreatorId,imagesLength }) => {
