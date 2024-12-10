@@ -16,7 +16,10 @@ const Page = async ({ searchParams }) => {
   const noStatusMessage = !redirectStatus; // Check if no status is provided
   console.log(searchParams.redirect_status)
   let accType = await getUserAccountTypeOnStripe(session.email);
-  console.log("ucet:",accType)
+  if(accType?.length == 1){
+    accType = accType[0]
+  } 
+
   if (!session.isLoggedIn) redirect('/');
     
 const emoji1 = `<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>${process.env.BEST_RANK}</div>`;

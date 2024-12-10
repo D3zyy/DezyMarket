@@ -28,19 +28,24 @@ export async function POST(request) {
       });
        
         
-          const subscriptions = await stripe.subscriptions.list({
-            customer: customer.data[0]?.id,
-            status: "active"
+        
+        const subscriptions = await stripe.subscriptions.list({
+          customer: customer.id,
+          status: "active",
+          expand: ['data.items.data.price'], // Rozbalí objekt price pro kontrolu ID
+      });
+      const hasExistingSubscription = subscriptions.data.some(subscription =>
+        subscription.items.data.some(item => item.price.id === priceId) // 0 CZK PRICE IN OTHER WORDS THE DEFAULT ACC
+    );
+    
+    if (hasExistingSubscription) {
+        return new Response(JSON.stringify({
+            message: "Již nalezeno aktivní předplatné nelze aktivovat základní předplatné."
+        }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
         });
-       
-        if (subscriptions.data.length > 0) {
-            return new Response(JSON.stringify({
-                message: "Zákazník má již aktivní předplatné. Nelze vytvořit nové."
-            }), {
-                status: 403,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
+    }
 
           const subscription = await stripe.subscriptions.create({
             customer:  customer.data[0].id,

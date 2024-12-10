@@ -24,13 +24,40 @@ export async function getUserAccountTypeOnStripe(email) {
         customer: customer.id,
         status: 'active',
         expand: ['data.plan.product'],
-        limit: 1, // Get only the first active subscription
+       
       });
+      let namesToReturn = [];
+      let zakladniFound = false;
+      
+      for (const subscription of subscriptions.data) {
+          const productName = subscription.plan.product.name;
+      
+          if (productName === "Základní") {
+              zakladniFound = true;
+          } else {
+              namesToReturn.push(productName);
+          }
+          
+      }
+      
+      // Logika vrácení hodnot
+      if (namesToReturn.length === 0 && zakladniFound) {
+          // Pokud je pouze jedno předplatné "Základní"
+          namesToReturn.push("Základní");
+      } else if (zakladniFound && namesToReturn.length === 1) {
+          // Pokud je jedno "Základní" a jedno jiné, necháme pouze jiné
+          // `namesToReturn` již obsahuje jiné, takže nic nemusíme dělat
+      } else if (zakladniFound && namesToReturn.length > 1) {
+          // Pokud existují dvě různá předplatná, zachováme je obě
+          namesToReturn.push("Základní");
+      }
+      
+      console.log("Názvy k vrácení: ", namesToReturn);
 
       // Check if there is an active subscription
       if (subscriptions.data.length > 0) {
         const subscription = subscriptions.data[0];
-        return subscription.plan.product.name; // Return the product name
+        return namesToReturn; // Return the product name
       }
     }
 

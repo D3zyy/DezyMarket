@@ -34,7 +34,7 @@ const Page = async ({ params }) => {
    
      [session, postRecord, imageUrls] = (await Promise.allSettled([
       getSession(),
-      getPostFromDb(params.postId),
+       getPostFromDb (params.postId),
       getImageUrlsFromDb(params.postId),
     ])).map(result => result.status === 'fulfilled' ? result.value : null);
 
@@ -56,7 +56,9 @@ const Page = async ({ params }) => {
       );
     }
     accType = await getUserAccountTypeOnStripe(postRecord.user.email);
-
+    if(accType?.length == 1){
+      accType = accType[0]
+    } 
     //console.log("5. jdeme pro typ účtu na stripe ")
    // console.log("6. výsledek callu na typ učtu na stripe:",accType)
     description = postRecord?.description;

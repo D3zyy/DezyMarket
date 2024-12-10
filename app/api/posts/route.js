@@ -5,7 +5,7 @@ import { prisma } from "@/app/database/db";
 import { S3Client, PutObjectCommand,ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import sharp from 'sharp';
 import { CloudFrontClient, CreateInvalidationCommand } from "@aws-sdk/client-cloudfront"
-
+import { DateTime } from 'luxon';
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 let sessionGeneral
 const schema = z.object({
@@ -223,10 +223,11 @@ if (!session || !session.isLoggedIn || !session.email) {
         headers: { 'Content-Type': 'application/json' }
     });
 }
+
 const numberOfPostsOfUser = await prisma.Posts.findMany({
   where: { userId: session.userID}
 });
-
+console.log(numberOfPostsOfUser)
 if(numberOfPostsOfUser.length > 30){
   return new Response(JSON.stringify({ messageToDisplay: "Již jste nahráli maximální počet příspěvků." }), {
     status: 403,
@@ -353,11 +354,16 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 return Buffer.from(arrayBuffer);  // Convert arrayBuffer to Buffer
               }));
               let newPost
+
+              const localISODateFixedOffset = DateTime.now()
+              .setZone('Europe/Prague') // Čas zůstane v českém pásmu
+              .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
               try{
                 const price = validatedFields.data.price;
                 const validatedPrice = typeof price === 'number' && Number.isInteger(price) ? price.toString() : price;
                  newPost = await prisma.Posts.create({
                   data: {
+                    dateAndTime: localISODateFixedOffset,
                     name: validatedFields.data.name,
                     description: validatedFields.data.description,
                     price: validatedPrice,

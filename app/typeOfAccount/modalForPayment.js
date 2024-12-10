@@ -38,7 +38,7 @@ export function PaymentModal({ price, name, priceId }) {
                     {price >= 15 ? (
                      <Elements stripe={stripePromise} options={options}>
 
-    {console.log('Elements options:', options)}
+   
 
 
     <CheckoutForm priceId={priceId} name={name} />

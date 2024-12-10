@@ -3,22 +3,21 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { PaymentModal, openPaymentModal } from './modalForPayment';
 import { SubscriptionInfo } from '../components/SubscriptionInfo';
-
+import {UpgradeModalSubscription, openUpgradeModalSubscriptionModal} from './UpgradeModalSubscription'
 
 
 
 
 export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
-  if(name === "Základní"){
-    name = "zakladni"
-  }
+  console.log("acc type,ucet:",name,hasThisType)
+ 
   const [loading, setLoading] = useState(false);
 
   const isActive = hasThisType === name;
-  const isZakladni = name === 'zakladni';
-
+  const isZakladni = name === 'Základní';
+  const canUpgrade = hasThisType === 'Šikula' && name === 'Profík';
   // Determine if the button should be disabled
-  const shouldDisable = hasThisType && (isZakladni || hasThisType !== 'zakladni');
+  const shouldDisable = hasThisType && (isZakladni || hasThisType !== 'Základní');
 
   // Determine if the "Zrušit předplatné" link should be shown
   const showCancelLink = isActive && !isZakladni;
@@ -73,6 +72,8 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
     isActive && !isZakladni ? "shadow-effect border-0" : "border-base-200"
   } rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700`}
 >
+
+  {canUpgrade ?  <UpgradeModalSubscription nameToUpgrade={name} /> : ""}
   <style jsx>{`
     @keyframes shadow {
       0% {
@@ -147,24 +148,30 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
 
   <button
     onClick={() => {
+      if(canUpgrade){
+        openUpgradeModalSubscriptionModal()
+      }
       if (price > 15 && !shouldDisable) {
-        openPaymentModal(price); // Pass the price to the function
+       
+          openPaymentModal(price); 
+        
+       
       } else if(!shouldDisable){
         setDefaultType();
       }
     }}
     type="button"
     className={`w-full btn text-sm sm:text-base ${
-      isActive
+      isActive &&!canUpgrade
         ? "bg-[#8300ff] text-white disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed"
         : "bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50"
-    } ${shouldDisable ? "cursor-not-allowed" : "cursor-pointer"}`}
-    disabled={shouldDisable || loading} // Disable button based on condition
+    } ${shouldDisable&&!canUpgrade  ? "cursor-not-allowed" : "cursor-pointer"}`}
+    disabled={!canUpgrade && shouldDisable || loading} // Disable button based on condition
   >
     {loading ? (
       <span className="loading loading-spinner loading-sm"></span>
     ) : (
-      <span>{isActive ? "Vaše předplatné" : "Zvolit"}</span>
+<span>{isActive && !canUpgrade ? "Vaše předplatné" : (canUpgrade ? "Upgradovat" : "Zvolit")}</span>
     )}
   </button>
 
@@ -174,6 +181,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
 
     </div>
   )}
+ 
 
   <PaymentModal price={price} name={name} priceId={priceId} />
 </div>

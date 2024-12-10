@@ -35,27 +35,40 @@ export async function POST(request) {
     // Retrieve subscriptions for the customer
     const subscriptions = await stripe.subscriptions.list({
       customer: customer.id,
-      status: "active"
-    });
-
-    if (subscriptions.data.length) {
+      status: "active",
+      expand: ['data.items.data.price'], // Rozbalí objekt price pro kontrolu ID
+  });
+  
+  console.log("předplatná:",subscriptions);
+  
+  // Ověření, zda existuje předplatné s konkrétní cenou
+  const hasExistingSubscription = subscriptions.data.some(subscription =>
+      subscription.items.data.some(item => item.price.id === "price_1QUWOUHvhgFZWc3HPMtO5Flt") // 0 CZK PRICE IN OTHER WORDS THE DEFAULT ACC
+  );
+  
+  if (hasExistingSubscription) {
       return new Response(JSON.stringify({
-        message: "Již nalezeno aktivní předplatné nelze aktivovat základní předplatné."
+          message: "Již nalezeno aktivní předplatné nelze aktivovat základní předplatné."
       }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' }
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
       });
-    }
+  }
+  
+  // Pokračujte dál, pokud není konfliktní předplatné nalezeno
+  
 
-    let isAlreadyAcc = await prisma.AccountType.findFirst({
-      where: {
-        name: "zakladni",
-        userId: session.userId,
-      },
+    const subscription = await stripe.subscriptions.create({
+      customer:  customer.id,
+      items: [{
+        price:"price_1QUWOUHvhgFZWc3HPMtO5Flt", // free price 0 CZK
+      }],
+      
     });
 
-    console.log("Již existuje :", isAlreadyAcc);
-    if (isAlreadyAcc) {
+
+
+    if (1==2) {
       return new NextResponse(
         JSON.stringify({ message: 'Základní účet již existuje pro tohoto uživatele' }),
         {
@@ -65,12 +78,7 @@ export async function POST(request) {
       );
     }
 
-    await prisma.AccountType.create({
-      data: {
-        name: "zakladni",
-        userId: session.userId,
-      },
-    });
+   
 
     return new NextResponse(
       JSON.stringify({ message: 'Uspesne aktivován základní typ učtu' }),

@@ -130,7 +130,7 @@ model Posts {
   section      Sections     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   images       Image[]      // Define a one-to-many relation
   userId       String 
-  dateAndTime  DateTime     @default(now())
+  dateAndTime  DateTime     
   user         Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
   postViews    PostViews[]  // One-to-many relationship with PostViews
   postReport    PostReport[]  // One-to-many relationship with PostViews
