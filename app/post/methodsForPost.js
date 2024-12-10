@@ -2,7 +2,9 @@ import { prisma } from "../database/db";
 
 export async function getPostFromDb(postId) {
   let postRecord = null;
+console.log(1)
   try {
+
     postRecord = await prisma.Posts.findUnique({
       
       where: {
