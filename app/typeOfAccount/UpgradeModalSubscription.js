@@ -10,7 +10,7 @@ async function upgradeSubscription(name, insta, setloadingPayment, setErrorFromP
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nameToUpgrade: name, instantly: !insta }),
+            body: JSON.stringify({ nameToUpgrade: name, instantly: true }),
         });
 
         if (!response.ok) {
