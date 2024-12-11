@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
-import moment from "moment";
+
 import { DateTime } from 'luxon';
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -130,9 +130,7 @@ if(alreadyHaveTHisSub){
          
              subscriptionInfo = await stripe.subscriptions.retrieve(nonZeroPriceSubscription.id);
             
-        } else {
-            console.log('Žádné předplatné s nenulovou cenou nebylo nalezeno.');
-        }
+        } 
 
         const subscription = subscriptions.data[0];
         const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
@@ -140,7 +138,7 @@ if(alreadyHaveTHisSub){
         let priceOfAlreadySub = await getProductPrice(product.default_price)
         console.log("Cena předplatného co již má:",priceOfAlreadySub)
         console.log("Cena předplatného co chce :",priceOfDesiredSub)
-        if(priceOfAlreadySub < priceOfDesiredSub){
+        if(priceOfAlreadySub > priceOfDesiredSub){
             return new Response(JSON.stringify({
                 message: "Toto předplatné nelze upgradovat"
               }), {
@@ -195,7 +193,9 @@ if(alreadyHaveTHisSub){
     const currentDateUnix = Math.floor(DateTime.now().toSeconds()); 
     
  let  priceToUpgrade = await calculateUpgradeCost(priceOfAlreadySub, priceOfDesiredSub, nonZeroPriceSubscription.current_period_start, nonZeroPriceSubscription.current_period_end, currentDateUnix);
-
+ if(priceToUpgrade < 15 ){
+    priceToUpgrade = 15
+}
 if (!nonZeroPriceSubscription) {
             return new Response(JSON.stringify({
                 message: "Žádné platící předplatné nenalezeno pro tohoto zákazníka"

@@ -11,8 +11,9 @@ const Page = async ({ searchParams }) => {
   
   const redirectStatus = searchParams.redirect_status // Get 'redirect_status' directly from searchParams
   const successMessage = redirectStatus === 'succeeded'; // Check for success
+  const upgradeMessage = redirectStatus === 'upgraded'; // Check for success
   const failureMessage = redirectStatus === 'failed'; // Check for failure
-  const unknownMessage = redirectStatus && redirectStatus !== 'succeeded' && redirectStatus !== 'failed'; // Check for unknown status
+  const unknownMessage = redirectStatus && redirectStatus !== 'succeeded' && redirectStatus !== 'failed' && redirectStatus !=="upgraded"; // Check for unknown status
   const noStatusMessage = !redirectStatus; // Check if no status is provided
   console.log(searchParams.redirect_status)
   let accType = await getUserAccountTypeOnStripe(session.email);
@@ -130,6 +131,32 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
 </svg>
 
             <span className="font-bold">Neznámý stav!</span> Stav platby není rozpoznán.
+          </div>
+        </div>
+      ): upgradeMessage ? (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '20px',
+          }}
+        >
+          <div
+            className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-200 dark:bg-gray-800 dark:text-yellow-400"
+            role="alert"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+</svg>
+
+
+            <span className="font-bold">Upgrade!</span>Úspěšně jste upgradovali předplatné.
           </div>
         </div>
       ) : noStatusMessage ? (
