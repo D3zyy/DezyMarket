@@ -38,10 +38,53 @@ export async function POST(request) {
       status: "active",
       expand: ['data.items.data.price'], // Rozbalí objekt price pro kontrolu ID
   });
+
+  let productExist = await getProductByName(data.nameToUpgrade);
+
+  async function checkCustomerSubscription(customerId, productId) {
+    try {
+        const subscriptions = await stripe.subscriptions.list({
+            customer: customerId,
+            status: 'active',
+            expand: ['data.items.data.plan'], // Rozbalí ID produktu
+        });
+
+        for (const subscription of subscriptions.data) {
+            const hasProduct = subscription.items.data.some(
+                item => item.price.product === productId
+            );
+
+            if (hasProduct) {
+                return true; // Zákazník již má produkt
+            }
+        }
+
+        return false; // Produkt nebyl nalezen v žádném předplatném
+    } catch (error) {
+        console.error('Chyba při kontrole předplatného:', error);
+        throw error;
+    }
+}
+if(!productExist){
+    return new Response(JSON.stringify({
+      message: "Tento produkt na upgrade neexistuje"
+    }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+    });
+}
+let alreadyHaveTHisSub = await checkCustomerSubscription(customer.id,productExist.id)
+
+   if(alreadyHaveTHisSub){
+            return new Response(JSON.stringify({
+              message: "Toto předplatné již máte nelze na něj upgradovat"
+            }), {
+                status: 403,
+                headers: { 'Content-Type': 'application/json' }
+            });
+   }
   
 
-  
-  // Ověření, zda existuje předplatné s konkrétní cenou
   const hasExistingSubscription = subscriptions.data.some(subscription =>
       subscription.items.data.some(item => item.price.id === "price_1QUWOUHvhgFZWc3HPMtO5Flt") // 0 CZK PRICE IN OTHER WORDS THE DEFAULT ACC
   );

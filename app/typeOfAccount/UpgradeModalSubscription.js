@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 
-async function upgradeSubscription(name) {
+async function upgradeSubscription(name,insta) {
     try {
         const response = await fetch('/api/upgradeSubscripiton', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name: name }),
+            body: JSON.stringify({ nameToUpgrade: name , instantly: !insta}),
         });
 
         if (!response.ok) {
@@ -35,6 +35,7 @@ export function UpgradeModalSubscription({ nameToUpgrade, date }) {
     const [isChecked, setIsChecked] = useState(false);
     const [priceToUpgrade, setPriceToUpgrade] = useState(false);
     const [priceOfDesiredSub, setPriceOfDesiredSub] = useState(0);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         function fetchSubscriptionInfo() {
@@ -62,6 +63,8 @@ export function UpgradeModalSubscription({ nameToUpgrade, date }) {
                     setLoading(false);
                 })
                 .catch(error => {
+                    setError("Nastala chyba na serveru. Zkuste to později")
+                    setLoading(false);
                     console.error('Chyba při získávání informací o předplatném:', error);
                 });
         }
@@ -81,6 +84,10 @@ export function UpgradeModalSubscription({ nameToUpgrade, date }) {
                 <div className="modal-box flex flex-col justify-center items-center p-4">
                     {loading ? <span className="loading loading-spinner loading-lg"></span> : 
                         <>
+                        {error ? <span className='text-red-500 flex justify-center items-center '> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8 mr-4">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+</svg>
+ Nastala chyba. Zkuste to později</span>  : <> 
                             <span className="block text-center font-bold mb-4 text-lg">
                                 Upgradovat předplatné na {nameToUpgrade}
                             </span>
@@ -164,8 +171,8 @@ export function UpgradeModalSubscription({ nameToUpgrade, date }) {
                                 <button
                                     type="button"
                                     className="btn bg-primary mr-2 hover:bg-primary"
-                                    onClick={() => upgradeSubscription(nameToUpgrade)}
-                                    onTouchStart={() => upgradeSubscription(nameToUpgrade)}
+                                    onClick={() => upgradeSubscription(nameToUpgrade,isChecked)}
+                                    onTouchStart={() => upgradeSubscription(nameToUpgrade,isChecked)}
                                 >
                                     Upgradovat
                                 </button>
@@ -182,6 +189,7 @@ export function UpgradeModalSubscription({ nameToUpgrade, date }) {
                                     Zavřít
                                 </button>
                             </div>
+                            </>}
                         </>
                     }
                 </div>

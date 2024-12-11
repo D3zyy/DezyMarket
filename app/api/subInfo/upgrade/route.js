@@ -140,6 +140,14 @@ if(alreadyHaveTHisSub){
         let priceOfAlreadySub = await getProductPrice(product.default_price)
         console.log("Cena předplatného co již má:",priceOfAlreadySub)
         console.log("Cena předplatného co chce :",priceOfDesiredSub)
+        if(priceOfAlreadySub < priceOfDesiredSub){
+            return new Response(JSON.stringify({
+                message: "Toto předplatné nelze upgradovat"
+              }), {
+                  status: 403,
+                  headers: { 'Content-Type': 'application/json' }
+              });
+        }
         console.log("Předplatné zakaznika začalo:",nonZeroPriceSubscription.current_period_start)
         console.log("Předplatné zakaznika začalo:",nonZeroPriceSubscription.current_period_end)
        // Funkce pro výpočet upgrade ceny
@@ -217,7 +225,7 @@ if (!nonZeroPriceSubscription) {
 
         // Format the date as day.month.year
         const formattedDate = `${day}.${month}.${year}`;
-
+ 
         return new Response(JSON.stringify({
             nextPayment: formattedDate,
             scheduledToCancel: subscriptions.data[0].cancel_at_period_end,
