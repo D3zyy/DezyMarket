@@ -68,15 +68,6 @@ export async function POST(request) {
 
 
 
-    if (1==2) {
-      return new NextResponse(
-        JSON.stringify({ message: 'Základní účet již existuje pro tohoto uživatele' }),
-        {
-          status: 403,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    }
 
    
 

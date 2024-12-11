@@ -9,7 +9,7 @@ import {UpgradeModalSubscription, openUpgradeModalSubscriptionModal} from './Upg
 
 
 export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
-  console.log("acc type,ucet:",name,hasThisType)
+
  
   const [loading, setLoading] = useState(false);
 

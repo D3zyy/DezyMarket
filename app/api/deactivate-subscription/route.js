@@ -55,6 +55,7 @@ export async function POST(req) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
+
        if(subscriptions.data[0].cancel_at_period_end){
         return new Response(JSON.stringify({
             message: "Žádné aktivní předplatné nenalezeno"
