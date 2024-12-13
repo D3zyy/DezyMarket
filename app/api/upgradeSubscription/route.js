@@ -30,7 +30,26 @@ export async function POST(request) {
         headers: { 'Content-Type': 'application/json' }
       });
     }
+ let  cardIdFromToBePaid =   data.cardId
+ const paymentMethods = await stripe.paymentMethods.list({
+    customer: customer.id,
+    type: 'card',
+});
 
+// Kontrola, zda karta s daným ID existuje u tohoto zákazníka
+const cardFound = paymentMethods.data.find(card => card.id === data.cardId);
+
+if (cardFound) {
+    console.log('Karta patří uživateli:', cardFound);
+}  else {
+    console.log("Karta nepatří uživateli")
+    return new Response(JSON.stringify({
+        message: "Tuto platební metodu nelze použít s tímto účtem"
+      }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+      });
+}
   
     // Retrieve subscriptions for the customer
     const subscriptions = await stripe.subscriptions.list({

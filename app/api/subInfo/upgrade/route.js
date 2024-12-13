@@ -33,7 +33,34 @@ export async function POST(request) {
         }
         let data = await request.json();
         const customer = customers.data[0];
-       
+        async function getCustomerCard(customerId) {
+            try {
+                console.log("zakaznik id:",customerId)
+                // Načtení dat o zákazníkovi
+                const customer = await stripe.customers.retrieve(customerId);
+        
+                // Získání uložených karet
+                const paymentMethods = await stripe.paymentMethods.list({
+                    customer: customer.id,
+                    type: 'card',
+                });
+                
+                // Vytvoření pole obsahujícího požadované informace
+                const cards = paymentMethods.data.map((method) => ({
+                    id: method.id,
+                    brand: method.card.brand,
+                    last4: method.card.last4,
+                }));
+                
+                console.log(cards);
+                return cards
+            } catch (error) {
+                console.error('Chyba při načítání dat o zákazníkovi:', error);
+            }
+        }
+        
+        // Zavolání funkce
+
         console.log("Na co chci upgradovat:",data.nameToUpgrade)
         async function getProductPrice(defaultPriceId) {
             try {
@@ -225,13 +252,15 @@ if (!nonZeroPriceSubscription) {
 
         // Format the date as day.month.year
         const formattedDate = `${day}.${month}.${year}`;
- 
+        let  lastFourDigitsOfCustomerCard =  await getCustomerCard(customer.id);
+        console.log("Posledni 4 čísla karty:",lastFourDigitsOfCustomerCard)
         return new Response(JSON.stringify({
             nextPayment: formattedDate,
             scheduledToCancel: subscriptions.data[0].cancel_at_period_end,
             name : product.name,
             priceToUpgrade: priceToUpgrade,
-            priceOfDesiredSub: priceOfDesiredSub
+            priceOfDesiredSub: priceOfDesiredSub,
+            cards: lastFourDigitsOfCustomerCard
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
