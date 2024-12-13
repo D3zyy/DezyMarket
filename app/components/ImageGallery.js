@@ -172,7 +172,8 @@ const ImageGallery = ({ allImages }) => {
           <div className="grid grid-cols-3 gap-2 mt-4">
             {allImages.slice(1, 3).map((thumbnail, index) => (
               <div key={index} className="relative w-full h-20">
-                <img
+                <Image
+                  layout="fill"
                   loading="lazy"
                   decoding="async"
                   src={thumbnail.url}
@@ -189,7 +190,8 @@ const ImageGallery = ({ allImages }) => {
                   className="absolute inset-0 rounded-lg bg-opacity-25 cursor-pointer"
                   onClick={() => setIsGalleryOpen(true)}
                 >
-                  <img
+                  <Image
+                    layout="fill"
                     loading="lazy"
                     decoding="async"
                     src={allImages[3].url} 
@@ -236,6 +238,7 @@ const ImageGallery = ({ allImages }) => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {allImages.map((image, index) => (
                     <img
+                     
                       loading="lazy"
                       decoding="async"
                       key={index}

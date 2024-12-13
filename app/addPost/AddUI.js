@@ -620,8 +620,8 @@ const handleDeleteImage = (index) => {
       {imagePreviews.length > 0 &&
     imagePreviews.map((imagePreview, index) => (
         <div key={index} className="relative">
-          <img
-          
+          <Image
+     layout="fill"
     src={imagePreview}
     alt={`Náhled ${index + 1}`}
     
