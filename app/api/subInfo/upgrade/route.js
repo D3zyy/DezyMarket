@@ -253,7 +253,7 @@ if (!nonZeroPriceSubscription) {
         // Format the date as day.month.year
         const formattedDate = `${day}.${month}.${year}`;
         let  lastFourDigitsOfCustomerCard =  await getCustomerCard(customer.id);
-        console.log("Posledni 4 čísla karty:",lastFourDigitsOfCustomerCard)
+      
         return new Response(JSON.stringify({
             nextPayment: formattedDate,
             scheduledToCancel: subscriptions.data[0].cancel_at_period_end,
