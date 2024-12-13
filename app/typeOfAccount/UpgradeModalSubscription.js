@@ -185,6 +185,14 @@ export function UpgradeModalSubscription({ nameToUpgrade, date }) {
         ))}
     </select>
 </div>
+<ul>
+<li className="flex items-center mb-5 mt-5 text-gray-400 text-opacity-75 text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 mr-2 text-gray-500">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+        </svg>
+        Kliknutím na ‘Upgradovat’ souhlasíte s okamžitým stržením částky z vaší karty a přechodem na uvedené předplatné.
+    </li>
+    </ul>
 
                             <div className="flex justify-center mt-6 space-x-4 ">
                                 {!success && (
