@@ -121,15 +121,16 @@ export function UpgradeModalSubscription({ nameToUpgrade, date }) {
                         </div>
                     ) : (
                         <>
-                       <h2 className="text-md mb-4 text-center text-red-500 flex items-center justify-center">
+                        {errorFromPayment && <h2 className="text-md mb-4 text-center text-red-500 flex items-center justify-center">
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
   </svg>
   {errorFromPayment}
-</h2>
+</h2>}
+                      
                        
                             <h2 className="text-lg font-bold mb-4 text-center">
-                            Upgradovat předplatné na ${nameToUpgrade}
+                            Upgradovat předplatné na {nameToUpgrade}
                             </h2>
                             <ul className="space-y-4 text-centre">
                                 <li className="text-center">
@@ -163,7 +164,7 @@ export function UpgradeModalSubscription({ nameToUpgrade, date }) {
         value={selectedCardId || ""}
         onChange={(e) => setSelectedCardId(e.target.value)}
     >
-        {lastDigits.map((card) => (
+        {lastDigits?.map((card) => (
             <option key={card.id} value={card.id}>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
