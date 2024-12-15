@@ -34,7 +34,7 @@ export const RatePostModalWrapperLazy = ({ userToRate,nameOfUser }) => {
   return (
     <div>
       <a
-        className="btn   flex-shrink "
+        className="btn  sm:h-0 h-20   flex-shrink "
         onClick={handleOpenModal}
       >
         {hasError ? (
