@@ -40,17 +40,19 @@ export const ReportPostModalWrapperLazy = ({
 
   return (
     <div>
-      <a
-        className="btn sm:h-0 h-20 flex-shrink "
-        onClick={() =>
-            handleOpenModalReportLazy(
-            openReportPostModal, // Zde nahraď svou implementací openReportPostModal
-            isModalVisible,
-            setIsModalVisible,
-            setHasError
-          )
-        }
-      >
+     <a
+  href="#"
+  className="btn sm:h-0 h-20 flex-shrink"
+  onClick={(event) => {
+    event.preventDefault(); // Zabránění výchozímu chování odkazu
+    handleOpenModalReportLazy(
+      openReportPostModal, // Zde nahraď svou implementací openReportPostModal
+      isModalVisible,
+      setIsModalVisible,
+      setHasError
+    );
+  }}
+>
         {hasError ? (
           <span>Nastala chyba</span> // Zobrazí se text místo ikony
         ) : (

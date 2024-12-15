@@ -63,7 +63,7 @@ const ImageGallery = ({ allImages }) => {
     
     
   ];
-
+  const MotionImage = motion.create(Image);
   // Disable/enable scrolling on the main page when the gallery is opened/closed
   useEffect(() => {
     if (isGalleryOpen) {
@@ -118,19 +118,23 @@ const ImageGallery = ({ allImages }) => {
           <div className="relative bg-gray-100 max-h-[600px] flex items-center justify-center rounded-lg overflow-auto">
            
 
-             <AnimatePresence mode="wait">
-              <motion.img
-                key={mainImageIndex}
-                src={allImages[mainImageIndex].url}
-                alt="Main"
-                className="w-full h-full "
-                initial={{ opacity: 0.8, filter: "blur(40px)" }}
-                animate={{ opacity: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0.9, filter: "blur(40px)" }}
-                transition={{ duration: 0.38 }}
-                loading="lazy"
-              />
-            </AnimatePresence>
+        
+
+<MotionImage
+  width={1200}
+  height={1200}
+  key={mainImageIndex}
+  src={allImages[mainImageIndex].url}
+  alt="Main image"
+  className="w-full h-full"
+  initial={{ opacity: 0.8, filter: "blur(40px)" }}
+  animate={{ opacity: 1, filter: "blur(0px)" }}
+  exit={{ opacity: 0.9, filter: "blur(40px)" }}
+  transition={{ duration: 1 }}
+  layout="fill" // Důležité: Přizpůsobení rodiči
+ 
+  priority // Zajistí rychlejší načtení hlavního obrázku
+/>
             {allImages.length > 1 && (
               <button
                 onClick={handlePreviousImage}
@@ -173,13 +177,14 @@ const ImageGallery = ({ allImages }) => {
             {allImages.slice(1, 3).map((thumbnail, index) => (
               <div key={index} className="relative w-full h-20">
                 <Image
-                  layout="fill"
-                  loading="lazy"
+                width={50}
+                height={50}
                   decoding="async"
                   src={thumbnail.url}
                   alt={`Obrázek ${index + 1}`}
                   className="w-full h-full rounded-lg cursor-pointer"
                   onClick={() => setIsGalleryOpen(true)}
+                  priority
                 />
               </div>
             ))}
@@ -191,7 +196,8 @@ const ImageGallery = ({ allImages }) => {
                   onClick={() => setIsGalleryOpen(true)}
                 >
                   <Image
-                    layout="fill"
+                      width={40}
+                      height={40}
                     loading="lazy"
                     decoding="async"
                     src={allImages[3].url} 
@@ -237,14 +243,15 @@ const ImageGallery = ({ allImages }) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {allImages.map((image, index) => (
-                    <img
-                     
+                    <Image
+                      height={1200}
+                      width={1200}
                       loading="lazy"
                       decoding="async"
                       key={index}
                       src={image.url}
                       alt={`Obrázek ${index + 1}`}
-                      className="w-full h-auto rounded-lg object-cover"
+                      className=" rounded-lg object-cover"
                     />
                   ))}
                 </div>

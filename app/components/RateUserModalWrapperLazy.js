@@ -34,9 +34,13 @@ export const RatePostModalWrapperLazy = ({ userToRate,nameOfUser }) => {
   return (
     <div>
       <a
-        className="btn  sm:h-0 h-20   flex-shrink "
-        onClick={handleOpenModal}
-      >
+      href="#"
+      className="btn sm:h-0 h-20 flex-shrink"
+      onClick={(event) => {
+        event.preventDefault(); // Zabraňuje výchozímu chování odkazu
+        handleOpenModal(); // Vaše logika pro otevření modalu
+      }}
+    >
         {hasError ? (
           <span>Nastala chyba</span> // Zobrazí se text místo ikony
         ) : (

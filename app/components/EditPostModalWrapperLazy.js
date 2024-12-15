@@ -49,21 +49,23 @@ export const EditPostModalWrapperLazy = ({
 
   return (
     <div>
-      <a
-        className={`${
-          roleOfEditor > 1 && idUserOfEditor != idUserOfPost
-            ? "btn border-dotted border-red-600 border-2 flex-shrink hover:border-red-600"
-            : "btn sm:h-0 h-20 flex-shrink"
-        }`}
-        onClick={() =>
-          handleOpenModalEditLazy(
-            openEditPostModal,
-            isModalVisible,
-            setIsModalVisible,
-            setHasError
-          )
-        }
-      >
+     <a
+  href="#"
+  className={`${
+    roleOfEditor > 1 && idUserOfEditor !== idUserOfPost
+      ? "btn border-dotted border-red-600 border-2 flex-shrink hover:border-red-600"
+      : "btn sm:h-0 h-20 flex-shrink"
+  }`}
+  onClick={(event) => {
+    event.preventDefault(); // Zabránění výchozímu chování odkazu
+    handleOpenModalEditLazy(
+      openEditPostModal,
+      isModalVisible,
+      setIsModalVisible,
+      setHasError
+    );
+  }}
+>
         {hasError ? (
           <span>Nastala chyba</span> // Zobrazí se text místo ikony
         ) : roleOfEditor > 1 && idUserOfEditor != idUserOfPost ? (

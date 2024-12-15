@@ -33,10 +33,14 @@ export const ReportsPostModalWrapperLazy = ({ postId }) => {
 
   return (
     <div>
-      <a
-        className="btn border-dotted border-orange-500 border-2 flex-shrink hover:border-orange-500"
-        onClick={handleOpenModal}
-      >
+     <a
+  href="#"
+  className="btn border-dotted border-orange-500 border-2 flex-shrink hover:border-orange-500"
+  onClick={(event) => {
+    event.preventDefault(); // Zabránění navigaci
+    handleOpenModal(); // Vaše logika pro otevření modalu
+  }}
+>
         {hasError ? (
           <span>Nastala chyba</span> // Zobrazí se text místo ikony
         ) : (

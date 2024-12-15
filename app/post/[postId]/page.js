@@ -118,6 +118,7 @@ const Page = async ({ params }) => {
   
 
   <a 
+    href="#"
     className="btn border-dotted border-red-600 border-2 flex-shrink hover:border-red-600" 
     onClick={openDeletePostModal}
   >
