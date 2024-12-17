@@ -49,7 +49,7 @@ export function closeReportPostModal() {
       }
 }
 
- const ReportPostModal = ({posttId,postCreatorName, postCreatorId,imagesLength }) => {
+const ReportPostModal = ({ posttId, postCreatorName, postCreatorId, imagesLength }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -61,99 +61,97 @@ export function closeReportPostModal() {
     const [errorMessage, setErrorMessage] = useState('');
     const [alreadyReported, setAlreadyReported] = useState('');
     const [alreadyEnoughReports, setAlreadyEnoughReports] = useState('');
-    const [loadingStatus, setLoadingStatus] = useState(true); // Track loading status
-    const dropdownRef = useRef(null);  // Reference to the dropdown container
-    
+    const [loadingStatus, setLoadingStatus] = useState(true); // Stav načítání
+    const dropdownRef = useRef(null); // Reference na dropdown
+  
     useEffect(() => {
-    const checkReportStatus = async () => {
+      const checkReportStatus = async () => {
         setLoadingStatus(true); // Zobrazí spinner
         
         try {
-            
-            const response = await fetch('/api/posts/report', {
-                method: 'PUT', 
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ postId }),
-            });
-
-            if (response.ok) {
-                console.log("Odpoved v poradku")
-                const data = await response.json();
-                setAlreadyReported(data.reported);
-                setAlreadyEnoughReports(data.enoughReports);
-            } else {
-                console.log("Odpoved neni poradku")
-                console.error('Failed to report post:', response.statusText);
-            }
+          const response = await fetch('/api/posts/report', {
+            method: 'PUT', 
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ postId }),
+          });
+  
+          if (response.ok) {
+            console.log("Odpověď v pořádku");
+            const data = await response.json();
+            setAlreadyReported(data.reported);
+            setAlreadyEnoughReports(data.enoughReports);
+          } else {
+            console.error('Nepodařilo se načíst stav reportu:', response.statusText);
+          }
         } catch (error) {
-            console.error('Error checking report status:', error);
-        }
-
-        // Nastaví zpoždění, aby spinner byl zobrazen alespoň 2 sekundy
-        setTimeout(() => {
-            setLoadingStatus(false); // Skrývá spinner po zpoždění
-        }, 2000); // Zpoždění 2 sekundy (2000 ms)
-    };
-
-    checkReportStatus();
-}, [postId]);
-
-    // Close dropdown if clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setDropdownOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const reasons = [
-        'Nesprávná kategorie',
-        'Nesprávná sekce',
-        'Nevhodný inzerát',
-        'Podvodný inzerát',
-        ...(imagesLength > 0 ? ['Nevhodné fotografie'] : []),
-        'Nevhodný obsah',
-        'Jiné',
-      ];
-    //  console.log("duvody:",reasons)
-    const handleReasonToggle = (reason) => {
-        setSelectedReasons((prevReasons) =>
-            prevReasons.includes(reason)
-                ? prevReasons.filter((r) => r !== reason)
-                : [...prevReasons, reason]
-        );
-    };
-
-    const handleReportChange = async () => {
-        if (selectedReasons.length === 0) {
-            setErrorMessage('Důvod je povinný.');
-            return; // Prevent submission if no reason is selected
-        }
-
-        setErrorMessage(''); // Clear error message if validation passes
-        setLoading(true);
-
-        try {
-            const resultsFromReport = await reportPost(postId, selectedReasons, setSuccess, moreInfo);
-            console.log("co server odpovedel:", resultsFromReport);
-
-            if (resultsFromReport.success) {
-                setSuccess(resultsFromReport.message);
-            } else {
-                setErrorFromServer(true);
-                setErrorMessage(resultsFromReport.message);
-            }
-        } catch (error) {
-            console.error("An error occurred while reporting the post:", error);
-            setErrorMessage("Nastala chyba při odesílání. Zkuste to prosím znovu.");
+          console.error('Chyba při načítání stavu reportu:', error);
         } finally {
-            setLoading(false);
+          // Nastaví zpoždění, aby spinner byl zobrazen alespoň 2 sekundy
+          setTimeout(() => {
+            setLoadingStatus(false); // Skrývá spinner po zpoždění
+          }, 2000); // Zpoždění 2 sekundy (2000 ms)
         }
+      };
+  
+      checkReportStatus();
+    }, [postId]);
+  
+    // Zavření dropdownu při kliknutí mimo něj
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setDropdownOpen(false);
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+  
+    const reasons = [
+      'Nesprávná kategorie',
+      'Nesprávná sekce',
+      'Nevhodný inzerát',
+      'Podvodný inzerát',
+      ...(imagesLength > 0 ? ['Nevhodné fotografie'] : []),
+      'Nevhodný obsah',
+      'Jiné',
+    ];
+  
+    const handleReasonToggle = (reason) => {
+      setSelectedReasons((prevReasons) =>
+        prevReasons.includes(reason)
+          ? prevReasons.filter((r) => r !== reason)
+          : [...prevReasons, reason]
+      );
+    };
+  
+    const handleReportChange = async () => {
+      if (selectedReasons.length === 0) {
+        setErrorMessage('Důvod je povinný.');
+        return; // Zabrání odeslání, pokud není vybrán žádný důvod
+      }
+  
+      setErrorMessage(''); // Vyčistí chybovou zprávu, pokud validace projde
+      setLoading(true);
+  
+      try {
+        const resultsFromReport = await reportPost(postId, selectedReasons, setSuccess, moreInfo);
+        console.log("Co server odpověděl:", resultsFromReport);
+  
+        if (resultsFromReport.success) {
+          setSuccess(resultsFromReport.message);
+        } else {
+          setErrorFromServer(true);
+          setErrorMessage(resultsFromReport.message);
+        }
+      } catch (error) {
+        console.error("Chyba při odesílání reportu:", error);
+        setErrorMessage("Nastala chyba při odesílání. Zkuste to prosím znovu.");
+      } finally {
+        setLoading(false);
+      }
     };
 
     return (
@@ -273,8 +271,10 @@ export function closeReportPostModal() {
                         </button>
                         {isDropdownOpen && (
                             <div className="absolute bg-base-300 rounded-md top-full left-0 w-full mt-1 z-10">
-                                {reasons.map((reason) => {
-                                    const isAlreadyReported = alreadyReported?.some((report) => report.reason === reason);
+                                {reasons?.map((reason) => {
+                                   const isAlreadyReported = Array.isArray(alreadyReported) 
+                                   ? alreadyReported.some((report) => report.reason === reason) 
+                                   : false;
 
                                     return (
                                         <label key={reason} className="flex items-center cursor-pointer p-2">

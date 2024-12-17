@@ -35,11 +35,19 @@ const ProfileNavBarClient = ({ session }) => {
           className="btn btn-ghost btn-circle avatar"
           onClick={handleDropdownToggle}
         >
-          <div
-            className={`w-10 rounded-full ${
-              session?.role?.privileges === 2 ? "border border-red-500" : ""
-            }`}
-          >
+        
+
+        <div
+        className={`w-10 rounded-full ${
+          session?.role?.privileges === 2 
+            ? "border border-red-500" 
+            : session?.role?.privileges === 3 
+            ? "border border-yellow-500" 
+            : session?.role?.privileges === 4 
+            ? "border border-green-500"
+            : "" // případ, kdy žádná podmínka není splněna
+        }`}
+      >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
