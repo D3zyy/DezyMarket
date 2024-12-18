@@ -19,7 +19,7 @@ async function updatedPost(name, price, category, section, description, postId, 
   const result = await response.json();
 
   if (!response.ok) {
-      return { success: false, error: result.message };
+      return { success: false, error: result.message , validationErrors: result};
   } else {
       return { success: true, error: null };
   }
@@ -187,14 +187,14 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
     console.log("Odpověď od serveru :", result);
 
     setLoading(false);
-    setErrorValidation(result);
+    setErrorValidation(result.validationErrors);
 
     if (result.success) {
         setErrorFromServer(null);
         router.refresh();
         closeEditPostModal();
-    } else {
-        setErrorFromServer(result.error);
+    } else if(result.error != 'Nevalidní vstupy.') {
+      setErrorFromServer(result.error);
     }
 };
 
