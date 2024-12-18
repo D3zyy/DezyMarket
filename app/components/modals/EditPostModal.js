@@ -2,34 +2,27 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-async function updatedPost(name, price, category, section, description, postId, location, setSuccess,phoneNumber,setErrorFromServer) {
-    if(!section){
-      return false
-    }
-    const response = await fetch('/api/posts', {
+async function updatedPost(name, price, category, section, description, postId, location, phoneNumber) {
+  if (!section) {
+      return { success: false, error: "Section is required" };
+  }
+
+  const response = await fetch('/api/posts', {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, price, category, section, description, postId ,location,phoneNumber}),
-    });
+      body: JSON.stringify({ name, price, category, section, description, postId, location, phoneNumber }),
+  });
 
-    console.log("Server response for post edit:", response);
-    const result = await response.json();
-    if (!response.ok) { 
-  
-      setErrorFromServer(result.message)
-      
-      setSuccess(false)
-     
-    } else {
-      setSuccess(true)
-    }
-   
-    
-    return result;
-    
-  
+  console.log("Server response for post edit:", response);
+  const result = await response.json();
+
+  if (!response.ok) {
+      return { success: false, error: result.message };
+  } else {
+      return { success: true, error: null };
+  }
 }
 
 function htmlToText(htmlString) {
@@ -186,33 +179,24 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
 
   const handlePostChange = async () => {
     setLoading(true);
-  
-    const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton  : postPrice;
-    
-    let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location,setSuccess,phoneNumber,setErrorFromServer);
+
+    const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton : postPrice;
+
+    const result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId, location, phoneNumber);
+
     console.log("Odpověď od serveru :", result);
-   
-    
-    setErrorValidation(result)
+
     setLoading(false);
+    setErrorValidation(result);
 
-    if (result?.errors) {
-      // If there are errors, do nothing (you can handle the display of errors as needed)
-      setSuccess(false); // Optionally set success to false for error handling
-    } else {
-
-      if(success){
-        setErrorFromServer(null)
+    if (result.success) {
+        setErrorFromServer(null);
         router.refresh();
         closeEditPostModal();
-      }
-       
-      
-      // No errors, refresh and close the modal
-     
+    } else {
+        setErrorFromServer(result.error);
     }
-
-  };
+};
 
   return (
     <dialog id="edit_post_modal" className="modal modal-bottom sm:modal-middle" style={{ marginLeft: "0px" }}>
