@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-async function updatedPost(name, price, category, section, description, postId, location, setSuccess,phoneNumber) {
+async function updatedPost(name, price, category, section, description, postId, location, setSuccess,phoneNumber,setErrorFromServer) {
     if(!section){
       return false
     }
@@ -15,15 +15,18 @@ async function updatedPost(name, price, category, section, description, postId, 
     });
 
     console.log("Server response for post edit:", response);
-    
+    const result = await response.json();
     if (!response.ok) { 
+  
+      setErrorFromServer(result.message)
+      
       setSuccess(false)
      
     } else {
       setSuccess(true)
     }
    
-    const result = await response.json();
+    
     return result;
     
   
@@ -186,11 +189,9 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
   
     const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton  : postPrice;
     
-    let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location,setSuccess,phoneNumber);
+    let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location,setSuccess,phoneNumber,setErrorFromServer);
     console.log("Odpověď od serveru :", result);
-    if(!success){
-      setErrorFromServer(result.message)
-    }
+   
     
     setErrorValidation(result)
     setLoading(false);
@@ -199,10 +200,14 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
       // If there are errors, do nothing (you can handle the display of errors as needed)
       setSuccess(false); // Optionally set success to false for error handling
     } else {
+
       if(success){
+        setErrorFromServer(null)
         router.refresh();
         closeEditPostModal();
       }
+       
+      
       // No errors, refresh and close the modal
      
     }
