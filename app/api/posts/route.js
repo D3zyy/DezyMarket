@@ -600,7 +600,7 @@ export async function PUT(req) {
         },
       },
     });
-    if( numberOfActionsToday >15){
+    if( numberOfActionsToday > 15){
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
       }), {

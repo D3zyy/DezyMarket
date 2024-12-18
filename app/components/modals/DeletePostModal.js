@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-async function updatedPost(postId, setSuccess) {
+async function updatedPost(postId) {
     const response = await fetch('/api/posts', {
         method: 'DELETE',
         headers: {
@@ -11,16 +11,14 @@ async function updatedPost(postId, setSuccess) {
         body: JSON.stringify({ postId }),
     });
 
-    console.log("Server response for post delete:", response);
-
-    if (!response.ok) { 
-        setSuccess(false);
-    } else {
-        setSuccess(true);
-    }
-
     const result = await response.json();
-    return result;
+    if (!response.ok) {
+        console.log("nastavuji success na false");
+        return { success: false, error: result.message };
+    } else {
+        console.log("nastavuji success na true");
+        return { success: true, error: null };
+    }
 }
 
 export function openDeletePostModal() {
@@ -37,19 +35,19 @@ export const DeletePostModal = ({ posttId }) => {
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
     const [postId, setPostId] = useState(posttId);
-
+    
     const handlePostChange = async () => {
         setLoading(true);
-       let ress =  await updatedPost(postId, setSuccess);
+        const { success, error } = await updatedPost(postId);
         setLoading(false);
-        if(success){
+    
+        if (success) {
+            setError(null);
             router.push("/");
             closeDeletePostModal();
-        } else if (!success){
-            setError(ress.message)
+        } else {
+            setError(error);
         }
-       
-       
     };
 
     return (
