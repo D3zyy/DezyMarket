@@ -37,7 +37,23 @@ model Users {
   ipAddresses                 IpAddressesOnUsers[] // Relation to join table
   userRatingsGiven            UserRatings[]       @relation("RatingsGiven")
   userRatingsReceived         UserRatings[]       @relation("RatingsReceived")
+  fromUser            ManagementActions[]       @relation("ActionDoneBy")
+  toUser         ManagementActions[]       @relation("ActionDoneTo")
   @@index([verifiedEmail])
+}
+
+model ManagementActions {
+  id           Int      @id @default(autoincrement())
+  fromUserId   String      // Foreign key for the user giving the rating
+  toUserId     String      // Foreign key for the user receiving the rating
+  info    String?  // Optional topic of the rating
+  doneAt      DateTime 
+  numberOfStars Int?
+  fromUser     Users    @relation("ActionDoneBy", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser       Users    @relation("ActionDoneTo", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@index([fromUserId])
+  @@index([toUserId])
 }
 
 model UserRatings {

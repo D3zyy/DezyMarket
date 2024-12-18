@@ -745,6 +745,28 @@ export async function DELETE(req) {
         headers: { 'Content-Type': 'application/json' }
       });
     }
+    const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd');
+
+    let numberOfActionsToday = await prisma.managementActions.count({
+      where: {
+        fromUserId: session.userId,
+        doneAt: {
+          gte: new Date(`${currentDate}T00:00:00.000Z`),
+          lt: new Date(`${currentDate}T23:59:59.999Z`),
+        },
+      },
+    });
+    if( numberOfActionsToday > 10){
+      return new Response(JSON.stringify({
+        message: 'Již jste vyčerpal administrantivnách pravomocí dnes'
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     let haveImages =  await prisma.Image.findMany({
       where: { postId: data.postId }
     });
