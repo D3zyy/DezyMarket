@@ -18,6 +18,7 @@ async function updatedPost(name, price, category, section, description, postId, 
     
     if (!response.ok) { 
       setSuccess(false)
+     
     } else {
       setSuccess(true)
     }
@@ -98,6 +99,7 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
   const [activeButton, setActiveButton] = useState(null); 
   const [isDisabled, setIsDisabled] = useState(false);
   const [errorValidation, setErrorValidation] = useState(null);
+  const [errorFromServer, setErrorFromServer] = useState(null);
   useEffect(() => {
     const isPriceValid = !isNaN(posttPrice) && Number.isInteger(Number(posttPrice));
 
@@ -186,6 +188,10 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
     
     let result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId,location,setSuccess,phoneNumber);
     console.log("Odpověď od serveru :", result);
+    if(!success){
+      setErrorFromServer(result.message)
+    }
+    
     setErrorValidation(result)
     setLoading(false);
 
@@ -193,9 +199,12 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
       // If there are errors, do nothing (you can handle the display of errors as needed)
       setSuccess(false); // Optionally set success to false for error handling
     } else {
+      if(success){
+        router.refresh();
+        closeEditPostModal();
+      }
       // No errors, refresh and close the modal
-      router.refresh();
-      closeEditPostModal();
+     
     }
 
   };
@@ -205,6 +214,7 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
       <div className="modal-box w-full p-6 flex flex-col items-center">
       
         <div className="flex justify-center mb-4">
+       
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -221,8 +231,18 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
               d="M16.862 4.487l1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
             />
           </svg>
+          
         </div>
+        {errorFromServer && (
+  <span className="text-red-500 flex items-center gap-1">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+    </svg>
+    {errorFromServer}
+  </span>
+)}
         <div className="w-full text-left">
+        
           { roleOfEditore > 1 && idUserOfEditor != idUserOfPost ? 
         <div className="w-full mt-4 flex items-center"> {/* Přidání items-center */}
 <label

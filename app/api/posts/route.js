@@ -587,7 +587,27 @@ export async function PUT(req) {
         headers: { 'Content-Type': 'application/json' }
       });
     }
+    const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd');
 
+    let numberOfActionsToday = await prisma.managementActions.count({
+      where: {
+        fromUserId: session.userId,
+        doneAt: {
+          gte: new Date(`${currentDate}T00:00:00.000Z`),
+          lt: new Date(`${currentDate}T23:59:59.999Z`),
+        },
+      },
+    });
+    if( numberOfActionsToday > 15){
+      return new Response(JSON.stringify({
+        message: 'Již jste vyčerpal administrativních pravomocí dnes'
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
       //validation starts here
       let priceConverted = data.price // Vždy vrací string
  
@@ -758,9 +778,9 @@ export async function DELETE(req) {
         },
       },
     });
-    if( numberOfActionsToday > 10){
+    if( numberOfActionsToday > 15){
       return new Response(JSON.stringify({
-        message: 'Již jste vyčerpal administrantivnách pravomocí dnes'
+        message: 'Již jste vyčerpal administrativních pravomocí dnes'
       }), {
         status: 403,
         headers: { 'Content-Type': 'application/json' }
