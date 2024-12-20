@@ -814,7 +814,7 @@ export async function DELETE(req) {
      .setZone('Europe/Prague') // Čas zůstane v českém pásmu
      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
       await prisma.managementActions.create({
-        data: { doneAt: timeee , fromUserId: session.userId,toUserId:  post.user.id, info: "Smazat příspěvek [zneviditelnit]" },
+        data: { doneAt: timeee , fromUserId: session.userId,toUserId:  post.user.id, info: "Smazat příspěvek [zneviditelnit]" , postId: post.id },
       });
 
     //ještě z s3 deletnout

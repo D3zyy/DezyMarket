@@ -50,7 +50,9 @@ model ManagementActions {
   doneAt      DateTime 
   fromUser     Users    @relation("ActionDoneBy", fields: [fromUserId], references: [id], onDelete: Cascade)
   toUser       Users    @relation("ActionDoneTo", fields: [toUserId], references: [id], onDelete: Cascade)
-
+  postId      String?
+  valueBefore String?
+  valueAfter String?
   @@index([fromUserId])
   @@index([toUserId])
 }
