@@ -13,6 +13,12 @@
 # 2. npm run start 
 # na portu :8000 poběží aplikace
 
+
+# STRIPE
+# 1. mám produkty s názvy : Základní,Šikuka,Profík
+# 2. nastavím ceny a ty vložím do app sem do kodu ty jejich priceId 
+
+
 # --------------------------------------------------------------------------------------------------------------------------------------
 ## Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 a správce s privilegii 3 a majitel s privilegii 4 !!!!!!!!!!!!!!!!!!!
 # --------------------------------------------------------------------------------------------------------------------------------------
