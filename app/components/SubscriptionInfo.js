@@ -11,33 +11,32 @@ export function SubscriptionInfo() {
 
 
 
-
     useEffect(() => {
-        function fetchSubscriptionInfo() {
-            setLoading(true)
-            fetch('/api/subInfo', {
-                method: 'POST',
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Chyba získávaní informací o předplatném');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setNextPayment(data.nextPayment); // Corrected property name to 'nextPayment'
-                setScheduledToCancel(data.scheduledToCancel)
-                setName(data.name)
-                setLoading(false)
-                
-            })
-            .catch(error => {
-                console.error('Chyba získávaní informací o předplatném:', error);
+        async function fetchSubscriptionInfo() {
+          setLoading(true);
+          try {
+            const response = await fetch('/api/subInfo', {
+              method: 'POST',
             });
+    
+            if (!response.ok) {
+              throw new Error('Chyba získávaní informací o předplatném');
+            }
+    
+            const data = await response.json();
+            setNextPayment(data.nextPayment);  // Opravený název vlastnosti na 'nextPayment'
+            setScheduledToCancel(data.scheduledToCancel);
+            setName(data.name);
+            setLoading(false);
+    
+          } catch (error) {
+            console.error('Chyba získávaní informací o předplatném:', error);
+            setLoading(false); // Ujisti se, že loading je ukončen i při chybě
+          }
         }
-
+    
         fetchSubscriptionInfo();
-    }, []);
+      }, []);
     const formattedDate = nextPayment
     ? nextPayment
     : null;

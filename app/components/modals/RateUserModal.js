@@ -3,28 +3,35 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-async function RateUser(userId, setErrorMessage, setSuccess,moreInfo,numberOfStars) {
-    const response = await fetch('/api/posts/rate', {
+async function RateUser(userId, setErrorMessage, setSuccess, moreInfo, numberOfStars) {
+    try {
+      const response = await fetch('/api/posts/rate', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId ,moreInfo,numberOfStars}),
-    });
-
-    console.log("Server response for post report:", response);
-    const result = await response.json();
-    if (!response.ok) { 
+        body: JSON.stringify({ userId, moreInfo, numberOfStars }),
+      });
+  
+      console.log("Server response for post report:", response);
+  
+      const result = await response.json();
+  
+      if (!response.ok) {
         setSuccess(false);
-        setErrorMessage(result.message);
-    } else {
-        setSuccess(result.message);
-
+        setErrorMessage(result.message); // Set error message if response is not ok
+      } else {
+        setSuccess(result.message); // Set success message if response is ok
+      }
+  
+      return result;
+  
+    } catch (error) {
+      console.error('Chyba při odesílání požadavku:', error);
+      setSuccess(false);
+      setErrorMessage('Nastala chyba'); // Provide a user-friendly error message
     }
-
-    
-    return result;
-}
+  }
 
 export function openRateUserModal() {
     try{

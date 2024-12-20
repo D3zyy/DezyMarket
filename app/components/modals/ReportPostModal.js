@@ -4,24 +4,32 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 async function reportPost(postId, selectedReasons, setSuccess, moreInfo) {
+  try {
     const response = await fetch('/api/posts/report', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ postId, reasons: selectedReasons ,extraInfo : moreInfo}),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ postId, reasons: selectedReasons, extraInfo: moreInfo }),
     });
 
     console.log("Server response for post report:", response);
 
-    if (!response.ok) { 
-        setSuccess(false);
+    const result = await response.json();
+
+    if (!response.ok) {
+      setSuccess(false);
     } else {
-        setSuccess(true);
+      setSuccess(true);
     }
 
-    const result = await response.json();
     return result;
+
+  } catch (error) {
+    console.error('Chyba při odesílání požadavku:', error);
+    setSuccess(false);
+    return { success: false, error: 'Network error or server is unavailable' }; // Return error object if network issue occurs
+  }
 }
 
 export function openReportPostModal() {

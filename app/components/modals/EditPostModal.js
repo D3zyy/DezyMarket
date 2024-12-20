@@ -7,21 +7,27 @@ async function updatedPost(name, price, category, section, description, postId, 
       return { success: false, error: "Section is required" };
   }
 
-  const response = await fetch('/api/posts', {
-      method: 'PUT',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, price, category, section, description, postId, location, phoneNumber }),
-  });
+  try {
+    const response = await fetch('/api/posts', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, price, category, section, description, postId, location, phoneNumber }),
+    });
 
-  console.log("Server response for post edit:", response);
-  const result = await response.json();
+    console.log("Server response for post edit:", response);
 
-  if (!response.ok) {
-      return { success: false, error: result.message , validationErrors: result};
-  } else {
-      return { success: true, error: null };
+    if (!response.ok) {
+        const result = await response.json();
+        return { success: false, error: result.message, validationErrors: result };
+    }
+
+    const result = await response.json();
+    return { success: true, error: null };
+
+  } catch (error) {
+    return { success: false, error: 'Chyba síťe' };
   }
 }
 

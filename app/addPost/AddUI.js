@@ -66,7 +66,7 @@ const AddUI = ({ accType , categories, sections}) => {
 
   
     setLoading(true);
-
+    try {
     const res = await fetch('/api/posts', {
         method: 'POST',
         body: formData, // Send the FormData directly
@@ -98,6 +98,9 @@ const AddUI = ({ accType , categories, sections}) => {
   
       setLoading(false); // Ukončení načítání
   }
+} catch (error) {
+  console.error("Nastala chyba")
+}
 }
 
 

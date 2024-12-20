@@ -3,23 +3,29 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 async function updatedPost(postId) {
-    const response = await fetch('/api/posts', {
+    try {
+      const response = await fetch('/api/posts', {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ postId }),
-    });
-
-    const result = await response.json();
-    if (!response.ok) {
-        console.log("nastavuji success na false");
+      });
+  
+      const result = await response.json();
+  
+      if (!response.ok) {
+       
         return { success: false, error: result.message };
-    } else {
-        console.log("nastavuji success na true");
+      } else {
+       
         return { success: true, error: null };
+      }
+    } catch (error) {
+      console.error('Chyba při odesílání požadavku:', error);
+      return { success: false, error: 'Nastala chyba' };
     }
-}
+  }
 
 export function openDeletePostModal() {
     document.getElementById('delete_post_modal').showModal();
