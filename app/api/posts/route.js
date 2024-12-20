@@ -668,9 +668,100 @@ export async function PUT(req) {
         headers: { 'Content-Type': 'application/json' }
       });
     }
-     //validation ends here
 
+   
 
+      async function checkDifferencesAndLogChanges(postId, newData, userId) {
+        // Načtení starého příspěvku včetně názvů kategorií a sekcí
+        const oldPost = await prisma.posts.findFirst({
+          where: { id: postId },
+          include: {
+            category: true, // Předpoklad, že tabulka Categories existuje a je propojena
+            section: true,   // Předpoklad, že tabulka Sections existuje a je propojena
+          },
+        });
+      
+        if (!oldPost) {
+          return new Response(JSON.stringify({ message: "Příspěvek nebyl nalezen." }), {
+            status: 404,
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
+      
+        // Načtení nových kategorií a sekcí podle jejich ID
+        const newCategory = newData.category
+          ? await prisma.categories.findFirst({ where: { id: parseInt(newData.category, 10) } })
+          : null;
+      
+        const newSection = newData.section
+          ? await prisma.sections.findFirst({ where: { id: parseInt(newData.section, 10) } })
+          : null;
+      
+        const changes = [];
+      
+        // Mapování polí
+        const fieldsToCompare = {
+          phoneNumber: newData.phoneNumber,
+          location: newData.location,
+          description: newData.description,
+          name: newData.name,
+          price: newData.price,
+          categoryId: {
+            oldId: oldPost.categoryId, // Porovnáváme ID
+            newId: parseInt(newData.category, 10), // Nové ID kategorie
+            oldName: oldPost.category?.name || null, // Název staré kategorie
+            newName: newCategory?.name || null, // Název nové kategorie z DB
+          },
+          sectionId: {
+            oldId: oldPost.sectionId, // Porovnáváme ID
+            newId: parseInt(newData.section, 10), // Nové ID sekce
+            oldName: oldPost.section?.name || null, // Název staré sekce
+            newName: newSection?.name || null, // Název nové sekce z DB
+          },
+        };
+      
+        // Porovnání polí
+        for (const [field, value] of Object.entries(fieldsToCompare)) {
+          if (typeof value === "object") {
+            // Speciální porovnání pro ID kategorií a sekcí
+            if (value.oldId !== value.newId) {
+              changes.push({
+                field,
+                valueBefore: value.oldName, // Do DB vložíme starý název
+                valueAfter: value.newName,  // Do DB vložíme nový název
+              });
+            }
+          } else {
+            const oldValue = oldPost[field];
+            const newValue = value;
+            if (oldValue !== newValue) {
+              changes.push({
+                field,
+                valueBefore: oldValue,
+                valueAfter: newValue,
+              });
+            }
+          }
+        }
+        const timeeeeNow = DateTime.now()
+        .setZone('Europe/Prague') // Čas zůstane v českém pásmu
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+
+        for (const change of changes) {
+          await prisma.managementActions.create({
+            data: {
+              doneAt: timeeeeNow,
+              fromUserId: userId,
+              toUserId: oldPost.userId, // Předpoklad, že `userId` existuje
+              info: `Editace příspěvek (${change.field})`,
+              postId: postId,
+              valueBefore: String(change.valueBefore),
+              valueAfter: String(change.valueAfter),
+            },
+          });
+        }
+      }
+    await checkDifferencesAndLogChanges(data.postId, data, session.userId);
 
     // Proceed with updating the post if privileges are higher
     await updatePost(data.postId, data);
