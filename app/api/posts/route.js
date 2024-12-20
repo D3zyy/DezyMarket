@@ -224,16 +224,31 @@ if (!session || !session.isLoggedIn || !session.email) {
     });
 }
 
-const numberOfPostsOfUser = await prisma.Posts.findMany({
-  where: { userId: session.userID}
+const posts = await prisma.posts.findMany({
+  where: { userId: session.userId },
 });
-console.log(numberOfPostsOfUser)
-if(numberOfPostsOfUser.length > 30){
+
+// Count the visible and invisible posts
+const visiblePosts = posts.filter(post => post.visible === true).length;
+const invisiblePosts = posts.filter(post => post.visible === false).length;
+
+// Check the conditions
+if (visiblePosts > 30) {
   return new Response(JSON.stringify({ messageToDisplay: "Již jste nahráli maximální počet příspěvků." }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
   });
 }
+
+if (invisiblePosts > 100) {
+  return new Response(JSON.stringify({ messageToDisplay: "Maximální počet neviditelných příspěvků byl dosažen." }), {
+    status: 403,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+
+
+
 // Now you can use session directly throughout your function
 const userId = session.userId; // Use userId directly from session
 
