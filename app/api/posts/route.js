@@ -713,7 +713,7 @@ export async function DELETE(req) {
 
     // Fetch the post and the creator's role
     const post = await prisma.posts.findUnique({
-      where: { id: data.postId },
+      where: { id: data.postId , visible: true,},
       include: { user: { include: { role: true } } }  // Include the user and their role
     });
 
@@ -732,9 +732,16 @@ export async function DELETE(req) {
      let haveImages =  await prisma.Image.findMany({
         where: { postId: data.postId }
       });
-      await prisma.posts.delete({
-        where: { id: data.postId }
+
+        //sets its visibility to false istead of removing
+      await prisma.posts.update({
+        where: { id: data.postId },
+        data: { visible: false },
       });
+
+     // await prisma.posts.delete({
+      //  where: { id: data.postId }
+      //});
           //ještě z s3 deletnout
           if(haveImages.length > 0){
     
@@ -791,9 +798,13 @@ export async function DELETE(req) {
       where: { postId: data.postId }
     });
 
-    await prisma.posts.delete({
-      where: { id: data.postId }
+    await prisma.posts.update({
+      where: { id: data.postId },
+      data: { visible: false },
     });
+  //  await prisma.posts.delete({
+    //  where: { id: data.postId }
+    //});
     if(haveImages.length > 0){
  
       let res =  await  deleteImagesByPostId(data.postId)

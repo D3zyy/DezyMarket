@@ -9,6 +9,7 @@ export async function getPostFromDb(postId) {
       
       where: {
         id: postId,
+        visible: true,
       },
       include: {
         category: true,

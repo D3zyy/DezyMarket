@@ -139,6 +139,7 @@ model Posts {
   price        String       @db.VarChar(100)
   categoryId   Int
   sectionId    Int
+  visible Boolean @default(true)
   phoneNumber  String       @db.VarChar(9)
   location     String       @db.VarChar(50)
   typeOfPost   String       @db.VarChar(100)
