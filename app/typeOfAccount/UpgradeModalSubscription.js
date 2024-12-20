@@ -18,7 +18,6 @@ async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFrom
             setErrorFromPayment("Nepodařilo se nám zpracovat vaši platbu. Zkuste to znovu");
         } else {
             setSuccess(true);
-            setloadingPayment(false);
             setTimeout(() => {
                 router.push("/typeOfAccount?redirect_status=upgraded");
                 router.refresh();
@@ -207,6 +206,7 @@ export function UpgradeModalSubscription({ nameToUpgrade, date }) {
                                     </button>
                                 )}
                                 <button
+                                 disabled={loadingPayment}
                                     className="btn"
                                     onClick={() => document.getElementById("upgradeModalSubscriptionModal").close()}
                                 >
