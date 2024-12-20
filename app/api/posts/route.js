@@ -809,9 +809,14 @@ export async function DELETE(req) {
  
       let res =  await  deleteImagesByPostId(data.postId)
       
-     } else {
-       
-      }
+     } 
+     const timeee = DateTime.now()
+     .setZone('Europe/Prague') // Čas zůstane v českém pásmu
+     .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
+      await prisma.managementActions.create({
+        data: { doneAt: timeee , fromUserId: session.userId,toUserId:  post.user.id, info: "Smazat příspěvek [zneviditelnit]" },
+      });
+
     //ještě z s3 deletnout
     return new Response(JSON.stringify({
       message: 'Příspěvek byl úspěšně smazán'
