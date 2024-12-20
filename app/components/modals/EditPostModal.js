@@ -78,7 +78,7 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
 
   const router = useRouter();
   const [typeOfPostt, setTypeOfPostt] = useState(typePost);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [postId, setPostId] = useState(posttId);
   const [roleOfEditore, setRoleOfEditore] = useState(roleOfEditor);
@@ -146,6 +146,7 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
     };
 
     fetchCategoriesAndSections();
+    setLoading(false);
   }, []);
   const handleButtonClick = (buttonName) => {
     if (activeButton === buttonName) {
