@@ -233,6 +233,9 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
 )}
         <div className="w-full text-left">
         
+
+        <div className='mb-5' style={{textAlign: "left"}}>{printErrorValidation()}</div>
+
           { roleOfEditore > 1 && idUserOfEditor != idUserOfPost ? 
         <div className="w-full mt-4 flex items-center"> {/* Přidání items-center */}
 <label
@@ -250,7 +253,7 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
 
   </div>
    : ""}
-        <div className='mb-5' style={{textAlign: "left"}}>{printErrorValidation()}</div>
+       
           <label htmlFor="name">Co nazízím</label>
           <input
             type="text"
