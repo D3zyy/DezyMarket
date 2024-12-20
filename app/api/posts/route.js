@@ -223,6 +223,9 @@ if (!session || !session.isLoggedIn || !session.email) {
         headers: { 'Content-Type': 'application/json' }
     });
 }
+console.log("Pravomoce :",session.role.privileges)
+if (Number(session.role.privileges) !== 4) {
+
 
 const posts = await prisma.posts.findMany({
   where: { userId: session.userId },
@@ -231,7 +234,8 @@ const posts = await prisma.posts.findMany({
 // Count the visible and invisible posts
 const visiblePosts = posts.filter(post => post.visible === true).length;
 const invisiblePosts = posts.filter(post => post.visible === false).length;
-
+console.log("visible:",visiblePosts)
+console.log("invisiblePosts:",invisiblePosts)
 // Check the conditions
 if (visiblePosts > 30) {
   return new Response(JSON.stringify({ messageToDisplay: "Již jste nahráli maximální počet příspěvků." }), {
@@ -247,7 +251,7 @@ if (invisiblePosts > 100) {
   });
 }
 
-
+}
 
 // Now you can use session directly throughout your function
 const userId = session.userId; // Use userId directly from session
