@@ -127,10 +127,10 @@ const ImageGallery = ({ allImages }) => {
   src={allImages[mainImageIndex].url}
   alt="Main image"
   className="w-full h-full"
-  initial={{ opacity: 0.8, filter: "blur(40px)" }}
+  initial={{ opacity: 0.8, filter: "blur(50px)" }}
   animate={{ opacity: 1, filter: "blur(0px)" }}
-  exit={{ opacity: 0.9, filter: "blur(40px)" }}
-  transition={{ duration: 1 }}
+  exit={{ opacity: 0.9, filter: "blur(20px)" }}
+  transition={{ duration: 1.3}}
   layout="fill" // Důležité: Přizpůsobení rodiči
  
   priority // Zajistí rychlejší načtení hlavního obrázku
