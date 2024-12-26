@@ -9,7 +9,7 @@ import CheckoutForm from '../components/CheckOutForm';
 export function openPaymentModal(price) {
     const modal = document.getElementById(`payment_modal_${price}`);
     if (modal) {
-        modal.showModal();
+        modal.show();
     }
 }
 
@@ -31,7 +31,7 @@ export function PaymentModal({ price, name, priceId }) {
    
     return (
     
-            <dialog id={`payment_modal_${price}`} className="modal  modal-bottom sm:modal-middle" style={{ zIndex: 2 }}>
+            <dialog id={`payment_modal_${price}`} className="modal bg-slate-950/25  modal-bottom sm:modal-middle" data-backdrop="true">
                 <div className="modal-box ">
 
                     {/* Text center and bold */}
