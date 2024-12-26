@@ -68,7 +68,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   return (
 
 <div
-  className={`w-full max-w-xs sm:max-w-sm p-3 sm:p-8 bg-base-100 border ${
+  className={`w-full max-w-xs sm:max-w-sm p-3 sm:p-8 bg-base-100 border  ${
     isActive && !isZakladni ? "shadow-effect border-0" : "border-base-200"
   } rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700`}
 >
@@ -145,7 +145,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
       );
     })}
   </ul>
-
+  <PaymentModal price={price} name={name} priceId={priceId} />
   <button
     onClick={() => {
       if(canUpgrade){
@@ -183,7 +183,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   )}
  
 
-  <PaymentModal price={price} name={name} priceId={priceId} />
+
 </div>
   );
 }

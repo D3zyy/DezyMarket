@@ -23,15 +23,16 @@ export function PaymentModal({ price, name, priceId }) {
         mode: 'subscription',
         amount: 8800,
         currency: 'czk',
+    
         
       };
     const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
     const stripePromise = loadStripe(publicKey);
    
     return (
-        <div>
-            <dialog id={`payment_modal_${price}`} className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box">
+    
+            <dialog id={`payment_modal_${price}`} className="modal  modal-bottom sm:modal-middle" style={{ zIndex: 2 }}>
+                <div className="modal-box ">
 
                     {/* Text center and bold */}
                     <span className="block text-center font-bold mb-4">{name}</span>     
@@ -61,6 +62,6 @@ export function PaymentModal({ price, name, priceId }) {
                     Zavřít
                 </button>
             </dialog>
-        </div>
+    
     );
 }

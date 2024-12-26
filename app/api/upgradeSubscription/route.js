@@ -241,14 +241,14 @@ if(data.instantly){
           );
       }
 
-      const card = paymentMethods.data[0]; // První karta v seznamu
 
 
+      
       const paymentIntent = await stripe.paymentIntents.create({
         amount: priceToUpgrade * 100, // částka v nejmenší měně, např. 1000 = 10.00 CZK
         currency: 'czk',
         customer: customer.id,
-        payment_method: card.id,
+        payment_method: cardIdFromToBePaid,
         off_session: true,
         confirm: true,
         description: 'Upgrade předplatného Dezy.cz',
