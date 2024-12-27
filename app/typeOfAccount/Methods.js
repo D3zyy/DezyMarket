@@ -1,9 +1,10 @@
 import { prisma } from "../database/db";
 import { getSession } from "../authentication/actions";
+import { DateTime } from 'luxon';
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-export async function getUserAccountTypeOnStripe(email) {
+export async function getUserAccountTypeFromDb(email) {
   try {
     if (!email) {
       return null;
@@ -91,4 +92,62 @@ export async function getUserAccountTypeOnStripe(email) {
   }finally {
     await prisma.$disconnect(); // Uzavřete připojení po dokončení
 }
+}
+
+
+
+
+
+
+
+
+export async function getUserAccountTypeOnStripe(email) {
+  try {
+    if (!email) {
+      return null;
+    }
+
+    // Získejte aktuální čas v zóně Praha
+    const DateAndTimeNowPrague = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+
+    // Načtěte typy účtů uživatele z databáze
+    const userAccountTypes = await prisma.users.findUnique({
+      where: {
+        email: email,
+      },
+      select: {
+        accounts: {
+          
+          select: {
+          
+            accountType: {
+              select: {
+                priority: true,
+                name: true, // Přístup k poli "name" v tabulce "accountType"
+              },
+            },
+          },
+        },
+      },
+    });
+
+
+
+    // Zkontrolujte, zda existují nějaké účty
+    if (userAccountTypes && userAccountTypes.accounts && userAccountTypes.accounts.length > 0) {
+      // Seřaďte účty podle priority sestupně
+      const sortedAccounts = userAccountTypes.accounts.sort((a, b) => b.accountType.priority - a.accountType.priority);
+    
+      return sortedAccounts[0].accountType.name;  // Vraťte název účtu s nejvyšší prioritou
+    } else {
+      return null; // Žádný odpovídající účet nenalezen
+    }
+  } catch (error) {
+    console.error("Chyba při získávání typu účtu z databáze:", error);
+    throw error; // Předejte chybu volajícímu
+  } finally {
+    await prisma.$disconnect(); // Uzavřete připojení k databázi
+  }
 }

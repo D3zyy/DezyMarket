@@ -26,7 +26,6 @@ model Users {
   bans                        Bans[]
   posts                       Posts[]
   sessions                    Sessions[]
-  accountTypes                AccountType[]       // One-to-many relationship with AccountType
   termsOfUseAndPrivatePolicy  Boolean             @default(false)
   verifiedEmail               Boolean             @default(false) // New field to track email verification status
   verificationToken           VerificationTokens? // Optional relation to VerificationToken
@@ -39,8 +38,11 @@ model Users {
   userRatingsReceived         UserRatings[]       @relation("RatingsReceived")
   fromUser            ManagementActions[]       @relation("ActionDoneBy")
   toUser         ManagementActions[]       @relation("ActionDoneTo")
+  accounts   AccountTypeUsers[] // Relace "jeden Users má mnoho AccountTypeUsers"
   @@index([verifiedEmail])
 }
+
+
 
 model ManagementActions {
   id           Int      @id @default(autoincrement())
@@ -101,14 +103,106 @@ model IpAddressesOnUsers {
   @@index([ipAddressId])
 }
 
-model AccountType {
-  id       Int    @id @default(autoincrement())
-  name     String
-  userId   String
-  user     Users  @relation(fields: [userId], references: [id], onDelete: Cascade)  // Foreign key for the one-to-many relationship
-  @@index([id])
-  @@index([userId])
+
+
+
+model Tops {
+  id                    Int          @id @default(autoincrement())
+  name                  String?
+  emoji                 String?
+  color                 String?
+  numberOfMonthsToValid Int?
+  
+  postType              PostType?    @relation // Volitelný vztah s PostType
+  
   @@index([name])
+}
+
+model PostType {
+  id             Int             @id @default(autoincrement())
+  name           String
+  perks          PerksPost[]     // Relace "jeden PostType má mnoho PerksPost"
+  topId          Int?            @unique // Cizí klíč na Top, nyní unikátní
+  top            Tops?           @relation(fields: [topId], references: [id], onDelete: Cascade)
+  
+  @@index([name])
+}
+
+model PerksPost {
+  id        Int           @id @default(autoincrement())
+  name      String
+  postTypeId Int          // Cizí klíč na PostType
+  valid     Boolean?
+  postType  PostType     @relation(fields: [postTypeId], references: [id], onDelete: Cascade)
+
+  @@index([postTypeId])
+  @@index([name])
+}
+
+
+
+
+
+model AccountTypeOnPrices {
+  id             Int             @id @default(autoincrement())
+  priceId         Int            // Cizí klíč na Prices
+  activeFrom      DateTime?      // Datum, od kdy je cena platná
+  activeTo        DateTime?      // Datum, do kdy je cena platná
+  
+  accountTypeId   Int            // Cizí klíč na AccountType
+  accountType     AccountType    @relation(fields: [accountTypeId], references: [id],onDelete: Cascade)
+  price           Prices         @relation(fields: [priceId], references: [id],onDelete: Cascade)
+
+  @@index([accountTypeId])
+  @@index([priceId])
+  @@index([activeFrom])
+  @@index([activeTo])
+}
+model PerksAccount {
+  id        Int           @id @default(autoincrement())
+  name      String
+  accId     Int           // Cizí klíč na AccountType
+  valid  Boolean?
+  typeOfAcc AccountType   @relation(fields: [accId], references: [id], onDelete: Cascade)
+
+  @@index([id])
+  @@index([accId])
+  @@index([name])
+}
+
+model AccountType {
+  id             Int             @id @default(autoincrement())
+  name           String
+  priority       Int?
+  perks          PerksAccount[]  // Relace "jeden AccountType má mnoho PerksAccount"
+  accountUsers   AccountTypeUsers[] // Relace "jeden AccountType má mnoho AccountTypeUsers"
+  
+  accPrices      AccountTypeOnPrices[] // Relace na více cen pro tento AccountType
+  
+  @@index([name])
+}
+
+model Prices {
+  id             Int             @id @default(autoincrement())
+  value          Int             // Cena
+  priceCode      String?         // Unikátní kód pro cenu
+  discountedPrice Int?           // Sleva, pokud existuje
+  accountPrices  AccountTypeOnPrices[] // Relace s AccountTypeOnPrices
+
+  @@index([priceCode])
+}
+
+model AccountTypeUsers {
+  id            Int           @id @default(autoincrement())
+  fromDate         DateTime?
+  toDate          DateTime?
+  userId        String           // Cizí klíč na Users (změna na Int pro správný odkaz na ID uživatele)
+  user          Users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountTypeId Int           // Cizí klíč na AccountType
+  accountType   AccountType   @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+
 }
 
 
