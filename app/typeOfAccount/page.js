@@ -16,7 +16,7 @@ const Page = async ({ searchParams }) => {
   const unknownMessage = redirectStatus && redirectStatus !== 'succeeded' && redirectStatus !== 'failed' && redirectStatus !=="upgraded"; // Check for unknown status
   const noStatusMessage = !redirectStatus; // Check if no status is provided
 
-  let accType = await getUserAccountTypeOnStripe(session.email);
+  let accTypeOfUser = await getUserAccountTypeOnStripe(session.email);
   let acctypes = await getTypeOfAccountDetails();
 
   
@@ -26,8 +26,8 @@ const Page = async ({ searchParams }) => {
   const sortedAcctypes = acctypes?.slice().sort((a, b) => b.priority - a.priority);
 console.log(sortedAcctypes)
   
-  if(accType?.length == 1){
-    accType = accType[0]
+  if(accTypeOfUser?.length == 1){
+    accTypeOfUser = accTypeOfUser[0]
   } 
 
   if (!session.isLoggedIn) redirect('/');
@@ -186,7 +186,7 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
   
   <Account
     key={accType.id}
-    hasThisType={accType}
+    hasThisType={accTypeOfUser}
     emoji={accType.emoji}
     name={accType.name}
     price={accType.activePrice || 0}
