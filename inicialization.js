@@ -46,7 +46,7 @@ async function main() {
       priceAmountCZKMonthly: "0", 
       perks: [
         ["Neomezený počet inzerátů", true],
-        ["až 25 fotografií u inzerátu", true],
+        ["až 15 fotografií u inzerátu", true],
         ["Základní typ inzerátu", true],
         ["Topování na hlavní stránce", false],
         ["Topování v kategorii", false],
@@ -58,6 +58,7 @@ async function main() {
     { 
       name: 'Šikula', 
       priority: 2, 
+      emoji: `<div class="badge badge-lg badge-secondary badge-outline" style="color: #ff7d5c; border-color: #ff7d5c;">Šikula</div>`,
       priceAmountCZKMonthly: "88", 
       perks: [
         ["Neomezený počet inzerátů", true],
@@ -72,6 +73,7 @@ async function main() {
     },
     { 
       name: 'Profík', 
+      emoji: `<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>`,
       priority: 3, 
       priceAmountCZKMonthly: "98", 
       perks: [
@@ -90,6 +92,7 @@ async function main() {
     // Create the AccountType record
     const accId = await prisma.AccountType.create({
       data: {
+        emoji: accountType.emoji,
         name: accountType.name,
         priority: accountType.priority,
       },
@@ -112,6 +115,7 @@ async function main() {
   const postTypes = [
     { 
       name: 'Základní', 
+      priority: 1, 
       perks: [
         ["až 15 fotografií u inzerátu", true],
         ["Doba uložení ař 2 měsíce", true],

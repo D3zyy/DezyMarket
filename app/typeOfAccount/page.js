@@ -4,7 +4,7 @@ import NotLoggedIn from '../components/NotLoggedIn';
 import { redirect } from 'next/navigation';
 import Account from './Account'; // Import Account properly
 import Link from 'next/link';
-import {  getUserAccountTypeOnStripe } from './Methods';
+import {  getUserAccountTypeOnStripe,getTypeOfAccountDetails } from './Methods';
 
 const Page = async ({ searchParams }) => {
   const session = await getSession();
@@ -15,8 +15,17 @@ const Page = async ({ searchParams }) => {
   const failureMessage = redirectStatus === 'failed'; // Check for failure
   const unknownMessage = redirectStatus && redirectStatus !== 'succeeded' && redirectStatus !== 'failed' && redirectStatus !=="upgraded"; // Check for unknown status
   const noStatusMessage = !redirectStatus; // Check if no status is provided
-  console.log(searchParams.redirect_status)
+
   let accType = await getUserAccountTypeOnStripe(session.email);
+  let acctypes = await getTypeOfAccountDetails();
+
+  
+  if (typeof acctypes === "string") {
+    acctypes = JSON.parse(acctypes);
+  }
+  const sortedAcctypes = acctypes?.slice().sort((a, b) => b.priority - a.priority);
+console.log(sortedAcctypes)
+  
   if(accType?.length == 1){
     accType = accType[0]
   } 
@@ -173,60 +182,20 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
 <div style={{marginBottom:"40px"}} className="flex flex-col md:flex-row items-center justify-center gap-2 p-2">
 
 
-<Account
-  hasThisType={accType}
-  name="Profík"
-  emoji={emoji1} // První účet
-  price={98}
-  priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
-  benefits={[
-    ["Neomezený počet inzerátů", true],
-    ["až 25 fotografií u inzerátu", true],
-    ["Profík inzerát", true],
-    ["Statistika zobrazení inzerátu", true],
-    ["Topování na hlavní stránce", true],
-    ["Topování v kategorii", true],
-    ["Odznáček vedle jména", true],
-    ["Prioritní zákaznická podpora", true],
-  ]}
-/>
+{sortedAcctypes?.map(accType => (
+  
+  <Account
+    key={accType.id}
+    hasThisType={accType}
+    emoji={accType.emoji}
+    name={accType.name}
+    price={accType.activePrice || 0}
+    priceId={accType.accPrices[0]?.priceCode || ''}
+    benefits={accType.perks.map(perk => [perk.name, perk.valid])}
+    className={accType.priority === 1 ? 'order-last md:order-none' : ''}
+  />
+))}
 
-<Account
-  hasThisType={accType}
-  name="Šikula"
-  emoji={emoji2} // Druhý účet
-  price={88}
-  priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
-  benefits={[
-    ["Neomezený počet inzerátů ", true],
-    ["až 20 fotografie u inzerátu", true],
-    ["Šikula inzerát", true],
-    ["Topování v kategorii", true],
-    ["Odznáček vedle jména", true],
-    ["Prioritní zákaznická podpora", true],
-    ["Topování na hlavní stránce", false],
-    ["Statistika zobrazení inzerátu", false],
-  ]}
-/>
-
-<Account
-  hasThisType={accType}
-  name="Základní"
-  emoji={""} // Třetí účet
-  price={0}
-  priceId={""}
-  benefits={[
-    ["Neomezený počet inzerátů", true],
-    ["až 25 fotografií u inzerátu", true],
-    ["Základní typ inzerátu", true],
-    ["Topování na hlavní stránce", false],
-    ["Topování v kategorii", false],
-    ["Statistika zobrazení inzerátu", false],
-    ["Odznáček vedle jména", false],
-    ["Prioritní zákaznická podpora", false],
-  ]}
-  className="order-last md:order-none" // Přidejte třídu pro mobilní zařízení
-/>
 </div>
 
         </>
