@@ -167,29 +167,39 @@ export async function getUserAccountTypeOnStripe(email) {
 
     // Získejte aktuální čas v zóně Praha
     const DateAndTimeNowPrague = DateTime.now()
-      .setZone('Europe/Prague')
-      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+  .setZone('Europe/Prague')
+  .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
 
-    // Načtěte typy účtů uživatele z databáze
-    const userAccountTypes = await prisma.users.findUnique({
+// Načtěte typy účtů uživatele z databáze a filtrujte pouze aktivní účty
+const userAccountTypes = await prisma.users.findUnique({
+  where: {
+    email: email,  // Filtrace podle emailu uživatele
+  },
+  select: {
+    accounts: {
       where: {
-        email: email,
+        active: true,  // Filtrujte pouze aktivní účty
+        fromDate: {
+          lte: DateAndTimeNowPrague,  // Zkontrolujte, že fromDate je menší nebo rovno aktuálnímu datu
+        },
+        toDate: {
+          gte: DateAndTimeNowPrague,  // Zkontrolujte, že toDate je větší nebo rovno aktuálnímu datu
+        },
       },
       select: {
-        accounts: {
-          
+
+        fromDate: true,
+        toDate: true,
+        accountType: {
           select: {
-          
-            accountType: {
-              select: {
-                priority: true,
-                name: true, // Přístup k poli "name" v tabulce "accountType"
-              },
-            },
+            priority: true,
+            name: true,  // Přístup k poli "name" v tabulce "accountType"
           },
         },
       },
-    });
+    },
+  },
+});
 
 
 

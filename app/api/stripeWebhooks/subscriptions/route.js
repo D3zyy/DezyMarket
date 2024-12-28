@@ -143,8 +143,16 @@ export async function POST(request) {
 
                 console.log(`Aktualizováno předplatné pro uživatele ${user.id}.`);
             }
-        } else {
-            console.log(`Ignorování události typu: ${event.type}`);
+        }  if (event.type === 'invoice.payment_failed') {
+            const paymentIntent = event.data.object;
+
+            console.log("PaymentIntent failed!!!!!!:", paymentIntent);
+            if (paymentIntent.billing_reason === "subscription_cycle")  {
+
+
+
+                }
+
         }
 
         return new Response(JSON.stringify({ received: true }), {
