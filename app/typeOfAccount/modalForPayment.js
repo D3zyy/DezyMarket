@@ -28,7 +28,7 @@ export function PaymentModal({ price, name, priceId }) {
       };
     const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
     const stripePromise = loadStripe(publicKey);
-   
+   console.log("Jméno v payentmodal:",name)
     return (
     
             <dialog id={`payment_modal_${price}`} className="modal bg-slate-950/25  modal-bottom sm:modal-middle" data-backdrop="true">
@@ -42,7 +42,7 @@ export function PaymentModal({ price, name, priceId }) {
    
 
 
-    <CheckoutForm priceId={priceId} name={name} />
+    <CheckoutForm priceId={priceId} nameOfSub={name} />
 </Elements>
 
                     ) : (

@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
 import Link from 'next/link';
-export default function CheckoutForm(priceId,name) {
+export default function CheckoutForm({priceId,nameOfSub}) {
   const stripe = useStripe();
-
+  console.log("Jmeno predplatneho:",nameOfSub)
   const elements = useElements();
 
   const [errorMessage, setErrorMessage] = useState();
@@ -33,13 +33,13 @@ export default function CheckoutForm(priceId,name) {
   
       let agreed = document.getElementById("agreeBusinessConditions").checked; // Use .checked for checkbox
       // Create the subscription
-    
+
       const res = await fetch('/api/create-subscription', {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ priceId, agreed })
+        body: JSON.stringify({ priceId, agreed ,nameOfSub})
       });
       
       if (!res.ok) {
@@ -49,15 +49,23 @@ export default function CheckoutForm(priceId,name) {
       const { type, clientSecret } = await res.json();
       const confirmIntent = type === "setup" ? stripe.confirmSetup : stripe.confirmPayment;
   
-      const successAccountType = name;
-      const returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/typeOfAccount?success=${encodeURIComponent(successAccountType)}`;
+      const successAccountType = nameOfSub;
+      let returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/typeOfAccount?success=${encodeURIComponent(successAccountType)}`;
+      if (returnUrl.includes('?')) {
+        returnUrl += '&redirect_status=succeeded';
+      } else {
+        returnUrl += '?redirect_status=succeeded';
+      }
+      console.log(returnUrl);
+      const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
   
       const { error } = await confirmIntent({
         elements,
         clientSecret,
+        redirect: "if_required",
         confirmParams: {
           return_url: returnUrl,
-          
           payment_method_data: {
             billing_details: {
               address: {    
@@ -68,6 +76,10 @@ export default function CheckoutForm(priceId,name) {
         },
         
       });
+     
+      await delay(3800)
+     
+      window.location.href = returnUrl
   
       if (error) {
         

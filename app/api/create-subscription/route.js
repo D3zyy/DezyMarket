@@ -19,18 +19,19 @@ export async function POST(request) {
           );
 
    
-       const { priceId , agreed} = await request.json()
+       const { priceId , agreed, nameOfSub} = await request.json()
   
       
 
        const customer = await stripe.customers.search({
         query: `email:'${session.email}'`,
       });
-       
+      
         
         
         const subscriptions = await stripe.subscriptions.list({
           customer: customer.id,
+        
           status: "active",
           expand: ['data.items.data.price'], // Rozbalí objekt price pro kontrolu ID
       });
@@ -57,12 +58,16 @@ export async function POST(request) {
             headers: { 'Content-Type': 'application/json' }
         });
     }
-
+        console.log("Co vkladam jako name :",nameOfSub)
+        console.log("Price id:",priceId)
           const subscription = await stripe.subscriptions.create({
             customer:  customer.data[0].id,
             items: [{
-              price: priceId.priceId,
-            }],
+              price: priceId,
+             
+            }],  metadata: {
+              name: nameOfSub, 
+            },
             payment_behavior: 'default_incomplete',
             payment_settings: { save_default_payment_method: 'on_subscription' },
             expand: ['latest_invoice.payment_intent', 'pending_setup_intent'],

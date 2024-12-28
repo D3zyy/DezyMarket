@@ -6,6 +6,7 @@ import Account from './Account'; // Import Account properly
 import Link from 'next/link';
 import {  getUserAccountTypeOnStripe,getTypeOfAccountDetails } from './Methods';
 
+
 const Page = async ({ searchParams }) => {
   const session = await getSession();
   
