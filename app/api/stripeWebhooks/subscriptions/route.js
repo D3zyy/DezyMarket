@@ -18,110 +18,131 @@ export async function POST(request) {
         // Zpracování webhook událostí
         if (event.type === 'invoice.payment_succeeded') {
             const paymentIntent = event.data.object;
-            console.log("PaymentIntent:",paymentIntent)
+
+            console.log("PaymentIntent:", paymentIntent);
 
             // Získání emailu a subscription ID z PaymentIntent
-            const userEmail = paymentIntent.customer_email; // Email uživatele
-            const subscriptionId = paymentIntent.subscription; // Subscription ID
-        
-           // const productName = paymentIntent.subscription_details.metada.name;
+            const userEmail = paymentIntent.customer_email;
+            const subscriptionId = paymentIntent.subscription;
+
             if (!userEmail || !subscriptionId) {
-                throw new Error("Chybí důležité informace v PaymentIntent: email nebo subscriptionId.");
+                throw new Error("Chybí důležité informace: email nebo subscriptionId.");
             }
 
             console.log(`Zpracování platby pro uživatele: ${userEmail}`);
 
             // Načtení detailů předplatného z API Stripe
-          
-           
+            let subscriptionDetails;
+            try {
+                subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
+            } catch (err) {
+                console.error("Chyba při získávání subscription detailů:", err.message);
+                throw new Error("Nepodařilo se načíst detaily předplatného.");
+            }
 
-                // Konkrétní data o předplatném
-                const currentPeriodStart = paymentIntent.period_start; // Unix timestamp (v sekundách)
-                const currentPeriodEnd = paymentIntent.period_end; // Unix timestamp (v sekundách)
-              
-                
-                console.log('Current Period Start:', currentPeriodStart);
-                console.log('Current Period End:', currentPeriodEnd);
-                
-                // Převod na JavaScript Date (v milisekundách)
-                const startDate = new Date(currentPeriodStart * 1000); 
-                const endDate = new Date(currentPeriodEnd * 1000); 
-                
-                // Kontrola, zda jsou data platná
-                if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-                  console.log('Invalid Date');
-                } else {
-                  console.log('Current Period Start Date:', startDate);
-                  console.log('Current Period End Date:', endDate);
-                }
-            
+            if (!subscriptionDetails || !subscriptionDetails.metadata || !subscriptionDetails.metadata.name) {
+                throw new Error("Metadata neobsahují potřebné informace o typu účtu.");
+            }
 
-                const accToAcctivate = await prisma.AccountType.findFirst({
-                    where: {
-                        name: paymentIntent.subscription_details.metadata.name,  // Hledání podle emailu
-                    },
-                });
-                console.log("Id typu uctu:",accToAcctivate.id)
-                // Načtení uživatele z databáze pomocí emailu
-                const user = await prisma.Users.findFirst({
-                    where: {
-                        email: userEmail,  // Hledání podle emailu
-                    },
-                });
+            const accountTypeName = subscriptionDetails.metadata.name;
 
-                if (!user) {
-                    throw new Error(`Uživatel s e-mailem ${userEmail} nebyl nalezen.`);
-                }
-                const fromDate = DateTime.now()
-                .setZone('Europe/Prague') // Čas zůstane v českém pásmu
+            // Načtení detailů z předplatného
+            const currentPeriodStart = subscriptionDetails.current_period_start;
+            const currentPeriodEnd = subscriptionDetails.current_period_end;
+            const cancelAtPeriodEnd = subscriptionDetails.cancel_at_period_end;
+
+            console.log('Current Period Start:', new Date(currentPeriodStart * 1000));
+            console.log('Current Period End:', new Date(currentPeriodEnd * 1000));
+            console.log('Cancel at Period End:', cancelAtPeriodEnd);
+
+            // Načtení typu účtu z databáze
+            const accToAcctivate = await prisma.AccountType.findFirst({
+                where: { name: accountTypeName },
+            });
+
+            if (!accToAcctivate) {
+                throw new Error(`Typ účtu "${accountTypeName}" nebyl nalezen.`);
+            }
+
+            // Načtení uživatele z databáze pomocí emailu
+            const user = await prisma.Users.findFirst({
+                where: { email: userEmail },
+            });
+
+            if (!user) {
+                throw new Error(`Uživatel s e-mailem ${userEmail} nebyl nalezen.`);
+            }
+
+            // Výpočet aktuálního data pro fromDate a toDate
+            const fromDate = DateTime.now()
+                .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
 
-              
-              
-              const toDate = DateTime.now()
-              .setZone('Europe/Prague') // Čas zůstane v českém pásmu
-              .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                console.log("Duvod:",paymentIntent.billing_reason)
-              if (paymentIntent.billing_reason === "subscription_create") {
-                await prisma.AccountTypeUsers.create({
-                  data: {
-                    scheduleToCancel: false,
-                    nextPayment: String(currentPeriodEnd),  // Použití timestampu jako čísla
-                    fromDate: fromDate,  // Použití formátovaného data z luxon
-                    toDate: toDate,      // Použití formátovaného data z luxon
-                    user: {
-                      connect: {
-                        id: user.id, // Připojení uživatele pomocí jeho ID
-                      },
-                    },
-                    accountType: {
-                      connect: {
-                        id: accToAcctivate.id, // Připojení typu účtu pomocí jeho ID
-                      },
-                    },
-                  },
-                });
-              } else if (paymentIntent.billing_reason === "subscription_cycle") {
-                const updatedToDate = DateTime.fromISO(toDate)
-                  .plus({ months: 1 }) // Přidání jednoho měsíce k původnímu datu
-                  .toISO();
-              
-                await prisma.AccountTypeUsers.update({
-                  where: {
-                    userId: cancelAtPeriodEnd,
-                    scheduleToCancel: false,
-                    monthIn: monthIn + 1,
-                  },
-                  data: {
-                    fromDate: fromDate,  // Použití formátovaného data z luxon
-                    toDate: updatedToDate, // Nové datum po přidání měsíce
-                  },
-                });
-              }
-                    
+          
+            // Připočítání dní k toDate podle rozdílu mezi current_period_start a current_period_end
+            const diffDays = Math.floor((currentPeriodEnd - currentPeriodStart) / (60 * 60 * 24));  // Výpočet rozdílu v dnech
+            const toDate = DateTime.now()
+                .setZone('Europe/Prague')
+                .plus({ days: diffDays })  // Připočítáme dny k fromDate
+                .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
 
-                console.log(`Předplatné pro uživatele ${user.id} bylo úspěšně uloženo.`);
-            
+         
+
+            if (paymentIntent.billing_reason === "subscription_create") {
+                await prisma.AccountTypeUsers.create({
+                    data: {
+                        active: true,
+                        scheduleToCancel: cancelAtPeriodEnd,
+                        nextPayment: toDate,  // Nastavení příští platby
+                        fromDate: fromDate,
+                        toDate: toDate,
+                        user: { connect: { id: user.id } },
+                        accountType: { connect: { id: accToAcctivate.id } },
+                    },
+                });
+                console.log(`Vytvořeno nové předplatné pro uživatele ${user.id}.`);
+            } else if (paymentIntent.billing_reason === "subscription_cycle") {
+                const updated = await prisma.AccountTypeUsers.findFirst({
+                    where: {
+                        active: true,
+                        userId: user.id,
+                        scheduleToCancel: false,
+                    },
+                });
+                
+                if (updated) {
+                    // Načtení původního `nextPayment` a `toDate`
+                    const currentNextPayment = DateTime.fromISO(updated.nextPayment);  // Předpokládáme, že je ve formátu ISO 8601
+                    const currentToDate = DateTime.fromISO(updated.toDate);            // Předpokládáme, že je ve formátu ISO 8601
+                
+                    // Přidání 1 měsíce k těmto datům
+                    const newNextPayment = currentNextPayment.plus({ months: 1 }).toISO();
+                    const newToDate = currentToDate.plus({ months: 1 }).toISO();
+                
+                    // Aktuální měsíc (pokud potřebujete zvýšit `monthIn`)
+                    const newMonthIn = updated.monthIn + 1;
+                
+                    // Aktualizace v databázi
+                    const updatedAccount = await prisma.AccountTypeUsers.update({
+                        where: {
+                            id: updated.id, // Aktualizujeme podle ID z načtené položky
+                        },
+                        data: {
+                            nextPayment: newNextPayment,
+                            toDate: newToDate,
+                            monthIn: newMonthIn,
+                        },
+                    });
+                
+                   
+                } else {
+                    console.log('Předplatné nenalezeno.');
+                }
+
+               
+
+                console.log(`Aktualizováno předplatné pro uživatele ${user.id}.`);
+            }
         } else {
             console.log(`Ignorování události typu: ${event.type}`);
         }
@@ -130,7 +151,6 @@ export async function POST(request) {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
         });
-
     } catch (error) {
         console.error('Chyba při zpracování Stripe webhooku:', error.message);
 

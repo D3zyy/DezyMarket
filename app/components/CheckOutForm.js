@@ -77,7 +77,7 @@ export default function CheckoutForm({priceId,nameOfSub}) {
         
       });
      
-      await delay(3800)
+      await delay(5000)
      
       window.location.href = returnUrl
   

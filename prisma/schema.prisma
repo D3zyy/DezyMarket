@@ -193,9 +193,12 @@ model Prices {
   @@index([priceCode])
 }
 
+
+
 model AccountTypeUsers {
   id            Int           @id @default(autoincrement())
   scheduleToCancel        Boolean?
+  active        Boolean?
   monthIn         Int?        @default(1)
   nextPayment   String?
   fromDate         DateTime?
