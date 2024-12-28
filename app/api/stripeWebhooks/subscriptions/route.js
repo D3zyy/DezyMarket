@@ -148,7 +148,7 @@ export async function POST(request) {
 
             console.log("PaymentIntent failed!!!!!!:", paymentIntent);
             
-            if (paymentIntent.billing_reason !== "subscription_cycle") {
+            if (paymentIntent.billing_reason === "subscription_cycle") {
                 const endOfSubscription = DateTime.now()
                     .setZone('Europe/Prague')
                     .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
@@ -162,7 +162,7 @@ export async function POST(request) {
                 const accountType = await prisma.AccountType.findFirst({
                     where: { name: paymentIntent.subscription_details.metadata.name },
                 });
-                console.log("ucet co budu updatovat neboli predlpatne:",accountType)
+                
                 if (accountType) {
                     // Update the AccountTypeUsers record using AND for the conditions
                     const updatedAccount = await prisma.AccountTypeUsers.updateMany({
@@ -179,9 +179,9 @@ export async function POST(request) {
                             active: false,
                         },
                     });
-                    console.log("updated:",updatedAccount);
+                   
                 } else {
-                    console.error('AccountType not found!');
+                  
                 }
             }
 
