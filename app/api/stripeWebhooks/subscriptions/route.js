@@ -169,7 +169,7 @@ export async function POST(request) {
                         where: {
                             AND: [
                                 { userId: user.id },
-                                { accountTypeId: 2 },
+                                { accountTypeId: accountType.id },
                                 { active: true }
                             ]
                         },
