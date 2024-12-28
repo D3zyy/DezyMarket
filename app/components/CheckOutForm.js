@@ -51,11 +51,7 @@ export default function CheckoutForm({priceId,nameOfSub}) {
   
       const successAccountType = nameOfSub;
       let returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/typeOfAccount?success=${encodeURIComponent(successAccountType)}`;
-      if (returnUrl.includes('?')) {
-        returnUrl += '&redirect_status=succeeded';
-      } else {
-        returnUrl += '?redirect_status=succeeded';
-      }
+      
       console.log(returnUrl);
       const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -77,15 +73,24 @@ export default function CheckoutForm({priceId,nameOfSub}) {
         
       });
      
-      await delay(5000)
-     
-      window.location.href = returnUrl
+      
   
       if (error) {
-        
+        if (returnUrl.includes('?')) {
+          returnUrl += '&redirect_status=failed';
+        } else {
+          returnUrl += '?redirect_status=failed';
+        }
+        window.location.href = returnUrl
         handleError(error);
       } else {
-        // Handle successful payment here (e.g., redirect, show success message)
+        if (returnUrl.includes('?')) {
+          returnUrl += '&redirect_status=succeeded';
+        } else {
+          returnUrl += '?redirect_status=succeeded';
+        }
+        await delay(5000)
+       window.location.href = returnUrl
       }
     } catch (error) {
       handleError(error);
