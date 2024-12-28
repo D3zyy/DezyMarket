@@ -195,7 +195,7 @@ model Prices {
 
 model AccountTypeUsers {
   id            Int           @id @default(autoincrement())
-  active        Boolean?
+  scheduleToCancel        Boolean?
   monthIn         Int?        @default(1)
   nextPayment   String?
   fromDate         DateTime?
