@@ -4,7 +4,7 @@ import AuthenticateUser from './AuthenticateUser';
 import localFont from 'next/font/local';
 
 const pacifico = localFont({
-  src: './pacifico/Pacifico-Regular.ttf',  // Relativní cesta k fontu ve stejném adresáři
+  src: './Pacifico/Pacifico-Regular.ttf',  // Relativní cesta k fontu ve stejném adresáři
   weight: '400',
   style: 'normal',
 });
