@@ -24,7 +24,7 @@ const Page = async ({ searchParams }) => {
     acctypes = JSON.parse(acctypes);
   }
   const sortedAcctypes = acctypes?.slice().sort((a, b) => b.priority - a.priority);
-console.log(sortedAcctypes)
+
   
   if(accTypeOfUser?.length == 1){
     accTypeOfUser = accTypeOfUser[0]

@@ -1,23 +1,37 @@
-import React from 'react'
-import Link from 'next/link'
-import AuthenticateUser from './AuthenticateUser'
-import { Pacifico } from 'next/font/google';
-import { Bebas_Neue } from 'next/font/google'
+import React from 'react';
+import Link from 'next/link';
+import AuthenticateUser from './AuthenticateUser';
+import localFont from 'next/font/local';
 
-// Import and assign the fonts correctly
-const pacifico = Pacifico({ subsets: ['latin'], weight: '400' });
-const bebas = Bebas_Neue({ subsets: ['latin'], weight: '400' });
+const pacifico = localFont({
+  src: '/../../public/fonts/pacifico/Pacifico-Regular.ttf', // Začíná lomítkem
+  weight: '400',
+  style: 'normal',
+});
+
+const bebas = localFont({
+  src: '/../../public/fonts/Bebas_Neue/BebasNeue-Regular.ttf', // Začíná lomítkem
+  weight: '400',
+  style: 'normal',
+});
 
 const Navigation = () => {
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
-        {/* Apply Bebas Neue font to the Link with larger font size */}
-        <Link href="/" className={`${bebas.className} btn btn-ghost`} style={{ fontSize: "1.8rem" }}>
+        {/* Použití Bebas Neue fontu pro odkaz */}
+        <Link
+          href="/"
+          className={`${bebas.className} btn btn-ghost`}
+          style={{ fontSize: '1.8rem' }}
+        >
           Dezy
         </Link>
-        {/* Apply Pacifico font to the slogan with larger font size */}
-        <span className={pacifico.className} style={{ marginLeft: "10px", fontSize: "1rem" }}>
+        {/* Použití Pacifico fontu pro slogan */}
+        <span
+          className={pacifico.className}
+          style={{ marginLeft: '10px', fontSize: '1rem' }}
+        >
           „když chci něco víc.“
         </span>
       </div>
@@ -25,7 +39,7 @@ const Navigation = () => {
         <AuthenticateUser />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navigation
+export default Navigation;

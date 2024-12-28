@@ -195,6 +195,9 @@ model Prices {
 
 model AccountTypeUsers {
   id            Int           @id @default(autoincrement())
+  active        Boolean?
+  monthIn         Int?        @default(1)
+  nextPayment   String?
   fromDate         DateTime?
   toDate          DateTime?
   userId        String           // Cizí klíč na Users (změna na Int pro správný odkaz na ID uživatele)
