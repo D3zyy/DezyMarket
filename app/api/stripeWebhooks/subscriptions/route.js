@@ -174,6 +174,7 @@ export async function POST(request) {
                             ]
                         },
                         data: {
+                            nextPayment: '',
                             toDate: endOfSubscription,
                             active: false,
                         },
