@@ -4,13 +4,13 @@ import AuthenticateUser from './AuthenticateUser';
 import localFont from 'next/font/local';
 
 const pacifico = localFont({
-  src: './Pacifico/Pacifico-Regular.ttf',  // Relativní cesta k fontu ve stejném adresáři
+  src: '../../public/fonts/Pacifico/Pacifico-Regular.ttf', // Začíná lomítkem
   weight: '400',
   style: 'normal',
 });
 
 const bebas = localFont({
-  src: './Bebas_Neue/BebasNeue-Regular.ttf',  // Relativní cesta k fontu ve stejném adresáři
+  src: '../../public/fonts/Bebas_Neue/BebasNeue-Regular.ttf', // Začíná lomítkem
   weight: '400',
   style: 'normal',
 });
