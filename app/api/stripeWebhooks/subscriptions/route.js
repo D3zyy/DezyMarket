@@ -102,11 +102,21 @@ export async function POST(request) {
                 });
                 console.log(`Vytvořeno nové předplatné pro uživatele ${user.id}.`);
             } else if (paymentIntent.billing_reason === "subscription_cycle") {
+              
+               
+            
+                // Find the AccountTypeId by its name
+                const accountType = await prisma.AccountType.findFirst({
+                    where: { name: paymentIntent.subscription_details.metadata.name },
+                });
+
+
                 const updated = await prisma.AccountTypeUsers.findFirst({
                     where: {
                         active: true,
                         userId: user.id,
                         scheduleToCancel: false,
+                        accountTypeId: accountType.id
                     },
                 });
                 
@@ -186,6 +196,45 @@ export async function POST(request) {
             }
 
         }
+        if (event.type === 'customer.subscription.deleted') {
+            console.log("HIT webhook subscription deleted")
+            const paymentIntent = event.data.object;
+
+            console.log("Subscription canceled!!!!!!:", paymentIntent);
+const endOfSubscription = DateTime.now()
+                    .setZone('Europe/Prague')
+                    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            
+                // Get the user based on their email
+                const user = await prisma.Users.findFirst({
+                    where: { email: paymentIntent.customer_email },
+                });
+            
+                // Find the AccountTypeId by its name
+                const accountType = await prisma.AccountType.findFirst({
+                    where: { name: paymentIntent.metadata.name },
+                });
+                
+                if (accountType) {
+                    // Update the AccountTypeUsers record using AND for the conditions
+                    const updatedAccount = await prisma.AccountTypeUsers.updateMany({
+                        where: {
+                            AND: [
+                                { userId: user.id },
+                                { accountTypeId: accountType.id },
+                                { active: true }
+                            ]
+                        },
+                        data: {
+                            nextPayment: '',
+                            toDate: endOfSubscription,
+                            active: false,
+                        },
+                    });
+                }
+            }
+
+     
 
         return new Response(JSON.stringify({ received: true }), {
             status: 200,
