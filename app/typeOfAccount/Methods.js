@@ -191,11 +191,6 @@ const userAccountTypes = await prisma.users.findUnique({
           {
             toDate: null, // Záznamy, kde toDate není nastaveno
           },
-          {
-            toDate: {
-              lt: DateAndTimeNowPrague, // Záznamy, kde toDate < dnešní datum (mimo interval)
-            },
-          },
         ],
       },
       select: {
