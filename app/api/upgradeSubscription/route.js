@@ -301,10 +301,6 @@ console.log("Jeho nínejší produkt",product)
 
 
 
-
-
-console.log("Předplatné zakaznika začalo:",nonZeroPriceSubscription.current_period_start)
-console.log("Předplatné zakaznika končí:",nonZeroPriceSubscription.current_period_end)
 // Funkce pro výpočet upgrade ceny
 
 
@@ -327,11 +323,6 @@ console.log("Předplatné zakaznika končí:",nonZeroPriceSubscription.current_p
       if (paymentIntent.status === 'succeeded') {
         console.log("Platba byla úspěšná. Pokračuji v aktualizaci předplatného.");
       
-        console.log("cele subscirption:", nonZeroPriceSubscription);
-        console.log("id subscription to update:", nonZeroPriceSubscription.id);
-        console.log("id produktu, který měním:", product.id);
-
-     console.log("Na id ceny menim do db:::::::",pricevalueOfDesiredSub?.price?.id)
         // Aktualizace předplatného
         const updatedSubscription = await stripe.subscriptions.update(nonZeroPriceSubscription.id, {
           items: [{
@@ -369,7 +360,7 @@ console.log("Předplatné zakaznika končí:",nonZeroPriceSubscription.current_p
 
 
 
-        console.log("Předplatné bylo úspěšně aktualizováno.", updatedSubscription);
+
       } else {
         return new NextResponse(
             JSON.stringify({ message: 'Platba se nezdařila!' }),
