@@ -373,10 +373,11 @@ console.log("Předplatné zakaznika končí:",nonZeroPriceSubscription.current_p
             
           },
       });
-         await prisma.AccountUpgrades.updateMany({
+
+         await prisma.AccountUpgrades.create({
         data: {
             dateTime: dateAndTime,
-            AccountTypeIdBefore: existWithuser.id,
+            AccountTypeIdBefore: accThatAlreadyhaveExist.id,
             AccountTypeIdAfter: accToUpgradExist.id,
             userId: session.userId
           
