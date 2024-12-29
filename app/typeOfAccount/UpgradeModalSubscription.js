@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFromPayment, setSuccess, router) {
+async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFromPayment, setSuccess, router,fromNameUp) {
     try {
         setloadingPayment(true);
         const response = await fetch("/api/upgradeSubscription", {
@@ -10,7 +10,7 @@ async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFrom
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ nameToUpgrade: name,instantly: true, cardId: cardId }),
+            body: JSON.stringify({ nameToUpgrade: name,instantly: true, cardId: cardId ,fromName:  fromNameUp}),
         });
 
         if (!response.ok) {
@@ -37,8 +37,9 @@ export function openUpgradeModalSubscriptionModal() {
     }
 }
 
-export function UpgradeModalSubscription({ nameToUpgrade, date }) {
+export function UpgradeModalSubscription({ nameToUpgrade, fromName }) {
     const [nextPayment, setNextPayment] = useState(null);
+    const [fromNameUp, setfromNameUp] = useState(fromName);
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(true);
     const [loadingPayment, setloadingPayment] = useState(false);
@@ -199,7 +200,7 @@ export function UpgradeModalSubscription({ nameToUpgrade, date }) {
                                         className={`btn btn-primary  `}
                                         disabled={loadingPayment || !selectedCardId}
                                         onClick={() =>
-                                            upgradeSubscription(nameToUpgrade, selectedCardId, setloadingPayment, setErrorFromPayment, setSuccess, router)
+                                            upgradeSubscription(nameToUpgrade, selectedCardId, setloadingPayment, setErrorFromPayment, setSuccess, router,fromNameUp)
                                         }
                                     >
                                         {loadingPayment ? "Upgraduji..." : "Upgradovat"}

@@ -39,6 +39,7 @@ model Users {
   fromUser            ManagementActions[]       @relation("ActionDoneBy")
   toUser         ManagementActions[]       @relation("ActionDoneTo")
   accounts   AccountTypeUsers[] // Relace "jeden Users má mnoho AccountTypeUsers"
+  upgrades AccountUpgrades[] 
   @@index([verifiedEmail])
 }
 
@@ -179,7 +180,8 @@ model AccountType {
   accountUsers   AccountTypeUsers[] // Relace "jeden AccountType má mnoho AccountTypeUsers"
   
   accPrices      AccountTypeOnPrices[] // Relace na více cen pro tento AccountType
-  
+  upgradesBefore AccountUpgrades[] @relation("AccountTypeBefore")
+  upgradesAfter  AccountUpgrades[] @relation("AccountTypeAfter")
   @@index([name])
 }
 
@@ -193,11 +195,24 @@ model Prices {
   @@index([priceCode])
 }
 
+model AccountUpgrades {
+  id                  Int           @id @default(autoincrement())
+  dateTime            DateTime?
+  userId              String           // Cizí klíč na tabulku Users
+  AccountTypeIdBefore Int           // Cizí klíč na předchozí typ účtu
+  AccountTypeIdAfter  Int           // Cizí klíč na nový typ účtu
 
+  user                Users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountTypeBefore   AccountType   @relation("AccountTypeBefore", fields: [AccountTypeIdBefore], references: [id], onDelete: Cascade)
+  accountTypeAfter    AccountType   @relation("AccountTypeAfter", fields: [AccountTypeIdAfter], references: [id], onDelete: Cascade)
+
+  @@index([userId]) // Index na cizí klíč userId
+}
 
 model AccountTypeUsers {
   id            Int           @id @default(autoincrement())
   scheduleToCancel        Boolean?
+  priceId       String?
   active        Boolean?
   monthIn         Int?        @default(1)
   nextPayment   String?

@@ -89,8 +89,12 @@ export async function POST(request) {
          
 
             if (paymentIntent.billing_reason === "subscription_create") {
+                console.log("Payment intent:",paymentIntent)
+                // přidám s jakou cenou je vytvořeno
+                console.log("Tohle davam do db jako priceId",paymentIntent.subscription_details.metadata.priceId)
                 await prisma.AccountTypeUsers.create({
                     data: {
+                        priceId: paymentIntent.subscription_details.metadata.priceId,
                         active: true,
                         scheduleToCancel: cancelAtPeriodEnd,
                         nextPayment: toDate,  // Nastavení příští platby

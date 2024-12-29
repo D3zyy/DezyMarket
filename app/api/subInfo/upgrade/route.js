@@ -126,6 +126,7 @@ async function checkCustomerSubscription(customerId, productId) {
         throw error;
     }
 }
+console.log("tady:",productExist)
 let priceOfDesiredSub = await getProductPrice(productExist.default_price)
 console.log("Cena předplatného co chce:",priceOfDesiredSub)
 let alreadyHaveTHisSub = await checkCustomerSubscription(customer.id,productExist.id)

@@ -18,6 +18,147 @@ export async function POST(request) {
     }
 
     let data = await request.json();
+    console.log("data co jsem dostal na server:",data)
+
+
+    const accToUpgradExist = await prisma.AccountType.findFirst({
+      where: { name: data.nameToUpgrade },
+  });
+  if (!accToUpgradExist) {
+    return new NextResponse(
+      JSON.stringify({ message: 'Účet který byl poslán že chcete upgradovat neexistuje' }),
+      {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
+  const accThatAlreadyhaveExist = await prisma.AccountType.findFirst({
+    where: { name: data.fromName},
+});
+if (!accThatAlreadyhaveExist) {
+  return new NextResponse(
+    JSON.stringify({ message: 'Účet který byl poslán že máte neexistuje' }),
+    {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' }
+    }
+  );
+}
+if(accThatAlreadyhaveExist.priority >= accToUpgradExist.priority){
+  return new NextResponse(
+    JSON.stringify({ message: 'Nelze upgradovat na daný účet' }),
+    {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' }
+    }
+  );
+}
+const existWithuser = await prisma.AccountTypeUsers.findFirst({
+  where: {
+      active: true,
+      userId: session.userId,
+      accountType: {
+          name : data.fromName  ,
+      }
+  },
+});
+console.log("Má ten co říká že má:",existWithuser)
+
+if (!existWithuser) {
+  return new NextResponse(
+    JSON.stringify({ message: 'Účet který byl poslán že máte nebyl nalezen s vaším účtem' }),
+    {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' }
+    }
+  );
+}
+
+const existWithuserWhichToUpgrade = await prisma.AccountTypeUsers.findFirst({
+  where: {
+      active: true,
+      userId: session.userId,
+      accountType: {
+          name : data.nameToUpgrade  ,
+      }
+  },
+});
+console.log("Má ten co říká že chce:",existWithuserWhichToUpgrade)
+if (existWithuserWhichToUpgrade) {
+  return new NextResponse(
+    JSON.stringify({ message: 'Účet který byl poslán že chcete upgradovat již máte' }),
+    {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' }
+    }
+  );
+}
+// oba učty existují učet co chce nevlastní vlastní ten co říká že má a učet co chce má vetší prioritu než ten co má
+
+const priceValueOfAlreadySub = await prisma.prices.findFirst({
+  where: {
+      priceCode: existWithuser.priceId,
+  },
+});
+
+if(!priceValueOfAlreadySub){
+  return new Response(JSON.stringify({
+    message: "Žádná cena předplatného které máte nenalezena"
+  }), {
+    status: 403,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+
+const dateAndTime = DateTime.now()
+  .setZone('Europe/Prague')
+  .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+
+// Adjusting the query logic for date range filter
+const pricevalueOfDesiredSub = await prisma.accountTypeOnPrices.findFirst({
+  where: {
+    accountTypeId: accToUpgradExist.id,
+    activeFrom: {
+      lte: dateAndTime,  // activeFrom must be in the past or now
+    },
+    OR: [
+      {
+        activeTo: null,  // activeTo is null (indicating it's still valid indefinitely)
+      },
+      {
+        activeTo: {
+          gte: dateAndTime,  // activeTo must be in the future or now
+        },
+      },
+    ],
+  },
+  include: {
+    price: true,  // Fetch related price information
+  },
+});
+
+if(!pricevalueOfDesiredSub){
+  return new Response(JSON.stringify({
+    message: "Žádná cena předplatného které chcete upgradovat nenalezena"
+  }), {
+    status: 403,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+console.log("Co má sub:",existWithuser)
+console.log("Subscription co má začal",existWithuser.fromDate)
+console.log("Subscription co má skončí",existWithuser.toDate)
+const UnixFromDate = new Date("2024-12-29T17:01:59.000Z").getTime() / 1000; // Sekundy
+const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // Sekundy
+console.log("Cena sub které chce:",pricevalueOfDesiredSub?.price?.value)
+console.log("Cena sub které má:",priceValueOfAlreadySub?.value)
+
+
+
+
+
+//kontrola karty id co byla poslána zda patří uživateli
     const customers = await stripe.customers.list({
       email: session.email
     });
@@ -41,7 +182,7 @@ const cardFound = paymentMethods.data.find(card => card.id === data.cardId);
 
 if (cardFound) {
     console.log('Karta patří uživateli:', cardFound);
-}  else {
+}  else  {
     console.log("Karta nepatří uživateli")
     return new Response(JSON.stringify({
         message: "Tuto platební metodu nelze použít s tímto účtem"
@@ -51,6 +192,70 @@ if (cardFound) {
       });
 }
   
+
+
+
+///////
+
+async function calculateUpgradeCostt(priceOfAlreadySub, priceOfDesiredSub, startDateUnix, endDateUnix, currentDateUnix) {
+  // Převod Unixového času na DateTime objekt
+  const startDate = DateTime.fromSeconds(startDateUnix).setZone('Europe/Prague');
+  const endDate = DateTime.fromSeconds(endDateUnix).setZone('Europe/Prague');
+  const currentDate = DateTime.fromSeconds(currentDateUnix).setZone('Europe/Prague');
+  
+  // Výpočet celkového počtu dní v období (včetně počátečního a koncového dne)
+  const totalDays = endDate.diff(startDate, 'days').days + 1;  // +1 zahrnuje i poslední den
+  
+  // Výpočet zbývajících dní (od aktuálního data do konce období)
+  const remainingDays = endDate.diff(currentDate, 'days').days + 1;  // +1 zahrnuje i dnešek
+  
+  // Ošetření případu, kdy zbývající dny jsou záporné (např. pokud je aktuální datum po skončení období)
+  if (remainingDays < 0) {
+      console.log("Aktuální datum je po skončení období. Žádné dny k dispozici.");
+      return 0;
+  }
+  
+  // Výpočet denní ceny pro aktuální a požadované předplatné
+  const dailyPriceCurrent = priceOfAlreadySub / totalDays;
+  const dailyPriceDesired = priceOfDesiredSub / totalDays;
+  
+  // Výpočet poměrné částky za zbývající dny pro oba plány
+  const remainingValueCurrent = dailyPriceCurrent * remainingDays;
+  const remainingValueDesired = dailyPriceDesired * remainingDays;
+  
+  // Rozdíl (upgrade částka), kterou musí zákazník doplatit
+  const upgradeCost = remainingValueDesired - remainingValueCurrent;
+  
+  // Výpis výsledků
+  console.log(`Celkový počet dní v období: ${totalDays}`);
+  console.log(`Zbývající dny: ${remainingDays}`);
+  console.log(`Denní cena aktuálního předplatného: ${dailyPriceCurrent.toFixed(2)} Kč`);
+  console.log(`Denní cena požadovaného předplatného: ${dailyPriceDesired.toFixed(2)} Kč`);
+  console.log(`Poměrná částka za zbývající dny u aktuálního předplatného: ${remainingValueCurrent.toFixed(2)} Kč`);
+  console.log(`Poměrná částka za zbývající dny u požadovaného předplatného: ${remainingValueDesired.toFixed(2)} Kč`);
+  console.log(`Celková částka za upgrade (doplatek): ${upgradeCost.toFixed(0)} Kč`);
+  
+  return upgradeCost.toFixed(0);
+  }
+
+  const currentDateUnixx = Math.floor(DateTime.now().toSeconds()); 
+  let  priceToUpgradee 
+  if(data.instantly){
+    priceToUpgradee = await calculateUpgradeCostt(priceValueOfAlreadySub?.value, pricevalueOfDesiredSub?.price?.value, UnixFromDate,UnixTotoDate, currentDateUnixx);
+      if(priceToUpgradee < 15 ){
+        priceToUpgradee = 15
+      }
+    }
+    console.log("Cena nahore kolik to vyslo na upgrade:",priceToUpgradee)
+
+
+
+
+//////
+
+
+
+
     // Retrieve subscriptions for the customer
     const subscriptions = await stripe.subscriptions.list({
       customer: customer.id,
@@ -81,61 +286,11 @@ if (cardFound) {
 
 
 
-  async function checkCustomerSubscription(customerId, productId) {
-    try {
-        const subscriptions = await stripe.subscriptions.list({
-            customer: customerId,
-            status: 'active',
-            expand: ['data.items.data.plan'], // Rozbalí ID produktu
-        });
-       
-
-        for (const subscription of subscriptions.data) {
-            const hasProduct = subscription.items.data.some(
-                item => item.price.product === productId
-            );
-
-            if (hasProduct) {
-                return true; // Zákazník již má produkt
-            }
-        }
-
-        return false; // Produkt nebyl nalezen v žádném předplatném
-    } catch (error) {
-        console.error('Chyba při kontrole předplatného:', error);
-        throw error;
-    }
-}
-if(!productExist){
-    return new Response(JSON.stringify({
-      message: "Tento produkt na upgrade neexistuje"
-    }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' }
-    });
-}
-let alreadyHaveTHisSub = await checkCustomerSubscription(customer.id,productExist.id)
-
-   if(alreadyHaveTHisSub){
-            return new Response(JSON.stringify({
-              message: "Toto předplatné již máte nelze na něj upgradovat"
-            }), {
-                status: 403,
-                headers: { 'Content-Type': 'application/json' }
-            });
-   }
   
 
+
   
-   async function getProductPrice(defaultPriceId) {
-    try {
-        const price = await stripe.prices.retrieve(defaultPriceId); // Načtení detailů ceny
-        return price.unit_amount / 100; // Cena je vrácena v centech, takže ji převedeme na celé jednotky
-    } catch (error) {
-        console.error('Chyba při získávání ceny:', error);
-        throw error;
-    }
-}
+
 
 const nonZeroPriceSubscription = subscriptions.data.find(subscription => {
     // Projde všechny položky předplatného (může jich být více)
@@ -160,92 +315,24 @@ if (nonZeroPriceSubscription) {
 console.log("info o sub :",subscriptionInfo.items.data[0].id)
 const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
 console.log("Jeho nínejší produkt",product)
-let priceOfDesiredSub = await getProductPrice(productExist.default_price)
-let priceOfAlreadySub = await getProductPrice(product.default_price)
 
-console.log("Cena předplatného co již má:",priceOfAlreadySub)
-console.log("Cena předplatného co chce :",priceOfDesiredSub)
 
-if(priceOfAlreadySub > priceOfDesiredSub){
-    return new Response(JSON.stringify({
-        message: "Toto předplatné nelze upgradovat"
-      }), {
-          status: 403,
-          headers: { 'Content-Type': 'application/json' }
-      });
-}
+
+
 
 
 console.log("Předplatné zakaznika začalo:",nonZeroPriceSubscription.current_period_start)
 console.log("Předplatné zakaznika končí:",nonZeroPriceSubscription.current_period_end)
 // Funkce pro výpočet upgrade ceny
-async function calculateUpgradeCost(priceOfAlreadySub, priceOfDesiredSub, startDateUnix, endDateUnix, currentDateUnix) {
-// Převod Unixového času na DateTime objekt
-const startDate = DateTime.fromSeconds(startDateUnix).setZone('Europe/Prague');
-const endDate = DateTime.fromSeconds(endDateUnix).setZone('Europe/Prague');
-const currentDate = DateTime.fromSeconds(currentDateUnix).setZone('Europe/Prague');
 
-// Výpočet celkového počtu dní v období (včetně počátečního a koncového dne)
-const totalDays = endDate.diff(startDate, 'days').days + 1;  // +1 zahrnuje i poslední den
 
-// Výpočet zbývajících dní (od aktuálního data do konce období)
-const remainingDays = endDate.diff(currentDate, 'days').days + 1;  // +1 zahrnuje i dnešek
-
-// Ošetření případu, kdy zbývající dny jsou záporné (např. pokud je aktuální datum po skončení období)
-if (remainingDays < 0) {
-    console.log("Aktuální datum je po skončení období. Žádné dny k dispozici.");
-    return 0;
-}
-
-// Výpočet denní ceny pro aktuální a požadované předplatné
-const dailyPriceCurrent = priceOfAlreadySub / totalDays;
-const dailyPriceDesired = priceOfDesiredSub / totalDays;
-
-// Výpočet poměrné částky za zbývající dny pro oba plány
-const remainingValueCurrent = dailyPriceCurrent * remainingDays;
-const remainingValueDesired = dailyPriceDesired * remainingDays;
-
-// Rozdíl (upgrade částka), kterou musí zákazník doplatit
-const upgradeCost = remainingValueDesired - remainingValueCurrent;
-
-// Výpis výsledků
-console.log(`Celkový počet dní v období: ${totalDays}`);
-console.log(`Zbývající dny: ${remainingDays}`);
-console.log(`Denní cena aktuálního předplatného: ${dailyPriceCurrent.toFixed(2)} Kč`);
-console.log(`Denní cena požadovaného předplatného: ${dailyPriceDesired.toFixed(2)} Kč`);
-console.log(`Poměrná částka za zbývající dny u aktuálního předplatného: ${remainingValueCurrent.toFixed(2)} Kč`);
-console.log(`Poměrná částka za zbývající dny u požadovaného předplatného: ${remainingValueDesired.toFixed(2)} Kč`);
-console.log(`Celková částka za upgrade (doplatek): ${upgradeCost.toFixed(0)} Kč`);
-
-return upgradeCost.toFixed(0);
-}
-
-const currentDateUnix = Math.floor(DateTime.now().toSeconds()); 
-let  priceToUpgrade 
-if(data.instantly){
-    priceToUpgrade = await calculateUpgradeCost(priceOfAlreadySub, priceOfDesiredSub, nonZeroPriceSubscription.current_period_start, nonZeroPriceSubscription.current_period_end, currentDateUnix);
-    if(priceToUpgrade < 15 ){
-        priceToUpgrade = 15
-    }
-    const paymentMethods = await stripe.paymentMethods.list({
-        customer: customer.id,
-        type: 'card',
-      });
-      if (paymentMethods.data.length === 0) {
-        return new NextResponse(
-            JSON.stringify({ message: 'Vaši platební metodu se nepodařilo zpracovat' }),
-            {
-              status: 403,
-              headers: { 'Content-Type': 'application/json' }
-            }
-          );
-      }
+  
 
 
 
       
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: priceToUpgrade * 100, // částka v nejmenší měně, např. 1000 = 10.00 CZK
+        amount: priceToUpgradee * 100, // částka v nejmenší měně, např. 1000 = 10.00 CZK
         currency: 'czk',
         customer: customer.id,
         payment_method: cardIdFromToBePaid,
@@ -269,9 +356,35 @@ if(data.instantly){
             id: nonZeroPriceSubscription.items.data[0].id, // ID položky předplatného, kterou chcete změnit
             price: productExist.default_price, // Nové Price ID
           }],
-          proration_behavior: 'none',  // Vytvoří prorata fakturaci na základě rozdílu
+          proration_behavior: 'none',  // Neprovádí poměrné účtování
+          metadata: {
+            name: data.nameToUpgrade, // Aktualizace nebo přidání metadat
+          },
         });
       
+
+        //db update
+        const updatedAccount = await prisma.AccountTypeUsers.updateMany({
+          where: {
+                id: existWithuser.id
+          },
+          data: {
+              accountTypeId: accToUpgradExist.id,
+            
+          },
+      });
+         await prisma.AccountUpgrades.updateMany({
+        data: {
+            dateTime: dateAndTime,
+            AccountTypeIdBefore: existWithuser.id,
+            AccountTypeIdAfter: accToUpgradExist.id,
+            userId: session.userId
+          
+        },
+    });
+
+
+
         console.log("Předplatné bylo úspěšně aktualizováno.", updatedSubscription);
       } else {
         return new NextResponse(
@@ -289,23 +402,6 @@ if(data.instantly){
    
 
 
-} else {
-     
-
-      return new NextResponse(
-        JSON.stringify({ message: 'Nelze upgradovat předplatné!', instant: false }),
-  
-        {
-          status: 403,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-
-
-
-
-
-}
 
 
 

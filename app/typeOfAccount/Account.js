@@ -74,7 +74,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
   } rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700`}
 >
 
-  {canUpgrade ?  <UpgradeModalSubscription nameToUpgrade={name} /> : ""}
+  {canUpgrade ?  <UpgradeModalSubscription nameToUpgrade={name}  fromName={hasThisType}/> : ""}
   <style jsx>{`
     @keyframes shadow {
       0% {

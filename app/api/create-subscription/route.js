@@ -60,13 +60,14 @@ export async function POST(request) {
     }
         console.log("Co vkladam jako name :",nameOfSub)
         console.log("Price id:",priceId)
+        let priceee =priceId
           const subscription = await stripe.subscriptions.create({
             customer:  customer.data[0].id,
             items: [{
               price: priceId,
              
             }],  metadata: {
-              name: nameOfSub, 
+              name: nameOfSub, priceId: priceee
             },
             payment_behavior: 'default_incomplete',
             payment_settings: { save_default_payment_method: 'on_subscription' },
