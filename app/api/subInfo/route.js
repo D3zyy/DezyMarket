@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
-import moment from "moment";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import { prisma } from "@/app/database/db";
 
 export async function POST(request) {
     try {
@@ -16,65 +16,48 @@ export async function POST(request) {
             });
         }
 
-        // Retrieve customer information from Stripe
-        const customers = await stripe.customers.list({
-            email: session.email
-        });
 
-        if (!customers.data.length) {
+        const dataFromDb = await prisma.AccountTypeUsers.findFirst({
+            where: {
+                active: true,
+                userId: session.userId,
+                accountType: {
+                    priority: {
+                        gt: 1,  // Ensure the related AccountType's priority is greater than 1
+                    }
+                }
+            },
+            include: {
+                accountType: {  // This includes the related AccountType model
+                    select: {
+                        name: true,  // Select the name from the related AccountType
+                    }
+                },
+            },
+        });
+        if(!dataFromDb){
             return new Response(JSON.stringify({
-                message: "Žádný zákazník nenalezen s tímto emailem"
+                message: "Nastala chyba při získávání dat z db"
             }), {
                 status: 404,
                 headers: { 'Content-Type': 'application/json' }
             });
         }
+      
 
-        const customer = customers.data[0];
-
-        // Retrieve subscriptions for the customer
-        const subscriptions = await stripe.subscriptions.list({
-            customer: customer.id,
-            status: "active"
-        });
-        const subscriptionInfo = await stripe.subscriptions.retrieve(subscriptions.data[0].id);
-        const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
-
-
-        if (!subscriptions.data.length) {
-            return new Response(JSON.stringify({
-                message: "Žádné předplatné nenalezeno pro tohoto zákazníka"
-            }), {
-                status: 404,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-
-        const subscription = subscriptions.data[0];
-
-        // Check if `current_period_end` is available
-        if (!subscription.current_period_end) {
-            return new Response(JSON.stringify({
-                message: "Chyba: 'current_period_end' není k dispozici v předplatném"
-            }), {
-                status: 500,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
 
         // Convert the timestamp to a date
-        const date = new Date(subscription.current_period_end * 1000);
+        const date = new Date(dataFromDb.toDate);  // No need to multiply by 1000 if toDate is a valid ISO string.
         const day = date.getDate();
-        const month = date.getMonth() + 1; // Months are 0-indexed
+        const month = date.getMonth() + 1;  // Months are 0-indexed
         const year = date.getFullYear();
-
+        
         // Format the date as day.month.year
         const formattedDate = `${day}.${month}.${year}`;
-
         return new Response(JSON.stringify({
             nextPayment: formattedDate,
-            scheduledToCancel: subscriptions.data[0].cancel_at_period_end,
-            name : product.name
+            scheduledToCancel: dataFromDb.scheduleToCancel,
+            name : dataFromDb.accountType.name
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
