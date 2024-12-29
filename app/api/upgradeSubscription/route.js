@@ -349,7 +349,7 @@ console.log("Předplatné zakaznika končí:",nonZeroPriceSubscription.current_p
         console.log("id subscription to update:", nonZeroPriceSubscription.id);
         console.log("id produktu, který měním:", product.id);
         console.log("na jakou cenu měním:", productExist.default_price);
-      
+     console.log("Na id ceny menim do db:::::::",pricevalueOfDesiredSub?.price?.id)
         // Aktualizace předplatného
         const updatedSubscription = await stripe.subscriptions.update(nonZeroPriceSubscription.id, {
           items: [{
@@ -370,7 +370,7 @@ console.log("Předplatné zakaznika končí:",nonZeroPriceSubscription.current_p
           },
           data: {
               accountTypeId: accToUpgradExist.id,
-            
+              priceId: pricevalueOfDesiredSub?.price?.priceCode
           },
       });
 
@@ -379,7 +379,8 @@ console.log("Předplatné zakaznika končí:",nonZeroPriceSubscription.current_p
             dateTime: dateAndTime,
             AccountTypeIdBefore: accThatAlreadyhaveExist.id,
             AccountTypeIdAfter: accToUpgradExist.id,
-            userId: session.userId
+            userId: session.userId,
+            priceToUpgrade: priceToUpgradee
           
         },
     });

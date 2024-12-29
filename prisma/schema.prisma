@@ -201,6 +201,7 @@ model AccountUpgrades {
   userId              String           // Cizí klíč na tabulku Users
   AccountTypeIdBefore Int           // Cizí klíč na předchozí typ účtu
   AccountTypeIdAfter  Int           // Cizí klíč na nový typ účtu
+  priceToUpgrade      Int?
 
   user                Users         @relation(fields: [userId], references: [id], onDelete: Cascade)
   accountTypeBefore   AccountType   @relation("AccountTypeBefore", fields: [AccountTypeIdBefore], references: [id], onDelete: Cascade)
