@@ -173,41 +173,55 @@ export async function getUserAccountTypeOnStripe(email) {
 // Načtěte typy účtů uživatele z databáze a filtrujte pouze aktivní účty
 const userAccountTypes = await prisma.users.findUnique({
   where: {
-    email: email,  // Filtrace podle emailu uživatele
+    email: email, // Filtrace podle emailu uživatele
   },
   select: {
     accounts: {
       where: {
-        active: true,  // Filtrujte pouze aktivní účty
+        active: true, // Filtrujte pouze aktivní účty
         fromDate: {
-          lte: DateAndTimeNowPrague,  // Zkontrolujte, že fromDate je menší nebo rovno aktuálnímu datu
+          lte: DateAndTimeNowPrague, // Zkontrolujte, že fromDate je menší nebo rovno aktuálnímu datu
         },
-        toDate: {
-          gte: DateAndTimeNowPrague,  // Zkontrolujte, že toDate je větší nebo rovno aktuálnímu datu
-        },
+        OR: [
+          {
+            toDate: {
+              gte: DateAndTimeNowPrague, // Záznamy, kde toDate >= dnešní datum
+            },
+          },
+          {
+            toDate: null, // Záznamy, kde toDate není nastaveno
+          },
+          {
+            toDate: {
+              lt: DateAndTimeNowPrague, // Záznamy, kde toDate < dnešní datum (mimo interval)
+            },
+          },
+        ],
       },
       select: {
-
         fromDate: true,
         toDate: true,
         accountType: {
           select: {
             priority: true,
-            name: true,  // Přístup k poli "name" v tabulce "accountType"
+            name: true, // Přístup k poli "name" v tabulce "accountType"
           },
         },
       },
     },
   },
 });
-
+console.log(
+  "Typy účtů uživatele:",
+  JSON.stringify(userAccountTypes, null, 2) // Převod na JSON s odsazením 2 mezery
+);
 
 
     // Zkontrolujte, zda existují nějaké účty
     if (userAccountTypes && userAccountTypes.accounts && userAccountTypes.accounts.length > 0) {
       // Seřaďte účty podle priority sestupně
       const sortedAccounts = userAccountTypes.accounts.sort((a, b) => b.accountType.priority - a.accountType.priority);
-    
+      console.log("Vracím :",sortedAccounts[0].accountType.name)
       return sortedAccounts[0].accountType.name;  // Vraťte název účtu s nejvyšší prioritou
     } else {
       return null; // Žádný odpovídající účet nenalezen

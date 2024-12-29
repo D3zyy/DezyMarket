@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
+import { DateTime } from "luxon"; // Pokud ještě není importováno
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
   try {
     const session = await getSession();
-    if (!session.isLoggedIn) {
+    if (!session || !session.isLoggedIn || !session.email) {
       return new NextResponse(
-        JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na nastavení zakladní typ účtu. Session nebyla nalezena' }),
+        JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na nastavení základní typ účtu. Session nebyla nalezena' }),
         {
           status: 500,
           headers: { 'Content-Type': 'application/json' }
@@ -16,63 +17,72 @@ export async function POST(request) {
       );
     }
 
-
-    const customers = await stripe.customers.list({
-      email: session.email
+    const user = await prisma.Users.findFirst({
+      where: { email: session.email },
     });
 
-    if (!customers.data.length) {
-      return new Response(JSON.stringify({
-        message: "Žádný zákazník nenalezen s tímto emailem"
-      }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' }
-      });
+    if (!user) {
+      return new NextResponse(
+        JSON.stringify({ message: 'Uživatel nenalezen' }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
     }
 
-    const customer = customers.data[0];
-    
-    // Retrieve subscriptions for the customer
-    const subscriptions = await stripe.subscriptions.list({
-      customer: customer.id,
-      status: "active",
-      expand: ['data.items.data.price'], // Rozbalí objekt price pro kontrolu ID
-  });
-  
+    const { name } = await request.json();
 
-  
-  // Ověření, zda existuje předplatné s konkrétní cenou
-  const hasExistingSubscription = subscriptions.data.some(subscription =>
-      subscription.items.data.some(item => item.price.id === "price_1QUWOUHvhgFZWc3HPMtO5Flt") // 0 CZK PRICE IN OTHER WORDS THE DEFAULT ACC
-  );
-  
-  if (hasExistingSubscription) {
-      return new Response(JSON.stringify({
-          message: "Již nalezeno aktivní předplatné nelze aktivovat základní předplatné."
-      }), {
-          status: 403,
-          headers: { 'Content-Type': 'application/json' }
-      });
-  }
-  
-  // Pokračujte dál, pokud není konfliktní předplatné nalezeno
-  
-
-    const subscription = await stripe.subscriptions.create({
-      customer:  customer.id,
-      items: [{
-        price:"price_1QUWOUHvhgFZWc3HPMtO5Flt", // free price 0 CZK
-      }],
-      
+    // Najdi AccountType podle názvu
+    const accountType = await prisma.AccountType.findFirst({
+      where: { name: name },
     });
 
+    if (!accountType) {
+      return new NextResponse(
+        JSON.stringify({ message: 'Typ účtu nenalezen' }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
 
+    // Zkontroluj, zda uživatel již má tento typ účtu
+    const existingAccountTypeUser = await prisma.AccountTypeUsers.findFirst({
+      where: {
+        userId: user.id,
+        accountTypeId: accountType.id,
+        active: true,
+      },
+    });
 
+    if (existingAccountTypeUser) {
+      return new NextResponse(
+        JSON.stringify({ message: 'Uživatel již má aktivní základní typ účtu' }),
+        {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
 
-   
+    const fromDate = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+
+    // Vytvoř nový záznam
+    await prisma.AccountTypeUsers.create({
+      data: {
+        active: true,
+        fromDate: fromDate,
+        user: { connect: { id: user.id } },
+        accountType: { connect: { id: accountType.id } },
+      },
+    });
 
     return new NextResponse(
-      JSON.stringify({ message: 'Uspesne aktivován základní typ učtu' }),
+      JSON.stringify({ message: 'Úspěšně aktivován základní typ účtu' }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
@@ -80,9 +90,9 @@ export async function POST(request) {
     );
 
   } catch (error) {
-    console.error('Chyba při vytvřání požadavku na nastavení základního typu předplatného : ', error);
+    console.error('Chyba při vytváření požadavku na nastavení základního typu předplatného: ', error);
     return new NextResponse(
-      JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na zakladní typ předplatného' }),
+      JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na základní typ předplatného' }),
       {
         status: 500,
         headers: { 'Content-Type': 'application/json' }

@@ -30,6 +30,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
             headers: {
                 'Content-Type': 'application/json' // Add the Content-Type header
             },
+            body: JSON.stringify({ name })
         });
 
         // If successful, reload the page
