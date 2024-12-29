@@ -262,25 +262,7 @@ async function calculateUpgradeCostt(priceOfAlreadySub, priceOfDesiredSub, start
       status: "active",
       expand: ['data.items.data.price'], // Rozbalí objekt price pro kontrolu ID
   });
-  async function getProductByName(nameToUpgrade) {
-    try {
-        const products = await stripe.products.list(); // Získání seznamu všech produktů
-        const product = products.data.find(product => product.name === nameToUpgrade); // Hledání podle názvu
-        
-        if (product) {
-            console.log("produkt:",product)
-            return product;
-        } else {
-          
-            return null;
-        }
-    } catch (error) {
-        console.error('Chyba při získávání produktu:', error);
-        throw error;
-    }
-}
 
-  let productExist = await getProductByName(data.nameToUpgrade);
 
   
 
@@ -348,13 +330,13 @@ console.log("Předplatné zakaznika končí:",nonZeroPriceSubscription.current_p
         console.log("cele subscirption:", nonZeroPriceSubscription);
         console.log("id subscription to update:", nonZeroPriceSubscription.id);
         console.log("id produktu, který měním:", product.id);
-        console.log("na jakou cenu měním:", productExist.default_price);
+
      console.log("Na id ceny menim do db:::::::",pricevalueOfDesiredSub?.price?.id)
         // Aktualizace předplatného
         const updatedSubscription = await stripe.subscriptions.update(nonZeroPriceSubscription.id, {
           items: [{
             id: nonZeroPriceSubscription.items.data[0].id, // ID položky předplatného, kterou chcete změnit
-            price: productExist.default_price, // Nové Price ID
+            price: pricevalueOfDesiredSub?.price?.priceCode, // Nové Price ID
           }],
           proration_behavior: 'none',  // Neprovádí poměrné účtování
           metadata: {
