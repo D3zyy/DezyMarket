@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
-
+import { prisma } from "@/app/database/db";
 import { DateTime } from 'luxon';
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -17,6 +17,155 @@ export async function POST(request) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
+        let data = await request.json();
+        console.log("Na co chci upgradovat infoUpgrade:",data.nameToUpgrade)
+        console.log("Z čeho chci upgradovat infoUpgrade:",data.fromNameUp)
+
+
+        const accToUpgradExist = await prisma.AccountType.findFirst({
+            where: { name: data.nameToUpgrade },
+        });
+        if (!accToUpgradExist) {
+          return new NextResponse(
+            JSON.stringify({ message: 'Účet který byl poslán že chcete upgradovat neexistuje' }),
+            {
+              status: 403,
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+        }
+        const accThatAlreadyhaveExist = await prisma.AccountType.findFirst({
+          where: { name: data.fromName},
+      });
+      if (!accThatAlreadyhaveExist) {
+        return new NextResponse(
+          JSON.stringify({ message: 'Účet který byl poslán že máte neexistuje' }),
+          {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      if(accThatAlreadyhaveExist.priority >= accToUpgradExist.priority){
+        return new NextResponse(
+          JSON.stringify({ message: 'Nelze upgradovat na daný účet' }),
+          {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+
+      const existWithuser = await prisma.AccountTypeUsers.findFirst({
+        where: {
+          active: true,
+          userId: session.userId,
+          accountType: {
+            name: data.fromNameUp,
+            priority: {
+              gt: 1, 
+            },
+          },
+        },
+      });
+      console.log("Má ten co říká že má:",existWithuser)
+      
+      if (!existWithuser) {
+        return new NextResponse(
+          JSON.stringify({ message: 'Účet který byl poslán že máte nebyl nalezen s vaším účtem' }),
+          {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+
+      
+      const existWithuserWhichToUpgrade = await prisma.AccountTypeUsers.findFirst({
+        where: {
+            active: true,
+            userId: session.userId,
+            accountType: {
+                name : data.nameToUpgrade  ,
+            }
+        },
+      });
+      console.log("Má ten co říká že chce:",existWithuserWhichToUpgrade)
+      if (existWithuserWhichToUpgrade) {
+        return new NextResponse(
+          JSON.stringify({ message: 'Účet který byl poslán že chcete upgradovat již máte' }),
+          {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      // oba učty existují učet co chce nevlastní vlastní ten co říká že má a učet co chce má vetší prioritu než ten co má
+      
+      const priceValueOfAlreadySub = await prisma.prices.findFirst({
+        where: {
+            priceCode: existWithuser.priceId,
+        },
+      });
+      
+      if(!priceValueOfAlreadySub){
+        return new Response(JSON.stringify({
+          message: "Žádná cena předplatného které máte nenalezena"
+        }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+
+
+     
+    
+    // Adjusting the query logic for date range filter
+    const pricevalueOfDesiredSub = await prisma.accountTypeOnPrices.findFirst({
+      where: {
+        accountTypeId: accToUpgradExist.id,
+        activeFrom: {
+          lte: dateAndTime,  // activeFrom must be in the past or now
+        },
+        OR: [
+          {
+            activeTo: null,  // activeTo is null (indicating it's still valid indefinitely)
+          },
+          {
+            activeTo: {
+              gte: dateAndTime,  // activeTo must be in the future or now
+            },
+          },
+        ],
+      },
+      include: {
+        price: true,  // Fetch related price information
+      },
+    });
+    
+    if(!pricevalueOfDesiredSub){
+      return new Response(JSON.stringify({
+        message: "Žádná cena předplatného které chcete upgradovat nenalezena"
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+
+const UnixFromDate = new Date("2024-12-29T17:01:59.000Z").getTime() / 1000; // Sekundy
+const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // Sekundy
+
+
+
+
+
+
+
 
         // Retrieve customer information from Stripe
         const customers = await stripe.customers.list({
@@ -31,17 +180,14 @@ export async function POST(request) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-        let data = await request.json();
+
         const customer = customers.data[0];
         async function getCustomerCard(customerId) {
             try {
-                console.log("zakaznik id:",customerId)
-                // Načtení dat o zákazníkovi
-                const customer = await stripe.customers.retrieve(customerId);
         
                 // Získání uložených karet
                 const paymentMethods = await stripe.paymentMethods.list({
-                    customer: customer.id,
+                    customer: customerId,
                     type: 'card',
                 });
                 
@@ -58,124 +204,7 @@ export async function POST(request) {
                 console.error('Chyba při načítání dat o zákazníkovi:', error);
             }
         }
-        
-        // Zavolání funkce
 
-        console.log("Na co chci upgradovat:",data.nameToUpgrade)
-        async function getProductPrice(defaultPriceId) {
-            try {
-                const price = await stripe.prices.retrieve(defaultPriceId); // Načtení detailů ceny
-                return price.unit_amount / 100; // Cena je vrácena v centech, takže ji převedeme na celé jednotky
-            } catch (error) {
-                console.error('Chyba při získávání ceny:', error);
-                throw error;
-            }
-        }
-        async function getProductByName(nameToUpgrade) {
-            try {
-                const products = await stripe.products.list(); // Získání seznamu všech produktů
-                const product = products.data.find(product => product.name === nameToUpgrade); // Hledání podle názvu
-                
-                if (product) {
-                    console.log("produkt:",product)
-                    return product;
-                } else {
-                  
-                    return null;
-                }
-            } catch (error) {
-                console.error('Chyba při získávání produktu:', error);
-                throw error;
-            }
-        }
-        
-        
-        let productExist = await getProductByName(data.nameToUpgrade);
-
-        if(!productExist){
-            return new Response(JSON.stringify({
-              message: "Tento produkt neexistuje"
-            }), {
-                status: 403,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-        console.log("existuje produtk s tímto názvem co byl poslán na API:",productExist.id)
-        // Funkce pro kontrolu, zda zákazník již má produkt
-async function checkCustomerSubscription(customerId, productId) {
-    try {
-        const subscriptions = await stripe.subscriptions.list({
-            customer: customerId,
-            status: 'active',
-            expand: ['data.items.data.plan'], // Rozbalí ID produktu
-        });
-
-        for (const subscription of subscriptions.data) {
-            const hasProduct = subscription.items.data.some(
-                item => item.price.product === productId
-            );
-
-            if (hasProduct) {
-                return true; // Zákazník již má produkt
-            }
-        }
-
-        return false; // Produkt nebyl nalezen v žádném předplatném
-    } catch (error) {
-        console.error('Chyba při kontrole předplatného:', error);
-        throw error;
-    }
-}
-console.log("tady:",productExist)
-let priceOfDesiredSub = await getProductPrice(productExist.default_price)
-console.log("Cena předplatného co chce:",priceOfDesiredSub)
-let alreadyHaveTHisSub = await checkCustomerSubscription(customer.id,productExist.id)
-console.log("Již má poslaný produkt :",alreadyHaveTHisSub)
-
-if(alreadyHaveTHisSub){
-    return new Response(JSON.stringify({
-      message: "Toto předplatné již máte"
-    }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' }
-    });
-}
-        // Retrieve subscriptions for the customer
-        const subscriptions = await stripe.subscriptions.list({
-            customer: customer.id,
-            status: "active",
-            expand: ['data.items.data.price'], // Rozbalí objekt price pro kontrolu ID
-        });
-        
-        // Najde první předplatné, kde cena není 0
-        const nonZeroPriceSubscription = subscriptions.data.find(subscription => {
-            // Projde všechny položky předplatného (může jich být více)
-
-            return subscription.items.data.some(item => item.price.unit_amount > 0);
-        });
-        let subscriptionInfo;
-        if (nonZeroPriceSubscription) {
-         
-             subscriptionInfo = await stripe.subscriptions.retrieve(nonZeroPriceSubscription.id);
-            
-        } 
-
-        const subscription = subscriptions.data[0];
-        const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
-        console.log("produkt předpaltného co má:",product)
-        let priceOfAlreadySub = await getProductPrice(product.default_price)
-        console.log("Cena předplatného co již má:",priceOfAlreadySub)
-        console.log("Cena předplatného co chce :",priceOfDesiredSub)
-        if(priceOfAlreadySub > priceOfDesiredSub){
-            return new Response(JSON.stringify({
-                message: "Toto předplatné nelze upgradovat"
-              }), {
-                  status: 403,
-                  headers: { 'Content-Type': 'application/json' }
-              });
-        }
-        console.log("Předplatné zakaznika začalo:",nonZeroPriceSubscription.current_period_start)
-        console.log("Předplatné zakaznika začalo:",nonZeroPriceSubscription.current_period_end)
        // Funkce pro výpočet upgrade ceny
        async function calculateUpgradeCost(priceOfAlreadySub, priceOfDesiredSub, startDateUnix, endDateUnix, currentDateUnix) {
         // Převod Unixového času na DateTime objekt
@@ -218,35 +247,21 @@ if(alreadyHaveTHisSub){
         return upgradeCost.toFixed(0);
     }
     
-    const currentDateUnix = Math.floor(DateTime.now().toSeconds()); 
+    const currentDateUnix = Math.floor(
+        DateTime.now().setZone('Europe/Prague').toSeconds()
+      );
     
- let  priceToUpgrade = await calculateUpgradeCost(priceOfAlreadySub, priceOfDesiredSub, nonZeroPriceSubscription.current_period_start, nonZeroPriceSubscription.current_period_end, currentDateUnix);
+ let  priceToUpgrade = await calculateUpgradeCost(priceValueOfAlreadySub?.value, pricevalueOfDesiredSub?.price?.value, UnixFromDate, UnixTotoDate, currentDateUnix);
  if(priceToUpgrade < 15 ){
     priceToUpgrade = 15
 }
-if (!nonZeroPriceSubscription) {
-            return new Response(JSON.stringify({
-                message: "Žádné platící předplatné nenalezeno pro tohoto zákazníka"
-            }), {
-                status: 404,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
+
 
         
 
-        // Check if `current_period_end` is available
-        if (!subscription.current_period_end) {
-            return new Response(JSON.stringify({
-                message: "Chyba: 'current_period_end' není k dispozici v předplatném"
-            }), {
-                status: 500,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
 
         // Convert the timestamp to a date
-        const date = new Date(subscription.current_period_end * 1000);
+        const date = new Date(existWithuser.nextPayment);
         const day = date.getDate();
         const month = date.getMonth() + 1; // Months are 0-indexed
         const year = date.getFullYear();
@@ -255,13 +270,13 @@ if (!nonZeroPriceSubscription) {
         const formattedDate = `${day}.${month}.${year}`;
         let  lastFourDigitsOfCustomerCard =  await getCustomerCard(customer.id);
       
-        return new Response(JSON.stringify({
+        return new Response(JSON.stringify({    
             nextPayment: formattedDate,
-            scheduledToCancel: subscriptions.data[0].cancel_at_period_end,
-            name : product.name,
+            name : data.nameToUpgrade,
+            priceOfDesiredSub: pricevalueOfDesiredSub?.price?.value,
             priceToUpgrade: priceToUpgrade,
-            priceOfDesiredSub: priceOfDesiredSub,
             cards: lastFourDigitsOfCustomerCard
+
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }

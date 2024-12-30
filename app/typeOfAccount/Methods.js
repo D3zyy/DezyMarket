@@ -206,17 +206,14 @@ const userAccountTypes = await prisma.users.findUnique({
     },
   },
 });
-console.log(
-  "Typy účtů uživatele:",
-  JSON.stringify(userAccountTypes, null, 2) // Převod na JSON s odsazením 2 mezery
-);
+
 
 
     // Zkontrolujte, zda existují nějaké účty
     if (userAccountTypes && userAccountTypes.accounts && userAccountTypes.accounts.length > 0) {
       // Seřaďte účty podle priority sestupně
       const sortedAccounts = userAccountTypes.accounts.sort((a, b) => b.accountType.priority - a.accountType.priority);
-      console.log("Vracím :",sortedAccounts[0].accountType.name)
+     
       return sortedAccounts[0].accountType.name;  // Vraťte název účtu s nejvyšší prioritou
     } else {
       return null; // Žádný odpovídající účet nenalezen

@@ -3,7 +3,7 @@ import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
 import Link from 'next/link';
 export default function CheckoutForm({priceId,nameOfSub}) {
   const stripe = useStripe();
-  console.log("Jmeno predplatneho:",nameOfSub)
+ 
   const elements = useElements();
 
   const [errorMessage, setErrorMessage] = useState();

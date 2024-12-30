@@ -110,12 +110,12 @@ export const getSession = async () => {
           },
         });
       }
-      console.log("hledam roli uživatele na stripe ")
+
        accountTypeName = await getUserAccountTypeOnStripe(userToCreate.email)
        if(accountTypeName?.length == 1){
         accountTypeName = accountTypeName[0]
       } 
-       console.log("jmeno uctu pri login:",accountTypeName)
+      
       
       
       // Use iron-session to set the session ID in a cookie

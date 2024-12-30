@@ -2,7 +2,6 @@
 import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import { useState, useEffect } from 'react';
 import CheckoutForm from '../components/CheckOutForm';
 
 // Function to open the modal
@@ -28,7 +27,7 @@ export function PaymentModal({ price, name, priceId }) {
       };
     const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
     const stripePromise = loadStripe(publicKey);
-   console.log("Jméno v payentmodal:",name)
+
     return (
     
             <dialog id={`payment_modal_${price}`} className="modal bg-slate-950/25  modal-bottom sm:modal-middle" data-backdrop="true">

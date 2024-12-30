@@ -63,7 +63,7 @@ export function UpgradeModalSubscription({ nameToUpgrade, fromName }) {
                 const response = await fetch("/api/subInfo/upgrade", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ nameToUpgrade }),
+                    body: JSON.stringify({ nameToUpgrade, fromNameUp }),
                 });
                 if (!response.ok) throw new Error("Chyba při získávání informací o předplatném");
 

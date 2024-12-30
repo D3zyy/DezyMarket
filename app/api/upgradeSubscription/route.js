@@ -59,7 +59,10 @@ const existWithuser = await prisma.AccountTypeUsers.findFirst({
       active: true,
       userId: session.userId,
       accountType: {
-          name : data.fromName  ,
+          name : data.fromName  , 
+           priority: {
+            gt: 1, 
+          },
       }
   },
 });
@@ -146,13 +149,10 @@ if(!pricevalueOfDesiredSub){
     headers: { 'Content-Type': 'application/json' }
   });
 }
-console.log("Co má sub:",existWithuser)
-console.log("Subscription co má začal",existWithuser.fromDate)
-console.log("Subscription co má skončí",existWithuser.toDate)
+
 const UnixFromDate = new Date("2024-12-29T17:01:59.000Z").getTime() / 1000; // Sekundy
 const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // Sekundy
-console.log("Cena sub které chce:",pricevalueOfDesiredSub?.price?.value)
-console.log("Cena sub které má:",priceValueOfAlreadySub?.value)
+
 
 
 
@@ -238,10 +238,12 @@ async function calculateUpgradeCostt(priceOfAlreadySub, priceOfDesiredSub, start
   return upgradeCost.toFixed(0);
   }
 
-  const currentDateUnixx = Math.floor(DateTime.now().toSeconds()); 
+  const currentDateUnix = Math.floor(
+    DateTime.now().setZone('Europe/Prague').toSeconds()
+  );
   let  priceToUpgradee 
   if(data.instantly){
-    priceToUpgradee = await calculateUpgradeCostt(priceValueOfAlreadySub?.value, pricevalueOfDesiredSub?.price?.value, UnixFromDate,UnixTotoDate, currentDateUnixx);
+    priceToUpgradee = await calculateUpgradeCostt(priceValueOfAlreadySub?.value, pricevalueOfDesiredSub?.price?.value, UnixFromDate,UnixTotoDate, currentDateUnix);
       if(priceToUpgradee < 15 ){
         priceToUpgradee = 15
       }
