@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import {loadStripe} from '@stripe/stripe-js/pure';
+loadStripe.setLoadParameters({advancedFraudSignals: false});
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '../components/CheckOutForm';
 
