@@ -4,9 +4,9 @@ import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 async function updatedPost(name, price, category, section, description, postId, location, phoneNumber) {
   if (!section) {
-      return { success: false, error: "Section is required" };
+      return { success: false, error: "Sekce nebyla vybrána" };
   }
-
+  
   try {
     const response = await fetch('/api/posts', {
         method: 'PUT',
