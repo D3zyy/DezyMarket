@@ -290,7 +290,7 @@ const Page = async ({ params }) => {
       <strong className="text-sm">Kategorie:</strong>
       <span className="ml-1">
         <Link href={`/category?categoryName=${postRecord?.category?.name}`}>
-          <span style={{ marginRight: "2px" }} dangerouslySetInnerHTML={{ __html: postRecord?.category?.logo }}></span>
+          <span style={{ marginRight: "5px" }} dangerouslySetInnerHTML={{ __html: postRecord?.category?.logo }}></span>
           <span className="link">{postRecord?.category?.name}</span>
         </Link>
       </span>
