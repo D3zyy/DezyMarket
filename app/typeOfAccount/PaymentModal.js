@@ -14,7 +14,7 @@ export function openPaymentModal(price) {
 
 // PaymentModal Component
 
-export function PaymentModal({ price, name, priceId }) {
+ function PaymentModal({ price, name, priceId }) {
     const options = {
         appearance: {
           theme: 'flat',
@@ -64,3 +64,5 @@ export function PaymentModal({ price, name, priceId }) {
     
     );
 }
+
+export default PaymentModal

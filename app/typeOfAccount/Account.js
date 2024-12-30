@@ -1,10 +1,16 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
-import { PaymentModal, openPaymentModal } from './modalForPayment';
+import dynamic from 'next/dynamic';
+import { openPaymentModal } from './PaymentModal';
 import { SubscriptionInfo } from '../components/SubscriptionInfo';
 import {UpgradeModalSubscription, openUpgradeModalSubscriptionModal} from './UpgradeModalSubscription'
 
+
+const PaymentModal = dynamic(
+  () => import("@/app/typeOfAccount/PaymentModal"),
+  {ssr:false  }
+);
 
 
 
@@ -12,12 +18,30 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
 
  
   const [loading, setLoading] = useState(false);
-
+  const [isPaymentModalVisible,setIsPaymentModalVisible] = useState(false)
   const isActive = hasThisType === name;
   const isZakladni = name === 'Základní';
   const canUpgrade = hasThisType === 'Šikula' && name === 'Profík';
   // Determine if the button should be disabled
   const shouldDisable = hasThisType && (isZakladni || hasThisType !== 'Základní');
+
+  function importPaymentModalDynamically (price){
+    try {
+      setIsPaymentModalVisible(true);
+      if (!isPaymentModalVisible) {
+        console.log("Čekám ")
+        setTimeout(() => {
+            openPaymentModal(price);
+        }, 1000);
+        console.log("Otevírám ")
+      } else {
+  
+        openPaymentModal(price);
+      }
+    } catch (error) {
+      console.log("Chyba otevírání payment modalu")
+    }
+  }
 
   // Determine if the "Zrušit předplatné" link should be shown
   const showCancelLink = isActive && !isZakladni;
@@ -146,7 +170,8 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
       );
     })}
   </ul>
-  <PaymentModal price={price} name={name} priceId={priceId} />
+  
+  {isPaymentModalVisible && <PaymentModal price={price} name={name} priceId={priceId} />} 
   <button
     onClick={() => {
       if(canUpgrade){
@@ -154,7 +179,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
       }
       if (price > 15 && !shouldDisable) {
        
-          openPaymentModal(price); 
+        importPaymentModalDynamically(price); 
         
        
       } else if(!shouldDisable){

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
-import { PaymentModal, openPaymentModal } from '../typeOfAccount/modalForPayment';
+import { PaymentModal, openPaymentModal } from '../typeOfAccount/PaymentModal';
 import { SubscriptionInfo } from '../components/SubscriptionInfo';
 
 
