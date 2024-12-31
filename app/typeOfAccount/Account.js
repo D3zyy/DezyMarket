@@ -20,7 +20,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
   const [loading, setLoading] = useState(false);
   const [isPaymentModalVisible,setIsPaymentModalVisible] = useState(false)
   const isActive = hasThisType === name;
-  const isZakladni = name === 'Základní';
+  const isZakladni = namePriority === 1;
  let  canUpgrade = (hasThisTypePriority < namePriority ) && hasThisTypePriority != 1
   console.log("To co má priorita:",hasThisTypePriority)
   console.log("Tohohle priorita:",namePriority)
