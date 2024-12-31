@@ -1,17 +1,41 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import {EditSubscriptionModal, openEditSubscriptionModal} from './modals/EditSubscriptionModal';
+import { openEditSubscriptionModal} from './modals/EditSubscriptionModal';
+import dynamic from 'next/dynamic';
 
 export function SubscriptionInfo() {
     const [nextPayment, setNextPayment] = useState(null);
     const [scheduledToCancel, setScheduledToCancel] = useState(false);
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState(false);
+    const [isSubInfoModalVisible, setIsSubInfoModalVisible] = useState(false);
+const EditSubscriptionModal = dynamic(
+  () => import("@/app/components/modals/EditSubscriptionModal"),
+  {ssr:false  }
+);
 
 
+  function importSubInfoModalDynamically (){
+    try {
+      setIsSubInfoModalVisible(true);
+      if (!isSubInfoModalVisible) {
+        console.log("Čekám ")
+        setTimeout(() => {
+          openEditSubscriptionModal();
+        }, 1000);
+        console.log("Otevírám ")
+      } else {
+  
+        openEditSubscriptionModal();
+      }
+    } catch (error) {
+      console.log("Chyba otevírání payment modalu")
+    }
+  }
 
     useEffect(() => {
+    
         async function fetchSubscriptionInfo() {
           setLoading(true);
           try {
@@ -50,7 +74,8 @@ export function SubscriptionInfo() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                 </svg>) : "" }
            
-        {formattedDate ? <EditSubscriptionModal cancel={scheduledToCancel} date={formattedDate} name={name}/>  : ""}   
+                {formattedDate &&isSubInfoModalVisible && <EditSubscriptionModal cancel={scheduledToCancel} date={formattedDate} name={name} />} 
+        
                 
                 <span>{
                         formattedDate ? (
@@ -77,10 +102,11 @@ export function SubscriptionInfo() {
               
                 ) : ""}
                 <button
-                        onClick={openEditSubscriptionModal}
-                        onTouchStart={openEditSubscriptionModal}
+                        onClick={importSubInfoModalDynamically}
+                        onTouchStart={importSubInfoModalDynamically}
                         className={`underline ${scheduledToCancel ? 'text-green-500' : 'text-gray-400'}`}
                         >
+                         
                         {formattedDate ? (scheduledToCancel ? 'Obnovit předplatné' : 'Zrušit předplatné') : ""}
 
                  </button>

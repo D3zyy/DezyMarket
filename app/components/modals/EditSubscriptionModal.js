@@ -50,7 +50,7 @@ export function closeEditSubscriptionModal() {
   document.getElementById('edit_modal').close();
 }
 
-export const EditSubscriptionModal = ({ cancel, date, name }) => {
+ const EditSubscriptionModal = ({ cancel, date, name }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false); // State for loading indicator
 
@@ -171,3 +171,5 @@ export const EditSubscriptionModal = ({ cancel, date, name }) => {
     </dialog>
   );
 };
+
+export default EditSubscriptionModal
