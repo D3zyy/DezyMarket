@@ -18,10 +18,8 @@ const Page = async () => {
             }
     
              accType = await getUserAccountTypeOnStripe(session.email);
-             if(accType?.length == 1){
-                accType = accType[0]
-              } 
-            console.log("Na addpost:",accType)
+            accType = accType.name
+           
         }catch(error){
             throw new Error('Session nebo získaní typu účtu error:',error);
         }

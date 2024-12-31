@@ -214,7 +214,7 @@ const userAccountTypes = await prisma.users.findUnique({
       // Seřaďte účty podle priority sestupně
       const sortedAccounts = userAccountTypes.accounts.sort((a, b) => b.accountType.priority - a.accountType.priority);
      
-      return sortedAccounts[0].accountType.name;  // Vraťte název účtu s nejvyšší prioritou
+      return sortedAccounts[0].accountType;  // Vraťte název účtu s nejvyšší prioritou
     } else {
       return null; // Žádný odpovídající účet nenalezen
     }

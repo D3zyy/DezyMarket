@@ -14,14 +14,17 @@ const PaymentModal = dynamic(
 
 
 
-export function Account({ name,emoji, price, priceId, benefits, hasThisType }) {
+export function Account({ name,emoji, price, priceId, benefits, hasThisType, hasThisTypePriority, namePriority}) {
 
  
   const [loading, setLoading] = useState(false);
   const [isPaymentModalVisible,setIsPaymentModalVisible] = useState(false)
   const isActive = hasThisType === name;
   const isZakladni = name === 'Základní';
-  const canUpgrade = hasThisType === 'Šikula' && name === 'Profík';
+  let canUpgrade = hasThisType === 'Šikula' && name === 'Profík';
+  canUpgrade = hasThisTypePriority < namePriority
+  console.log("To co má priorita:",hasThisTypePriority)
+  console.log("Tohohle priorita:",namePriority)
   // Determine if the button should be disabled
   const shouldDisable = hasThisType && (isZakladni || hasThisType !== 'Základní');
 

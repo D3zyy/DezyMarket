@@ -20,16 +20,13 @@ const Page = async ({ searchParams }) => {
   let accTypeOfUser = await getUserAccountTypeOnStripe(session.email);
   let acctypes = await getTypeOfAccountDetails();
 
-  
+  console.log(accTypeOfUser)
   if (typeof acctypes === "string") {
     acctypes = JSON.parse(acctypes);
   }
   const sortedAcctypes = acctypes?.slice().sort((a, b) => b.priority - a.priority);
 
-  
-  if(accTypeOfUser?.length == 1){
-    accTypeOfUser = accTypeOfUser[0]
-  } 
+
 
   if (!session.isLoggedIn) redirect('/');
     
@@ -201,12 +198,14 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
   
   <Account
     key={accType.id}
-    hasThisType={accTypeOfUser}
+    hasThisType={accTypeOfUser.name}
     emoji={accType.emoji}
     name={accType.name}
     price={accType.activePrice || 0}
     priceId={accType.accPrices[0]?.priceCode || ''}
     benefits={accType.perks.map(perk => [perk.name, perk.valid])}
+    hasThisTypePriority={accTypeOfUser.priority}
+    namePriority={accType.priority}
     className={accType.priority === 1 ? 'order-last md:order-none' : ''}
   />
 ))}
