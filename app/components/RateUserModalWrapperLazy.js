@@ -20,7 +20,7 @@ export const RatePostModalWrapperLazy = ({ userToRate,nameOfUser }) => {
        
         setTimeout(() => {
             openRateUserModal();
-        }, 1000);
+        }, 500);
       } else {
 
         openRateUserModal();

@@ -40,7 +40,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
         console.log("Čekám ")
         setTimeout(() => {
             openPaymentModal(price);
-        }, 1000);
+        }, 500);
         console.log("Otevírám ")
       } else {
   
@@ -57,7 +57,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
         console.log("Čekám ")
         setTimeout(() => {
             openUpgradeModalSubscriptionModal();
-        }, 1000);
+        }, 500);
         console.log("Otevírám ")
       } else {
   

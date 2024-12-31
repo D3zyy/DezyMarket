@@ -94,7 +94,7 @@ export function closeRateUserModal() {
             } catch (error) {
                 console.error('Error checking rate status:', error);
             } finally {
-                setTimeout(() => setLoadingStatus(false), 1000);
+                setTimeout(() => setLoadingStatus(false), 500);
             }
         };
     

@@ -20,7 +20,7 @@ export const handleOpenModalEditLazy = (
     if (!isModalVisible) {
       setTimeout(() => {
         openEditPostModal();
-      }, 1000);
+      }, 500);
     } else {
       openEditPostModal();
     }

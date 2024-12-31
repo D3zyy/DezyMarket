@@ -20,7 +20,7 @@ export const ReportsPostModalWrapperLazy = ({ postId }) => {
        
         setTimeout(() => {
           openReportsPostModal();
-        }, 1000);
+        }, 500);
       } else {
 
         openReportsPostModal();

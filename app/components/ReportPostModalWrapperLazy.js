@@ -24,7 +24,7 @@ export const handleOpenModalReportLazy = (
           setHasError(true);
           console.error("Chyba při otevírání modalu v timeoutu:", error);
         }
-      }, 1000);
+      }, 500);
     } else {
       openReportPostModal();
     }

@@ -23,7 +23,7 @@ const EditSubscriptionModal = dynamic(
         console.log("Čekám ")
         setTimeout(() => {
           openEditSubscriptionModal();
-        }, 1000);
+        }, 500);
         console.log("Otevírám ")
       } else {
   
