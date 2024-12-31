@@ -4,11 +4,17 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { openPaymentModal } from './PaymentModal';
 import { SubscriptionInfo } from '../components/SubscriptionInfo';
-import {UpgradeModalSubscription, openUpgradeModalSubscriptionModal} from './UpgradeModalSubscription'
+
+import { openUpgradeModalSubscriptionModal} from './UpgradeModalSubscription'
 
 
 const PaymentModal = dynamic(
   () => import("@/app/typeOfAccount/PaymentModal"),
+  {ssr:false  }
+);
+
+const UpgradeModalSubscription = dynamic(
+  () => import("@/app/typeOfAccount/UpgradeModalSubscription"),
   {ssr:false  }
 );
 
@@ -19,6 +25,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
  
   const [loading, setLoading] = useState(false);
   const [isPaymentModalVisible,setIsPaymentModalVisible] = useState(false)
+  const [isUpgradeModalVisible,setIsUpgradeModalVisible] = useState(false)
   const isActive = hasThisType === name;
   const isZakladni = namePriority === 1;
  let  canUpgrade = (hasThisTypePriority < namePriority ) && hasThisTypePriority != 1
@@ -41,6 +48,23 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
       }
     } catch (error) {
       console.log("Chyba otevírání payment modalu")
+    }
+  }
+  function importUpgradeModalDynamically (){
+    try {
+      setIsUpgradeModalVisible(true);
+      if (!isUpgradeModalVisible) {
+        console.log("Čekám ")
+        setTimeout(() => {
+            openUpgradeModalSubscriptionModal();
+        }, 1000);
+        console.log("Otevírám ")
+      } else {
+  
+        openUpgradeModalSubscriptionModal();
+      }
+    } catch (error) {
+      console.log("Chyba otevírání upgrade modalu")
     }
   }
 
@@ -99,7 +123,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
   } rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700`}
 >
 
-  {canUpgrade ?  <UpgradeModalSubscription nameToUpgrade={name}  fromName={hasThisType}/> : ""}
+  {canUpgrade  && isUpgradeModalVisible?  <UpgradeModalSubscription nameToUpgrade={name}  fromName={hasThisType}/> : ""}
   <style jsx>{`
     @keyframes shadow {
       0% {
@@ -176,7 +200,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
   <button
     onClick={() => {
       if(canUpgrade){
-        openUpgradeModalSubscriptionModal()
+        importUpgradeModalDynamically()
       }
       if (price > 15 && !shouldDisable) {
        

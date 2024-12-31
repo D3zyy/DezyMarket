@@ -37,7 +37,7 @@ export function openUpgradeModalSubscriptionModal() {
     }
 }
 
-export function UpgradeModalSubscription({ nameToUpgrade, fromName }) {
+ function UpgradeModalSubscription({ nameToUpgrade, fromName }) {
     const [nextPayment, setNextPayment] = useState(null);
     const [fromNameUp, setfromNameUp] = useState(fromName);
     const [success, setSuccess] = useState(false);
@@ -208,3 +208,5 @@ export function UpgradeModalSubscription({ nameToUpgrade, fromName }) {
         </div>
     );
 }
+
+export default UpgradeModalSubscription
