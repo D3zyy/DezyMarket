@@ -43,7 +43,16 @@ async function reactivateSubscription(name) {
 }
 
 export function openEditSubscriptionModal() {
-  document.getElementById('edit_modal').showModal();
+  try {
+    const modal =   document.getElementById('edit_modal')
+    if (modal) {
+      modal.showModal();
+    } 
+  } catch (error) {
+    console.error("Chyba otevírání modalu:", error);
+
+  }
+
 }
 
 export function closeEditSubscriptionModal() {
