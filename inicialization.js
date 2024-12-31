@@ -39,6 +39,7 @@ async function main() {
 
   // 4) Inicializace typů účtů
   console.log("Inicializace typů účtů...");
+  // vždy u předplatného zdarma u toho base předplatného musí být priority 1
   const accountTypes = [
     { 
       name: 'Základní', 

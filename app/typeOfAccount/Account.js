@@ -22,10 +22,9 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
   const isActive = hasThisType === name;
   const isZakladni = namePriority === 1;
  let  canUpgrade = (hasThisTypePriority < namePriority ) && hasThisTypePriority != 1
-  console.log("To co má priorita:",hasThisTypePriority)
-  console.log("Tohohle priorita:",namePriority)
+
   // Determine if the button should be disabled
-  const shouldDisable = hasThisType && (isZakladni || hasThisType !== 'Základní');
+  const shouldDisable = hasThisType && (isZakladni ||  hasThisTypePriority != 1);
 
   function importPaymentModalDynamically (price){
     try {
@@ -121,7 +120,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
 
 <h5 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-base-content dark:text-base-content">
 <span style={{ marginRight: name ? "15px" : "" }}>
-  {name === "zakladni" ? "Základní" : name}
+  {name}
 </span>
   <span dangerouslySetInnerHTML={{ __html: emoji }} />
 </h5>
