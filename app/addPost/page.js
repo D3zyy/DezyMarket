@@ -11,22 +11,21 @@ import Link from 'next/link';
 const Page = async () => {
     let session
     let accType
-        try{
+ 
             session = await getSession();
             if (!session) {
                 throw new Error('Session nebyla nalezena');
             }
     
              accType = await getUserAccountTypeOnStripe(session.email);
-            accType = accType.name
+             
+             accType = accType?.name
            
-        }catch(error){
-            throw new Error('Session nebo získaní typu účtu error:',error);
-        }
+       
 
         // Perform redirect if no account type is found and the user is logged in
         if (!accType && session.isLoggedIn) {
-           await redirect('/typeOfAccount'); // Call redirect without await
+            redirect('/typeOfAccount'); // Call redirect without await
         }
         try {
         // Fetching Categories and Sections with error handling
