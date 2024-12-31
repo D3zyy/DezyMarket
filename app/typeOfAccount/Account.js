@@ -22,7 +22,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
   const isActive = hasThisType === name;
   const isZakladni = name === 'Základní';
   let canUpgrade = hasThisType === 'Šikula' && name === 'Profík';
-  canUpgrade = hasThisTypePriority < namePriority
+  canUpgrade = (hasThisTypePriority < namePriority ) && hasThisTypePriority != 1
   console.log("To co má priorita:",hasThisTypePriority)
   console.log("Tohohle priorita:",namePriority)
   // Determine if the button should be disabled
