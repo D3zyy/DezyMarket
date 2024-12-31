@@ -56,9 +56,7 @@ const Page = async ({ params }) => {
       );
     }
     accType = await getUserAccountTypeOnStripe(postRecord.user.email);
-    if(accType?.length == 1){
-      accType = accType[0]
-    } 
+    accType = accType.name
     //console.log("5. jdeme pro typ účtu na stripe ")
    // console.log("6. výsledek callu na typ učtu na stripe:",accType)
     description = postRecord?.description;

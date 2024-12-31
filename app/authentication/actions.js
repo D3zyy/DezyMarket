@@ -112,9 +112,7 @@ export const getSession = async () => {
       }
 
        accountTypeName = await getUserAccountTypeOnStripe(userToCreate.email)
-       if(accountTypeName?.length == 1){
-        accountTypeName = accountTypeName[0]
-      } 
+       accountTypeName = accountTypeName.name
       
       
       
