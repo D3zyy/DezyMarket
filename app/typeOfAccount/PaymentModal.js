@@ -42,7 +42,7 @@ export function openPaymentModal(price) {
    
 
 
-    <CheckoutForm priceId={priceId} nameOfSub={name} />
+    <CheckoutForm priceId={priceId} nameOfSub={name} price={price} />
 </Elements>
 
                     ) : (
