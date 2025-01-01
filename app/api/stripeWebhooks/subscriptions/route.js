@@ -208,18 +208,19 @@ export async function POST(request) {
 const endOfSubscription = DateTime.now()
                     .setZone('Europe/Prague')
                     .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            
+                console.log("email uživatele kterému bylo zrušené předplatné:",paymentIntent.customer_email)
                 // Get the user based on their email
-                const user = await prisma.Users.findFirst({
+                const user = await prisma.users.findFirst({
                     where: { email: paymentIntent.customer_email },
                 });
-            
+                console.log("Uživatel kterému bylo zrušeno předplatné:",user)
                 // Find the AccountTypeId by its name
                 const accountType = await prisma.AccountType.findFirst({
                     where: { name: paymentIntent.metadata.name },
                 });
-                
+                console.log("Uživatel kterému bylo zrušeno předplatné typ účtu:",accountType)
                 if (accountType) {
+                    console.log("Učet nalezen")
                     // Update the AccountTypeUsers record using AND for the conditions
                     const updatedAccount = await prisma.AccountTypeUsers.updateMany({
                         where: {
@@ -235,6 +236,7 @@ const endOfSubscription = DateTime.now()
                             active: false,
                         },
                     });
+                    console.log("Učet aktualizován")
                 }
             }
 

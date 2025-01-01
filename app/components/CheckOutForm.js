@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 export default function CheckoutForm({priceId,nameOfSub}) {
   const stripe = useStripe();
- 
+  const router = useRouter()
   const elements = useElements();
 
   const [errorMessage, setErrorMessage] = useState();
@@ -27,7 +28,7 @@ export default function CheckoutForm({priceId,nameOfSub}) {
       // Trigger form validation and wallet collection
       const { error: submitError } = await elements.submit();
       if (submitError) {
-        handleError(submitError);
+      
         return;
       }
   
@@ -43,7 +44,7 @@ export default function CheckoutForm({priceId,nameOfSub}) {
       });
       
       if (!res.ok) {
-        throw new Error('Nastala chyba při vytváření předplatného'); // Handle server error
+        setErrorMessage('Nastala chyba při platbě. Zkuste to znovu');
       }
   
       const { type, clientSecret } = await res.json();
@@ -76,24 +77,18 @@ export default function CheckoutForm({priceId,nameOfSub}) {
       
   
       if (error) {
-        if (returnUrl.includes('?')) {
-          returnUrl += '&redirect_status=failed';
-        } else {
-          returnUrl += '?redirect_status=failed';
-        }
-        window.location.href = returnUrl
-        handleError(error);
+        router.push("/typeOfAccount?redirect_status=failed");
+        router.refresh(); 
+        setErrorMessage('Nastala chyba při platbě. Zkuste to znovu');
       } else {
-        if (returnUrl.includes('?')) {
-          returnUrl += '&redirect_status=succeeded';
-        } else {
-          returnUrl += '?redirect_status=succeeded';
-        }
+       
         await delay(5000)
-       window.location.href = returnUrl
+        router.push("/typeOfAccount?redirect_status=succeeded");
+        router.refresh();
+       
       }
     } catch (error) {
-      handleError(error);
+      setErrorMessage('Nastala chyba při platbě. Zkuste to znovu');
     } finally {
       setLoading(false); // Ensure loading state is reset
     }
@@ -107,6 +102,14 @@ export default function CheckoutForm({priceId,nameOfSub}) {
     }
   return (
     <form onSubmit={handleSubmit}>
+       <div className="flex items-start gap-3 py-3  text-red-600   font-medium mt-4 transition-transform transform hover:scale-105">
+       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-red-500 ">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+</svg>
+
+    <span>{errorMessage}</span>
+  </div>
+  
      <PaymentElement
   options={{
     fields: {
