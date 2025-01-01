@@ -324,12 +324,12 @@ useEffect(() => {
         className="btn btn-link"
         style={{padding: "0px", color: "#a063ff"}}
         onClick={ () => {
-          router.push("/");
+        
           document.getElementById('info_modal').close(); 
           openRegisterModal()
         }}
         onTouchStart={() => {
-          router.push("/");
+          
           document.getElementById('info_modal').close(); 
           openRegisterModal()
         }}
