@@ -63,20 +63,36 @@ export function closeEditPostModal() {
 }
 
 async function getCategories() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  console.log("odpoved na ziskani kategorii ze server :",res)
-  return res.json();
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    console.log("Odpověď na získání kategorií ze serveru:", res);
+    if (!res.ok) {
+      throw new Error('Chyba při načítání kategorií');
+    }
+    return res.json();
+  } catch (error) {
+    console.error('Došlo k chybě při získávání kategorií:', error);
+    return [];  // nebo return nějakou výchozí hodnotu, např. []
+  }
 }
 
 async function getSections() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sections`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  return res.json();
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/sections`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!res.ok) {
+      throw new Error('Chyba při načítání sekcí');
+    }
+    return res.json();
+  } catch (error) {
+    console.error('Došlo k chybě při získávání sekcí:', error);
+    return [];  // nebo return nějakou výchozí hodnotu, např. []
+  }
 }
 
 const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,posttId,posttName,posttPrice,postPhoneNumber,postLocation,postCategoryId,postSectionId, descriptionPost }) => {

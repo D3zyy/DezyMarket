@@ -177,8 +177,8 @@ const ImageGallery = ({ allImages }) => {
             {allImages.slice(1, 3).map((thumbnail, index) => (
               <div key={index} className="relative w-full h-20">
                 <Image
-                width={50}
-                height={50}
+                width={65}
+                height={65}
                   decoding="async"
                   src={thumbnail.url}
                   alt={`Obrázek ${index + 1}`}
@@ -196,8 +196,8 @@ const ImageGallery = ({ allImages }) => {
                   onClick={() => setIsGalleryOpen(true)}
                 >
                   <Image
-                      width={40}
-                      height={40}
+                      width={65}
+                      height={65}
                     loading="lazy"
                     decoding="async"
                     src={allImages[3].url} 
