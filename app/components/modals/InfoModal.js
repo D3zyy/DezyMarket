@@ -282,14 +282,15 @@ useEffect(() => {
                 onClick={() => {
                     document.getElementById('info_modal').close(); 
                     if(backToHome) {
-                      router.push("/");
+                      window.history.back()
+           
                     }
                    
                 }}
                 onTouchStart={() => {
                   document.getElementById('info_modal').close(); 
                   if(backToHome) {
-                    router.push("/");
+                    window.history.back()
                   }
               }}
                 >
