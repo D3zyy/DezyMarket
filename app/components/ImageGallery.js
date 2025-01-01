@@ -115,7 +115,7 @@ const ImageGallery = ({ allImages }) => {
       ) : (
         <>
           {/* Main Image Display */}
-          <div className="relative bg-gray-100 max-h-[600px] flex items-center justify-center rounded-lg overflow-auto">
+          <div className="relative scrollbar-hidden bg-gray-100 max-h-[600px] flex items-center justify-center rounded-lg overflow-auto">
            
 
         
@@ -126,7 +126,7 @@ const ImageGallery = ({ allImages }) => {
   key={mainImageIndex}
   src={allImages[mainImageIndex].url}
   alt="Main image"
-  className="w-full h-full"
+  className="w-full h-full "
   initial={{ opacity: 0.8, filter: "blur(50px)" }}
   animate={{ opacity: 1, filter: "blur(0px)" }}
   exit={{ opacity: 0.9, filter: "blur(20px)" }}

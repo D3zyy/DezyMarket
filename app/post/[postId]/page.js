@@ -74,7 +74,7 @@ const Page = async ({ params }) => {
   return (
   <div>
     
-    <div className="md:mt-0 mt-4 pr-4 pl-4 lg:pr-8 lg:pl-8 md:pl-4  md:pr-4 breadcrumbs text-sm">
+    <div className="md:mt-0 mt-4 pr-4 pl-4 lg:pr-8 lg:pl-8 md:pl-4  md:pr-4 breadcrumbs text-sm scrollbar-hidden">
   <ul>
     <li>
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4  ">
