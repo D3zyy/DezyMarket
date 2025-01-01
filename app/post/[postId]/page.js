@@ -179,11 +179,10 @@ const Page = async ({ params }) => {
   {postRecord?.name}
 </h1>
 
-            <div className="btn inline-block w-32 mb-5" style={{ display: 'flex', alignItems: 'center' }}>
-           <span className="text-3xl">&#128064;</span>
-  <span>200x</span>
+<div className="btn inline-block w-32 mb-5 " style={{ display: 'flex', alignItems: 'center' }}>
+  <span className="text-3xl" style={{ marginTop: '-4px' }}>&#128064;</span>
+  <span className="font-bold">200x</span>
 </div>
-
  
   
 
