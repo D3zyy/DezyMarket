@@ -44,7 +44,7 @@ export default function CheckoutForm({priceId,nameOfSub,price}) {
       });
       
       if (!res.ok) {
-        setErrorMessage('Nastala chyba při platbě. Zkuste to znovu');
+        setErrorMessage('Platba se nezdařila. Zkuste to znovu');
       }
   
       const { type, clientSecret } = await res.json();
@@ -77,10 +77,8 @@ export default function CheckoutForm({priceId,nameOfSub,price}) {
       
   
       if (error) {
-        router.push("/typeOfAccount?redirect_status=failed");
-    
-        document.getElementById(`payment_modal_${price}`).close()
-        setErrorMessage('Nastala chyba při platbě. Zkuste to znovu');
+        
+        setErrorMessage('Platba se nezdařila. Zkuste to znovu');
       } else {
        
         await delay(5000)
@@ -90,7 +88,7 @@ export default function CheckoutForm({priceId,nameOfSub,price}) {
        
       }
     } catch (error) {
-      setErrorMessage('Nastala chyba při platbě. Zkuste to znovu');
+      setErrorMessage('Platba se nezdařila. Zkuste to znovu');
     } finally {
       setLoading(false); // Ensure loading state is reset
     }

@@ -208,10 +208,11 @@ export async function POST(request) {
 const endOfSubscription = DateTime.now()
                     .setZone('Europe/Prague')
                     .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                console.log("email uživatele kterému bylo zrušené předplatné:",paymentIntent.customer_email)
+                const customer = await stripe.customers.retrieve(paymentIntent.customer);
+                let customerEmail = customer.email
                 // Get the user based on their email
                 const user = await prisma.users.findFirst({
-                    where: { email: paymentIntent.customer_email },
+                    where: { email: customerEmail },
                 });
                 console.log("Uživatel kterému bylo zrušeno předplatné:",user)
                 // Find the AccountTypeId by its name
