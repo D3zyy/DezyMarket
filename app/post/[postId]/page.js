@@ -309,7 +309,7 @@ const Page = async ({ params }) => {
           {/* Second part of the right section - Description */}
           <div className="mt-5 md:mt-0 lg:mt-0 relative ">{/* Add overflow-hidden to the parent */}
   <strong className="text-xl">Popis</strong>
-  <div className="mt-2 overflow-y-auto max-h-[380px] min-w-[320px]  lg:max-w-[648px] md:max-w-[900px]"> {/* Wrap in a div for better overflow handling */}
+  <div className="mt-2  scrollbar-hidden overflow-y-auto max-h-[380px] min-w-[320px]  lg:max-w-[500px] md:max-w-[900px]"> {/* Wrap in a div for better overflow handling */}
     <p style={{ whiteSpace: 'pre-line' }} className="  text-base  mb-4 break-words">
       {description}
     </p>
