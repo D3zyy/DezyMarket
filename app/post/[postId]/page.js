@@ -180,7 +180,7 @@ const Page = async ({ params }) => {
 </h1>
 
 <div className="btn inline-block w-32 mb-5 " style={{ display: 'flex', alignItems: 'center' }}>
-  <span className="text-3xl" style={{ marginTop: '-7px' }}>&#128064;</span>
+  <span className="text-3xl" style={{ marginTop: '-5px' }}>&#128064;</span>
   <span className="font-bold">200x</span>
 </div>
  
