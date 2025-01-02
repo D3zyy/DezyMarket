@@ -22,7 +22,7 @@ const AddUI = ({ accType , categories, sections}) => {
 
   const fieldTranslation = {
     name: 'Název',
-    description: 'Popisek',
+    description: 'Popis',
     location: 'Místo',
     price: 'Cena',
     phoneNumber: 'Telefoní číslo',
