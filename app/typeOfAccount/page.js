@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import Account from './Account'; // Import Account properly
 import Link from 'next/link';
 import {  getUserAccountTypeOnStripe,getTypeOfAccountDetails } from './Methods';
-
+import { prisma } from '../database/db';
 
 const Page = async ({ searchParams }) => {
   const session = await getSession();
@@ -17,12 +17,14 @@ const Page = async ({ searchParams }) => {
   const unknownMessage = redirectStatus && redirectStatus !== 'succeeded' && redirectStatus !== 'failed' && redirectStatus !=="upgraded"; // Check for unknown status
   const noStatusMessage = !redirectStatus; // Check if no status is provided
 
-  let [accTypeOfUser, acctypes] = await Promise.all([
+  let [accTypeOfUser, acctypes,typeOfTops] = await Promise.all([
     getUserAccountTypeOnStripe(session.email),
-    getTypeOfAccountDetails()
+    getTypeOfAccountDetails(),
+     prisma.Tops.findMany({}),
   ]);
-
+  
   console.log(accTypeOfUser)
+  console.log("Tops:",typeOfTops)
   if (typeof acctypes === "string") {
     acctypes = JSON.parse(acctypes);
   }
@@ -193,6 +195,36 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
           Zvolte typ účtu, který vám sedí
         </h3>
       ) : null}
+
+
+     <h3 className='mt-5 mb-2'
+  style={{
+    textAlign: "center",
+    fontSize: "large",
+  }}
+>
+Topování
+  </h3>
+  <div className='text-center'> 
+ 
+
+  <ul className="steps steps-vertical lg:steps-horizontal">
+  {typeOfTops.map(top => (
+    <li
+      key={top.id}
+      className={`step after:!hidden ${top.numberOfMonthsToValid <= accTypeOfUser.monthIn ? 'step-primary' : ''}`}
+    >
+      {top.numberOfMonthsToValid} měsíc{top.numberOfMonthsToValid > 1 ? "e" : ""}
+      <div className={`z-[1] ${top.numberOfMonthsToValid <= accTypeOfUser.monthIn ? 'bg-primary' : ''} font-semibold col-start-1 row-start-1 grid p-2 place-content-center rounded-full bg-base-300 items-center`}>
+  <span>{top.name} {top.emoji && <span dangerouslySetInnerHTML={{ __html: top.emoji }} />}</span>
+</div>
+    </li>
+  ))}
+</ul>
+
+
+  </div>
+
 <div style={{marginBottom:"40px"}} className="flex flex-col md:flex-row items-center justify-center gap-2 p-2">
 
 

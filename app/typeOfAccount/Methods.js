@@ -229,3 +229,55 @@ const userAccountTypes = await prisma.users.findUnique({
     await prisma.$disconnect(); // Uzavřete připojení k databázi
   }
 }
+
+
+
+
+
+export async function getTypeOfTops() {
+  try {
+    // Získání AccountType s připojenými perkami a cenami
+    const accountTypes = await prisma.Tops.findMany({});
+
+    // Mapování výsledků pro každého accountType
+    const result = accountTypes.map(accountType => {
+      // Najdi aktivní cenu
+      const activePrice = accountType.accPrices.find(accPrice => {
+        // Pokud `activeTo` je null, znamená, že cena je stále aktivní.
+        const activeFrom = DateTime.fromJSDate(accPrice.activeFrom);
+        const activeTo = accPrice.activeTo ? DateTime.fromJSDate(accPrice.activeTo) : null;
+
+        const now = DateTime.fromISO(DateAndTimeNowPrague);
+
+        // Cena je aktivní, pokud je aktivní od `activeFrom` a aktuální datum je mezi activeFrom a activeTo (nebo `activeTo` je null)
+        return activeFrom <= now && (activeTo === null || activeTo >= now);
+      });
+
+      return {
+        id: accountType.id,
+        name: accountType.name,
+        emoji: accountType.emoji,
+        priority: accountType.priority,
+        perks: accountType.perks.map(perk => ({
+          id: perk.id,
+          name: perk.name,
+          valid: perk.valid,
+        })),
+        accPrices: accountType.accPrices.map(accPrice => ({
+          priceId: accPrice.priceId,
+          priceValue: accPrice.price.value,
+          priceCode: accPrice.price.priceCode,
+          activeFrom: accPrice.activeFrom,
+          activeTo: accPrice.activeTo,
+        })),
+        activePrice: activePrice ? activePrice.price.value : null, // Pokud je cena aktivní
+      };
+    });
+
+    // Vráti výsledek jako JSON
+    return JSON.stringify(result, null, 2);
+  } catch (error) {
+    console.error('Error retrieving account types with active prices and perks:', error);
+    return null;
+  }
+}
