@@ -208,7 +208,7 @@ Topování
 
 </h3>
 
-<h3 className='font-normal flex justify-center items-center'>
+<h3 className='font-normal  mb-3 flex justify-center items-center'>
   {sortedAcctypes?.map((accType, index) => (
     accType?.name === accTypeOfUser?.name && accType.priority !== 0 ? (
       <React.Fragment key={accType.name + accType.priority}>
@@ -224,7 +224,7 @@ Topování
 
 
 
-  <ul className="steps flex flex-wrap lg:flex-row justify-center ">
+  <ul className="steps mb-3 flex flex-wrap lg:flex-row justify-center ">
   {typeOfTops.map((top) => {
     const isPrimary = accTypeOfUser.monthIn >= top.numberOfMonthsToValid;
     const borderColor = isPrimary ? '#b0b0b0' : '#e0e0e0'; // Světle šedý okraj pro odemčené, šedý pro zamčené
