@@ -184,43 +184,43 @@ for (const postType of postTypes) {
   const Tops = [
     { 
       name: 'Top', 
-      emoji: '',
+      emoji: '&#128171;',
       color: '#cccccc', // Neutrální barva pro základní top
       numberOfMonthsToValid: 0,
     },
     { 
       name: 'Top+', 
-      emoji: '',
+      emoji: '&#128227;',
       color: '#b3b3b3', // Světlejší šedá pro Top+
       numberOfMonthsToValid: 1,
     },
     { 
-      name: 'Spicy Top', 
-      emoji: '&#x1f336;', // Chilli emoji
+      name: 'Premium Top', 
+      emoji: '&#128142;', // Chilli emoji
       color: '#e01930', // Červená pro spicy
       numberOfMonthsToValid: 2,
     },
     { 
-      name: 'Top Deluxe', 
-      emoji: '&#x1f4b0;', // Symbol peněz pro deluxe
+      name: 'Spicy Top', 
+      emoji: '&#x1f336;;', // Symbol peněz pro deluxe
       color: '#f2c14e', // Zlatá/žlutá pro luxus
       numberOfMonthsToValid: 4,
     },
     { 
-      name: 'Top Supreme', 
-      emoji: '&#x1f31f;', // Hvězda pro Supreme
+      name: 'Ultimate Top', 
+      emoji: '&#128640;', // Hvězda pro Supreme
       color: '#ff8c00', // Oranžová pro "supreme"
       numberOfMonthsToValid: 6,
     },
     { 
-      name: 'Top Ultra', 
-      emoji: '&#x1f680;', // Raketa pro Ultra
+      name: 'Royal Top', 
+      emoji: '&#128640;', // Raketa pro Ultra
       color: '#00bfff', // Modrá pro ultramoderní vzhled
       numberOfMonthsToValid: 9,
     },
     { 
-      name: 'Top King', 
-      emoji: '&#x1f451;', // Koruna pro King
+      name: 'Legendary Top', 
+      emoji: '&#127752;', // Koruna pro King
       color: '#ffd700', // Zlatá pro "king"
       numberOfMonthsToValid: 12,
     }

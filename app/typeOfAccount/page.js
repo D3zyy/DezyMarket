@@ -197,30 +197,100 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
       ) : null}
 
 
-     <h3 className='mt-5 mb-2'
+     <h3 className='mt-5 mb-2 font-bold'
   style={{
     textAlign: "center",
     fontSize: "large",
   }}
 >
-Topování
+Topování<div className='font-normal'
+  dangerouslySetInnerHTML={{
+    __html: sortedAcctypes?.map(accType => `${accType.emoji}`).join('')
+  }}
+/>
   </h3>
+  
   <div className='text-center'> 
  
 
-  <ul className="steps steps-vertical lg:steps-horizontal">
-  {typeOfTops.map(top => (
-    <li
-      key={top.id}
-      className={`step after:!hidden ${top.numberOfMonthsToValid <= accTypeOfUser.monthIn ? 'step-primary' : ''}`}
-    >
-      {top.numberOfMonthsToValid} měsíc{top.numberOfMonthsToValid > 1 ? "e" : ""}
-      <div className={`z-[1] ${top.numberOfMonthsToValid <= accTypeOfUser.monthIn ? 'bg-primary' : ''} font-semibold col-start-1 row-start-1 grid p-2 place-content-center rounded-full bg-base-300 items-center`}>
-  <span>{top.name} {top.emoji && <span dangerouslySetInnerHTML={{ __html: top.emoji }} />}</span>
-</div>
-    </li>
-  ))}
+
+
+  <ul className="steps">
+  {typeOfTops.map((top) => {
+    const isPrimary = accTypeOfUser.monthIn >= top.numberOfMonthsToValid;
+    const borderColor = isPrimary ? '#b0b0b0' : '#e0e0e0'; // Světle šedý okraj pro odemčené, šedý pro zamčené
+    const backgroundColor = isPrimary ? '#f5f5f5' : '#fafafa'; // Světle šedé pozadí pro odemčené, jemně šedé pro zamčené
+    const textColor = isPrimary ? '#757575' : '#b0b0b0'; // Šedá barva pro text
+    const lockColor = isPrimary ? '#00d390' : '#b0b0b0'; // Zelený zámek pro odemčený, šedý pro zamčený
+
+    return (
+      <li
+        key={top.id}
+        style={{
+        
+          opacity: isPrimary ? 1 : 0.8, // Mírná průhlednost pro zamčené kroky
+        }}
+        className={`border-2 border-solid rounded-[12px] p-[6px_10px] inline-flex flex-col items-center justify-center m-[5px] w-[120px] opacity-100 
+        ${isPrimary ? 'bg-[#f5f5f5] text-[#757575]' : 'bg-[#fafafa] text-[#b0b0b0]'}
+        dark:border-[#2a2828] dark:bg-[#333333] dark:text-[#cccccc] dark:opacity-90`}
+      
+      >
+        {/* Obsah: emoji a text s měsíci */}
+        <div
+          dangerouslySetInnerHTML={{ __html: top.emoji }}
+          style={{
+            fontSize: '18px', // Menší velikost pro emoji
+            marginBottom: '5px',
+            filter: isPrimary ? 'none' : 'blur(1px)', // Mírný blur pro zamčené kroky
+          }}
+        />
+        <div
+          style={{
+            fontSize: '12px',
+            textAlign: 'center',
+            filter: isPrimary ? 'none' : 'blur(1px)',
+          }}
+        >
+          {top.name} <br />
+        </div>
+
+        {/* Zámeček na třetím řádku */}
+        <span
+          style={{
+            marginTop: '5px', // Mírný prostor mezi textem a zámkem
+            color: lockColor, // Zelený zámek pro odemčený, šedý pro zamčený
+            fontSize: '20px', // Změna velikosti zámku
+          }}
+        >
+          {isPrimary ? (
+            <></>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6 dark:text-[#f9f7f7] text-[#494949]"
+              style={{ width: '24px', height: '24px' }}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+              />
+            </svg>
+          )}
+        </span>
+        {top.numberOfMonthsToValid}. měsíc
+      </li>
+    );
+  })}
 </ul>
+
+
+
+
 
 
   </div>
