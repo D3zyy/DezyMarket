@@ -197,10 +197,11 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
       ) : null}
 
 
-     <h3 className='mt-5 mb-2 font-bold'
+     <h3 className='mt-5 mb-2 font-bold italic '
   style={{
     textAlign: "center",
     fontSize: "large",
+    
   }}
 >
 Topování
@@ -208,15 +209,31 @@ Topování
 
 </h3>
 
-<h3 className='font-normal  mb-3 flex justify-center items-center'>
-  {sortedAcctypes?.map((accType, index) => (
-    accType?.name === accTypeOfUser?.name && accType.priority !== 0 ? (
-      <React.Fragment key={accType.name + accType.priority}>
-        <span className='font-normal text-center mr-2' dangerouslySetInnerHTML={{ __html: accType.emoji }}></span>
-        {` ${accTypeOfUser.monthIn}. měsíc`}
-      </React.Fragment>
-    ) : null
-  ))}
+<h3 className='font-normal mb-3 flex justify-center items-center'>
+
+  {
+
+    // Zkontroluje, zda existuje účet, který splňuje podmínky
+    sortedAcctypes?.some(accType => accType?.name === accTypeOfUser?.name && accType.priority !== 1) ? (
+      sortedAcctypes?.map((accType) => (
+        accType?.name === accTypeOfUser?.name && accType.priority !== 0 ? (
+          <React.Fragment key={accType.name + accType.priority}>
+            <span className='font-normal text-center mr-2' dangerouslySetInnerHTML={{ __html: accType.emoji }}></span>
+            {` ${accTypeOfUser.monthIn}. měsíc`}
+          </React.Fragment>
+        ) : null
+      ))
+    ) : (
+      <>
+        <span className='mr-3'>Dostupné pro: </span>
+        {sortedAcctypes?.map((accType) => (
+          accType.priority !== 1 ? (
+            <span key={accType.name + accType.priority} className='font-normal text-center mr-2' dangerouslySetInnerHTML={{ __html: accType.emoji }}></span>
+          ) : null
+        ))}
+      </>
+    )
+  }
 </h3>
 
   <div className='text-center'> 
