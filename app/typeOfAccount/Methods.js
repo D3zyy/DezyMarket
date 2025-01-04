@@ -51,6 +51,7 @@ export async function getUserAccountTypeFromDb(email) {
       } else if (zakladniFound && namesToReturn.length > 1) {
           // Pokud existují dvě různá předplatná, zachováme je obě
           namesToReturn.push("Základní");
+          
       }
       
       console.log("Názvy k vrácení: ", namesToReturn);
@@ -196,8 +197,10 @@ const userAccountTypes = await prisma.users.findUnique({
       select: {
         fromDate: true,
         toDate: true,
+        monthIn: true,
         accountType: {
           select: {
+         
             priority: true,
             name: true, // Přístup k poli "name" v tabulce "accountType"
           },
@@ -213,7 +216,8 @@ const userAccountTypes = await prisma.users.findUnique({
     if (userAccountTypes && userAccountTypes.accounts && userAccountTypes.accounts.length > 0) {
       // Seřaďte účty podle priority sestupně
       const sortedAccounts = userAccountTypes.accounts.sort((a, b) => b.accountType.priority - a.accountType.priority);
-     
+      sortedAccounts[0].accountType.monthIn = sortedAccounts[0].monthIn;
+      console.log("Typ účtu:",sortedAccounts[0].accountType )
       return sortedAccounts[0].accountType;  // Vraťte název účtu s nejvyšší prioritou
     } else {
       return null; // Žádný odpovídající účet nenalezen
