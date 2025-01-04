@@ -153,21 +153,13 @@ const RegistrationModal = () => {
   className="btn"
   onClick={() => {
     const modal = document.getElementById('register_modal');
-    if (registrationSuccess) {
-      modal.close();
-      window.history.back();
-    } else {
-      modal.close();
-    }
+    modal.close();
+    window.history.back();
   }}
   onTouchStart={() => {
     const modal = document.getElementById('register_modal');
-    if (registrationSuccess) {
-      modal.close();
-      window.history.back();
-    } else {
-      modal.close();
-    }
+    modal.close();
+    window.history.back();
   }}
 >
   Zavřít
