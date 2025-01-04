@@ -17,8 +17,10 @@ const Page = async ({ searchParams }) => {
   const unknownMessage = redirectStatus && redirectStatus !== 'succeeded' && redirectStatus !== 'failed' && redirectStatus !=="upgraded"; // Check for unknown status
   const noStatusMessage = !redirectStatus; // Check if no status is provided
 
-  let accTypeOfUser = await getUserAccountTypeOnStripe(session.email);
-  let acctypes = await getTypeOfAccountDetails();
+  let [accTypeOfUser, acctypes] = await Promise.all([
+    getUserAccountTypeOnStripe(session.email),
+    getTypeOfAccountDetails()
+  ]);
 
   console.log(accTypeOfUser)
   if (typeof acctypes === "string") {
