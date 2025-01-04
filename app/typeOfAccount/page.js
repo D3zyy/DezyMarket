@@ -185,15 +185,16 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
           </div>
         </div>
       ) : noStatusMessage ? (
-        <h3
-          style={{
-            textAlign: "center",
-            fontSize: "large",
-            fontWeight: "bold",
-          }}
-        >
-          Zvolte typ účtu, který vám sedí
-        </h3>
+      <>   { accTypeOfUser?.priority === 1 &&  <h3
+        style={{
+          textAlign: "center",
+          fontSize: "large",
+          fontWeight: "bold",
+        }}
+      >
+      
+      </h3>}</>
+       
       ) : null}
 
 
@@ -257,17 +258,17 @@ Topování
     );
     
     // Poté porovnáme každý top a zjistíme, zda je nejdál aktivovaný
-    const isMostAdvanced = top.numberOfMonthsToValid === maxValidMonths && accTypeOfUser?.monthIn >= top.numberOfMonthsToValid;
+    const isMostAdvanced = top.numberOfMonthsToValid === maxValidMonths && accTypeOfUser?.monthIn >= top.numberOfMonthsToValid &&  accTypeOfUser?.priority !== 1
     
     return (
       <li
         key={top.id}
         style={{
-          opacity: isPrimary ? 1 : 0.8, // Mírná průhlednost pro zamčené kroky
+          opacity: isPrimary &&accTypeOfUser?.priority !== 1 ? 1 : 0.8, // Mírná průhlednost pro zamčené kroky
         }}
         className={`border-2 border-solid rounded-[12px] p-[6px_10px] inline-flex flex-col items-center justify-center m-[5px] w-[120px] opacity-100 
-        ${isPrimary ? 'bg-[#f5f5f5] text-[#757575]' : 'bg-[#fafafa] text-[#b0b0b0]'}
-        ${isMostAdvanced ? 'dark:border-[#242121] border-[#686666]' : ''} // Přidání extra třídy pro nejdál pokročilý top
+        ${isPrimary &&accTypeOfUser?.priority !== 1 ? 'bg-[#f5f5f5] text-[#757575]' : 'bg-[#fafafa] text-[#b0b0b0]'}
+        ${isMostAdvanced ? 'dark:border-[#181616] border-[#686666]' : ''} // Přidání extra třídy pro nejdál pokročilý top
         dark:border-[#2a2828] dark:bg-[#333333] dark:text-[#9b9a9a] dark:opacity-90`}
       >
         {/* Obsah: emoji a text s měsíci */}
@@ -276,14 +277,14 @@ Topování
           style={{
             fontSize: '18px', // Menší velikost pro emoji
             marginBottom: '5px',
-            filter: isPrimary ? 'none' : 'blur(1px)', // Mírný blur pro zamčené kroky
+            filter: isPrimary &&accTypeOfUser?.priority !== 1 ? 'none' : 'blur(1px)', // Mírný blur pro zamčené kroky
           }}
         />
         <div
           style={{
             fontSize: '12px',
             textAlign: 'center',
-            filter: isPrimary ? 'none' : 'blur(1px)',
+            filter: isPrimary &&accTypeOfUser?.priority !== 1 ? 'none' : 'blur(1px)',
           }}
         >
           {top.name} <br />
@@ -297,7 +298,7 @@ Topování
             fontSize: '20px', // Změna velikosti zámku
           }}
         >
-          {isPrimary ? (
+          {isPrimary &&accTypeOfUser?.priority !== 1 ? (
             <></>
           ) : (
             <svg
