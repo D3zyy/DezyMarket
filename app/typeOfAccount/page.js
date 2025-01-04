@@ -203,19 +203,28 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
     fontSize: "large",
   }}
 >
-Topování<div className='font-normal'
-  dangerouslySetInnerHTML={{
-    __html: sortedAcctypes?.map(accType => `${accType.emoji}`).join('')
-  }}
-/>
-  </h3>
-  
+Topování
+
+
+</h3>
+
+<h3 className='font-normal flex justify-center items-center'>
+  {sortedAcctypes?.map((accType, index) => (
+    accType?.name === accTypeOfUser?.name && accType.priority !== 0 ? (
+      <React.Fragment key={accType.name + accType.priority}>
+        <span className='font-normal text-center mr-2' dangerouslySetInnerHTML={{ __html: accType.emoji }}></span>
+        {` ${accTypeOfUser.monthIn}. měsíc`}
+      </React.Fragment>
+    ) : null
+  ))}
+</h3>
+
   <div className='text-center'> 
  
 
 
 
-  <ul className="steps">
+  <ul className="steps flex flex-wrap lg:flex-row justify-center ">
   {typeOfTops.map((top) => {
     const isPrimary = accTypeOfUser.monthIn >= top.numberOfMonthsToValid;
     const borderColor = isPrimary ? '#b0b0b0' : '#e0e0e0'; // Světle šedý okraj pro odemčené, šedý pro zamčené
@@ -223,17 +232,26 @@ Topování<div className='font-normal'
     const textColor = isPrimary ? '#757575' : '#b0b0b0'; // Šedá barva pro text
     const lockColor = isPrimary ? '#00d390' : '#b0b0b0'; // Zelený zámek pro odemčený, šedý pro zamčený
 
+    // Určíme, který top má největší počet měsíců, které už uživatel odemkl
+    const maxValidMonths = Math.max(
+      ...typeOfTops
+        .filter(top => accTypeOfUser.monthIn >= top.numberOfMonthsToValid)  // Filtrujeme pouze odemčené topy
+        .map(top => top.numberOfMonthsToValid)  // Získáme hodnoty 'numberOfMonthsToValid'
+    );
+    
+    // Poté porovnáme každý top a zjistíme, zda je nejdál aktivovaný
+    const isMostAdvanced = top.numberOfMonthsToValid === maxValidMonths && accTypeOfUser.monthIn >= top.numberOfMonthsToValid;
+    
     return (
       <li
         key={top.id}
         style={{
-        
           opacity: isPrimary ? 1 : 0.8, // Mírná průhlednost pro zamčené kroky
         }}
         className={`border-2 border-solid rounded-[12px] p-[6px_10px] inline-flex flex-col items-center justify-center m-[5px] w-[120px] opacity-100 
         ${isPrimary ? 'bg-[#f5f5f5] text-[#757575]' : 'bg-[#fafafa] text-[#b0b0b0]'}
-        dark:border-[#2a2828] dark:bg-[#333333] dark:text-[#cccccc] dark:opacity-90`}
-      
+        ${isMostAdvanced ? 'dark:border-[#242121] border-[#686666]' : ''} // Přidání extra třídy pro nejdál pokročilý top
+        dark:border-[#2a2828] dark:bg-[#333333] dark:text-[#9b9a9a] dark:opacity-90`}
       >
         {/* Obsah: emoji a text s měsíci */}
         <div
@@ -283,10 +301,12 @@ Topování<div className='font-normal'
           )}
         </span>
         {top.numberOfMonthsToValid}. měsíc
+
+       
       </li>
     );
   })}
-</ul>
+</ul> 
 
 
 
