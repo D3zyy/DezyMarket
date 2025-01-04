@@ -148,7 +148,30 @@ const RegistrationModal = () => {
                       {loading ? <span className="loading loading-spinner loading-sm"></span>  : 'Registrovat se'}
                     </button>
                   )}
-                  <button type="button" className="btn" onClick={() => document.getElementById('register_modal').close()} onTouchStart={() => document.getElementById('register_modal').close()}>Zavřít</button>
+<button
+  type="button"
+  className="btn"
+  onClick={() => {
+    const modal = document.getElementById('register_modal');
+    if (registrationSuccess) {
+      modal.close();
+      window.history.back();
+    } else {
+      modal.close();
+    }
+  }}
+  onTouchStart={() => {
+    const modal = document.getElementById('register_modal');
+    if (registrationSuccess) {
+      modal.close();
+      window.history.back();
+    } else {
+      modal.close();
+    }
+  }}
+>
+  Zavřít
+</button>
                 </div>
               </form>
             </>

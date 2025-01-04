@@ -186,37 +186,37 @@ for (const postType of postTypes) {
       name: 'Top', 
       emoji: '&#128171;',
       color: '#cccccc', // Neutrální barva pro základní top
-      numberOfMonthsToValid: 0,
+      numberOfMonthsToValid: 1,
     },
     { 
       name: 'Top+', 
       emoji: '&#128227;',
       color: '#b3b3b3', // Světlejší šedá pro Top+
-      numberOfMonthsToValid: 1,
+      numberOfMonthsToValid: 2,
     },
     { 
       name: 'Premium Top', 
       emoji: '&#128142;', // Chilli emoji
       color: '#e01930', // Červená pro spicy
-      numberOfMonthsToValid: 2,
+      numberOfMonthsToValid: 4,
     },
     { 
       name: 'Spicy Top', 
       emoji: '&#x1f336;;', // Symbol peněz pro deluxe
       color: '#f2c14e', // Zlatá/žlutá pro luxus
-      numberOfMonthsToValid: 4,
+      numberOfMonthsToValid: 6,
     },
     { 
       name: 'Ultimate Top', 
       emoji: '&#128640;', // Hvězda pro Supreme
       color: '#ff8c00', // Oranžová pro "supreme"
-      numberOfMonthsToValid: 6,
+      numberOfMonthsToValid: 8,
     },
     { 
       name: 'Royal Top', 
       emoji: '&#128640;', // Raketa pro Ultra
       color: '#00bfff', // Modrá pro ultramoderní vzhled
-      numberOfMonthsToValid: 9,
+      numberOfMonthsToValid: 10,
     },
     { 
       name: 'Legendary Top', 

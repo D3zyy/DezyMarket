@@ -219,7 +219,7 @@ Topování
         accType?.name === accTypeOfUser?.name && accType.priority !== 0 ? (
           <React.Fragment key={accType.name + accType.priority}>
             <span className='font-normal text-center mr-2' dangerouslySetInnerHTML={{ __html: accType.emoji }}></span>
-            {` ${accTypeOfUser.monthIn}. měsíc`}
+            {` ${accTypeOfUser?.monthIn}. měsíc`}
           </React.Fragment>
         ) : null
       ))
@@ -243,7 +243,7 @@ Topování
 
   <ul className="steps mb-3 flex flex-wrap lg:flex-row justify-center ">
   {typeOfTops.map((top) => {
-    const isPrimary = accTypeOfUser.monthIn >= top.numberOfMonthsToValid;
+    const isPrimary = accTypeOfUser?.monthIn >= top.numberOfMonthsToValid;
     const borderColor = isPrimary ? '#b0b0b0' : '#e0e0e0'; // Světle šedý okraj pro odemčené, šedý pro zamčené
     const backgroundColor = isPrimary ? '#f5f5f5' : '#fafafa'; // Světle šedé pozadí pro odemčené, jemně šedé pro zamčené
     const textColor = isPrimary ? '#757575' : '#b0b0b0'; // Šedá barva pro text
@@ -252,12 +252,12 @@ Topování
     // Určíme, který top má největší počet měsíců, které už uživatel odemkl
     const maxValidMonths = Math.max(
       ...typeOfTops
-        .filter(top => accTypeOfUser.monthIn >= top.numberOfMonthsToValid)  // Filtrujeme pouze odemčené topy
+        .filter(top => accTypeOfUser?.monthIn >= top.numberOfMonthsToValid)  // Filtrujeme pouze odemčené topy
         .map(top => top.numberOfMonthsToValid)  // Získáme hodnoty 'numberOfMonthsToValid'
     );
     
     // Poté porovnáme každý top a zjistíme, zda je nejdál aktivovaný
-    const isMostAdvanced = top.numberOfMonthsToValid === maxValidMonths && accTypeOfUser.monthIn >= top.numberOfMonthsToValid;
+    const isMostAdvanced = top.numberOfMonthsToValid === maxValidMonths && accTypeOfUser?.monthIn >= top.numberOfMonthsToValid;
     
     return (
       <li
