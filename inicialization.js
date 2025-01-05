@@ -183,45 +183,45 @@ for (const postType of postTypes) {
 
   const Tops = [
     { 
-      name: 'Top', 
-      emoji: '&#128171;',
-      color: '#cccccc', // Neutrální barva pro základní top
+      name: 'Top',  
+      emoji: '&#128204;',
+      color: '#ba3d42', // Neutrální barva pro základní top
       numberOfMonthsToValid: 1,
     },
     { 
       name: 'Top+', 
-      emoji: '&#128227;',
-      color: '#b3b3b3', // Světlejší šedá pro Top+
+      emoji: '&#128171;',
+      color: '#f0f018', // Světlejší šedá pro Top+
       numberOfMonthsToValid: 2,
     },
     { 
       name: 'Premium Top', 
       emoji: '&#128142;', // Chilli emoji
-      color: '#e01930', // Červená pro spicy
+      color: '#05abab', // Červená pro spicy
       numberOfMonthsToValid: 4,
     },
     { 
       name: 'Spicy Top', 
-      emoji: '&#x1f336;;', // Symbol peněz pro deluxe
-      color: '#f2c14e', // Zlatá/žlutá pro luxus
+      emoji: '&#127798;', // Symbol peněz pro deluxe
+      color: '#ff2200', // Zlatá/žlutá pro luxus
       numberOfMonthsToValid: 6,
+    },
+    { 
+      name: 'Fire Top', 
+      emoji: '&#128293;', // Raketa pro Ultra
+      color: '#ff7738', // Modrá pro ultramoderní vzhled
+      numberOfMonthsToValid: 8,
     },
     { 
       name: 'Ultimate Top', 
       emoji: '&#128640;', // Hvězda pro Supreme
       color: '#ff8c00', // Oranžová pro "supreme"
-      numberOfMonthsToValid: 8,
-    },
-    { 
-      name: 'Royal Top', 
-      emoji: '&#x1f451;', // Raketa pro Ultra
-      color: '#00bfff', // Modrá pro ultramoderní vzhled
       numberOfMonthsToValid: 10,
     },
     { 
       name: 'Legendary Top', 
-      emoji: '&#127752;', // Koruna pro King
-      color: '#ffd700', // Zlatá pro "king"
+      emoji: '&#127879', // Koruna pro King
+      color: '#d9a891', // Zlatá pro "king"
       numberOfMonthsToValid: 12,
     }
   ];

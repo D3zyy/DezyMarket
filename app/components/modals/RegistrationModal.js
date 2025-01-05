@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { handleRegistration } from '@/app/authentication/registration/actions';
 import { InboxArrowDownIcon } from '@heroicons/react/24/solid';
 import { CheckCircleIcon, XCircleIcon , LockClosedIcon} from '@heroicons/react/24/solid';
-
+import { useRouter } from 'next/navigation';
 
 export function openRegisterModal() {
   document.getElementById('register_modal').showModal();
@@ -75,7 +75,7 @@ const RegistrationModal = () => {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState(null); // Initialize as null
-
+  const router = useRouter()
   useEffect(() => {
     if (state?.closeModal) {
       setLoading(false);
@@ -153,13 +153,15 @@ const RegistrationModal = () => {
   className="btn"
   onClick={() => {
     const modal = document.getElementById('register_modal');
+    router.push(("/"))
     modal.close();
-    window.history.back();
+
   }}
   onTouchStart={() => {
     const modal = document.getElementById('register_modal');
+    router.push(("/"))
     modal.close();
-    window.history.back();
+
   }}
 >
   Zavřít

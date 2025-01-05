@@ -222,7 +222,7 @@ Topování
          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 mr-2 ">
   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
 </svg>
-   <span className='font-normal text-center mr-2' dangerouslySetInnerHTML={{ __html: accType.emoji }}></span>
+   <span className='font-normal text-center mr-2 ' dangerouslySetInnerHTML={{ __html: accType.emoji }}></span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 mr-2">
   <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
 </svg>
@@ -250,88 +250,86 @@ Topování
 
 
   <ul className="steps mb-3 flex flex-wrap lg:flex-row justify-center ">
-  {typeOfTops.map((top) => {
-    const isPrimary = accTypeOfUser?.monthIn >= top.numberOfMonthsToValid;
-    const borderColor = isPrimary ? '#b0b0b0' : '#e0e0e0'; // Světle šedý okraj pro odemčené, šedý pro zamčené
-    const backgroundColor = isPrimary ? '#f5f5f5' : '#fafafa'; // Světle šedé pozadí pro odemčené, jemně šedé pro zamčené
-    const textColor = isPrimary ? '#757575' : '#b0b0b0'; // Šedá barva pro text
-    const lockColor = isPrimary ? '#00d390' : '#b0b0b0'; // Zelený zámek pro odemčený, šedý pro zamčený
+  {typeOfTops
+    .sort((a, b) => a.numberOfMonthsToValid - b.numberOfMonthsToValid) // Seřazení podle počtu měsíců
+    .map((top) => {
+      const isPrimary = accTypeOfUser?.monthIn >= top.numberOfMonthsToValid;
+      const borderColor = isPrimary ? '#b0b0b0' : '#e0e0e0';
+      const backgroundColor = isPrimary ? '#f5f5f5' : '#fafafa';
+      const textColor = isPrimary ? '#757575' : '#b0b0b0';
+      const lockColor = isPrimary ? '#00d390' : '#b0b0b0';
 
-    // Určíme, který top má největší počet měsíců, které už uživatel odemkl
-    const maxValidMonths = Math.max(
-      ...typeOfTops
-        .filter(top => accTypeOfUser?.monthIn >= top.numberOfMonthsToValid)  // Filtrujeme pouze odemčené topy
-        .map(top => top.numberOfMonthsToValid)  // Získáme hodnoty 'numberOfMonthsToValid'
-    );
-    
-    // Poté porovnáme každý top a zjistíme, zda je nejdál aktivovaný
-    const isMostAdvanced = top.numberOfMonthsToValid === maxValidMonths && accTypeOfUser?.monthIn >= top.numberOfMonthsToValid &&  accTypeOfUser?.priority !== 1
-    
-    return (
-      <li
-        key={top.id}
-        style={{
-          opacity: isPrimary &&accTypeOfUser?.priority !== 1 ? 1 : 0.8, // Mírná průhlednost pro zamčené kroky
-        }}
-        className={`border-2 border-solid rounded-[12px] p-[6px_10px] inline-flex flex-col items-center justify-center m-[5px] w-[120px] opacity-100 
-        ${isPrimary &&accTypeOfUser?.priority !== 1 ? 'bg-[#f5f5f5] text-[#757575]' : 'bg-[#fafafa] text-[#b0b0b0]'}
-        ${isMostAdvanced ? 'dark:border-[#181616] border-[#686666]' : ''} // Přidání extra třídy pro nejdál pokročilý top
+      const maxValidMonths = Math.max(
+        ...typeOfTops
+          .filter((top) => accTypeOfUser?.monthIn >= top.numberOfMonthsToValid)
+          .map((top) => top.numberOfMonthsToValid)
+      );
+
+      const isMostAdvanced =
+        top.numberOfMonthsToValid === maxValidMonths &&
+        accTypeOfUser?.monthIn >= top.numberOfMonthsToValid &&
+        accTypeOfUser?.priority !== 1;
+
+      return (
+        <li
+          key={top.id}
+          style={{
+            opacity: isPrimary && accTypeOfUser?.priority !== 1 ? 1 : 0.8,
+          }}
+          className={`border-2 border-solid rounded-[12px] p-[6px_10px] inline-flex flex-col items-center justify-center m-[5px] w-[120px] opacity-100 
+        ${isPrimary && accTypeOfUser?.priority !== 1 ? 'bg-[#f5f5f5] text-[#757575]' : 'bg-[#fafafa] text-[#b0b0b0]'}
+        ${isMostAdvanced ? 'dark:border-[#181616] border-[#686666]' : ''} 
         dark:border-[#2a2828] dark:bg-[#333333] dark:text-[#9b9a9a] dark:opacity-90`}
-      >
-        {/* Obsah: emoji a text s měsíci */}
-        <div
-          dangerouslySetInnerHTML={{ __html: top.emoji }}
-          style={{
-            fontSize: '18px', // Menší velikost pro emoji
-            marginBottom: '5px',
-            filter: isPrimary &&accTypeOfUser?.priority !== 1 ? 'none' : 'blur(1px)', // Mírný blur pro zamčené kroky
-          }}
-        />
-        <div
-          style={{
-            fontSize: '12px',
-            textAlign: 'center',
-            filter: isPrimary &&accTypeOfUser?.priority !== 1 ? 'none' : 'blur(1px)',
-          }}
         >
-          {top.name} <br />
-        </div>
-
-        {/* Zámeček na třetím řádku */}
-        <span
-          style={{
-            marginTop: '5px', // Mírný prostor mezi textem a zámkem
-            color: lockColor, // Zelený zámek pro odemčený, šedý pro zamčený
-            fontSize: '20px', // Změna velikosti zámku
-          }}
-        >
-          {isPrimary &&accTypeOfUser?.priority !== 1 ? (
-            <></>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6 dark:text-[#f9f7f7] text-[#494949]"
-              style={{ width: '24px', height: '24px' }}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
-              />
-            </svg>
-          )}
-        </span>
-        {top.numberOfMonthsToValid}. měsíc
-
-       
-      </li>
-    );
-  })}
-</ul> 
+          <div
+            dangerouslySetInnerHTML={{ __html: top.emoji }}
+            style={{
+              fontSize: '18px',
+              marginBottom: '5px',
+              filter: isPrimary && accTypeOfUser?.priority !== 1 ? 'none' : 'blur(1px)',
+            }}
+          />
+          <div
+            style={{
+              fontSize: '12px',
+              textAlign: 'center',
+              filter: isPrimary && accTypeOfUser?.priority !== 1 ? 'none' : 'blur(1px)',
+            }}
+          >
+            {top.name} <br />
+          </div>
+          <span
+            style={{
+              marginTop: '5px',
+              color: lockColor,
+              fontSize: '20px',
+            }}
+          >
+            {isPrimary && accTypeOfUser?.priority !== 1 ? (
+              <></>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6 dark:text-[#f9f7f7] text-[#494949]"
+                style={{ width: '24px', height: '24px' }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+                />
+              </svg>
+            )}
+          </span>
+          {top.numberOfMonthsToValid}. měsíc
+        </li>
+      );
+    })}
+</ul>
 
 
 
