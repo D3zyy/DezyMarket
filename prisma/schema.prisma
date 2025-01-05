@@ -113,6 +113,7 @@ model Tops {
   emoji                 String?
   color                 String?
   numberOfMonthsToValid Int?
+  hidden                Boolean? 
   
   postType              PostType?    @relation // Volitelný vztah s PostType
   

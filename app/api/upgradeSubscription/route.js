@@ -355,7 +355,7 @@ console.log("Jeho nínejší produkt",product)
             AccountTypeIdBefore: accThatAlreadyhaveExist.id,
             AccountTypeIdAfter: accToUpgradExist.id,
             userId: session.userId,
-            priceToUpgrade: priceToUpgradee
+            priceToUpgrade: parseInt(priceToUpgradee, 10)
           
         },
     });

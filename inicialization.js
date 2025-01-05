@@ -60,7 +60,7 @@ async function main() {
       name: 'Šikula', 
       priority: 2, 
       emoji: `<div class="badge badge-lg badge-secondary badge-outline" style="color: #ff7d5c; border-color: #ff7d5c;">Šikula</div>`,
-      priceAmountCZKMonthly: "88", 
+      priceAmountCZKMonthly: "134", 
       perks: [
         ["Neomezený počet inzerátů", true],
         ["až 20 fotografie u inzerátu", true],
@@ -76,7 +76,22 @@ async function main() {
       name: 'Profík', 
       emoji: `<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>`,
       priority: 3, 
-      priceAmountCZKMonthly: "98", 
+      priceAmountCZKMonthly: "152", 
+      perks: [
+        ["Neomezený počet inzerátů", true],
+        ["až 25 fotografií u inzerátu", true],
+        ["Profík inzerát", true],
+        ["Statistika zobrazení inzerátu", true],
+        ["Topování na hlavní stránce", true],
+        ["Topování v kategorii", true],
+        ["Odznáček vedle jména", true],
+        ["Prioritní zákaznická podpora", true]
+      ]
+    },{ 
+      name: 'MegaMan', 
+      emoji: `<div class='badge badge-lg badge-secondary badge-outline' style='color: #13bd40; border-color: #13bd40; '>MegaMan</div>`,
+      priority: 4, 
+      priceAmountCZKMonthly: "251", 
       perks: [
         ["Neomezený počet inzerátů", true],
         ["až 25 fotografií u inzerátu", true],
@@ -187,42 +202,49 @@ for (const postType of postTypes) {
       emoji: '&#128204;',
       color: '#ba3d42', // Neutrální barva pro základní top
       numberOfMonthsToValid: 1,
+      hidden: false,
     },
     { 
       name: 'Top+', 
       emoji: '&#128171;',
       color: '#f0f018', // Světlejší šedá pro Top+
       numberOfMonthsToValid: 2,
+      hidden: false,
     },
     { 
       name: 'Premium Top', 
       emoji: '&#128142;', // Chilli emoji
       color: '#05abab', // Červená pro spicy
       numberOfMonthsToValid: 4,
+      hidden: false,
     },
     { 
       name: 'Spicy Top', 
       emoji: '&#127798;', // Symbol peněz pro deluxe
       color: '#ff2200', // Zlatá/žlutá pro luxus
       numberOfMonthsToValid: 6,
+      hidden: false,
     },
     { 
       name: 'Fire Top', 
       emoji: '&#128293;', // Raketa pro Ultra
       color: '#ff7738', // Modrá pro ultramoderní vzhled
-      numberOfMonthsToValid: 8,
+      numberOfMonthsToValid: 9,
+      hidden: false,
     },
     { 
       name: 'Ultimate Top', 
       emoji: '&#128640;', // Hvězda pro Supreme
       color: '#ff8c00', // Oranžová pro "supreme"
-      numberOfMonthsToValid: 10,
+      numberOfMonthsToValid: 12,
+      hidden: true,
     },
     { 
       name: 'Legendary Top', 
       emoji: '&#127879', // Koruna pro King
       color: '#d9a891', // Zlatá pro "king"
-      numberOfMonthsToValid: 12,
+      numberOfMonthsToValid: 24,
+      hidden: true,
     }
   ];
   for (const top of Tops) {
@@ -232,6 +254,7 @@ for (const postType of postTypes) {
         emoji: top.emoji,
         color: top.color,
         numberOfMonthsToValid: top.numberOfMonthsToValid,
+        hidden: top.hidden,
       },
     });
   }
@@ -402,24 +425,7 @@ const categories = [
 
           if (existingPrice) {
             // Pokud cena existuje a je jiná než požadovaná
-            if (existingPrice.unit_amount !== parseInt(accountType.priceAmountCZKMonthly) * 100) {
-              console.log(`Cena pro produkt "${accountType.name}" se liší od požadované.`);
-              
-              // Odstraníme starou cenu
-              await stripe.prices.del(existingPrice.id);
-              console.log(`Starší cena pro produkt "${accountType.name}" byla odstraněna.`);
-              
-              // Přidáme novou cenu
-              const newPrice = await stripe.prices.create({
-                unit_amount: parseInt(accountType.priceAmountCZKMonthly) * 100,  // Cena v haléřích (CZK * 100)
-                currency: 'czk',  // Měna
-                product: productId,  // ID produktu na Stripe
-                recurring: {
-                  interval: 'month',  // Interval platby (měsíčně)
-                },
-              });
-              console.log(`Cena pro produkt "${accountType.name}" byla aktualizována na Stripe.`);
-            }
+            
           } else {
             // Pokud cena pro produkt neexistuje, vytvoř ji
             console.log(`Produkt "${accountType.name}" nemá cenu na Stripe. Vytváříme novou cenu.`);
