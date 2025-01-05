@@ -20,9 +20,9 @@ async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFrom
             setSuccess(true);
             setTimeout(() => {
                 router.push("/typeOfAccount?redirect_status=upgraded");
-             
+                router.refresh()
                 document.getElementById("upgradeModalSubscriptionModal").close();
-            }, 1500);
+            }, 1000);
         }
     } catch (error) {
         console.error("Chyba při upgradu předplatného:", error);
