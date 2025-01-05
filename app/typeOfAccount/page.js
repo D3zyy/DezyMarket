@@ -250,6 +250,7 @@ Topování
 
   <ul className="steps mb-3 flex flex-wrap lg:flex-row justify-center ">
   {typeOfTops
+    .filter((top) => !top.hidden) 
     .sort((a, b) => a.numberOfMonthsToValid - b.numberOfMonthsToValid) // Seřazení podle počtu měsíců
     .map((top) => {
       const isPrimary = accTypeOfUser?.monthIn >= top.numberOfMonthsToValid;
