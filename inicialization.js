@@ -214,7 +214,7 @@ for (const postType of postTypes) {
     },
     { 
       name: 'Royal Top', 
-      emoji: '&#128640;', // Raketa pro Ultra
+      emoji: '&#x1f451;', // Raketa pro Ultra
       color: '#00bfff', // Modrá pro ultramoderní vzhled
       numberOfMonthsToValid: 10,
     },
