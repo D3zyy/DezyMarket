@@ -23,8 +23,7 @@ const Page = async ({ searchParams }) => {
      prisma.Tops.findMany({}),
   ]);
   
-  console.log(accTypeOfUser)
-  console.log("Tops:",typeOfTops)
+
   if (typeof acctypes === "string") {
     acctypes = JSON.parse(acctypes);
   }

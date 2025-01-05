@@ -22,6 +22,7 @@ export default function RootLayout({ children }) {
         <meta property="og:type" content="website" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charSet="UTF-8" />
+        <link rel="icon" href="/icon.png" sizes="any" />
       </head>
       <body style={{ display: 'flex', flexDirection: 'column', height: '100%', margin: '0' }}>
 
