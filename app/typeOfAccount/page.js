@@ -312,9 +312,9 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
             opacity: isPrimary && accTypeOfUser?.priority !== 1 ? 1 : 0.8,
           }}
           className={`border-2 border-solid rounded-[12px] p-[6px_10px] inline-flex flex-col items-center justify-center m-[5px] w-[120px] opacity-100 
-        ${isPrimary && accTypeOfUser?.priority !== 1 ? 'bg-[#f5f5f5] text-[#757575]' : 'bg-[#fafafa] text-[#b0b0b0]'}
-        ${isMostAdvanced ? 'dark:border-[#111010] border-[#686666]' : ''} 
-        dark:border-[#2a2828] dark:bg-[#333333] dark:text-[#9b9a9a] dark:opacity-90`}
+            ${isPrimary && accTypeOfUser?.priority !== 1 ? 'bg-[#f5f5f5] text-[#757575]' : 'bg-[#fafafa] text-[#b0b0b0]'}
+            ${isMostAdvanced ? 'dark:border-[#111010] border-[#686666]' : ''} 
+            dark:border-[#2a2828] dark:bg-[#333333] dark:text-[#9b9a9a] dark:opacity-90`}
         >
           <div
             dangerouslySetInnerHTML={{ __html: top.emoji }}

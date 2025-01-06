@@ -8,12 +8,23 @@ export default function ThemeToggle() {
     const storedTheme = localStorage.getItem('theme') || 'mytheme';
     setTheme(storedTheme);
     document.documentElement.setAttribute('data-theme', storedTheme);
+  
+    if (storedTheme === 'dim') {
+      document.documentElement.classList.add('dark');
+    }
   }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === 'mytheme' ? 'dim' : 'mytheme';
     setTheme(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
+    
+    if (newTheme === 'dim') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  
     localStorage.setItem('theme', newTheme);
   };
 
