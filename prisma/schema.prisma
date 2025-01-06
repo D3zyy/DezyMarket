@@ -215,6 +215,7 @@ model AccountTypeUsers {
   id            Int           @id @default(autoincrement())
   scheduleToCancel        Boolean?
   priceId       String?
+  gifted        Boolean @default(false)
   active        Boolean?
   monthIn         Int?        @default(1)
   nextPayment   String?

@@ -20,10 +20,11 @@ const UpgradeModalSubscription = dynamic(
 
 
 
-export function Account({ name,emoji, price, priceId, benefits, hasThisType, hasThisTypePriority, namePriority}) {
+export function Account({ name,emoji, price, priceId, benefits, hasThisType, hasThisTypePriority, namePriority,gifted}) {
 
- 
+
   const [loading, setLoading] = useState(false);
+  const [isGifted, setisGifted] = useState(gifted);
   const [isPaymentModalVisible,setIsPaymentModalVisible] = useState(false)
   const [isUpgradeModalVisible,setIsUpgradeModalVisible] = useState(false)
   const isActive = hasThisType === name;
@@ -226,9 +227,10 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
     )}
   </button>
 
+
   {showCancelLink && !isZakladni && (
     <div className="mt-4 sm:mt-5">
-      <SubscriptionInfo />
+      <SubscriptionInfo  gifted={isGifted}/>
 
     </div>
   )}

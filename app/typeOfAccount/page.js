@@ -28,7 +28,7 @@ const Page = async ({ searchParams }) => {
     acctypes = JSON.parse(acctypes);
   }
   const sortedAcctypes = acctypes?.slice().sort((a, b) => b.priority - a.priority);
-
+  console.log(accTypeOfUser)
 
 
   if (!session.isLoggedIn) redirect('/');
@@ -342,7 +342,7 @@ Topování
 
 
 {sortedAcctypes?.map(accType => (
-  
+    
   <Account
     key={accType.id}
     hasThisType={accTypeOfUser?.name}
@@ -353,6 +353,7 @@ Topování
     benefits={accType.perks.map(perk => [perk.name, perk.valid])}
     hasThisTypePriority={accTypeOfUser?.priority}
     namePriority={accType.priority}
+    gifted={accTypeOfUser.gifted}
     className={accType.priority === 1 ? 'order-last md:order-none' : ''}
   />
 ))}

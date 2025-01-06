@@ -198,9 +198,10 @@ const userAccountTypes = await prisma.users.findUnique({
         fromDate: true,
         toDate: true,
         monthIn: true,
+        gifted: true,
         accountType: {
           select: {
-         
+            
             priority: true,
             name: true, // Přístup k poli "name" v tabulce "accountType"
           },
@@ -217,6 +218,7 @@ const userAccountTypes = await prisma.users.findUnique({
       // Seřaďte účty podle priority sestupně
       const sortedAccounts = userAccountTypes.accounts.sort((a, b) => b.accountType.priority - a.accountType.priority);
       sortedAccounts[0].accountType.monthIn = sortedAccounts[0].monthIn;
+      sortedAccounts[0].accountType.gifted = sortedAccounts[0].gifted;
       console.log("Typ účtu:",sortedAccounts[0].accountType )
       return sortedAccounts[0].accountType;  // Vraťte název účtu s nejvyšší prioritou
     } else {
