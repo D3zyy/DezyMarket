@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFromPayment, setSuccess, router,fromNameUp) {
+async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFromPayment, setSuccess, router,fromNameUp,nameToUpgrade) {
     try {
         setloadingPayment(true);
         const response = await fetch("/api/upgradeSubscription", {
@@ -21,7 +21,7 @@ async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFrom
             setTimeout(() => {
                 router.push("/typeOfAccount?redirect_status=upgraded");
                 router.refresh()
-                document.getElementById("upgradeModalSubscriptionModal").close();
+                document.getElementById(`upgradeModalSubscriptionModal_${nameToUpgrade}`).close();
             }, 1000);
         }
     } catch (error) {
@@ -30,8 +30,9 @@ async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFrom
     }
 }
 
-export function openUpgradeModalSubscriptionModal() {
-    const modal = document.getElementById("upgradeModalSubscriptionModal");
+export function openUpgradeModalSubscriptionModal(nameToUpgrade) {
+    const modal = document.getElementById(`upgradeModalSubscriptionModal_${nameToUpgrade}`);
+    console.log("Otevírám:",nameToUpgrade)
     if (modal) {
         modal.showModal();
     }
@@ -82,13 +83,13 @@ export function openUpgradeModalSubscriptionModal() {
         }
 
         fetchSubscriptionInfo();
-    }, [nameToUpgrade]);
+    }, [nameToUpgrade,fromNameUp]);
 
     const formattedDate = nextPayment || null;
 
     return (
         <div>
-            <dialog id="upgradeModalSubscriptionModal" className="modal modal-bottom sm:modal-middle">
+            <dialog id={`upgradeModalSubscriptionModal_${nameToUpgrade}`} className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box flex flex-col justify-center items-center p-6">
                     {/* Hlavní SVG */}
                     <div className="mb-6">
@@ -114,7 +115,7 @@ export function openUpgradeModalSubscriptionModal() {
                             {error}
                             <button
                                 className="btn mt-3"
-                                onClick={() => document.getElementById("upgradeModalSubscriptionModal").close()}
+                                onClick={() => document.getElementById(`upgradeModalSubscriptionModal_${nameToUpgrade}`).close()}
                             >
                                 Zavřít
                             </button>
@@ -187,7 +188,7 @@ export function openUpgradeModalSubscriptionModal() {
                                         className={`btn btn-primary  `}
                                         disabled={loadingPayment || !selectedCardId}
                                         onClick={() =>
-                                            upgradeSubscription(nameToUpgrade, selectedCardId, setloadingPayment, setErrorFromPayment, setSuccess, router,fromNameUp)
+                                            upgradeSubscription(nameToUpgrade, selectedCardId, setloadingPayment, setErrorFromPayment, setSuccess, router,fromNameUp,nameToUpgrade)
                                         }
                                     >
                                         {loadingPayment ? "Upgraduji..." : "Upgradovat"}
@@ -196,7 +197,7 @@ export function openUpgradeModalSubscriptionModal() {
                                 <button
                                  disabled={loadingPayment}
                                     className="btn"
-                                    onClick={() => document.getElementById("upgradeModalSubscriptionModal").close()}
+                                    onClick={() => document.getElementById(`upgradeModalSubscriptionModal_${nameToUpgrade}`).close()}
                                 >
                                     Zavřít
                                 </button>

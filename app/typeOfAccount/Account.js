@@ -50,18 +50,18 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
       console.log("Chyba otevírání payment modalu")
     }
   }
-  function importUpgradeModalDynamically (){
+  function importUpgradeModalDynamically (nameToUpgrade){
     try {
       setIsUpgradeModalVisible(true);
       if (!isUpgradeModalVisible) {
         console.log("Čekám ")
         setTimeout(() => {
-            openUpgradeModalSubscriptionModal();
+            openUpgradeModalSubscriptionModal(nameToUpgrade);
         }, 500);
         console.log("Otevírám ")
       } else {
   
-        openUpgradeModalSubscriptionModal();
+        openUpgradeModalSubscriptionModal(nameToUpgrade);
       }
     } catch (error) {
       console.log("Chyba otevírání upgrade modalu")
@@ -200,7 +200,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
   <button
     onClick={() => {
       if(canUpgrade){
-        importUpgradeModalDynamically()
+        importUpgradeModalDynamically(name)
       }
       if (price > 15 && !shouldDisable) {
        
