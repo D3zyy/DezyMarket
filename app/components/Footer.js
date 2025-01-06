@@ -18,7 +18,7 @@ const Footer = () => {
         <Link href="/" className="link link-hover" aria-label="Q&A">
           Q&A
         </Link>
-          <ThemeToggle />
+ 
       </nav>
 
       <nav>
