@@ -247,14 +247,33 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
         ) : null
       ))
     ) : (
-      <>
-       
-        {sortedAcctypes?.map((accType) => (
-          accType.priority !== 1 ? (
-            <span key={accType.name + accType.priority} className='font-normal text-center mr-2 mt-2' dangerouslySetInnerHTML={{ __html: accType.emoji }}></span>
-          ) : null
-        ))}
-      </>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="size-6"
+    style={{ width: '20px', height: '20px' }}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5"
+    />
+  </svg>
+
+  {sortedAcctypes?.map((accType) =>
+    accType.priority !== 1 ? (
+      <span
+        key={accType.name + accType.priority}
+        className="font-normal text-center"
+        dangerouslySetInnerHTML={{ __html: accType.emoji }}
+      ></span>
+    ) : null
+  )}
+</div>
     )
   }
 </h3>
