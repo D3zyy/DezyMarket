@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import ThemeToggle from './ThemeToggle'
 
 const Footer = () => {
   return (
@@ -17,6 +18,7 @@ const Footer = () => {
         <Link href="/" className="link link-hover" aria-label="Q&A">
           Q&A
         </Link>
+          <ThemeToggle />
       </nav>
 
       <nav>

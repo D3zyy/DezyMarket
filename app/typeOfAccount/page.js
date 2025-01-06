@@ -388,7 +388,7 @@ const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`
     benefits={accType.perks.map(perk => [perk.name, perk.valid])}
     hasThisTypePriority={accTypeOfUser?.priority}
     namePriority={accType.priority}
-    gifted={accTypeOfUser.gifted}
+    gifted={accTypeOfUser?.gifted}
     className={accType.priority === 1 ? 'order-last md:order-none' : ''}
   />
 ))}

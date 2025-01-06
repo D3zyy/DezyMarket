@@ -87,21 +87,6 @@ async function main() {
         ["Odznáček vedle jména", true],
         ["Prioritní zákaznická podpora", true]
       ]
-    },{ 
-      name: 'MegaMan', 
-      emoji: `<div class='badge badge-lg badge-secondary badge-outline' style='color: #13bd40; border-color: #13bd40; '>MegaMan</div>`,
-      priority: 4, 
-      priceAmountCZKMonthly: "251", 
-      perks: [
-        ["Neomezený počet inzerátů", true],
-        ["až 25 fotografií u inzerátu", true],
-        ["Profík inzerát", true],
-        ["Statistika zobrazení inzerátu", true],
-        ["Topování na hlavní stránce", true],
-        ["Topování v kategorii", true],
-        ["Odznáček vedle jména", true],
-        ["Prioritní zákaznická podpora", true]
-      ]
     }
   ];
   for (const accountType of accountTypes) {
