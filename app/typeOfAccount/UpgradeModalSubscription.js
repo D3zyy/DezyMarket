@@ -161,17 +161,16 @@ export function openUpgradeModalSubscriptionModal(nameToUpgrade) {
         />
     </svg>
     <select
-        className="w-full p-3 border rounded-lg flex-1"
-        value={selectedCardId || ""}
-        onChange={(e) => setSelectedCardId(e.target.value)}
-    >
-        {lastDigits?.map((card) => (
-            <option key={card.id} value={card.id}>
-               
-                {`**** ${card.last4}  ${card.brand.toUpperCase()}`}
-            </option>
-        ))}
-    </select>
+  className="w-full p-3 border rounded-lg flex-1 bg-white text-black border-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600"
+  value={selectedCardId || ""}
+  onChange={(e) => setSelectedCardId(e.target.value)}
+>
+  {lastDigits?.map((card) => (
+    <option key={card.id} value={card.id}>
+      {`**** ${card.last4}  ${card.brand.toUpperCase()}`}
+    </option>
+  ))}
+</select>
 </div>
 <ul>
 <li className="flex items-center mb-5 mt-5 text-gray-400 text-opacity-75 text-sm">
