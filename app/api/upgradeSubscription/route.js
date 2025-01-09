@@ -58,6 +58,7 @@ const existWithuser = await prisma.AccountTypeUsers.findFirst({
   where: {
       active: true,
       userId: session.userId,
+      gifted: false,
       accountType: {
           name : data.fromName  , 
            priority: {
