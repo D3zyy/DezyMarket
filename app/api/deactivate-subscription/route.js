@@ -103,7 +103,8 @@ export async function POST(req) {
                 {   userId: session.userId, },
                 { accountTypeId: accountType.id },
                 { active: true },
-                {scheduleToCancel: false,}
+                {scheduleToCancel: false,},
+                {gifted: false}
             ]
         
         },
