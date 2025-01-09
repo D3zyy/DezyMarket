@@ -29,7 +29,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
   const [isUpgradeModalVisible,setIsUpgradeModalVisible] = useState(false)
   const isActive = hasThisType === name;
   const isZakladni = namePriority === 1;
- let  canUpgrade = (hasThisTypePriority < namePriority ) && hasThisTypePriority != 1
+ let  canUpgrade = (hasThisTypePriority < namePriority && !isGifted) && hasThisTypePriority != 1
 
   // Determine if the button should be disabled
   const shouldDisable = hasThisType && (isZakladni ||  hasThisTypePriority != 1);
@@ -203,7 +203,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
       if(canUpgrade){
         importUpgradeModalDynamically(name)
       }
-      if (price > 15 && !shouldDisable) {
+      if (price > 15 && !shouldDisable && !canUpgrade ) {
        
         importPaymentModalDynamically(price); 
         
@@ -214,16 +214,16 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
     }}
     type="button"
     className={`w-full btn text-sm sm:text-base ${
-      isActive &&!canUpgrade
+ isActive &&!canUpgrade
         ? "bg-[#8300ff] text-white disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed"
         : "bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50"
-    } ${shouldDisable&&!canUpgrade  ? "cursor-not-allowed" : "cursor-pointer"}`}
-    disabled={!canUpgrade && shouldDisable || loading} // Disable button based on condition
+    } ${isGifted && hasThisTypePriority == namePriority && !isZakladni ? "cursor-pointer": shouldDisable&&!canUpgrade  ? "cursor-not-allowed" : "cursor-pointer"}`}
+    disabled={ !canUpgrade && shouldDisable  || loading} // Disable button based on condition
   >
     {loading ? (
       <span className="loading loading-spinner loading-sm"></span>
     ) : (
-<span>{isActive && !canUpgrade ? "Vaše předplatné" : (canUpgrade ? "Upgradovat" : "Zvolit")}</span>
+<span>{ isActive && !canUpgrade ? "Vaše předplatné" : (canUpgrade && !isGifted ? "Upgradovat" : "Zvolit")} </span>
     )}
   </button>
 

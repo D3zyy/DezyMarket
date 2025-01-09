@@ -20,7 +20,7 @@ const Page = async ({ searchParams }) => {
   let [accTypeOfUser, acctypes,typeOfTops] = await Promise.all([
     getUserAccountTypeOnStripe(session.email),
     getTypeOfAccountDetails(),
-     prisma.Tops.findMany({}),
+     prisma.tops.findMany({}),
   ]);
   
 
