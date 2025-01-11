@@ -123,6 +123,7 @@ model Tops {
 model PostType {
   id             Int             @id @default(autoincrement())
   name           String
+  priority      Int?
   validFrom     DateTime?
   validTo       DateTime?
   perks          PerksPost[]     // Relace "jeden PostType má mnoho PerksPost"

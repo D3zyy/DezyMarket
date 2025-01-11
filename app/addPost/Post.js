@@ -7,8 +7,11 @@ import { SubscriptionInfo } from '../components/SubscriptionInfo';
 
 
 
-export function Post({ name,emoji, benefits, hasThisType }) {
+export function Post({ priority,allowedTops,name,emoji, benefits, hasThisType }) {
   const [loading, setLoading] = useState(false);
+  let canTop = allowedTops
+ // console.log("Může topovat:",canTop)
+console.log(benefits)
 
   function toggleSteps() {
     const typeOfPosts = document.getElementsByClassName('typeOfPosts');
@@ -26,11 +29,7 @@ for (let i = 0; i < secondStepDivs.length; i++) {
         localStorage.removeItem('typeOfPost'); 
         secondStepDivs[i].style.display = 'none';
     } else {
-      let nameToSave = 
-      name === "Topovaný" ? process.env.NEXT_PUBLIC_MEDIUM_RANK :
-      name === "Topovaný+" ? process.env.NEXT_PUBLIC_BEST_RANK :
-      process.env.NEXT_PUBLIC_BASE_RANK ;
-        localStorage.setItem('typeOfPost', nameToSave);
+        localStorage.setItem('typeOfPost', name);
         secondStepDivs[i].style.display = 'block';
     }
 }
@@ -57,7 +56,7 @@ if (firstStep && secondStep) {
 
 
   }
-  const isActive = hasThisType === name;
+  const isActive = priority != 1 && canTop && priority != 1;
   const isZakladni = name === process.env.NEXT_PUBLIC_BASE_RANK ;
 
   // Determine if the button should be disabled
@@ -100,9 +99,11 @@ if (firstStep && secondStep) {
 
 <h5 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-base-content dark:text-base-content">
 <span style={{ fontWeight: "bold",marginRight: name ? "15px" : "" }}>
-  {name === "zakladni"? "Základní" : name}
+  {name}
 </span>
-  <span dangerouslySetInnerHTML={{ __html: emoji }} />
+{(Array.isArray(emoji) ? emoji : []).map((item, index) => (
+        <span className='mr-1' key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />
+      ))}
 </h5>
 
 

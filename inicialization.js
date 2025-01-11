@@ -116,7 +116,7 @@ async function main() {
   const postTypes = [
     { 
       name: 'Základní', 
-      priority: 1, 
+      priority: 2, 
       perks: [
         ["až 15 fotografií u inzerátu", true],
         ["Doba uložení ař 2 měsíce", true],
@@ -127,31 +127,18 @@ async function main() {
       ]
     },
     { 
-      name: 'Šikula', 
-      priority: 2, 
-      priceAmountCZKMonthly: "88", 
+      name: 'Topovaný', 
+      priority: 1, 
       perks: [
-        ["až 20 fotografií u inzerátu", true],
-        ["Doba uložení až 3 měsíce", true],
+        ["až X fotografií u inzerátu", true],
+        ["Doba uložení až X měsíců", true],
         ["Počet zobrazení inzerátu", true],
         ["Kdo si zobrazil inzerát", true],
         ["Topovaný v kategorii", true],
         ["Topovaný v sekci", true],
       ]
     },
-    { 
-      name: 'Profík', 
-      priority: 3, 
-      priceAmountCZKMonthly: "98", 
-      perks: [
-        ["až 25 fotografií u inzerátu", true],
-        ["Doba uložení až 4 měsíce", true],
-        ["Počet zobrazení inzerátu", true],
-        ["Kdo si zobrazil inzerát", false],
-        ["Topovaný v kategorii", false],
-        ["Topovaný v sekci", false],
-      ]
-    }
+    
   ];
 
 
@@ -161,6 +148,7 @@ for (const postType of postTypes) {
     const postTypeId = await prisma.PostType.create({
       data: {
         name: postType.name,
+        priority: postType.priority
       },
     });
   

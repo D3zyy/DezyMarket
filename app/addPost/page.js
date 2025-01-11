@@ -20,9 +20,11 @@ const Page = async () => {
             }
     
              accType = await getUserAccountTypeOnStripe(session.email);
-             
+            let accPriority = accType?.priority
+          let   accMonthIn= accType?.monthIn
              accType = accType?.name
-           
+       
+     
        
 
         // Perform redirect if no account type is found and the user is logged in
@@ -34,11 +36,11 @@ const Page = async () => {
                       .setZone('Europe/Prague')
                       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
         // Fetching Categories and Sections with error handling
-        let CategoriesFromDb, SectionsFromDb,typeofPosts;
+        let CategoriesFromDb, SectionsFromDb,typeofPosts,typeTops,accEmojis;
         try {
-        [CategoriesFromDb, SectionsFromDb,typeofPosts] = (await Promise.allSettled([
-            prisma.Categories.findMany({}),
-            prisma.Sections.findMany({}),
+        [CategoriesFromDb, SectionsFromDb,typeofPosts,typeTops,accEmojis] = (await Promise.allSettled([
+            prisma.categories.findMany({}),
+            prisma.sections.findMany({}),
             prisma.postType.findMany({
                 where: {
                   OR: [
@@ -55,15 +57,29 @@ const Page = async () => {
                 include: {
                   perks: true // Zahrne všechny PerksPost patřící k danému PostType
                 }
-              })
+              }), 
+               prisma.tops.findMany({}),prisma.accountType.findMany({
+                where: {
+                    dependencyPriorityAcc: null, // Filtrovat pouze ty, které nemají žádnou závislost (null),
+                    emoji: { not: null } 
+                },
+                select: {
+                    emoji: true // Získání pouze emoji pro tyto záznamy
+                }
+            })
           ])).map(result => result.status === 'fulfilled' ? result.value : null);
        
         } catch (dbError) {
             throw new Error("Chyba při načítání kategorií  a sekcí na /addPost - přidání příspěvku : " + dbError.message);
         }
-
-
-         // console.dir(typeofPosts, { depth: null });
+        let filteredTypeTops 
+        let ableForTops = accPriority > 1
+        if(ableForTops){
+             filteredTypeTops = typeTops.filter(top => top.numberOfMonthsToValid <= accMonthIn);
+           // console.log(filteredTypeTops);
+        }
+       
+      // console.log(typeTops)
         return (
             <div>
                 {session.isLoggedIn ? (
@@ -74,65 +90,32 @@ const Page = async () => {
                                 <li className="step secondStep">Vytvořit inzerát</li>
                             </ul>
                         </div>
+                        <div
+            style={{ marginBottom: "40px" }}
+            className="typeOfPosts flex flex-col md:flex-row items-center justify-center gap-2 p-2"
+        >
 
-                        <div style={{ marginBottom: "40px" }} className="typeOfPosts flex flex-col md:flex-row items-center justify-center gap-2 p-2">
-                            <Post
-                                hasThisType={accType}
-                                name={
-                                    accType === process.env.BASE_RANK
-                                        ? 'Topovaný'
-                                        : accType === process.env.MEDIUM_RANK
-                                            ? `Topovaný`
-                                            : accType === process.env.BEST_RANK
-                                                ? `Topovaný+`
-                                                : ''
-                                }
-                                emoji={
-                                    accType === process.env.BASE_RANK
-                                        ? "<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>Šikula</div> <div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>"
-                                        : accType === process.env.MEDIUM_RANK
-                                            ? "<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>Šikula</div>"
-                                            : accType === process.env.BEST_RANK
-                                                ? "<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>"
-                                                : ''
-                                }
-                                price={
-                                    accType === process.env.BASE_RANK
-                                        ? 28
-                                        : accType === process.env.MEDIUM_RANK
-                                            ? 0
-                                            : accType === process.env.BEST_RANK
-                                                ? 0
-                                                : 28
-                                }
-                                priceId={"price_1PzMcUHvhgFZWc3Hb6o7RPbk"}
-                                benefits={[
-                                    [accType === process.env.BASE_RANK ? "X fotografií" : accType === process.env.MEDIUM_RANK ? "až 20 obrázků" : accType === process.env.BEST_RANK ? "až 25 obrázků" : "X obrázků", true],
-                                    [accType === process.env.BASE_RANK ? "Doba uložení 2 měsíce" : accType === process.env.MEDIUM_RANK ? "Doba uložení 3 měsíce" : accType === process.env.BEST_RANK ? "Doba uložení 4 měsíce" : "Doba uložení X měsíce", true],
-                                    ["Topovaný v kategorii ", true],
-                                    ["Kdo si zobrazil inzerát", true],
-                                    ["Počet zobrazení inzerátu", true],
-                                    ["Topovaný v sekci", accType === process.env.BASE_RANK ? true : accType === process.env.MEDIUM_RANK ? false : accType === process.env.BEST_RANK ? process.env.BEST_RANK : true],
-                                ]}
-                            />
-
-                            <Post
-                                hasThisType={accType}
-                                name={process.env.BASE_RANK}
-                                emoji=""
-                                price={0}
-                                priceId={"price_1PuH84HvhgFZWc3HGd8JElE1"}
-                                benefits={[
-                                    ["až 15 obrázků ", true],
-                                    ["Doba uložení  2 měsíce", true],
-                                    ["Počet zobrazení inzerátu", true],
-                                    ["Kdo si zobrazil inzerát", false],
-                                    ["Topovaný v kategorii ", false],
-                                    ["Topovaný v sekci", false],
-                             
-                                ]}
-                            />
-                        </div>
+           {typeofPosts
+    .sort((a, b) =>  a.priority- b.priority) // Řazení podle priority 
+    .map((post) => {
+        // Podmínka pro zobrazení emoji, když je priority > 1
+        const emojisToShow =
+            post.priority <= 1 ? accEmojis : []; 
+       
+        return (
+            <Post
+                priority={post.priority}
+                allowedTops = {ableForTops ? filteredTypeTops : false}
+                key={post.id}
+                hasThisType={accType}
+                name={post.name}
+                emoji={emojisToShow} // Předáme celý array emoji
+                benefits={post.perks.map((perk) => [perk.name, perk.valid])}
+            />
+        );
+    })}
+        </div>
+                        
 
                         <div className='addPostSecondStep' style={{ display: "none" }}>
                             <AddUI accType={accType} categories={CategoriesFromDb} sections={SectionsFromDb} />

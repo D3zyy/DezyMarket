@@ -33,9 +33,7 @@ const Page = async ({ searchParams }) => {
 
   if (!session.isLoggedIn) redirect('/');
     
-const emoji1 = `<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>${process.env.BEST_RANK}</div>`;
-const emoji2 = `<div class='badge badge-lg badge-secondary badge-outline' style='color: #ff7d5c; border-color: #ff7d5c;'>${process.env.MEDIUM_RANK}</div>`;
-const emoji3 = `<div class='badge badge-outline'>${process.env.BASE_RANK}</div>`;
+
   return (
     <div>
       {session.isLoggedIn ? (
