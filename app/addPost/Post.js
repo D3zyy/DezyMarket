@@ -35,7 +35,7 @@ export function Post({ priority,allowedTops,name,emoji, benefits, hasThisType })
     item.numberOfMonthsToValid > max.numberOfMonthsToValid ? item : max
   );
 };
-const [selectedTop, setSelectedTop] = useState(allowedTops? getDefaultTop(): false);
+const [selectedTop, setSelectedTop] = useState(allowedTops? getDefaultTop(): name);
 //console.log(allowedTops)
 
   function toggleSteps() {
@@ -54,7 +54,8 @@ for (let i = 0; i < secondStepDivs.length; i++) {
         localStorage.removeItem('typeOfPost'); 
         secondStepDivs[i].style.display = 'none';
     } else {
-        localStorage.setItem('typeOfPost', selectedTop);
+
+        localStorage.setItem('typeOfPost', selectedTop.name ? selectedTop.name: name);
         secondStepDivs[i].style.display = 'block';
     }
 }
