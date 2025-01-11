@@ -137,7 +137,7 @@ if (firstStep && secondStep) {
         {/* Tlačítko pro zobrazení aktuálního výběru */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-auto px-3 py-1.5 text-left whitespace-nowrap" // whitespace-nowrap pro zajištění, že se text nezalomí
+          className="w-auto mr-2 text-left whitespace-nowrap" // whitespace-nowrap pro zajištění, že se text nezalomí
           style={{
             borderColor: selectedTop.color,
             color: selectedTop.color,
