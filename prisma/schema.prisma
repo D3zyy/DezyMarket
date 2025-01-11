@@ -179,6 +179,7 @@ model AccountType {
   name           String
   priority       Int?
   emoji         String?
+  dependencyPriorityAcc Int?
   perks          PerksAccount[]  // Relace "jeden AccountType má mnoho PerksAccount"
   accountUsers   AccountTypeUsers[] // Relace "jeden AccountType má mnoho AccountTypeUsers"
   codes Codes[]

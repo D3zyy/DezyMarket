@@ -8,6 +8,7 @@ import Post from './Post';
 import AddUI from './AddUI';
 import { prisma } from '../database/db';
 import Link from 'next/link';
+import { DateTime } from 'luxon';
 const Page = async () => {
     let session
     let accType
@@ -29,25 +30,40 @@ const Page = async () => {
             redirect('/typeOfAccount'); // Call redirect without await
         }
         try {
+              const dateAndTime = DateTime.now()
+                      .setZone('Europe/Prague')
+                      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
         // Fetching Categories and Sections with error handling
         let CategoriesFromDb, SectionsFromDb,typeofPosts;
         try {
         [CategoriesFromDb, SectionsFromDb,typeofPosts] = (await Promise.allSettled([
             prisma.Categories.findMany({}),
             prisma.Sections.findMany({}),
-             prisma.postType.findMany({
+            prisma.postType.findMany({
+                where: {
+                  OR: [
+                    {
+                      validFrom: { lte: dateAndTime }, // validFrom <= dateAndTime
+                      validTo: { gte: dateAndTime }    // validTo >= dateAndTime
+                    },
+                    {
+                      validFrom: null, // Zahrne případy, kdy validFrom není nastaveno
+                      validTo: null    // Zahrne případy, kdy validTo není nastaveno
+                    }
+                  ]
+                },
                 include: {
                   perks: true // Zahrne všechny PerksPost patřící k danému PostType
                 }
-              }),
+              })
           ])).map(result => result.status === 'fulfilled' ? result.value : null);
        
         } catch (dbError) {
             throw new Error("Chyba při načítání kategorií  a sekcí na /addPost - přidání příspěvku : " + dbError.message);
         }
 
-       
-          console.dir(typeofPosts, { depth: null });
+
+         // console.dir(typeofPosts, { depth: null });
         return (
             <div>
                 {session.isLoggedIn ? (
