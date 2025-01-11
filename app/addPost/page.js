@@ -58,10 +58,15 @@ const Page = async () => {
                   perks: true // Zahrne všechny PerksPost patřící k danému PostType
                 }
               }), 
-               prisma.tops.findMany({}),prisma.accountType.findMany({
+               prisma.tops.findMany({ where: {
+              
+                hidden: { not: null } 
+              
+            },}),prisma.accountType.findMany({
                 where: {
                     dependencyPriorityAcc: null, // Filtrovat pouze ty, které nemají žádnou závislost (null),
-                    emoji: { not: null } 
+                    emoji: { not: null } ,
+                  
                 },
                 select: {
                     emoji: true, // Získání pouze emoji pro tyto záznamy
@@ -113,10 +118,9 @@ const Page = async () => {
 
         return (
             <Post
-                allTypeOfPostNames={1}
-                allTypeIfPostPerks={1}
+               
                 priority={post.priority}
-                allowedTops={ableForTops ? filteredTypeTops : false}
+                allowedTops={ableForTops&& post.priority <= 1? filteredTypeTops : false}
                 key={post.id}
                 hasThisType={accType}
                 name={post.name}

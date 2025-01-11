@@ -3,15 +3,40 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { PaymentModal, openPaymentModal } from '../typeOfAccount/PaymentModal';
 import { SubscriptionInfo } from '../components/SubscriptionInfo';
+import { color } from 'framer-motion';
 
 
 
 
 export function Post({ priority,allowedTops,name,emoji, benefits, hasThisType }) {
   const [loading, setLoading] = useState(false);
+
+  
+  const [isOpen, setIsOpen] = useState(false);
   let canTop = allowedTops
- // console.log("Může topovat:",canTop)
-console.log(benefits)
+  console.log("Může topovat:",canTop)
+  const [selectedColor, setSelectedColor] = useState(() => {
+    // Zajistíme, že allowedTops je skutečně pole
+    if (Array.isArray(allowedTops) && allowedTops.length > 0) {
+      // Najděte top s největším numberOfMonthsToValid při inicializaci
+      const defaultTop = allowedTops.reduce((max, item) =>
+        item.numberOfMonthsToValid > max.numberOfMonthsToValid ? item : max
+      );
+      
+      // Vraťte barvu výchozího topu pro inicializaci stavu
+      return defaultTop.color;
+    }
+  
+    // Pokud allowedTops není pole nebo je prázdné, nastavíme výchozí hodnotu
+  
+  });
+  const getDefaultTop = () => {
+  return allowedTops.reduce((max, item) =>
+    item.numberOfMonthsToValid > max.numberOfMonthsToValid ? item : max
+  );
+};
+const [selectedTop, setSelectedTop] = useState(allowedTops? getDefaultTop(): false);
+//console.log(allowedTops)
 
   function toggleSteps() {
     const typeOfPosts = document.getElementsByClassName('typeOfPosts');
@@ -29,7 +54,7 @@ for (let i = 0; i < secondStepDivs.length; i++) {
         localStorage.removeItem('typeOfPost'); 
         secondStepDivs[i].style.display = 'none';
     } else {
-        localStorage.setItem('typeOfPost', name);
+        localStorage.setItem('typeOfPost', selectedTop);
         secondStepDivs[i].style.display = 'block';
     }
 }
@@ -92,29 +117,87 @@ if (firstStep && secondStep) {
 
   return (
 <div
-  className={`w-full max-w-xs  p-3 sm:p-8 bg-base-100 border border-base-200 rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700`}
+  className={`w-full max-w-xs  p-3 sm:p-8 bg-base-100 border border-base-200 rounded-lg shadow-sm dark:bg-base-900 dark:border-base-700  `}
+ 
 >
 
   
 
 <h5 className="mb-3 sm:mb-4 text-lg sm:text-xl font-medium text-base-content dark:text-base-content">
-<span style={{ fontWeight: "bold",marginRight: name ? "15px" : "" }}>
-  {name}
-</span>
-{(Array.isArray(emoji) ? emoji : []).map((item, index) => {
-  // If `hasThisType` matches `item.name`, display only that emoji
-  if (hasThisType === item.name) {
-    return <span className='mr-1' key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />;
-  }
-  return null; // If `hasThisType` doesn't match, don't render anything here
-})}
+  <span
+    style={{
+      fontWeight: "bold",
+      marginRight: name ? "15px" : "",
+    }}
+    className="flex items-center space-x-2" // space-x-2 pro mezery mezi prvky
+  >
+    {canTop ? (
+      <div className="relative flex items-center" style={{ flexShrink: 0 }}>
+        {/* Tlačítko pro zobrazení aktuálního výběru */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-auto px-3 py-1.5 text-left whitespace-nowrap" // whitespace-nowrap pro zajištění, že se text nezalomí
+          style={{
+            borderColor: selectedTop.color,
+            color: selectedTop.color,
+          }}
+        >
+          <span
+            className="mr-2"
+            dangerouslySetInnerHTML={{ __html: selectedTop.emoji }}
+          />
+          {selectedTop.name}
+        </button>
 
-{/* If `hasThisType` doesn't match anything, display all emojis */}
-{!hasThisType || !emoji.some(item => item.name === hasThisType) ? (
-  emoji.map((item, index) => (
-    <span className='mr-1' key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />
-  ))
-) : null}
+        {/* Dropdown seznam */}
+        {isOpen && (
+          <div className="absolute z-10 w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+            {allowedTops.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => {
+                  setSelectedTop(item);
+                  setSelectedColor(item.color)
+                  setIsOpen(false); // Zavřít dropdown po výběru
+                }}
+                className="px-3 py-1.5 cursor-pointer hover:bg-gray-700 flex items-center text-sm"
+                style={{
+                  borderLeft: `4px solid ${item.color}`,
+                  color: item.color,
+                }}
+              >
+                <span
+                  className="mr-2"
+                  dangerouslySetInnerHTML={{ __html: item.emoji }}
+                />
+                {item.name}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    ) : (
+      name
+    )}
+
+    {/* Emoji seznam */}
+    {(Array.isArray(emoji) ? emoji : []).map((item, index) => {
+      // If `hasThisType` matches `item.name`, display only that emoji
+      if (hasThisType === item.name) {
+        return (
+          <span className="mr-1" key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />
+        );
+      }
+      return null; // If `hasThisType` doesn't match, don't render anything here
+    })}
+
+    {/* If `hasThisType` doesn't match anything, display all emojis */}
+    {!hasThisType || !emoji.some(item => item.name === hasThisType) ? (
+      emoji.map((item, index) => (
+        <span className="mr-1" key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />
+      ))
+    ) : null}
+  </span>
 </h5>
 
 
@@ -133,61 +216,78 @@ if (firstStep && secondStep) {
   )}
   
   {/* The benefits list */}
-  <ul
-    role="list"
-    className="space-y-4 sm:space-y-5 my-6 sm:my-7"
-    style={!shouldDisable ? { filter: 'blur(4px)', opacity: '1' } : {}}
-  >
-    {benefits.map((benefit, index) => {
-      const [text, active] = benefit;
-      return (
-        <li
-          key={index}
-          className={`flex items-center ${active ? "" : "line-through decoration-gray-500"}`}
+<ul
+  role="list"
+  className="space-y-4 sm:space-y-5 my-6 sm:my-7"
+  style={!shouldDisable ? { filter: 'blur(4px)', opacity: '1' } : {}}
+>
+  {benefits.map((benefit, index) => {
+    const [text, active] = benefit;
+    return (
+      <li
+        key={index}
+        className={`flex items-center ${active ? "" : "line-through decoration-gray-500"}`}
+        style={{
+          color: selectedColor ? selectedColor : active ? 'inherit' : '#555', // Použití selectedColor pro text, jinak fallback
+        }}
+      >
+        <svg
+          className={`flex-shrink-0 w-3 h-3 sm:w-4 sm:h-4 ${active ? "text-[#8300ff]" : "text-gray-400 dark:text-gray-500"}`}
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          style={{
+            color: selectedColor ? selectedColor : active ? '#8300ff' : '#gray', // Použití selectedColor pro SVG ikonu
+          }}
         >
-          <svg
-            className={`flex-shrink-0 w-3 h-3 sm:w-4 sm:h-4 ${active ? "text-[#8300ff]" : "text-gray-400 dark:text-gray-500"}`}
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-          </svg>
-          <span
-            className={`text-sm sm:text-base font-normal leading-tight ms-2 sm:ms-3 ${
-              active
-                ? "text-base-content dark:text-base-content"
-                : "text-gray-500 dark:text-gray-500"
-            }`}
-          >
-            {renderBenefitText(text)}
-          </span>
-        </li>
-      );
-    })}
-  </ul>
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+        </svg>
+        <span
+          className={`text-sm sm:text-base font-normal leading-tight ms-2 sm:ms-3 ${
+            active
+              ? "text-base-content dark:text-base-content"
+              : "text-gray-500 dark:text-gray-500"
+          }`}
+         
+          
+        >
+          {renderBenefitText(text)}
+        </span>
+      </li>
+    );
+  })}
+</ul>
 </div>
 <a
-    href="#scrollHereAddPost"
-    onClick={(e) => {
-      e.preventDefault(); // Zabránit výchozímu chování odkazu
-      if (shouldDisable) {
-        toggleSteps();
-        const scrollToElement = document.getElementById('scrollHereAddPost');
-        if (scrollToElement) {
-          scrollToElement.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll
-        }
+  href="#scrollHereAddPost"
+  onClick={(e) => {
+    e.preventDefault(); // Zabránit výchozímu chování odkazu
+    if (shouldDisable) {
+      toggleSteps();
+      const scrollToElement = document.getElementById('scrollHereAddPost');
+      if (scrollToElement) {
+        scrollToElement.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll
       }
-    }}
-    type="button"
-    className={`w-full btn text-sm sm:text-base ${
-      isActive
-        ? "bg-[#8300ff] text-white disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-        : "bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50"
-    } ${!shouldDisable ? "cursor-not-allowed" : "cursor-pointer"}`}
-    disabled={!shouldDisable || loading} // Disable button based on condition
+    }
+  }}
+  type="button"
+  className={`w-full btn text-sm sm:text-base ${
+    isActive
+      ? "disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+      : "bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50"
+  } ${!shouldDisable ? "cursor-not-allowed" : "cursor-pointer"}`}
+  style={{ 
+    backgroundColor: selectedColor ? selectedColor : '#8300ff', // Použije selectedColor pro pozadí
+    borderColor: selectedColor ? selectedColor : '#8300ff', // Použije selectedColor pro border
+   
+  }}
+  disabled={!shouldDisable || loading} // Disable button based on condition
 >
+
+
+
+
     {loading ? (
       <span className="loading loading-spinner loading-sm"></span>
     ) : (
