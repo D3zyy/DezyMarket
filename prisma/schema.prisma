@@ -179,7 +179,7 @@ model AccountType {
   emoji         String?
   perks          PerksAccount[]  // Relace "jeden AccountType má mnoho PerksAccount"
   accountUsers   AccountTypeUsers[] // Relace "jeden AccountType má mnoho AccountTypeUsers"
-  
+  codes Codes[]
   accPrices      AccountTypeOnPrices[] // Relace na více cen pro tento AccountType
   upgradesBefore AccountUpgrades[] @relation("AccountTypeBefore")
   upgradesAfter  AccountUpgrades[] @relation("AccountTypeAfter")
@@ -227,6 +227,21 @@ model AccountTypeUsers {
   accountType   AccountType   @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+
+}
+
+
+model Codes {
+  id            Int           @id @default(autoincrement())
+  description   String?
+  numberOfMonthsIn  Int?
+  NumberOfMontsForAcc Int?
+  active        Boolean @default(true)
+  ActivatedOn         DateTime?
+  validFromDate         DateTime?
+  validToDate          DateTime?
+  accountTypeId   Int            // Cizí klíč na AccountType
+  accountType     AccountType    @relation(fields: [accountTypeId], references: [id],onDelete: Cascade)
 
 }
 

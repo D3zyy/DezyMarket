@@ -29,12 +29,7 @@ const Page = async () => {
         }
         try {
         // Fetching Categories and Sections with error handling
-        let CategoriesFromDb, SectionsFromDb;
-        try {
-        [CategoriesFromDb, SectionsFromDb] = (await Promise.allSettled([
-            prisma.Categories.findMany({}),
-            prisma.Sections.findMany({}),
-          ])).map(result => result.status === 'fulfilled' ? result.value : null);
+
        
         } catch (dbError) {
             throw new Error("Chyba při načítání kategorií  a sekcí na /addPost - přidání příspěvku : " + dbError.message);
