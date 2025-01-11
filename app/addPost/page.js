@@ -64,7 +64,8 @@ const Page = async () => {
                     emoji: { not: null } 
                 },
                 select: {
-                    emoji: true // Získání pouze emoji pro tyto záznamy
+                    emoji: true, // Získání pouze emoji pro tyto záznamy
+                    name: true
                 }
             })
           ])).map(result => result.status === 'fulfilled' ? result.value : null);
@@ -95,8 +96,8 @@ const Page = async () => {
             className="typeOfPosts flex flex-col md:flex-row items-center justify-center gap-2 p-2"
         >
 
-{typeofPosts
-.sort((a, b) => a.priority - b.priority) // Řazení podle priority
+    {typeofPosts
+    .sort((a, b) => a.priority - b.priority) // Řazení podle priority
 
     .filter(post => post.show === true)  // Filtrovat pouze příspěvky s show: true
     .map((post) => {

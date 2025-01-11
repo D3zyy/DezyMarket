@@ -101,9 +101,20 @@ if (firstStep && secondStep) {
 <span style={{ fontWeight: "bold",marginRight: name ? "15px" : "" }}>
   {name}
 </span>
-{(Array.isArray(emoji) ? emoji : []).map((item, index) => (
-        <span className='mr-1' key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />
-      ))}
+{(Array.isArray(emoji) ? emoji : []).map((item, index) => {
+  // If `hasThisType` matches `item.name`, display only that emoji
+  if (hasThisType === item.name) {
+    return <span className='mr-1' key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />;
+  }
+  return null; // If `hasThisType` doesn't match, don't render anything here
+})}
+
+{/* If `hasThisType` doesn't match anything, display all emojis */}
+{!hasThisType || !emoji.some(item => item.name === hasThisType) ? (
+  emoji.map((item, index) => (
+    <span className='mr-1' key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />
+  ))
+) : null}
 </h5>
 
 
