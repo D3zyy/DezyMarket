@@ -186,21 +186,12 @@ if (firstStep && secondStep) {
       name
     )}
 
-    {/* Emoji seznam */}
-    {(Array.isArray(emoji) ? emoji : []).map((item, index) => {
-      // If `hasThisType` matches `item.name`, display only that emoji
-      if (hasThisType === item.name) {
-        return (
-          <span className="mr-1" key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />
-        );
-      }
-      return null; // If `hasThisType` doesn't match, don't render anything here
-    })}
+
 
     {/* If `hasThisType` doesn't match anything, display all emojis */}
     {!hasThisType || !emoji.some(item => item.name === hasThisType) ? (
       emoji.map((item, index) => (
-        <span className="mr-1" key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />
+        <span className="ml-3" key={index} dangerouslySetInnerHTML={{ __html: item.emoji }} />
       ))
     ) : null}
   </span>
@@ -284,8 +275,8 @@ if (firstStep && secondStep) {
       : "bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50"
   } ${!shouldDisable ? "cursor-not-allowed" : "cursor-pointer"}`}
   style={{ 
-    backgroundColor: selectedColor ? selectedColor : '#8300ff', // Použije selectedColor pro pozadí
-    borderColor: selectedColor ? selectedColor : '#8300ff', // Použije selectedColor pro border
+    backgroundColor: selectedColor ? selectedColor : '', // Použije selectedColor pro pozadí
+    borderColor: selectedColor ? selectedColor : '', // Použije selectedColor pro border
    
   }}
   disabled={!shouldDisable || loading} // Disable button based on condition

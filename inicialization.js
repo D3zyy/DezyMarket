@@ -122,8 +122,8 @@ async function main() {
         ["až 15 fotografií u inzerátu", true],
         ["Doba uložení ař 2 měsíce", true],
         ["Počet zobrazení inzerátu", true],
-        ["Topovaný v kategorii", true],
         ["Kdo si zobrazil inzerát", false],
+        ["Topovaný v kategorii", false],
         ["Topovaný v sekci", false],
       ]
     },
