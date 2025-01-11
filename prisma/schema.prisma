@@ -123,6 +123,8 @@ model Tops {
 model PostType {
   id             Int             @id @default(autoincrement())
   name           String
+  validFrom     DateTime?
+  validTo       DateTime?
   perks          PerksPost[]     // Relace "jeden PostType má mnoho PerksPost"
   topId          Int?            @unique // Cizí klíč na Top, nyní unikátní
   top            Tops?           @relation(fields: [topId], references: [id], onDelete: Cascade)

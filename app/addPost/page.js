@@ -11,7 +11,8 @@ import Link from 'next/link';
 const Page = async () => {
     let session
     let accType
- 
+
+    
             session = await getSession();
             if (!session) {
                 throw new Error('Session nebyla nalezena');
@@ -29,13 +30,24 @@ const Page = async () => {
         }
         try {
         // Fetching Categories and Sections with error handling
-
+        let CategoriesFromDb, SectionsFromDb,typeofPosts;
+        try {
+        [CategoriesFromDb, SectionsFromDb,typeofPosts] = (await Promise.allSettled([
+            prisma.Categories.findMany({}),
+            prisma.Sections.findMany({}),
+             prisma.postType.findMany({
+                include: {
+                  perks: true // Zahrne všechny PerksPost patřící k danému PostType
+                }
+              }),
+          ])).map(result => result.status === 'fulfilled' ? result.value : null);
        
         } catch (dbError) {
             throw new Error("Chyba při načítání kategorií  a sekcí na /addPost - přidání příspěvku : " + dbError.message);
         }
 
-
+       
+          console.dir(typeofPosts, { depth: null });
         return (
             <div>
                 {session.isLoggedIn ? (
