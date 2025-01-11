@@ -95,25 +95,36 @@ const Page = async () => {
             className="typeOfPosts flex flex-col md:flex-row items-center justify-center gap-2 p-2"
         >
 
-           {typeofPosts
-    .sort((a, b) =>  a.priority- b.priority) // Řazení podle priority 
+{typeofPosts
+.sort((a, b) => a.priority - b.priority) // Řazení podle priority
+
+    .filter(post => post.show === true)  // Filtrovat pouze příspěvky s show: true
     .map((post) => {
-        // Podmínka pro zobrazení emoji, když je priority > 1
-        const emojisToShow =
-            post.priority <= 1 ? accEmojis : []; 
-       
+        // Zkontrolujeme, zda je nějaký post s show: false a shoduje se s accType
+        const matchingPostWithFalseShow = typeofPosts.find(
+            (p) => p.show === false && p.name === accType&& post.priority <= 1
+        );
+      
+        // Pokud nalezneme příspěvek s show: false a odpovídá accType, použijeme jeho perks
+        const perksToUse = matchingPostWithFalseShow
+            ? matchingPostWithFalseShow.perks
+            : post.perks; // Pokud není shodný post, použijeme perks původního postu
+
         return (
             <Post
+                allTypeOfPostNames={1}
+                allTypeIfPostPerks={1}
                 priority={post.priority}
-                allowedTops = {ableForTops ? filteredTypeTops : false}
+                allowedTops={ableForTops ? filteredTypeTops : false}
                 key={post.id}
                 hasThisType={accType}
                 name={post.name}
-                emoji={emojisToShow} // Předáme celý array emoji
-                benefits={post.perks.map((perk) => [perk.name, perk.valid])}
+                emoji={post.priority <= 1 ? accEmojis : []}
+                benefits={perksToUse.map((perk) => [perk.name, perk.valid])} // Použijeme upravené perks
             />
         );
     })}
+      
         </div>
                         
 

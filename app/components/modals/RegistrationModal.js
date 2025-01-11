@@ -7,7 +7,19 @@ import { CheckCircleIcon, XCircleIcon , LockClosedIcon} from '@heroicons/react/2
 import { useRouter } from 'next/navigation';
 
 export function openRegisterModal() {
-  document.getElementById('register_modal').showModal();
+  try{
+    const modal =   document.getElementById('register_modal');
+    if (modal) {
+        modal.showModal();
+    }  
+
+}catch (error) {
+    console.error("Chyba otevírání modalu:", error);
+    
+  }
+
+
+
 }
 
 const translateField = (field) => {

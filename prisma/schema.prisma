@@ -123,6 +123,7 @@ model Tops {
 model PostType {
   id             Int             @id @default(autoincrement())
   name           String
+  show          Boolean? @default(false)
   priority      Int?
   validFrom     DateTime?
   validTo       DateTime?

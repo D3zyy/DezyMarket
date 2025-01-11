@@ -6,7 +6,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 export function openLoginModal() {
-  document.getElementById('login_modal').showModal();
+  try{
+    const modal =   document.getElementById('login_modal');
+    if (modal) {
+        modal.showModal();
+    }  
+
+}catch (error) {
+    console.error("Chyba otevírání modalu:", error);
+    
+  }
+
 }
 
 const handleLogin = async (event, setError, setLoading, setSuccess) => {
