@@ -152,7 +152,7 @@ if (firstStep && secondStep) {
 
         {/* Dropdown seznam */}
         {isOpen && (
-          <div className="absolute z-10 w-full bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+          <div className="absolute z-10 w-full  min-w-36  bg-base-200 rounded-md  shadow-lg">
             {allowedTops.map((item) => (
               <div
                 key={item.id}
@@ -161,9 +161,9 @@ if (firstStep && secondStep) {
                   setSelectedColor(item.color)
                   setIsOpen(false); // Zavřít dropdown po výběru
                 }}
-                className="px-3 py-1.5 cursor-pointer hover:bg-gray-700 flex items-center text-sm"
+                className="px-3 py-1.5 cursor-pointer  flex items-center text-sm"
                 style={{
-                  borderLeft: `4px solid ${item.color}`,
+                
                   color: item.color,
                 }}
               >

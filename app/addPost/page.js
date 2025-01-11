@@ -60,7 +60,7 @@ const Page = async () => {
               }), 
                prisma.tops.findMany({ where: {
               
-                hidden: { not: null } 
+                hidden: { not: true } 
               
             },}),prisma.accountType.findMany({
                 where: {
