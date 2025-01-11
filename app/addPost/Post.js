@@ -153,27 +153,28 @@ if (firstStep && secondStep) {
         {/* Dropdown seznam */}
         {isOpen && (
           <div className="absolute z-10 w-full  min-w-36  bg-base-200 rounded-md  shadow-lg">
-            {allowedTops.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => {
-                  setSelectedTop(item);
-                  setSelectedColor(item.color)
-                  setIsOpen(false); // Zavřít dropdown po výběru
-                }}
-                className="px-3 py-1.5 cursor-pointer  flex items-center text-sm"
-                style={{
-                
-                  color: item.color,
-                }}
-              >
-                <span
-                  className="mr-2"
-                  dangerouslySetInnerHTML={{ __html: item.emoji }}
-                />
-                {item.name}
-              </div>
-            ))}
+{allowedTops
+  .sort((a, b) => b.numberOfMonthsToValid - a.numberOfMonthsToValid) // Řazení sestupně podle numberOfMonthsToValid
+  .map((item) => (
+    <div
+      key={item.id}
+      onClick={() => {
+        setSelectedTop(item);
+        setSelectedColor(item.color);
+        setIsOpen(false); // Zavřít dropdown po výběru
+      }}
+      className="px-3 py-1.5 cursor-pointer flex items-center text-sm"
+      style={{
+        color: item.color,
+      }}
+    >
+      <span
+        className="mr-2"
+        dangerouslySetInnerHTML={{ __html: item.emoji }}
+      />
+      {item.name}
+    </div>
+  ))}
             
           </div>
           
