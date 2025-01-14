@@ -265,7 +265,12 @@ console.log(monthIn?.monthIn)
     name: typPost
   }
 });
-
+if(isAllowed.hidden){
+  return new Response(JSON.stringify({ messageToDisplay: "Tento typ topovaní není dostupný" }), {
+    status: 403,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
 const accOfUser = await prisma.accountType.findMany({
   where: {
     name: monthIn.name

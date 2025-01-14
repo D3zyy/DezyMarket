@@ -19,7 +19,7 @@ import { ReportPostModalWrapperLazy } from "@/app/components/ReportPostModalWrap
 import { handleOpenModalReportLazy } from "@/app/components/ReportPostModalWrapperLazy";
 import { EditPostModalWrapperLazy } from "@/app/components/EditPostModalWrapperLazy";
 import { RatePostModalWrapperLazy } from "@/app/components/RateUserModalWrapperLazy";
-
+import { prisma } from "@/app/database/db";
 
 const Page = async ({ params }) => {
   let session;
@@ -28,7 +28,7 @@ const Page = async ({ params }) => {
   let description;
   let isOverflowing;
   let imageUrls
-
+  let topinfo
 
   try {
    
@@ -37,7 +37,13 @@ const Page = async ({ params }) => {
        getPostFromDb (params.postId),
       getImageUrlsFromDb(params.postId),
     ])).map(result => result.status === 'fulfilled' ? result.value : null);
-
+    console.log(postRecord.topId)
+    if(postRecord.topId !== null){
+      topinfo = await prisma.tops.findUnique({
+        where: { id: postRecord.topId }
+      });
+      console.log("top::",topinfo)
+    }
     if (!postRecord) {
       return (
         <div className="p-4 text-center">
@@ -146,26 +152,28 @@ const Page = async ({ params }) => {
   className={`lg:w-1/2 min-h-[700px] flex flex-col justify-between lg:pl-8`}
 >
      
-      {!(postRecord.typeOfPost === process.env.BASE_RANK) && (
-  <div
+     {postRecord.topId !== null && <div
   className="mt-4 lg:mt-0 badge badge-md badge-outline mb-5"
   style={{
     fontSize: '0.875rem',
-    padding: '8px',
+    padding: '10px',
     borderWidth: '1.2px',
     borderStyle: 'solid',
     height: '2rem', // Přidej pro větší výšku
+    borderColor: topinfo.color
   }}
 >
-    <Link
+<Link
       href={session?.isLoggedIn ? `/typeOfAccount` : ``}
-      style={{ fontWeight: 'bold', fontSize: '1rem' }}
+      style={{ fontWeight: 'bold', fontSize: '1rem', color: topinfo.color }}
     >
-      {postRecord.typeOfPost === process.env.MEDIUM_RANK? "TOP" : "TOP+"}
+ <span className="mr-1" dangerouslySetInnerHTML={{ __html: topinfo.emoji }}></span>
+     
+      {topinfo.name}
 
     </Link>
-  </div>
-)}
+  </div>}
+     
       <h1
   style={{
     fontSize: "25px",
