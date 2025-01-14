@@ -213,7 +213,7 @@ export async function PUT(req) {
 
 
      
-      const post = await prisma.Posts.findUnique({
+      const post = await prisma.posts.findUnique({
         where: { id: data.postId },
       });
 

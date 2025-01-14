@@ -839,15 +839,13 @@ export async function DELETE(req) {
       //  where: { id: data.postId }
       //});
           //ještě z s3 deletnout
-          if(haveImages.length > 0){
+         // if(haveImages.length > 0){
     
-           let res =  await  deleteImagesByPostId(data.postId)
+         //  let res =  await  deleteImagesByPostId(data.postId)
            // here invalidating path 1000 free per month
           // let resCloudFront = await invalidateImagesOnCloudFrontByPostId(data.postId)
                
-            } else {
-        
-            }
+           
        
       return new Response(JSON.stringify({
         message: 'Příspěvek byl úspěšně smazán'
