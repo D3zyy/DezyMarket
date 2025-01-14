@@ -7,7 +7,7 @@ import sharp from 'sharp';
 import { CloudFrontClient, CreateInvalidationCommand } from "@aws-sdk/client-cloudfront"
 import { DateTime } from 'luxon';
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-let sessionGeneral
+import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 const schema = z.object({
   name: z.string()
   .max(70, 'Název může mít maximálně 70 znaků.') 
@@ -192,10 +192,13 @@ export async function POST(req) {
         let allowedTypeOfPost
         let formData;
         let allImages
- 
+        let typPost
+        let isAllowed 
         try {
             formData = await req.formData();
-   
+           typPost =  formData.get('typeOfPost')
+            console.log(typPost)
+
            allImages = formData.getAll("images")
            if(allImages.length > 25) {
             return new Response(JSON.stringify({ message: "Chyba. Nahráno nedovolené množství obrázků!" }), {
@@ -255,10 +258,35 @@ if (invisiblePosts > 100) {
 // Now you can use session directly throughout your function
 const userId = session.userId; // Use userId directly from session
 
+let monthIn = await getUserAccountTypeOnStripe(session.email)
+console.log(monthIn?.monthIn)
+ isAllowed = await prisma.tops.findMany({
+  where: {
+    name: typPost
+  }
+});
 
-        
-       
+const accOfUser = await prisma.accountType.findMany({
+  where: {
+    name: monthIn.name
+  }
+});
 
+if(allImages.length > accOfUser.numberOfAllowedImages ){
+  return new Response(JSON.stringify({ messageToDisplay: "Bylo nahráno nedovolené množství obrázků." }), {
+    status: 403,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+
+ if(isAllowed?.numberOfMonthsToValid > monthIn?.monthIn)   {
+ 
+  return new Response(JSON.stringify({ messageToDisplay: "Tento typ topovaní není pro vás dostupný." }), {
+    status: 403,
+    headers: { 'Content-Type': 'application/json' }
+  });
+ }
+ 
 
 // Získání všech hodnot pro 'price'
 let prices = formData.getAll('price');
@@ -296,48 +324,15 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
             });
           } else {
 
-            const customers = await stripe.customers.list({
-                email: session.email
-            });
 
-            const customer = customers.data[0];
-        
-            // Retrieve subscriptions for the customer
-            const subscriptions = await stripe.subscriptions.list({
-                customer: customer.id,
-                status: "active"
-            });
-            if (!subscriptions.data.length) {
-                allowedTypeOfPost = process.env.NEXT_PUBLIC_BASE_RANK
-            } else {
-                const subscription = subscriptions.data[0];
-                const subscriptionInfo = await stripe.subscriptions.retrieve(subscription.id);
-                const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
-                switch (product.name) {
-                    case process.env.NEXT_PUBLIC_MEDIUM_RANK:
-                        allowedTypeOfPost = process.env.NEXT_PUBLIC_MEDIUM_RANK;
-                        break;
-                    case process.env.NEXT_PUBLIC_BEST_RANK:
-                        allowedTypeOfPost = process.env.NEXT_PUBLIC_BEST_RANK;
-                        break;
-                    default:
-                        allowedTypeOfPost = process.env.NEXT_PUBLIC_BASE_RANK
-                        break;
-                }
-            }
-           
+
+
        
-            if (allowedTypeOfPost === formData.get('typeOfPost') ||  formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_BEST_RANK || formData.get('typeOfPost') === process.env.NEXT_PUBLIC_BASE_RANK && allowedTypeOfPost ===process.env.NEXT_PUBLIC_MEDIUM_RANK  ){
-              
-               if (!( (allowedTypeOfPost === process.env.NEXT_PUBLIC_BASE_RANK && allImages.length <= 15) ||
-                      (allowedTypeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK && allImages.length <= 20) ||
-                      (allowedTypeOfPost === process.env.NEXT_PUBLIC_BEST_RANK && allImages.length <= 25) )) {
-                   
-                  return new Response(JSON.stringify({ message: "Počet obrázků není povolen!" }), {
-                    status: 400,
-                    headers: { 'Content-Type': 'application/json' }
-                  });
-                }
+         
+    
+
+
+
                const categoryExist = await prisma.Categories.findUnique({
                 where: { id: parseInt(formData.get('category')) }
               });
@@ -372,21 +367,23 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 return Buffer.from(arrayBuffer);  // Convert arrayBuffer to Buffer
               }));
               let newPost
+               
 
               const localISODateFixedOffset = DateTime.now()
               .setZone('Europe/Prague') // Čas zůstane v českém pásmu
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
               try{
+
                 const price = validatedFields.data.price;
                 const validatedPrice = typeof price === 'number' && Number.isInteger(price) ? price.toString() : price;
-                 newPost = await prisma.Posts.create({
+                 newPost = await prisma.posts.create({
                   data: {
                     dateAndTime: localISODateFixedOffset,
                     name: validatedFields.data.name,
                     description: validatedFields.data.description,
                     price: validatedPrice,
                     location: validatedFields.data.location,
-                    typeOfPost: formData.get('typeOfPost'),
+                    topId: isAllowed.length > 0 ? isAllowed[0].id : null,
                     categoryId: validatedFields.data.category,
                     sectionId : validatedFields.data.section,
                     phoneNumber : validatedFields.data.phoneNumber,
@@ -426,23 +423,7 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
             });
                
 
-            } else {
-   
-                if(formData.get('typeOfPost') != process.env.NEXT_PUBLIC_BASE_RANK && formData.get('typeOfPost') != process.env.NEXT_PUBLIC_MEDIUM_RANK && formData.get('typeOfPost') != process.env.NEXT_PUBLIC_BEST_RANK ){
-                   
-                    return new Response(JSON.stringify({ message: "Tento typ příspěvku neexistuje." }), {
-                        status: 403,
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-                }
-
-        
-                return new Response(JSON.stringify({ message: "Na tento typ příspěvku nemáte opravnění." }), {
-                    status: 403,
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            }
-            
+           
           }
 
 

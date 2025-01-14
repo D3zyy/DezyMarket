@@ -186,15 +186,7 @@ const handleDeleteImage = (index) => {
 
     if (isVisible) {
       const storedTypeOfPost = localStorage.getItem('typeOfPost');
-      if (
-        (storedTypeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK && storedTypeOfPost === accType) ||
-        (storedTypeOfPost === process.env.NEXT_PUBLIC_BASE_RANK && storedTypeOfPost === accType) ||
-        (storedTypeOfPost === process.env.NEXT_PUBLIC_BEST_RANK && storedTypeOfPost === accType)
-      ) {
-        setTypeOfPost(storedTypeOfPost);
-      } else {
-        setTypeOfPost(process.env.NEXT_PUBLIC_BASE_RANK);
-      }
+      setTypeOfPost(storedTypeOfPost);
     }
   };
 

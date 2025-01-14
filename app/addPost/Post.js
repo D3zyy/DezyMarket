@@ -139,7 +139,6 @@ if (firstStep && secondStep) {
           onClick={() => setIsOpen(!isOpen)}
           className="w-auto mr-2 text-left whitespace-nowrap" // whitespace-nowrap pro zajištění, že se text nezalomí
           style={{
-            borderColor: selectedTop.color,
             color: selectedTop.color,
           }}
         >
@@ -226,9 +225,7 @@ if (firstStep && secondStep) {
       <li
         key={index}
         className={`flex items-center ${active ? "" : "line-through decoration-gray-500"}`}
-        style={{
-          color: selectedColor ? selectedColor : active ? 'inherit' : '#555', // Použití selectedColor pro text, jinak fallback
-        }}
+        
       >
         <svg
           className={`flex-shrink-0 w-3 h-3 sm:w-4 sm:h-4 ${active ? "text-[#8300ff]" : "text-gray-400 dark:text-gray-500"}`}
@@ -236,9 +233,7 @@ if (firstStep && secondStep) {
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           viewBox="0 0 20 20"
-          style={{
-            color: selectedColor && active ? selectedColor : active ? '#8300ff' : '#gray', // Použití selectedColor pro SVG ikonu
-          }}
+         
         >
           <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
         </svg>
@@ -276,11 +271,7 @@ if (firstStep && secondStep) {
       ? "disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed"
       : "bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50"
   } ${!shouldDisable ? "cursor-not-allowed" : "cursor-pointer"}`}
-  style={{ 
-    backgroundColor: selectedColor ? selectedColor : '', // Použije selectedColor pro pozadí
-    borderColor: selectedColor ? selectedColor : '', // Použije selectedColor pro border
-   
-  }}
+  
   disabled={!shouldDisable || loading} // Disable button based on condition
 >
 

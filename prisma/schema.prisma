@@ -114,7 +114,7 @@ model Tops {
   color                 String?
   numberOfMonthsToValid Int?
   hidden                Boolean? 
-  
+  posts Posts[]
   postType              PostType?    @relation // Volitelný vztah s PostType
   
   @@index([name])
@@ -181,6 +181,7 @@ model AccountType {
   name           String
   priority       Int?
   emoji         String?
+  numberOfAllowedImages Int? @default(15)
   dependencyPriorityAcc Int?
   perks          PerksAccount[]  // Relace "jeden AccountType má mnoho PerksAccount"
   accountUsers   AccountTypeUsers[] // Relace "jeden AccountType má mnoho AccountTypeUsers"
@@ -190,6 +191,8 @@ model AccountType {
   upgradesAfter  AccountUpgrades[] @relation("AccountTypeAfter")
   @@index([name])
 }
+
+
 
 model Prices {
   id             Int             @id @default(autoincrement())
@@ -282,7 +285,8 @@ model Posts {
   visible Boolean @default(true)
   phoneNumber  String       @db.VarChar(9)
   location     String       @db.VarChar(50)
-  typeOfPost   String       @db.VarChar(100)
+  topId         Int?    
+  top     Tops?   @relation(fields: [topId], references: [id], onDelete: Cascade) 
   category     Categories   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   section      Sections     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   images       Image[]      // Define a one-to-many relation
