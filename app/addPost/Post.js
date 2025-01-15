@@ -1,9 +1,7 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
-import { PaymentModal, openPaymentModal } from '../typeOfAccount/PaymentModal';
-import { SubscriptionInfo } from '../components/SubscriptionInfo';
-import { color } from 'framer-motion';
+
 
 
 
@@ -14,7 +12,6 @@ export function Post({ allTops,priority,allowedTops,name,emoji, benefits, hasThi
   console.log("Filtrované dovolené tops:", allowedTops);
   let result
   if (Array.isArray(allowedTops)) {
-console.log("Je array!")
 
 // Zajistíme, že allowedTops je pole, pokud není, nastavíme prázdné pole
 const allowedArray = Array.isArray(allowedTops) ? allowedTops : [];
@@ -28,7 +25,7 @@ const allowedIds = new Set(allowedArray.map(top => top.id));
   allowed: allowedIds.has(top.id)
 }));
 
-console.log("Výsledek s allowed flagem:", result);
+
 
 
 
@@ -37,7 +34,7 @@ console.log("Výsledek s allowed flagem:", result);
 
   const [isOpen, setIsOpen] = useState(false);
   let canTop = allowedTops
-  console.log("Může topovat:",canTop)
+
   const [selectedColor, setSelectedColor] = useState(() => {
     // Zajistíme, že allowedTops je skutečně pole
     if (Array.isArray(allowedTops) && allowedTops.length > 0) {
@@ -48,7 +45,7 @@ console.log("Výsledek s allowed flagem:", result);
         )
       : null; // nebo použij výchozí hodnotu podle potřeby
     
-    console.log("Výchozí top:", defaultTop);
+
       
       // Vraťte barvu výchozího topu pro inicializaci stavu
       return defaultTop.color;
@@ -216,18 +213,17 @@ if (firstStep && secondStep) {
       />
     </svg>
   )}
-  {item.allowed && (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-green-500 mr-3">
+  {item.allowed && (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-green-500  mr-3">
   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
 </svg>
 )}
 <span
-  style={{ filter: !item.allowed ? 'blur(1.5px)' : '' }}
-  className={!item.allowed ? 'text-slate-500' : ''}
+  style={{ filter: !item.allowed ? 'blur(1px)' : '' }}
   dangerouslySetInnerHTML={{ __html: item.emoji }}
 />
 </span>
 
-   <span   style={{ filter: !item.allowed ? 'blur(1.5px)' : '' }}>{item.name}</span>   
+   <span className={`${!item.allowed ? 'text-[#b0b0b0]' : ''}`}   style={{ filter: !item.allowed ? 'blur(1px)' : '' }}>{item.name}</span>   
     </div>
   ))}
             
