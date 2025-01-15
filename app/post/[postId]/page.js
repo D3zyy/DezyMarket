@@ -37,12 +37,15 @@ const Page = async ({ params }) => {
        getPostFromDb (params.postId),
       getImageUrlsFromDb(params.postId),
     ])).map(result => result.status === 'fulfilled' ? result.value : null);
-    console.log(postRecord.topId)
-    if(postRecord.topId !== null){
-      topinfo = await prisma.tops.findUnique({
-        where: { id: postRecord.topId }
-      });
-      console.log("top::",topinfo)
+
+    if(postRecord?.topId !== null){
+      if(postRecord?.topId) {
+        topinfo = await prisma.tops.findUnique({
+          where: { id: postRecord?.topId }
+        });
+        console.log("top::",topinfo)
+      }
+     
     }
     if (!postRecord) {
       return (
@@ -61,7 +64,7 @@ const Page = async ({ params }) => {
         </div>
       );
     }
-    accType = await getUserAccountTypeOnStripe(postRecord.user.email);
+    accType = await getUserAccountTypeOnStripe(postRecord?.user.email);
     accType = accType?.name
     //console.log("5. jdeme pro typ účtu na stripe ")
    // console.log("6. výsledek callu na typ učtu na stripe:",accType)
@@ -95,7 +98,7 @@ const Page = async ({ params }) => {
     <li >
         
       <Link   href={`/category?categoryName=${postRecord?.category?.name}`}>
-          <span className="mr-2 " dangerouslySetInnerHTML={{ __html: postRecord?.category?.logo }}></span>
+        {postRecord?.category?.logo  ? <span className="mr-2 " dangerouslySetInnerHTML={{ __html: postRecord?.category?.logo }}></span> : ""}  
           <span className="underline">{postRecord?.category?.name}</span>
         </Link>
     </li>
@@ -117,7 +120,7 @@ const Page = async ({ params }) => {
 {session?.isLoggedIn ? <> 
       {session?.role?.privileges > postRecord?.user?.role?.privileges && 
 <div className="flex space-x-4 mt-8">
-<EditPostModalWrapperLazy typePost={postRecord.typeOfPost} idUserOfEditor={session.userId} idUserOfPost={postRecord.user.id}  roleOfEditor={session.role.privileges} descriptionPost={description} posttId={postRecord.id} posttName={postRecord.name} posttPrice={postRecord.price} postPhoneNumber={postRecord.phoneNumber} postLocation={postRecord.location} postCategoryId={postRecord.category?.id} postSectionId={postRecord.section?.id} />
+<EditPostModalWrapperLazy typePost={postRecord?.typeOfPost} idUserOfEditor={session.userId} idUserOfPost={postRecord?.user.id}  roleOfEditor={session.role.privileges} descriptionPost={description} posttId={postRecord?.id} posttName={postRecord?.name} posttPrice={postRecord?.price} postPhoneNumber={postRecord?.phoneNumber} postLocation={postRecord?.location} postCategoryId={postRecord?.category?.id} postSectionId={postRecord?.section?.id} />
 
   
 
@@ -132,7 +135,7 @@ const Page = async ({ params }) => {
 </svg>
 
   </a>
-  <ReportsPostModalWrapperLazy postId={postRecord.id} />
+  <ReportsPostModalWrapperLazy postId={postRecord?.id} />
 </div>
 }</> : ""}
 </div>
@@ -141,7 +144,7 @@ const Page = async ({ params }) => {
     style={{ boxShadow: '0 0 10px var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)))' }}
   >
     
-     <ImageGallery  allImages={imageUrls} typeOfPost={postRecord.typeOfPost}/> 
+     <ImageGallery  allImages={imageUrls} typeOfPost={postRecord?.typeOfPost}/> 
     
 
 
@@ -152,7 +155,7 @@ const Page = async ({ params }) => {
   className={`lg:w-1/2 min-h-[700px] flex flex-col justify-between lg:pl-8`}
 >
      
-     {postRecord.topId !== null && <div
+     {postRecord?.topId !== null && <div
   className="mt-4 lg:mt-0 badge badge-md badge-outline mb-5"
   style={{
     fontSize: '0.875rem',
@@ -160,16 +163,16 @@ const Page = async ({ params }) => {
     borderWidth: '1.2px',
     borderStyle: 'solid',
     height: '2rem', // Přidej pro větší výšku
-    borderColor: topinfo.color
+    borderColor: topinfo?.color
   }}
 >
 <Link
       href={session?.isLoggedIn ? `/typeOfAccount` : ``}
-      style={{ fontWeight: 'bold', fontSize: '1rem', color: topinfo.color }}
+      style={{ fontWeight: 'bold', fontSize: '1rem', color: topinfo?.color }}
     >
- <span className="mr-1" dangerouslySetInnerHTML={{ __html: topinfo.emoji }}></span>
+ { topinfo?.emoji ? <span className="mr-1" dangerouslySetInnerHTML={{ __html: topinfo?.emoji }}></span> : ""}
      
-      {topinfo.name}
+      {topinfo?.name}
 
     </Link>
   </div>}
@@ -181,7 +184,7 @@ const Page = async ({ params }) => {
     maxWidth: "100%", // Zajistí, že se text zalomí v rámci šířky rodiče
   }}
   className={`text-xl font-bold mb-6 sm:mb-5 ${
-    postRecord.typeOfPost === process.env.BASE_RANK ? "mt-10" : "mt-0"
+    postRecord?.typeOfPost === process.env.BASE_RANK ? "mt-10" : "mt-0"
   } lg:mt-0`}
 >
   {postRecord?.name}
@@ -277,28 +280,29 @@ const Page = async ({ params }) => {
             <div className="mt-3">
               <strong className="text-sm">Cena</strong>
               <span className="ml-1">
-              {Number.isInteger(Number(postRecord.price)) 
-  ? `${Number(postRecord.price).toLocaleString('cs-CZ')} Kč` 
-  : postRecord.price}
+              {Number.isInteger(Number(postRecord?.price)) 
+  ? `${Number(postRecord?.price).toLocaleString('cs-CZ')} Kč` 
+  : postRecord?.price}
 </span>
             </div>
             <div className="mt-3">
               <strong className="text-sm">Zveřejněno</strong>
               <span className="ml-1">
-  {new Date(postRecord.dateAndTime).toISOString().slice(0, 10).split('-').reverse().join('.')}
+
+  {postRecord?.dateAndTime ?new Date(postRecord?.dateAndTime).toISOString().slice(0, 10).split('-').reverse().join('.'): ""}
 </span>
             </div>
             <div className="mt-3">
               <strong className="text-sm">Kde</strong>
               <span className="ml-1">
-  {postRecord.location}
+  {postRecord?.location}
 </span>
             </div>
             <div className="mt-3">
       <strong className="text-sm">Kategorie:</strong>
       <span className="ml-1">
         <Link href={`/category?categoryName=${postRecord?.category?.name}`}>
-          <span style={{ marginRight: "5px" }} dangerouslySetInnerHTML={{ __html: postRecord?.category?.logo }}></span>
+     {postRecord?.category?.logo ?  <span style={{ marginRight: "5px" }} dangerouslySetInnerHTML={{ __html: postRecord?.category?.logo }}></span> : ""}    
           <span className="link">{postRecord?.category?.name}</span>
         </Link>
       </span>
@@ -350,7 +354,7 @@ const Page = async ({ params }) => {
       {postRecord?.userId === session?.userId || session?.role?.privileges > postRecord?.user?.role?.privileges ? (
         <>
            
-           <DeletePostModal posttId={postRecord.id} />      
+           <DeletePostModal posttId={postRecord?.id} />      
         </>
       ) : (
         <>
@@ -371,7 +375,7 @@ const Page = async ({ params }) => {
       {session.isLoggedIn && postRecord?.userId === session?.userId && session.isLoggedIn  ? 
       <> 
 
-      <EditPostModalWrapperLazy typePost={postRecord.typeOfPost} idUserOfEditor={session.userId} idUserOfPost={postRecord.user.id}  roleOfEditor={session.role.privileges} descriptionPost={description} posttId={postRecord.id} posttName={postRecord.name} posttPrice={postRecord.price} postPhoneNumber={postRecord.phoneNumber} postLocation={postRecord.location} postCategoryId={postRecord.category?.id} postSectionId={postRecord.section?.id} />
+      <EditPostModalWrapperLazy typePost={postRecord?.typeOfPost} idUserOfEditor={session.userId} idUserOfPost={postRecord?.user.id}  roleOfEditor={session.role.privileges} descriptionPost={description} posttId={postRecord?.id} posttName={postRecord?.name} posttPrice={postRecord?.price} postPhoneNumber={postRecord?.phoneNumber} postLocation={postRecord?.location} postCategoryId={postRecord?.category?.id} postSectionId={postRecord?.section?.id} />
 
       <div style={{textAlign: "center"}} className="flex items-center space-x-2">
       <a href="#" className="btn sm:h-0 h-20 flex-shrink" onClick={openDeletePostModal}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-red-500 ">
@@ -381,7 +385,7 @@ const Page = async ({ params }) => {
 
 
       </> : <>  
-       {session.isLoggedIn? <ReportPostModalWrapperLazy ppostId={postRecord.id} creator={postRecord.user.fullName} creatorId={postRecord.user.id} imagesLen={imageUrls.length} /> : <><a onClick={openInfoModal} className="btn sm:h-0 h-20 flex-shrink"> <svg
+       {session.isLoggedIn? <ReportPostModalWrapperLazy ppostId={postRecord?.id} creator={postRecord?.user.fullName} creatorId={postRecord?.user.id} imagesLen={imageUrls.length} /> : <><a onClick={openInfoModal} className="btn sm:h-0 h-20 flex-shrink"> <svg
 xmlns="http://www.w3.org/2000/svg"
 fill="none"
 viewBox="0 0 24 24"
@@ -396,8 +400,8 @@ className="h-6 w-6 text-red-600"
 />
 </svg>
 Nahlásit příspěvek </a> </>}
-{session.isLoggedIn? <RatePostModalWrapperLazy userToRate={postRecord.user.id} 
-                nameOfUser={postRecord.user.fullName}  />  :  <a onClick={ openInfoModal}  className="btn sm:h-0 h-20 flex-shrink"> 
+{session.isLoggedIn? <RatePostModalWrapperLazy userToRate={postRecord?.user.id} 
+                nameOfUser={postRecord?.user.fullName}  />  :  <a onClick={ openInfoModal}  className="btn sm:h-0 h-20 flex-shrink"> 
        
 <svg
 xmlns="http://www.w3.org/2000/svg"
