@@ -187,9 +187,12 @@ if (firstStep && secondStep) {
     <div
       key={item.id}
       onClick={() => {
-        setSelectedTop(item);
-        setSelectedColor(item.color);
-        setIsOpen(false); // Zavřít dropdown po výběru
+        if(item.allowed){
+          setSelectedTop(item);
+          setSelectedColor(item.color);
+          setIsOpen(false); // Zavřít dropdown po výběru
+        }
+       
       }}
       className="px-3 py-1.5 cursor-pointer flex items-center text-sm"
       style={{
