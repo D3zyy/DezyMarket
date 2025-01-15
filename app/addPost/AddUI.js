@@ -31,11 +31,15 @@ const AddUI = ({ accType , categories, sections}) => {
 
   function toggleSteps() {
     const typeOfPosts = document.getElementsByClassName('typeOfPosts');
-   
 
     if (typeOfPosts.length > 0) {
+      // Přepne viditelnost na základě aktuálního stavu
       for (let i = 0; i < typeOfPosts.length; i++) {
-        typeOfPosts[i].style.display = 'none'; // Skrytí jednotlivých prvků
+        if (typeOfPosts[i].style.display === 'none') {
+          typeOfPosts[i].style.display = '';
+        } else {
+          typeOfPosts[i].style.display = 'none';
+        }
       }
     }
 
@@ -58,7 +62,7 @@ if (firstStep && secondStep) {
     if (firstStep.getAttribute('data-content') === '✓') {
         // Pokud je data-content '✓', odstranit ho a odebrat 'step-primary' ze druhého kroku
         secondStep.classList.remove('step-primary');
-        secondStep.setAttribute('data-content', '1');
+        secondStep.setAttribute('data-content', '2');
         firstStep.removeAttribute('data-content');
        
     } else {

@@ -64,50 +64,54 @@ const allowedIds = new Set(allowedArray.map(top => top.id));
 const [selectedTop, setSelectedTop] = useState(allowedTops? getDefaultTop(): name);
 //console.log(allowedTops)
 
-  function toggleSteps() {
-    const typeOfPosts = document.getElementsByClassName('typeOfPosts');
-   
+function toggleSteps() {
+  const typeOfPosts = document.getElementsByClassName('typeOfPosts');
 
-    if (typeOfPosts.length > 0) {
-      for (let i = 0; i < typeOfPosts.length; i++) {
-        typeOfPosts[i].style.display = 'none'; // Skrytí jednotlivých prvků
+  if (typeOfPosts.length > 0) {
+    // Přepne viditelnost na základě aktuálního stavu
+    for (let i = 0; i < typeOfPosts.length; i++) {
+      if (typeOfPosts[i].style.display === 'none') {
+        typeOfPosts[i].style.display = '';
+      } else {
+        typeOfPosts[i].style.display = 'none';
       }
     }
+  }
 
-    const secondStepDivs = document.getElementsByClassName('addPostSecondStep');
+  const secondStepDivs = document.getElementsByClassName('addPostSecondStep');
 for (let i = 0; i < secondStepDivs.length; i++) {
-    if (secondStepDivs[i].style.display === 'block') {
-        localStorage.removeItem('typeOfPost'); 
-        secondStepDivs[i].style.display = 'none';
-    } else {
+  if (secondStepDivs[i].style.display === 'block') {
+      localStorage.removeItem('typeOfPost'); 
+      secondStepDivs[i].style.display = 'none';
+  } else {
 
-        localStorage.setItem('typeOfPost', selectedTop?.name ? selectedTop?.name: name);
-        secondStepDivs[i].style.display = 'block';
-    }
+      localStorage.setItem('typeOfPost', selectedTop?.name ? selectedTop?.name: name);
+      secondStepDivs[i].style.display = 'block';
+  }
 }
 const firstStep = document.querySelector('.firstStep');
 const secondStep = document.querySelector('.secondStep');
 
 if (firstStep && secondStep) {
-    // Zkontrolovat, zda první krok má data-content atribut
-    if (firstStep.getAttribute('data-content') === '✓') {
-        // Pokud je data-content '✓', odstranit ho a odebrat 'step-primary' ze druhého kroku
-        secondStep.classList.remove('step-primary');
-        secondStep.setAttribute('data-content', '1');
-        firstStep.removeAttribute('data-content');
-       
-    } else {
-        // Jinak nastavit data-content na '✓' a přidat 'step-primary' k druhému kroku
-        secondStep.classList.add('step-primary');
-        secondStep.setAttribute('data-content', '2');
-        firstStep.setAttribute('data-content', '✓');
+  // Zkontrolovat, zda první krok má data-content atribut
+  if (firstStep.getAttribute('data-content') === '✓') {
+      // Pokud je data-content '✓', odstranit ho a odebrat 'step-primary' ze druhého kroku
+      secondStep.classList.remove('step-primary');
+      secondStep.setAttribute('data-content', '2');
+      firstStep.removeAttribute('data-content');
+     
+  } else {
+      // Jinak nastavit data-content na '✓' a přidat 'step-primary' k druhému kroku
+      secondStep.classList.add('step-primary');
+      secondStep.setAttribute('data-content', '2');
+      firstStep.setAttribute('data-content', '✓');
 
-    }
+  }
 }
 
 
 
-  }
+}
   const isActive = priority != 1 && canTop && priority != 1;
   const isZakladni = name === process.env.NEXT_PUBLIC_BASE_RANK ;
 
