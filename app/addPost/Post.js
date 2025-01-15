@@ -83,8 +83,8 @@ for (let i = 0; i < secondStepDivs.length; i++) {
   if (secondStepDivs[i].style.display === 'block') {
       localStorage.removeItem('typeOfPost'); 
       secondStepDivs[i].style.display = 'none';
-  } else {
-
+  } else {  
+      localStorage.setItem('typeOfPostColor', selectedColor);
       localStorage.setItem('typeOfPost', selectedTop?.name ? selectedTop?.name: name);
       secondStepDivs[i].style.display = 'block';
   }
