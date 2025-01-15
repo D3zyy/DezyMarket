@@ -204,7 +204,7 @@ if (firstStep && secondStep) {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="size-6 text-gray-500 mr-3"
+      className="size-6  mr-3"
     >
       <path
         strokeLinecap="round"
@@ -219,6 +219,7 @@ if (firstStep && secondStep) {
 )}
 <span
   style={{ filter: !item.allowed ? 'blur(1.5px)' : '' }}
+  className={!item.allowed ? 'text-slate-500' : ''}
   dangerouslySetInnerHTML={{ __html: item.emoji }}
 />
 </span>
