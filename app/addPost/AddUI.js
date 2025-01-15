@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation'
 const AddUI = ({ accType , categories, sections}) => {
-  
+  const [emojii, setEmojii] = useState(null);
   const [infoTop, setInfoTop] = useState(null);
   const [typeOfPost, setTypeOfPost] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -238,6 +238,7 @@ const handleDeleteImage = (index) => {
     const isVisible = divElement && getComputedStyle(divElement).display === 'block';
 
     if (isVisible) {
+      setEmojii(localStorage.getItem('typeOfPostEmoji'))
       setInfoTop(localStorage.getItem('typeOfPostColor'))
       const storedTypeOfPost = localStorage.getItem('typeOfPost');
       setTypeOfPost(storedTypeOfPost);
@@ -260,7 +261,7 @@ console.log(infoTop)
   return (
     <>
     <div className='flex justify-center gap-4 p-2'> <span style={{ color: infoTop }} className="badge badge-lg badge-outline">
-  {typeOfPost}
+    <span  className='mr-2' dangerouslySetInnerHTML={{ __html: emojii }}></span> {typeOfPost}
 </span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" onClick={toggleSteps} className="size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
 </svg></div>
