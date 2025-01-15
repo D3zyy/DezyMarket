@@ -262,8 +262,8 @@ const handleDeleteImage = (index) => {
 console.log(infoTop)
   return (
     <>
-    <div className='flex justify-center gap-4 p-2'> <span style={{ color: infoTop }} className="badge badge-lg badge-outline">
-    <span  className='mr-2' dangerouslySetInnerHTML={{ __html: emojii }}></span> {typeOfPost}
+    <div className='flex justify-center gap-4 p-2'> <span style={{ color: infoTop ? infoTop : '' }} className="badge badge-lg badge-outline">
+    <span  className={`${emojii ? 'mr-2' : ''}`} dangerouslySetInnerHTML={{ __html: emojii }}></span> {typeOfPost}
 </span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" onClick={toggleSteps} className="size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
 </svg></div>

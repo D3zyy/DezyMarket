@@ -87,7 +87,7 @@ for (let i = 0; i < secondStepDivs.length; i++) {
       secondStepDivs[i].style.display = 'none';
   } else {  
       localStorage.setItem('typeOfPostEmoji', selectedTop?.emoji ? selectedTop?.emoji: emoji);
-      localStorage.setItem('typeOfPostColor', selectedColor && selectedColor);
+      localStorage.setItem('typeOfPostColor', selectedColor ? selectedColor :'' );
       localStorage.setItem('typeOfPost', selectedTop?.name ? selectedTop?.name: name);
       secondStepDivs[i].style.display = 'block';
   }
