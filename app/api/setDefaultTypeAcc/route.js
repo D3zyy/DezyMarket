@@ -78,6 +78,7 @@ export async function POST(request) {
         fromDate: fromDate,
         user: { connect: { id: user.id } },
         accountType: { connect: { id: accountType.id } },
+        monthIn: 0
       },
     });
 

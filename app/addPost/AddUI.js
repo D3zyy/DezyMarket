@@ -61,7 +61,7 @@ const AddUI = ({ accType , categories, sections}) => {
 
 
     formData.append('price', priceFromUseState );
-    formData.append('typeOfPost',typeOfPost)
+    formData.append('typeOfPost','Top+')
 
 
   

@@ -257,15 +257,21 @@ if (invisiblePosts > 100) {
 
 // Now you can use session directly throughout your function
 const userId = session.userId; // Use userId directly from session
-
+console.log("pred !!!")
+if (typPost) {
+  console.log("Jdu dovnitr!!!")
 let monthIn = await getUserAccountTypeOnStripe(session.email)
 console.log(monthIn?.monthIn)
- isAllowed = await prisma.tops.findMany({
+
+console.log("Jdu kontrolvat top")
+
+ isAllowed = await prisma.tops.findFirst({
   where: {
     name: typPost
   }
 });
-if(isAllowed.hidden){
+console.log("Nasel sem top:",isAllowed)
+if(isAllowed?.hidden){
   return new Response(JSON.stringify({ messageToDisplay: "Tento typ topovaní není dostupný" }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
@@ -277,25 +283,27 @@ const accOfUser = await prisma.accountType.findMany({
   }
 });
 
-if(allImages.length > accOfUser.numberOfAllowedImages ){
+if(allImages?.length > accOfUser?.numberOfAllowedImages ){
   return new Response(JSON.stringify({ messageToDisplay: "Bylo nahráno nedovolené množství obrázků." }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
   });
 }
-
+console.log("Počet měsícu abych ho mohl tento top:",isAllowed?.numberOfMonthsToValid )
+console.log("Počet měsícu které mám:", monthIn?.monthIn)
+console.log(isAllowed?.numberOfMonthsToValid  > monthIn?.monthIn)
  if(isAllowed?.numberOfMonthsToValid > monthIn?.monthIn)   {
- 
-  return new Response(JSON.stringify({ messageToDisplay: "Tento typ topovaní není pro vás dostupný." }), {
+  console.log("Nemuzu!!")
+  return new Response(JSON.stringify({ messageToDisplay: "Tento druh topovaní není pro vás dostupný" }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
   });
  }
- 
-
+}
+console.log("Můžu!!")
 // Získání všech hodnot pro 'price'
 let prices = formData.getAll('price');
-console.log("data",formData)
+
 // Najděte první nenulovou hodnotu
 let priceConverted = prices.find(price => price !== '');
 
@@ -332,7 +340,7 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
 
 
 
-       
+            console.log("Tadyyyy")
          
     
 
@@ -373,12 +381,13 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
               }));
               let newPost
                
-
+              console.log("Tadyyyy 1")
               const localISODateFixedOffset = DateTime.now()
               .setZone('Europe/Prague') // Čas zůstane v českém pásmu
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
               try{
-
+                console.log( "Nasel sem top",isAllowed?.length > 0)
+                console.log("tento top:",isAllowed?.id)
                 const price = validatedFields.data.price;
                 const validatedPrice = typeof price === 'number' && Number.isInteger(price) ? price.toString() : price;
                  newPost = await prisma.posts.create({
@@ -388,7 +397,7 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                     description: validatedFields.data.description,
                     price: validatedPrice,
                     location: validatedFields.data.location,
-                    topId: isAllowed.length > 0 ? isAllowed[0].id : null,
+                    topId:  isAllowed?.id ?  isAllowed?.id : null,
                     categoryId: validatedFields.data.category,
                     sectionId : validatedFields.data.section,
                     phoneNumber : validatedFields.data.phoneNumber,
