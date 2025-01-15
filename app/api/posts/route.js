@@ -313,6 +313,10 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
     priceConverted = parseInt(priceConverted, 10); // Převeď na celé číslo
     console.log('Valid price:', priceConverted);
 } else {
+  if (!['Dohodou', 'V textu', 'Zdarma'].includes(priceConverted)) {
+    priceConverted = 0;
+  }
+
     console.log('Invalid price or no price entered');
 }
            
