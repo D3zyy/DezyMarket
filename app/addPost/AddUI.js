@@ -27,6 +27,53 @@ const AddUI = ({ accType , categories, sections}) => {
     price: 'Cena',
     phoneNumber: 'Telefoní číslo',
   };
+
+
+  function toggleSteps() {
+    const typeOfPosts = document.getElementsByClassName('typeOfPosts');
+   
+
+    if (typeOfPosts.length > 0) {
+      for (let i = 0; i < typeOfPosts.length; i++) {
+        typeOfPosts[i].style.display = 'none'; // Skrytí jednotlivých prvků
+      }
+    }
+
+    const secondStepDivs = document.getElementsByClassName('addPostSecondStep');
+for (let i = 0; i < secondStepDivs.length; i++) {
+    if (secondStepDivs[i].style.display === 'block') {
+        localStorage.removeItem('typeOfPost'); 
+        secondStepDivs[i].style.display = 'none';
+    } else {
+
+        localStorage.setItem('typeOfPost', selectedTop?.name ? selectedTop?.name: name);
+        secondStepDivs[i].style.display = 'block';
+    }
+}
+const firstStep = document.querySelector('.firstStep');
+const secondStep = document.querySelector('.secondStep');
+
+if (firstStep && secondStep) {
+    // Zkontrolovat, zda první krok má data-content atribut
+    if (firstStep.getAttribute('data-content') === '✓') {
+        // Pokud je data-content '✓', odstranit ho a odebrat 'step-primary' ze druhého kroku
+        secondStep.classList.remove('step-primary');
+        secondStep.setAttribute('data-content', '1');
+        firstStep.removeAttribute('data-content');
+       
+    } else {
+        // Jinak nastavit data-content na '✓' a přidat 'step-primary' k druhému kroku
+        secondStep.classList.add('step-primary');
+        secondStep.setAttribute('data-content', '2');
+        firstStep.setAttribute('data-content', '✓');
+
+    }
+}
+
+
+
+  }
+
   const printErrorValidation = () => {
     if (!errorValidation || !errorValidation.errors) return null;
   
@@ -205,6 +252,11 @@ const handleDeleteImage = (index) => {
 
   return (
     <>
+    <div className='flex justify-center gap-4 p-2'>  <span className=" badge badge-lg badge-outline"> {typeOfPost}   </span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" onClick={toggleSteps} className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+</svg></div>
+  
+
       {typeOfPost && (
         <div
           style={{
