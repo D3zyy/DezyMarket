@@ -271,6 +271,12 @@ console.log("Jdu kontrolvat top")
   }
 });
 console.log("Nasel sem top:",isAllowed)
+if(!isAllowed){
+  return new Response(JSON.stringify({ messageToDisplay: "Tento typ topovaní neexistuje" }), {
+    status: 403,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
 if(isAllowed?.hidden){
   return new Response(JSON.stringify({ messageToDisplay: "Tento typ topovaní není dostupný" }), {
     status: 403,
