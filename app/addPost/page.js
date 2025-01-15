@@ -85,7 +85,7 @@ const Page = async () => {
            // console.log(filteredTypeTops);
         }
        
-      // console.log(typeTops)
+       console.log("na serveru:",typeTops)
         return (
             <div>
                 {session.isLoggedIn ? (
@@ -118,7 +118,7 @@ const Page = async () => {
 
         return (
             <Post
-               
+                allTops={typeTops}
                 priority={post.priority}
                 allowedTops={ableForTops&& post.priority <= 1? filteredTypeTops : false}
                 key={post.id}

@@ -8,10 +8,33 @@ import { color } from 'framer-motion';
 
 
 
-export function Post({ priority,allowedTops,name,emoji, benefits, hasThisType }) {
+export function Post({ allTops,priority,allowedTops,name,emoji, benefits, hasThisType }) {
   const [loading, setLoading] = useState(false);
+  console.log("Všechny tops:", allTops);
+  console.log("Filtrované dovolené tops:", allowedTops);
+  let result
+  if (Array.isArray(allowedTops)) {
+console.log("Je array!")
 
-  
+// Zajistíme, že allowedTops je pole, pokud není, nastavíme prázdné pole
+const allowedArray = Array.isArray(allowedTops) ? allowedTops : [];
+
+// Získáme seznam povolených ID
+const allowedIds = new Set(allowedArray.map(top => top.id));
+
+// Vytvoříme třetí pole s přidaným klíčem `allowed`
+ result = allTops.map(top => ({
+  ...top,
+  allowed: allowedIds.has(top.id)
+}));
+
+console.log("Výsledek s allowed flagem:", result);
+
+
+
+  }
+
+
   const [isOpen, setIsOpen] = useState(false);
   let canTop = allowedTops
   console.log("Může topovat:",canTop)
@@ -19,9 +42,13 @@ export function Post({ priority,allowedTops,name,emoji, benefits, hasThisType })
     // Zajistíme, že allowedTops je skutečně pole
     if (Array.isArray(allowedTops) && allowedTops.length > 0) {
       // Najděte top s největším numberOfMonthsToValid při inicializaci
-      const defaultTop = allowedTops.reduce((max, item) =>
-        item.numberOfMonthsToValid > max.numberOfMonthsToValid ? item : max
-      );
+      const defaultTop = allowedTops.length > 0 
+      ? allowedTops.reduce((max, item) => 
+          item.numberOfMonthsToValid > max.numberOfMonthsToValid ? item : max
+        )
+      : null; // nebo použij výchozí hodnotu podle potřeby
+    
+    console.log("Výchozí top:", defaultTop);
       
       // Vraťte barvu výchozího topu pro inicializaci stavu
       return defaultTop.color;
@@ -31,9 +58,11 @@ export function Post({ priority,allowedTops,name,emoji, benefits, hasThisType })
   
   });
   const getDefaultTop = () => {
-  return allowedTops.reduce((max, item) =>
-    item.numberOfMonthsToValid > max.numberOfMonthsToValid ? item : max
-  );
+    return allowedTops.length > 0
+    ? allowedTops.reduce((max, item) => 
+        item.numberOfMonthsToValid > max.numberOfMonthsToValid ? item : max
+      )
+    : null; // nebo výchozí hodnota, např. {}
 };
 const [selectedTop, setSelectedTop] = useState(allowedTops? getDefaultTop(): name);
 //console.log(allowedTops)
@@ -55,7 +84,7 @@ for (let i = 0; i < secondStepDivs.length; i++) {
         secondStepDivs[i].style.display = 'none';
     } else {
 
-        localStorage.setItem('typeOfPost', selectedTop.name ? selectedTop.name: name);
+        localStorage.setItem('typeOfPost', selectedTop?.name ? selectedTop?.name: name);
         secondStepDivs[i].style.display = 'block';
     }
 }
@@ -139,20 +168,20 @@ if (firstStep && secondStep) {
           onClick={() => setIsOpen(!isOpen)}
           className="w-auto mr-2 text-left whitespace-nowrap" // whitespace-nowrap pro zajištění, že se text nezalomí
           style={{
-            color: selectedTop.color,
+            color: selectedTop?.color,
           }}
         >
           <span
             className="mr-2"
-            dangerouslySetInnerHTML={{ __html: selectedTop.emoji }}
+            dangerouslySetInnerHTML={{ __html: selectedTop?.emoji }}
           />
-          {selectedTop.name}
+          {selectedTop?.name}
         </button>
 
         {/* Dropdown seznam */}
         {isOpen && (
-          <div className="absolute z-10 w-full  min-w-36  bg-base-200 rounded-md  shadow-lg">
-{allowedTops
+          <div className="absolute z-10 w-full  min-w-48  bg-base-200 rounded-md  shadow-lg">
+{result
   .sort((a, b) => b.numberOfMonthsToValid - a.numberOfMonthsToValid) // Řazení sestupně podle numberOfMonthsToValid
   .map((item) => (
     <div
@@ -164,14 +193,37 @@ if (firstStep && secondStep) {
       }}
       className="px-3 py-1.5 cursor-pointer flex items-center text-sm"
       style={{
-        color: item.color,
+        color: item.allowed&& item.color ,
       }}
     >
-      <span
-        className="mr-2"
-        dangerouslySetInnerHTML={{ __html: item.emoji }}
+      <span className="mr-2 flex items-center">
+  {!item.allowed && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="size-6 text-gray-500 mr-3"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
       />
-      {item.name}
+    </svg>
+  )}
+  {item.allowed && (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-green-500 mr-3">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+</svg>
+)}
+<span
+  style={{ filter: !item.allowed ? 'blur(1.5px)' : '' }}
+  dangerouslySetInnerHTML={{ __html: item.emoji }}
+/>
+</span>
+
+   <span   style={{ filter: !item.allowed ? 'blur(1.5px)' : '' }}>{item.name}</span>   
     </div>
   ))}
             
