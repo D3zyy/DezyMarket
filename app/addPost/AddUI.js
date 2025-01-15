@@ -48,6 +48,8 @@ const AddUI = ({ accType , categories, sections}) => {
     const secondStepDivs = document.getElementsByClassName('addPostSecondStep');
 for (let i = 0; i < secondStepDivs.length; i++) {
     if (secondStepDivs[i].style.display === 'block') {
+      localStorage.removeItem('typeOfPostEmoji'); 
+      localStorage.removeItem('typeOfPostColor'); 
         localStorage.removeItem('typeOfPost'); 
         secondStepDivs[i].style.display = 'none';
     } else {
