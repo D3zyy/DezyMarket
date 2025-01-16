@@ -94,7 +94,7 @@ async function main() {
   ];
   for (const accountType of accountTypes) {
     // Create the AccountType record
-    const accId = await prisma.AccountType.create({
+    const accId = await prisma.accountType.create({
       data: {
         emoji: accountType.emoji,
         name: accountType.name,
