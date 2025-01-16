@@ -532,7 +532,7 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
   <div
   className="w-full mt-4 flex items-center"
   style={{
-    padding: "12px",
+    padding: "12px 0px",
     gap: "10px",
   }}
 >
@@ -606,7 +606,7 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
   <div
     className="hidden md:block w-full"
     style={{
-      padding: "12px",
+      padding: "12px 0px",
     }}
   >
     <div
