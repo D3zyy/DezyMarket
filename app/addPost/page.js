@@ -23,7 +23,7 @@ const Page = async () => {
             let accPriority = accType?.priority
           let   accMonthIn= accType?.monthIn
              accType = accType?.name
-       
+
      
        
 
@@ -36,9 +36,9 @@ const Page = async () => {
                       .setZone('Europe/Prague')
                       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
         // Fetching Categories and Sections with error handling
-        let CategoriesFromDb, SectionsFromDb,typeofPosts,typeTops,accEmojis;
+        let CategoriesFromDb, SectionsFromDb,typeofPosts,typeTops,accEmojis,allowedNumberOfImg;
         try {
-        [CategoriesFromDb, SectionsFromDb,typeofPosts,typeTops,accEmojis] = (await Promise.allSettled([
+        [CategoriesFromDb, SectionsFromDb,typeofPosts,typeTops,accEmojis,allowedNumberOfImg] = (await Promise.allSettled([
             prisma.categories.findMany({}),
             prisma.sections.findMany({}),
             prisma.postType.findMany({
@@ -70,9 +70,22 @@ const Page = async () => {
                 },
                 select: {
                     emoji: true, // Získání pouze emoji pro tyto záznamy
-                    name: true
+                    name: true,
+                    
+                }
+            }),prisma.accountType.findFirst({
+                where: {
+                    name:  accType
+                  
+                },
+                select: {
+                    numberOfAllowedImages: true, // Získání pouze emoji pro tyto záznamy
+                    
                 }
             })
+
+
+
           ])).map(result => result.status === 'fulfilled' ? result.value : null);
        
         } catch (dbError) {
@@ -134,7 +147,7 @@ const Page = async () => {
                         
 
                         <div className='addPostSecondStep' style={{ display: "none" }}>
-                            <AddUI accType={accType} categories={CategoriesFromDb} sections={SectionsFromDb} />
+                            <AddUI categories={CategoriesFromDb} sections={SectionsFromDb} allImgCount={allowedNumberOfImg} />
                         </div>
                     </>
                 ) : (

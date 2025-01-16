@@ -3,7 +3,8 @@ import { image } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation'
-const AddUI = ({ accType , categories, sections}) => {
+const AddUI = ({  categories, sections,allImgCount}) => {
+  console.log("Pocet povolených obrazků:",allImgCount.numberOfAllowedImages)
   const [emojii, setEmojii] = useState(null);
   const [infoTop, setInfoTop] = useState(null);
   const [typeOfPost, setTypeOfPost] = useState(null);
@@ -187,13 +188,7 @@ if (firstStep && secondStep) {
 
    
   const maxUploads = 
-  typeOfPost === process.env.NEXT_PUBLIC_BASE_RANK
-    ? 15// 5 obrázku základní rank
-    : typeOfPost === process.env.NEXT_PUBLIC_MEDIUM_RANK
-    ? 20 // 25 obrázku střední rank
-    : typeOfPost === process.env.NEXT_PUBLIC_BEST_RANK
-    ? 25 // 30 obrázku nejlepší rank
-    : 15; 
+  allImgCount.numberOfAllowedImages
   // Handle file input
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
