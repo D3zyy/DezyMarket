@@ -44,6 +44,7 @@ async function main() {
     { 
       name: 'Základní', 
       priority: 1, 
+      numberOfAllowedImages: 15,
       priceAmountCZKMonthly: "0", 
       perks: [
         ["Neomezený počet inzerátů", true],
@@ -59,6 +60,7 @@ async function main() {
     { 
       name: 'Šikula', 
       priority: 2, 
+      numberOfAllowedImages: 20,
       emoji: `<div class="badge badge-lg badge-secondary badge-outline" style="color: #ff7d5c; border-color: #ff7d5c;">Šikula</div>`,
       priceAmountCZKMonthly: "134", 
       perks: [
@@ -73,7 +75,8 @@ async function main() {
       ]
     },
     { 
-      name: 'Profík', 
+      name: 'Profík',
+      numberOfAllowedImages: 25, 
       emoji: `<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>`,
       priority: 3, 
       priceAmountCZKMonthly: "152", 
@@ -96,6 +99,7 @@ async function main() {
         emoji: accountType.emoji,
         name: accountType.name,
         priority: accountType.priority,
+        numberOfAllowedImages: accountType.numberOfAllowedImages
       },
     });
   
