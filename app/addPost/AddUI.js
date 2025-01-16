@@ -18,6 +18,7 @@ const AddUI = ({ accType , categories, sections}) => {
   const [errorFromServer, setErrorFromServer] = useState(null);
   const [errorValidation, setErrorValidation] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedSection, setSelectedSection] = useState('');
   const [filteredSections, setFilteredSections] = useState([]);
   const router = useRouter()
@@ -568,37 +569,64 @@ console.log(infoTop)
 
 
 
-              <div
-  className="flex items-center"
+<div
+  className="flex items-center justify-center"
   style={{
     padding: "12px",
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: '10px',
+    gap: "10px",
   }}
 >
-
   <span
     htmlFor="location"
     className="block"
-    style={{ fontSize: '14px', flexGrow: 1 }}
-  >
-    Místo (Město, Obec nebo kraj)
-  </span>
-  <input
-    minLength={2} // Minimální délka 5 znaků
-    maxLength={50}
-    type="text"
-    placeholder={"např. Praha 8"}
-    name="location"
-    className="input input-bordered"
-    required
     style={{
-      fontSize: '14px',
-      padding: '8px',
-      width: '55%', // Adjust this percentage to control the input width
+      fontSize: "14px",
+      marginRight: "auto", // Přidá prostor vlevo
     }}
-  />
+  >
+    Místo
+  </span>
+
+  <select
+    className="select select-md select-bordered w-full"
+    required
+    name="location"
+    id="location"
+    value={selectedLocation}
+    onChange={(e) => setSelectedLocation(e.target.value)}
+    style={{
+      marginLeft: "auto", // Přidá prostor vpravo
+      maxWidth: "300px", // Volitelné, aby šířka nebyla příliš velká
+    }}
+  >
+    <option value="" disabled>
+      Vybrat místo
+    </option>
+    {[
+      { id: "praha", name: "Praha" },
+      { id: "brno", name: "Brno" },
+      { id: "ostrava", name: "Ostrava" },
+      { id: "olomouc", name: "Olomouc" },
+      { id: "plzen", name: "Plzeň" },
+      { id: "stredocesky_kraj", name: "Středočeský kraj" },
+      { id: "jihocesky_kraj", name: "Jihočeský kraj" },
+      { id: "plzensky_kraj", name: "Plzeňský kraj" },
+      { id: "karlovarsky_kraj", name: "Karlovarský kraj" },
+      { id: "ustecky_kraj", name: "Ústecký kraj" },
+      { id: "liberecky_kraj", name: "Liberecký kraj" },
+      { id: "kralovehradecky_kraj", name: "Královéhradecký kraj" },
+      { id: "pardubicky_kraj", name: "Pardubický kraj" },
+      { id: "jihomoravsky_kraj", name: "Jihomoravský kraj" },
+      { id: "zlinsky_kraj", name: "Zlínský kraj" },
+      { id: "olomoucky_kraj", name: "Olomoucký kraj" },
+      { id: "moravskoslezsky_kraj", name: "Moravskoslezský kraj" },
+      { id: "kraj_vysocina", name: "Kraj Vysočina" },
+    ].map((location) => (
+      <option key={location.id} value={location.name}>
+        {location.name}
+      </option>
+    ))}
+  </select>
 </div>
       
 

@@ -109,6 +109,7 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
   const [postDescription, setPostDescription] = useState(descriptionPost);
   const [categories, setCategories] = useState([]);
   const [sections, setSections] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(postLocation);
   const [location, setPostLocation] = useState(postLocation);
   const [phoneNumber, setPhoneNumber] = useState(postPhoneNumber);
   const [selectedCategory, setSelectedCategory] = useState(postCategoryId || "");
@@ -205,7 +206,7 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
 
     const price = ["Dohodou", "V textu", "Zdarma"].includes(activeButton) ? activeButton : postPrice;
 
-    const result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId, location, phoneNumber);
+    const result = await updatedPost(postName, price, selectedCategory, selectedSection, postDescription, postId, selectedLocation, phoneNumber);
 
     console.log("Odpověď od serveru :", result);
 
@@ -528,31 +529,64 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
     }}
   />
   </div>
-        <div className="w-full mt-4 flex items-center"> {/* Přidání items-center */}
-  <label
+  <div
+  className="w-full mt-4 flex items-center"
+  style={{
+    padding: "12px",
+    gap: "10px",
+  }}
+>
+  <span
     htmlFor="location"
     className="block"
-    style={{ fontSize: '14px', flex: '1', marginRight: '8px' }}
-  >
-    Místo (Město, Obec nebo kraj)
-  </label>
-  <input
-    minLength={2}
-    value={location}
-    maxLength={50}
-    onChange={(e) => setPostLocation(e.target.value)}
-    type="text"
-    placeholder={"např. Praha 8, Beroun nebo Pardubický kraj"}
-    name="location"
-    className="input input-bordered"
-    required
     style={{
-      fontSize: '14px',
-      padding: '8px',
-      flex: '1',
+      fontSize: "14px",
+      marginRight: "auto", // Přidá prostor vlevo
     }}
-  />
-  
+  >
+    Místo
+  </span>
+
+  <select
+    className="select select-md select-bordered w-full"
+    required
+    name="location"
+    id="location"
+    value={selectedLocation}
+    onChange={(e) => setSelectedLocation(e.target.value)}
+    style={{
+      marginLeft: "auto", // Přidá prostor vpravo
+      maxWidth: "300px", // Volitelné, aby šířka nebyla příliš velká
+    }}
+  >
+    <option value="" disabled>
+      Vybrat místo
+    </option>
+    {[
+      { id: "praha", name: "Praha" },
+      { id: "brno", name: "Brno" },
+      { id: "ostrava", name: "Ostrava" },
+      { id: "olomouc", name: "Olomouc" },
+      { id: "plzen", name: "Plzeň" },
+      { id: "stredocesky_kraj", name: "Středočeský kraj" },
+      { id: "jihocesky_kraj", name: "Jihočeský kraj" },
+      { id: "plzensky_kraj", name: "Plzeňský kraj" },
+      { id: "karlovarsky_kraj", name: "Karlovarský kraj" },
+      { id: "ustecky_kraj", name: "Ústecký kraj" },
+      { id: "liberecky_kraj", name: "Liberecký kraj" },
+      { id: "kralovehradecky_kraj", name: "Královéhradecký kraj" },
+      { id: "pardubicky_kraj", name: "Pardubický kraj" },
+      { id: "jihomoravsky_kraj", name: "Jihomoravský kraj" },
+      { id: "zlinsky_kraj", name: "Zlínský kraj" },
+      { id: "olomoucky_kraj", name: "Olomoucký kraj" },
+      { id: "moravskoslezsky_kraj", name: "Moravskoslezský kraj" },
+      { id: "kraj_vysocina", name: "Kraj Vysočina" },
+    ].map((location) => (
+      <option key={location.id} value={location.name}>
+        {location.name}
+      </option>
+    ))}
+  </select>
 </div>
 
 <div>

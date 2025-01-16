@@ -85,7 +85,7 @@ const Page = async () => {
            // console.log(filteredTypeTops);
         }
        
-       console.log("na serveru:",typeTops)
+
         return (
             <div>
                 {session.isLoggedIn ? (

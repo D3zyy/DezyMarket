@@ -10,15 +10,17 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 const schema = z.object({
   name: z.string()
-  .max(70, 'Název může mít maximálně 70 znaků.') 
-  .min(5, 'Název musí mít alespoň 5 znaků.')
-  .regex(/^[A-Za-z0-9á-žÁ-Ž., /()#&_?!;:-]*$/, 'Název nesmí obsahovat speciální znaky jako < > nebo uvozovky.'),
+    .max(70, 'Název může mít maximálně 70 znaků.') 
+    .min(5, 'Název musí mít alespoň 5 znaků.')
+    .regex(/^[A-Za-z0-9á-žÁ-Ž., /()#&_?!;:-]*$/, 'Název nesmí obsahovat speciální znaky jako < > nebo uvozovky.'),
+
   phoneNumber: z.string()
     .max(9, 'Telefoní číslo musí mít přesně 9 číslic.') 
     .min(9, 'Telefoní číslo musí mít přesně 9 číslic.')
-    .regex(/^[0-9]*$/, 'Telefoní číslo musí obsahovat pouze číslice.') // Fixed regex to only allow digits
-    .optional(), // Make phoneNumber optional
-    category: z
+    .regex(/^[0-9]*$/, 'Telefoní číslo musí obsahovat pouze číslice.')
+    .optional(), // Telefonní číslo je nepovinné
+
+  category: z
     .preprocess(
       (value) => (value === '' || isNaN(value) ? NaN : Number(value)), // Převede prázdné nebo nečíselné hodnoty na NaN
       z.number({
@@ -28,44 +30,67 @@ const schema = z.object({
       .int('Kategorie musí být celé číslo.')
       .positive('Kategorie musí být kladné číslo.')
     ),
+
   section: z.number()
     .int('Sekce musí být celé číslo.') 
     .positive('Sekce musí být kladné číslo.'),
-    
+
   description: z.string()
     .min(15, 'Popis musí mít alespoň 15 znaků.')
     .max(2000, 'Popis může mít maximálně 2000 znaků.')
     .refine((value) => !/[<>]/.test(value), {
-      message: 'Popis nesmí obsahovat znaky < a >.'
+      message: 'Popis nesmí obsahovat znaky < a >.',
     })
-    .transform((value) => value.replace(/['";]/g, '')), // Remove quotes and semicolons
+    .transform((value) => value.replace(/['";]/g, '')), // Odstraní uvozovky a středníky
 
-  location: z.string()
-    .min(2, 'Místo musí mít alespoň 2 znaky.')
-    .max(50, 'Místo může mít maximálně 50 znaků.')
-    .regex(/^(?:[A-Za-z0-9á-žÁ-Ž]+(?: [A-Za-z0-9á-žÁ-Ž]+)?|[A-Za-z0-9á-žÁ-Ž]+ [A-Za-z0-9á-žÁ-Ž.]+)$/, 'Místo musí mít tvar "Název Číslo", "Název Název", nebo pouze "Název".'),
-   
-
-    price: z.preprocess(
-      (value) => {
-        if (typeof value === 'string' && !isNaN(Number(value))) {
-          return parseFloat(value); // Převede řetězec čísla na číslo
-        }
-        return value;
-      },
-      z.union([
-        z.number()
-          .min(1, 'Cena musí být minimálně 1.')
-          .max(5000000, 'Cena může být maximálně 5000000.')
-          .refine(
-            (value) => Number.isInteger(value),
-            'Cena nemůže být desetinné číslo.'
-          ),
-        z.string()
-          .regex(/^(Dohodou|V textu|Zdarma)$/, 'Cena musí být "Dohodou", "V textu" nebo "Zdarma".'),
-      ])
+    location: z.string()
+    .refine((value) =>
+      [
+        'Praha',
+        'Brno',
+        'Ostrava',
+        'Olomouc',
+        'Plzeň',
+        'Středočeský kraj',
+        'Jihočeský kraj',
+        'Plzeňský kraj',
+        'Karlovarský kraj',
+        'Ústecký kraj',
+        'Liberecký kraj',
+        'Královéhradecký kraj',
+        'Pardubický kraj',
+        'Jihomoravský kraj',
+        'Zlínský kraj',
+        'Olomoucký kraj',
+        'Moravskoslezský kraj',
+        'Kraj Vysočina',
+      ].includes(value),
+      {
+        message: 'Neplatná lokalita.',
+      }
     ),
+
+  price: z.preprocess(
+    (value) => {
+      if (typeof value === 'string' && !isNaN(Number(value))) {
+        return parseFloat(value); // Převede řetězec čísla na číslo
+      }
+      return value;
+    },
+    z.union([
+      z.number()
+        .min(1, 'Cena musí být minimálně 1.')
+        .max(5000000, 'Cena může být maximálně 5000000.')
+        .refine(
+          (value) => Number.isInteger(value),
+          'Cena nemůže být desetinné číslo.'
+        ),
+      z.string()
+        .regex(/^(Dohodou|V textu|Zdarma)$/, 'Cena musí být "Dohodou", "V textu" nebo "Zdarma".'),
+    ])
+  ),
 });
+
 const s3Client = new S3Client({
   region :process.env.AWS_S3_REGION,
   credentials: {
@@ -197,7 +222,7 @@ export async function POST(req) {
         try {
             formData = await req.formData();
            typPost =  formData.get('typeOfPost')
-            console.log(typPost)
+            console.log(formData.get('location'))
 
            allImages = formData.getAll("images")
            if(allImages.length > 25) {
