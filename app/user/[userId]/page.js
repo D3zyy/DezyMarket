@@ -1,11 +1,13 @@
-import { getSession } from "@/app/authentication/actions";
+
 import { prisma } from "@/app/database/db";
 import Link from "next/link";
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
-import { select } from "@nextui-org/react";
+
 const Page = async ({ params }) => {
-  const [session, posts, rankingOfUser, bansOfUser] = await Promise.all([
-    getSession(),
+  const [userAcc, posts, rankingOfUser, bansOfUser] = await Promise.all([
+    prisma.users.findUnique({
+      where: { id: params?.userId },
+    }),
     prisma.posts.findMany({
       where: { userId: params?.userId },
       include: {
@@ -22,7 +24,7 @@ const Page = async ({ params }) => {
       where: { userId: params?.userId },
     }),
   ]);
-   let accType = await getUserAccountTypeOnStripe(session.email);
+   let accType = await getUserAccountTypeOnStripe(userAcc.email);
 
 let emojiForAcc = false
 if(accType?.priority > 1){
@@ -31,30 +33,30 @@ if(accType?.priority > 1){
         select: { emoji: true }
     });
 }
-console.log(emojiForAcc)
+console.log(userAcc)
   const formatDate = (date) => {
     const d = new Date(date);
     return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
   };
 
   // Formátování data s tečkami
-  const formattedDate = new Date(posts[0]?.user?.dateOfRegistration);
+  const formattedDate = new Date(userAcc?.dateOfRegistration);
   const day = String(formattedDate.getDate()).padStart(2, '0');
   const month = String(formattedDate.getMonth() + 1).padStart(2, '0');
   const year = formattedDate.getFullYear();
   const formattedDateWithDots = `${day}.${month}.${year}`;
 
   return (
-    <div className="flex flex-col  md:flex-row  items-start justify-center mx-auto mb-10 mt-5"> {/* Flexbox pro dvě strany */}
+    <div  className="flex flex-col  md:flex-row justify-center mx-auto mb-10 mt-5 items-center "> {/* Flexbox pro dvě strany */}
       
      
      
 
-      <div className="flex flex-col items-start w-3/3 md:mr-16 mb-9 md:mb-0">
+      <div className="flex flex-col  w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
       
         <div className="flex  justify-center ">
 
-        <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-gray-500 pb-4">
+        <div className="flex flex-row gap-4 items-center  border-b-4 border-gray-500 pb-4  ">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-10 w-10 mt-2">
   <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
 </svg>
@@ -72,7 +74,7 @@ console.log(emojiForAcc)
   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
 </svg>
 
-          <p className=" ">{posts[0]?.user?.fullName}</p>
+          <p className=" ">{userAcc?.fullName}</p>
 
         </div>
        
@@ -109,7 +111,7 @@ console.log(emojiForAcc)
 
 
 
-      <div className="flex flex-col items-start w-3/3 max-h-96 overflow-auto w-60 min-w-60 scrollbar-hidden break-all md:mr-16 mb-9 md:mb-0  " >
+      <div className="flex flex-col items-start w-3/3 max-h-96 overflow-auto w-72 min-w-72 scrollbar-hidden break-all md:mr-16 mb-9 md:mb-0  " >
         <div className="flex justify-start">
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-gray-500 pb-4">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-10 w-10 mt-2 text-gray-500">
@@ -148,7 +150,7 @@ console.log(emojiForAcc)
 
 
       {/* Pravá strana - Sekce pro hodnocení */}
-      <div className="flex flex-col items-start w-3/3 max-h-96 overflow-auto w-60 min-w-60 scrollbar-hidden  break-all">
+      <div className="flex flex-col items-start w-3/3 max-h-96 overflow-auto w-72 min-w-72 scrollbar-hidden  break-all">
         <div className="flex justify-start">
 
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-yellow-500 pb-4">
