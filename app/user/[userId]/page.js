@@ -52,7 +52,7 @@ console.log(userAcc)
      
      
 
-      <div className="flex flex-col justify-center items-center w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
+      <div className="flex flex-col items-center md:items-start justify-center w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
       
         <div className="flex  justify-center ">
 
@@ -111,7 +111,7 @@ console.log(userAcc)
 
 
 
-      <div className="flex  w-3/3 max-h-96  overflow-auto  min-w-72 scrollbar-hiddenflex flex-col justify-center items-center w-3/3 md:mr-16 mb-9 md:mb-0 h-full  " >
+      <div className="flex  w-3/3 max-h-96  overflow-auto  min-w-72 scrollbar-hiddenflex flex-col justify-center items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full  " >
         <div className="flex items-center justify-start">
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-gray-500 pb-4">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-10 w-10 mt-2 text-gray-500">
@@ -150,7 +150,7 @@ console.log(userAcc)
 
 
       {/* Pravá strana - Sekce pro hodnocení */}
-      <div className="flex  w-3/3 max-h-96  overflow-auto  min-w-72 scrollbar-hiddenflex flex-col justify-center items-center w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
+      <div className="flex  w-3/3 max-h-96  overflow-auto  min-w-72 scrollbar-hiddenflex flex-col justify-center  items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
         <div className="flex justify-start">
 
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-yellow-500 pb-4">
