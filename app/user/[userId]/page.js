@@ -53,7 +53,7 @@ console.log('session:',session)
      
      
 
-      <div className="flex flex-col items-center md:items-start  justify-center w-3/3 md:mr-24 mb-9 md:mb-0 h-full">
+      <div className="flex flex-col  items-center md:items-start justify-center w-3/3 md:mr-24 mb-9 md:mb-0 h-full">
       
         <div className="flex  justify-center ">
 
@@ -112,7 +112,7 @@ console.log('session:',session)
 
 
 
-      <div className="flex  w-3/3 max-h-96  overflow-auto  min-w-72 scrollbar-hiddenflex flex-col justify-center items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full  " >
+      <div className="flex  w-3/3     scrollbar-hiddenflex flex-col justify-center items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full  " >
         <div className="flex items-center justify-start">
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-gray-500 pb-4">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-10 w-10 mt-2 text-gray-500">
@@ -129,7 +129,7 @@ console.log('session:',session)
         {posts.length > 0 ? (
   posts.map((post) => (
     <div key={post.id}>
-        <div className="mb-4 mt-3 flex flex-row gap-2 ">
+        <div className="mb-4 mt-3 flex flex-row gap-2    max-w-48 break-all">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 flex-shrink-0">
   <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
 </svg>
@@ -151,7 +151,7 @@ console.log('session:',session)
 
 
       {/* Pravá strana - Sekce pro hodnocení */}
-      <div className="flex  w-3/3 max-h-96  overflow-auto  min-w-72 scrollbar-hiddenflex flex-col justify-center  items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
+      <div className="flex  w-3/3   min-w-72 scrollbar-hidden  flex-col justify-center  items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
         <div className="flex justify-start">
 
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-yellow-500 pb-4">
@@ -204,7 +204,7 @@ console.log('session:',session)
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 flex-shrink-0">
   <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
 </svg>
-              <p>{rating.extraInfo}</p>
+              <p className=" max-w-48   overflow-scroll max-h-32 break-all">{rating.extraInfo}</p>
 
 </div>
 }  
