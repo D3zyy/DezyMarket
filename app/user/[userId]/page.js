@@ -48,7 +48,7 @@ console.log('session:',session)
   const formattedDateWithDots = `${day}.${month}.${year}`;
 
   return (
-    <div  className="flex flex-col  md:flex-row justify-center mx-auto mb-10 mt-14 "> {/* Flexbox pro dvě strany */}
+    <div  className="flex flex-col  md:flex-row justify-center mx-auto mb-10 mt-32 "> {/* Flexbox pro dvě strany */}
       
      
      
@@ -128,7 +128,7 @@ console.log('session:',session)
   
         {posts.length > 0 ? (
   posts
-    .filter((post) => session?.role?.privileges > 1 || post?.visible) // Admins see all posts, others see only visible ones
+    .filter((post) => session?.role?.privileges > 1 && session.userId != userAcc.id || post?.visible) // Admins see all posts, others see only visible ones
     .map((post) => (
       <div key={post.id}>
         <div className="mb-4 mt-3 flex flex-row gap-2 max-w-48 break-all">
