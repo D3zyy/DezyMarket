@@ -48,7 +48,7 @@ console.log('session:',session)
   const formattedDateWithDots = `${day}.${month}.${year}`;
 
   return (
-    <div  className="flex flex-col  md:flex-row justify-center mx-auto mb-10 mt-32 "> {/* Flexbox pro dvě strany */}
+    <div  className="flex flex-col  md:flex-row justify-center mx-auto mb-10 mt-14 "> {/* Flexbox pro dvě strany */}
       
      
      
