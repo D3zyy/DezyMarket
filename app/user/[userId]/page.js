@@ -35,7 +35,7 @@ console.log(posts)
   const formattedDateWithDots = `${day}.${month}.${year}`;
 
   return (
-    <div className="flex flex-row items-start justify-center space-x-16 mb-10"> {/* Flexbox pro dvě strany */}
+    <div className="flex flex-row items-start justify-center space-x-16 mb-10 mt-5"> {/* Flexbox pro dvě strany */}
       
      
      
@@ -91,7 +91,7 @@ console.log(posts)
 
 
 
-      <div className="flex flex-col items-start w-3/3">
+      <div className="flex flex-col items-start w-3/3 max-h-96 overflow-auto w-60 min-w-60 scrollbar-hidden " >
         <div className="flex justify-start">
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-gray-500 pb-4">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-10 w-10 mt-2 text-gray-500">
@@ -104,15 +104,22 @@ console.log(posts)
 </div>
         
         </div>
+  
+        {posts.length > 0 ? (
+  posts.map((post) => (
+    <div key={post.id}>
+        <div className="mb-4 mt-3 flex flex-row gap-2 ">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 flex-shrink-0">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+</svg>
 
-        {/* Hodnocení uživatele nebo zpráva, pokud žádná nejsou */}
-        {rankingOfUser.length > 0 ? (
-         <>
-         
-         </>
-        ) : (
-          <p className="text-sm mt-2 text-gray-500">Tento uživatel nemá žádné příspěvky.</p>
-        )}
+      <Link className="underline" target="_blank" href={`/post/${post.id}`}>{post.name}</Link>
+      </div>
+    </div>
+  ))
+) : (
+  <p className="text-sm mt-2 text-gray-500">Tento uživatel nemá žádné příspěvky.</p>
+)}
       </div>
 
 
