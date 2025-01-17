@@ -45,13 +45,14 @@ console.log(emojiForAcc)
   const formattedDateWithDots = `${day}.${month}.${year}`;
 
   return (
-    <div className="flex flex-row items-start justify-center space-x-16 mb-10 mt-5"> {/* Flexbox pro dvě strany */}
+    <div className="flex flex-col  md:flex-row  items-start justify-center mx-auto mb-10 mt-5"> {/* Flexbox pro dvě strany */}
       
      
      
 
-      <div className="flex flex-col items-start w-3/3">
-        <div className="flex justify-start">
+      <div className="flex flex-col items-start w-3/3 md:mr-16 mb-9 md:mb-0">
+      
+        <div className="flex  justify-center ">
 
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-gray-500 pb-4">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-10 w-10 mt-2">
@@ -59,7 +60,7 @@ console.log(emojiForAcc)
 </svg>
 
 
-  <p className="text-lg font-semibold">
+  <p className="text-lg font-semibold ">
    Uživatelský účet
   </p>
 </div>
@@ -108,7 +109,7 @@ console.log(emojiForAcc)
 
 
 
-      <div className="flex flex-col items-start w-3/3 max-h-96 overflow-auto w-60 min-w-60 scrollbar-hidden break-all " >
+      <div className="flex flex-col items-start w-3/3 max-h-96 overflow-auto w-60 min-w-60 scrollbar-hidden break-all md:mr-16 mb-9 md:mb-0  " >
         <div className="flex justify-start">
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-gray-500 pb-4">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-10 w-10 mt-2 text-gray-500">
