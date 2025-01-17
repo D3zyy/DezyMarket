@@ -52,7 +52,7 @@ console.log(userAcc)
      
      
 
-      <div className="flex flex-col items-center md:items-start justify-center w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
+      <div className="flex flex-col items-center md:items-start justify-center w-3/3 md:mr-24 mb-9 md:mb-0 h-full">
       
         <div className="flex  justify-center ">
 
