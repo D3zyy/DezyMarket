@@ -47,12 +47,12 @@ console.log(userAcc)
   const formattedDateWithDots = `${day}.${month}.${year}`;
 
   return (
-    <div  className="flex flex-col  md:flex-row justify-center mx-auto mb-10 mt-5 items-center "> {/* Flexbox pro dvě strany */}
+    <div  className="flex flex-col  md:flex-row justify-center mx-auto mb-10 mt-5 "> {/* Flexbox pro dvě strany */}
       
      
      
 
-      <div className="flex flex-col  w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
+      <div className="flex flex-col justify-center items-center w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
       
         <div className="flex  justify-center ">
 
