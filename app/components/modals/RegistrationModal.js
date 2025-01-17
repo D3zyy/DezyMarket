@@ -150,7 +150,7 @@ const RegistrationModal = () => {
 
               <form onSubmit={handleSubmit}>
                 <div className="py-2">
-                  <label htmlFor="fullName" className="block">Celé jméno</label>
+                  <label htmlFor="fullName" className="block">Uživatelské jméno</label>
                   <input type="text" id="fullName" name="fullName" className="input input-bordered w-full" required />
                 </div>
                 <div className="py-2">

@@ -17,10 +17,10 @@ const schema = z.object({
     .regex(/[a-z]/, 'Heslo musí obsahovat alespoň jedno malé písmeno.')
     .regex(/\d/, 'Heslo musí obsahovat alespoň jedno číslo.'),
     fullName: z.string()
-  .regex(
-    /^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]{2,} [A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]{2,}$/,
-    'Celé jméno musí mít formát "Jméno Příjmení", kde obě části mají alespoň 2 znaky, obsahují pouze písmena včetně českých znaků a mezi nimi je jedna mezera.'
-  ),
+    .regex(
+      /^(?!\d+$)[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]{3,10}$/,
+      'Uživatelské jméno nesmí obsahovat speciální znaky, musí mít 3 až 10 znaků a nesmí být pouze číslo'
+    ),
   termsOfUseAndPrivatePolicy: z.boolean()
     .refine(val => val === true, 'Musíte souhlasit s podmínkami použití a zásadami zpracování osobních údajů.')
 });
