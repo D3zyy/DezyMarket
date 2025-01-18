@@ -357,7 +357,7 @@ model Bans {
   id          Int      @id @default(autoincrement())
   bannedFrom  DateTime @default(now())
   bannedTill  DateTime? 
-  permanent   Boolean  @default(false)
+  pernament   Boolean  @default(false)
   reason      String?
   userId      String
   fromUserId  String

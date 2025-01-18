@@ -26,6 +26,13 @@ const Page = async ({ params }) => {
     }),
     prisma.bans.findMany({
       where: { userId: params?.userId },
+      include: {
+        fromUser: {
+          include: {
+            role: true, // Fetches the role of the user
+          },
+        },
+      },
     }),
   ]);
   if(!userAcc){
@@ -53,7 +60,7 @@ if(accType?.priority > 1){
         select: { emoji: true }
     });
 }
-console.log('bans:',userAcc)
+console.log('bans:',bansOfUser)
   const formatDate = (date) => {
     const d = new Date(date);
     return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
@@ -296,7 +303,27 @@ console.log('bans:',userAcc)
 bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
 .map((ban) => (
   <div className="mb-10 mt-5" key={ban.id}>
+        <div className="flex flex-row gap-2 mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"   className={`size-6 ${
+    ban.fromUser.role.privileges === 4
+      ? "text-green-500"
+      : ban.fromUser.role.privileges === 3
+      ? "text-yellow-500"
+      : ban.fromUser.role.privileges === 2
+      ? "text-red-500"
+      : ""
+  }`}>
+  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+</svg>
+
+<Link  className='underline'href={`/user/${ban.fromUser.id}`}>
+  {ban.fromUser.fullName}
+</Link>
+
+
+      </div>
     <div className=" flex flex-row gap-2 max-w-48 break-all">
+  
     {ban.reason &&
       <div className="flex flex-row gap-4">
         <svg
