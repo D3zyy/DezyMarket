@@ -170,9 +170,10 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
           </div>
 
           {/* Tlačítko pro uložení změn */}
+          <div className='text-center'> 
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn  btn-primary"
             onClick={handleSave}
           >
             Uložit změny
@@ -187,6 +188,8 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
           >
             Zavřít
           </button>
+          </div>
+         
         </div>
       </dialog>
     </div>

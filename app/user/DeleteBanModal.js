@@ -28,7 +28,7 @@ function DeleteBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
     <div>
       {/* Tlačítko pro otevření modalu */}
       <button onClick={() => openDeleteBanModal(banId)} className="btn btn-sm">
-        Smazat ban
+        Zrušit ban
       </button>
 
       {/* Modal */}
@@ -38,10 +38,10 @@ function DeleteBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
         data-backdrop="true"
       >
         <div className="modal-box">
-          <span className="block text-center font-bold mb-4">Ban delete modal</span>
+          <span className="block text-center text-lg font-bold mb-4">Zrušit ban</span>
           <div>
             {/* Zde můžete přidat obsah pro potvrzení smazání */}
-            <p>Opravdu chcete smazat tento ban?</p>
+            <p>Opravdu chcete zrušit tento ban?</p>
           </div>
 
           <button
