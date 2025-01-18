@@ -278,7 +278,7 @@ function formatDateFromISOString(isoString) {
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 flex-shrink-0">
   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
 </svg>
-<Link target="_blank" className='underline' href={`/user/${rating.fromUser.id}`}>{rating.fromUser.fullName}</Link>
+<Link target="_blank" className='underline' href={`/user/${rating.fromUser?.id}`}>{rating?.fromUser?.fullName}</Link>
     </div>
 
                
@@ -344,20 +344,24 @@ bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
   <div className="mb-10 mt-5" key={ban.id}>
         <div className="flex flex-row gap-2 mb-2">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"   className={`size-6 ${
-    ban.fromUser.role.privileges === 4
+    ban?.fromUser?.role?.privileges === 4
       ? "text-green-500"
-      : ban.fromUser.role.privileges === 3
+      : ban?.fromUser?.role?.privileges === 3
       ? "text-yellow-500"
-      : ban.fromUser.role.privileges === 2
+      : ban?.fromUser?.role?.privileges === 2
       ? "text-red-500"
-      : ""
+      : "text-red-500"
   }`}>
   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
 </svg>
 
-<Link  target="_blank" className='underline'href={`/user/${ban.fromUser.id}`}>
-  {ban.fromUser.fullName}
-</Link>
+{ban?.fromUser?.fullName ? (
+  <Link target="_blank" className='underline ml-2' href={`/user/${ban?.fromUser?.id}`}>
+    {ban?.fromUser?.fullName}
+  </Link>
+) : (
+  <span className="ml-2">{'Systém'}</span>
+)}
 
 
       </div>
@@ -414,13 +418,13 @@ bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
               </div>
 
 
-<div>{ban.pernament ? <> {(session?.role?.privileges > ban.fromUser.role.privileges   || session?.role?.privileges === 4 || session?.userId === ban?.fromUserId)  && <>
+<div>{ban.pernament ? <> {(session?.role?.privileges > ban?.fromUser?.role?.privileges   || session?.role?.privileges === 4 || session?.userId === ban?.fromUserId)  && <>
 
 <div className="flex flex-row gap-2 mt-2">
 <UpdateBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
 <DeleteBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
 </div>
- </>}</> : (DateTime.now().setZone('Europe/Prague').toMillis() >= new Date(ban.bannedTill).getTime() ? "" : <> {(session?.role?.privileges > ban.fromUser.role.privileges   || session?.role?.privileges === 4 || session?.userId === ban?.fromUserId)  && <>
+ </>}</> : (DateTime.now().setZone('Europe/Prague').toMillis() >= new Date(ban.bannedTill).getTime() ? "" : <> {(session?.role?.privileges > ban?.fromUser?.role?.privileges   || session?.role?.privileges === 4 || session?.userId === ban?.fromUserId)  && <>
 
                 <div className="flex flex-row gap-2 mt-2">
                 <UpdateBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
