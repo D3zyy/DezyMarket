@@ -71,8 +71,10 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
 
   // Funkce pro uložení změn a výpočet nového data
   const handleSave = () => {
-    let newDate = DateTime.now().setZone('Europe/Prague');
-
+    console.log("Togle se snažím přidat:",bannedFrom)
+    let newDate = DateTime.fromJSDate(new Date(bannedFrom)).setZone('Europe/Prague');
+    console.log("tady to pridavam:",newDate)
+  // chci to ale odvozovat od bannedFrom
     // Vytvoření nového data na základě vybrané doby
     switch (selectedDuration) {
       case '30minutes':
