@@ -7,7 +7,9 @@ const Page = async ({ params }) => {
   const [session,userAcc, posts, rankingOfUser, bansOfUser] = await Promise.all([
     getSession()
     , prisma.users.findUnique({
-      where: { id: params?.userId },
+      where: { id: params?.userId }, include: {
+        role: true,  
+      },
     }),
     prisma.posts.findMany({
       where: { userId: params?.userId },
@@ -34,7 +36,7 @@ if(accType?.priority > 1){
         select: { emoji: true }
     });
 }
-console.log('bans:',bansOfUser)
+console.log('bans:',userAcc)
   const formatDate = (date) => {
     const d = new Date(date);
     return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
@@ -128,7 +130,7 @@ console.log('bans:',bansOfUser)
   
         {posts.length > 0 ? (
   posts
-    .filter((post) => session?.role?.privileges > 1 && session.userId != userAcc.id || post?.visible) // Admins see all posts, others see only visible ones
+    .filter((post) => session?.role?.privileges > userAcc?.role?.privileges && session.userId != userAcc.id || post?.visible) // Admins see all posts, others see only visible ones
     .map((post) => (
       <div key={post.id}>
         <div className="mb-4 mt-3 flex flex-row gap-2 max-w-48 break-all">
@@ -256,7 +258,7 @@ console.log('bans:',bansOfUser)
       </div>
 
 
-        {session?.role?.privileges > 1 && session.userId != params.userId &&
+        {session?.role?.privileges > userAcc?.role?.privileges && session.userId != params.userId &&
       <div className="flex  w-3/3     scrollbar-hiddenflex flex-col justify-center items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full  " >
         <div className="flex items-center justify-start">
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-red-500 pb-4">
