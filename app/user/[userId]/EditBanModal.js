@@ -54,9 +54,7 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
         return daysDifference;
       }
 
-  useEffect(() => {
-    setIsClient(true); 
-  }, []);
+
 
   // Funkce pro zavření modalu
   const closeModal = () => {
@@ -142,9 +140,7 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
     }
   };
 
-  if (!isClient) {
-    return null;
-  }
+ 
 
   return (
     <div>
