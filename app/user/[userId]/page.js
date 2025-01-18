@@ -420,7 +420,7 @@ bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
 <UpdateBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
 <DeleteBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
 </div>
- </>}</> : (DateTime.now().setZone('Europe/Prague').toMillis() >= new Date(ban.bannedTill).getTime() ? "neukazat" : <> {(session?.role?.privileges > ban.fromUser.role.privileges   || session?.role?.privileges === 4 || session?.userId === ban?.fromUserId)  && <>
+ </>}</> : (DateTime.now().setZone('Europe/Prague').toMillis() >= new Date(ban.bannedTill).getTime() ? "" : <> {(session?.role?.privileges > ban.fromUser.role.privileges   || session?.role?.privileges === 4 || session?.userId === ban?.fromUserId)  && <>
 
                 <div className="flex flex-row gap-2 mt-2">
                 <UpdateBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
