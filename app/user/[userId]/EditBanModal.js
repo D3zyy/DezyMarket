@@ -43,16 +43,18 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
   const [isClient, setIsClient] = useState(false); // Flag to detect when the component is mounted on the client
   const [newBannedTo, setNewBannedTo] = useState(bannedToo); // New bannedTo for the updated date
   const router = useRouter()
-    function calculateDaysDifference(fromDate, toDate) {
-        const dateFrom = new Date(fromDate);
-        const dateTo = new Date(toDate);
-        const timeDifference = dateTo - dateFrom; // rozdíl v milisekundách
-        let daysDifference = timeDifference / (1000 * 3600 * 24); // převod na dny
-            if (daysDifference < 1){
-                daysDifference = 0
-            }
-        return daysDifference;
-      }
+  function calculateDaysDifference(fromDate, toDate) {
+    const dateFrom = new Date(fromDate);
+    const dateTo = new Date(toDate);
+    const timeDifference = dateTo - dateFrom; // rozdíl v milisekundách
+    let daysDifference = timeDifference / (1000 * 3600 * 24); // převod na dny
+    if (daysDifference < 1) {
+      daysDifference = 0;
+    } else {
+      daysDifference = Math.floor(daysDifference); // zaokrouhlení směrem dolů
+    }
+    return daysDifference;
+  }
 
 
 

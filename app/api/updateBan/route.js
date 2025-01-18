@@ -155,7 +155,8 @@ export async function PUT(request) {
                 id: data // Identifikátor banId, podle kterého se najde záznam
               },
               data: {    
-                bannedTill: dateAndTime,     // Pokud je potřeba, upravte podle typu ve vaší databázi
+                bannedTill: dateAndTime, 
+                pernament: false    // Pokud je potřeba, upravte podle typu ve vaší databázi
               }
             });
             
