@@ -97,98 +97,108 @@ export async function POST(request) {
 }
 
 export async function PUT(request) {
-
-
-
-
-    try {
-   console.log("HITtttttt")
-      const session = await getSession();
-      if (!session || !session.isLoggedIn || !session.email) {
-          return new Response(JSON.stringify({
-              message: "Chyba na serveru [POST] požadavek na získání informací o předplatném pro upgrade. Session nebyla nalezena"
-          }), {
-              status: 400,
-              headers: { 'Content-Type': 'application/json' }
-          });
-      }
-      let data = await request.json();
+  try {
+    console.log("HITtttttt");
+    const session = await getSession();
+    if (!session || !session.isLoggedIn || !session.email) {
+      return new Response(JSON.stringify({
+        message: "Chyba na serveru [POST] požadavek na získání informací o předplatném pro upgrade. Session nebyla nalezena"
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    let data = await request.json();
   
-      console.log("data:",data)
-      if(session?.role?.privileges <= 1){
-          return new Response(JSON.stringify({
-              message: "Na tento příkaz nemáte oprávnění"
-          }), {
-              status: 403,
-              headers: { 'Content-Type': 'application/json' }
-          });
-      }
-
-      const ban = await prisma.bans.findUnique({
-        where: {id: data},
-        include: {
-            fromUser: {
-              include: {
-                role: true, // Fetches the role of the user
-              },
-            },
+    console.log("data:", data);
+    if (session?.role?.privileges <= 1) {
+      return new Response(JSON.stringify({
+        message: "Na tento příkaz nemáte oprávnění"
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+  
+    const ban = await prisma.bans.findUnique({
+      where: { id: data },
+      include: {
+        fromUser: {
+          include: {
+            role: true, // Fetches the role of the user
           },
+        },
+      },
+    });
+  
+    console.log("bannn:", ban);
+    if (!ban) {
+      return new Response(JSON.stringify({
+        message: "Ban nebyl nalezen"
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
-    })
-      console.log("bannn:",ban)
-      if(!ban){
-        return new Response(JSON.stringify({
-            message: "Ban nebyl nalezen"
-        }), {
-            status: 403,
-            headers: { 'Content-Type': 'application/json' }
-        });
-      }
-      const dateAndTime = DateTime.now()
+    // Získání aktuálního času a doby vypršení banu
+    const currentTime = DateTime.now().setZone('Europe/Prague').toMillis();
+    const bannedTillTime = new Date(ban.bannedTill).getTime();
+    const timeDifference = currentTime - bannedTillTime; // Rozdíl v milisekundách
+
+    // Pokud je ban vypršený více než 2 hodiny, neumožníme prodloužení
+    if (timeDifference > 1000 * 3600 * 2) {
+      return new Response(JSON.stringify({
+        message: "Ban již vypršel o více než 2 hodiny, prodloužení není povoleno"
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Pokud je čas vypršení banu ještě v rámci tolerance 2 hodin, pokračujeme
+    const dateAndTime = DateTime.now()
       .setZone('Europe/Prague')
       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-      console.log("taddy")
-      if(session?.role?.privileges > ban?.fromUser?.role?.privileges &&  session?.userId != ban?.userId  || session?.userId === ban?.fromUser?.id &&  session?.userId != ban?.userId ){
-        console.log("taddy") 
-        const updateBan = await prisma.bans.update({
-              where: {
-                id: data // Identifikátor banId, podle kterého se najde záznam
-              },
-              data: {    
-                bannedTill: dateAndTime, 
-                pernament: false    // Pokud je potřeba, upravte podle typu ve vaší databázi
-              }
-            });
-            
-            console.log("udate:",updateBan)
-  
-  
-      } else {
-          return new Response(JSON.stringify({
-              message: "Na tento příkaz nemáte oprávnění"
-          }), {
-              status: 403,
-              headers: { 'Content-Type': 'application/json' }
-          });
-      }
-    
-     
-        
-      return new Response(
-        JSON.stringify({success: true}),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
+
+    if (session?.role?.privileges > ban?.fromUser?.role?.privileges && session?.userId !== ban?.userId || session?.userId === ban?.fromUser?.id && session?.userId !== ban?.userId) {
+      console.log("taddy");
+
+      const updateBan = await prisma.bans.update({
+        where: {
+          id: data // Identifikátor banId, podle kterého se najde záznam
+        },
+        data: {
+          bannedTill: dateAndTime, 
+          pernament: false    // Pokud je potřeba, upravte podle typu ve vaší databázi
         }
-      );
-    } catch (error) {
-      console.log(error)
-      return new Response(
-        JSON.stringify({ message: 'Chyba na serceru update banu', success: false }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
+      });
+
+      console.log("udate:", updateBan);
+    } else {
+      return new Response(JSON.stringify({
+        message: "Na tento příkaz nemáte oprávnění"
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
+    
+    return new Response(
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    return new Response(
+      JSON.stringify({ message: 'Chyba na serveru při update banu', success: false }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
   }
+}
