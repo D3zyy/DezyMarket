@@ -10,11 +10,22 @@ export const openUpdateBanModal = (banId) => {
 };
 
 const formatDate = (date) => {
-  if (date instanceof Date) {
-    return date.toLocaleString('cs-CZ');
-  }
-  return date; 
-};
+    // Pokud je datum typu Date, převedeme ho na řetězec ve formátu ISO
+    if (date instanceof Date) {
+      date = date.toISOString(); // Převod na ISO řetězec
+    }
+  
+    // Ověříme, že máme platný řetězec
+    if (typeof date === 'string' && date.includes('T')) {
+      const [datePart, timePart] = date.split('T');
+      const [year, month, day] = datePart.split('-');
+      const [hours, minutes] = timePart.split(':');
+  
+      return `${day}.${month}.${year} ${hours}:${minutes}`;
+    }
+  
+    return date; // Pokud to není platné datum, vrátíme původní hodnotu
+  };
 
 // UpdateBanModal Component
 function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt }) {
@@ -26,7 +37,8 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
   const [selectedDuration, setSelectedDuration] = useState(null);
   const [isClient, setIsClient] = useState(false); // Flag to detect when the component is mounted on the client
   const [newBannedTo, setNewBannedTo] = useState(bannedToo); // New bannedTo for the updated date
-
+console.log("frogbabiugiugwagwgwm :",bannedFromm)
+console.log("TOoooooooo",bannedToo)
   const calculateDaysDifference = (startDate, endDate) => {
     if (startDate && endDate) {
       const start = DateTime.fromISO(startDate).setZone('Europe/Prague').startOf('day');
