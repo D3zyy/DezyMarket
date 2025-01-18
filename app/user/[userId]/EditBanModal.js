@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { DateTime } from 'luxon'; // Nezapomeňte importovat Luxon
-
+import { useRouter } from 'next/navigation';
 export const openUpdateBanModal = (banId) => {
   const modal = document.getElementById(`ban_update-modal-${banId}`);
   if (modal) {
@@ -42,7 +42,7 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
   const [selectedDuration, setSelectedDuration] = useState(null);
   const [isClient, setIsClient] = useState(false); // Flag to detect when the component is mounted on the client
   const [newBannedTo, setNewBannedTo] = useState(bannedToo); // New bannedTo for the updated date
- 
+  const router = useRouter()
     function calculateDaysDifference(fromDate, toDate) {
         const dateFrom = new Date(fromDate);
         const dateTo = new Date(toDate);
@@ -134,6 +134,7 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
       });
 
       const result = await response.json();
+      router.refresh()
       console.log('Ban updated successfully', result);
     } catch (error) {
       console.error('Error updating ban:', error);
@@ -170,7 +171,7 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
               </tr>
               <tr>
                 <td><strong>Banováno do:</strong></td>
-                <td className={selectedDuration === 'permanent' ? 'text-red-500' : ''}>
+                <td>
                   {formatDate(newBannedTo)}
                 </td>
               </tr>
