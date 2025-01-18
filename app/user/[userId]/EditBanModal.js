@@ -10,22 +10,27 @@ export const openUpdateBanModal = (banId) => {
 };
 
 const formatDate = (date) => {
-    // Pokud je datum typu Date, převedeme ho na řetězec ve formátu ISO
-    if (date instanceof Date) {
-      date = date.toISOString(); // Převod na ISO řetězec
-    }
-  
-    // Ověříme, že máme platný řetězec
-    if (typeof date === 'string' && date.includes('T')) {
-      const [datePart, timePart] = date.split('T');
-      const [year, month, day] = datePart.split('-');
-      const [hours, minutes] = timePart.split(':');
-  
-      return `${day}.${month}.${year} ${hours}:${minutes}`;
-    }
-  
-    return date; // Pokud to není platné datum, vrátíme původní hodnotu
-  };
+  // Pokud je ban trvalý
+  if (date === 'permanent') {
+    return 'Trvale';
+  }
+
+  // Pokud je datum typu Date, převedeme ho na řetězec ve formátu ISO
+  if (date instanceof Date) {
+    date = date.toISOString(); // Převod na ISO řetězec
+  }
+
+  // Ověříme, že máme platný řetězec
+  if (typeof date === 'string' && date.includes('T')) {
+    const [datePart, timePart] = date.split('T');
+    const [year, month, day] = datePart.split('-');
+    const [hours, minutes] = timePart.split(':');
+
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
+  }
+
+  return date; // Pokud to není platné datum, vrátíme původní hodnotu
+};
 
 // UpdateBanModal Component
 function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt }) {
@@ -37,19 +42,15 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
   const [selectedDuration, setSelectedDuration] = useState(null);
   const [isClient, setIsClient] = useState(false); // Flag to detect when the component is mounted on the client
   const [newBannedTo, setNewBannedTo] = useState(bannedToo); // New bannedTo for the updated date
-console.log("frogbabiugiugwagwgwm :",bannedFromm)
-console.log("TOoooooooo",bannedToo)
-  const calculateDaysDifference = (startDate, endDate) => {
-    if (startDate && endDate) {
-      const start = DateTime.fromISO(startDate).setZone('Europe/Prague').startOf('day');
-      const end = DateTime.fromISO(endDate).setZone('Europe/Prague').startOf('day');
-  
-      const diffTime = end - start;
-      const diffDays = diffTime / (1000 * 3600 * 24);
-      return Math.floor(diffDays); 
-    }
-    return 0; 
-  };
+ 
+    function calculateDaysDifference(fromDate, toDate) {
+        const dateFrom = new Date(fromDate);
+        const dateTo = new Date(toDate);
+        const timeDifference = dateTo - dateFrom; // rozdíl v milisekundách
+        const daysDifference = timeDifference / (1000 * 3600 * 24); // převod na dny
+        
+        return daysDifference;
+      }
 
   useEffect(() => {
     setIsClient(true); 
@@ -164,7 +165,9 @@ console.log("TOoooooooo",bannedToo)
               </tr>
               <tr>
                 <td><strong>Banováno do:</strong></td>
-                <td>{formatDate(newBannedTo)}</td>
+                <td className={selectedDuration === 'permanent' ? 'text-red-500' : ''}>
+                  {formatDate(newBannedTo)}
+                </td>
               </tr>
               <tr>
                 <td><strong>Důvod:</strong></td>
