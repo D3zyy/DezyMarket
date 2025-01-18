@@ -9,7 +9,7 @@ export const openDeleteBanModal = (banId) => {
 };
 
 // DeleteBanModal Component
-function DeleteBanModal({ banIdd}) {
+function DeleteBanModal({ banIdd }) {
   const [banId, setbanId] = useState(banIdd);
 
   const updateBan = async () => {
@@ -23,14 +23,11 @@ function DeleteBanModal({ banIdd}) {
       });
 
       const result = await response.json();
-    window.location.reload()
- 
-     
+      window.location.reload();
     } catch (error) {
       console.error('Error updating ban:', error);
     }
   };
-
 
   // Funkce pro zavření modalu
   const closeModal = () => {
@@ -54,13 +51,13 @@ function DeleteBanModal({ banIdd}) {
         data-backdrop="true"
       >
         <div className="modal-box">
-          <span className="block text-center text-lg font-bold mb-4">Zrušit ban</span>
+          <span className="block text-center text-lg font-bold mb-4 text-red-500">Zrušit ban</span>
           <div>
-            {/* Zde můžete přidat obsah pro potvrzení smazání */}
-            <p>Opravdu chcete zrušit tento ban?</p>
+            {/* Zarovnaný text na střed */}
+            <p className="text-gray-500 text-center mb-4 font-semibold text-sm">Opravdu chcete zrušit tento ban?</p>
           </div>
 
-          <div className="text-center"> 
+          <div className="text-center">
             <button
               type="button"
               className="btn btn-primary"
