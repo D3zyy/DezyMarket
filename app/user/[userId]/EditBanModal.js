@@ -134,7 +134,8 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
       });
 
       const result = await response.json();
-      router.refresh()
+    window.location.reload()
+ 
       console.log('Ban updated successfully', result);
     } catch (error) {
       console.error('Error updating ban:', error);
@@ -163,7 +164,7 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
             <tbody>
               <tr>
                 <td><strong>Počet dní:</strong></td>
-                <td>{calculateDaysDifference(bannedFrom, bannedTo)}</td>
+                <td>{pernament? 'pernametně': calculateDaysDifference(bannedFrom, bannedTo)}</td>
               </tr>
               <tr>
                 <td><strong>Banováno od:</strong></td>
