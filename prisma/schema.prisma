@@ -23,7 +23,8 @@ model Users {
   dateOfRegistration          DateTime          
   roleId                      Int
   role                        Roles               @relation(fields: [roleId], references: [id])
-  bans                        Bans[]
+  bans        Bans[]   @relation("BannedUser")
+  bansGiven   Bans[]   @relation("BannedByUser")
   posts                       Posts[]
   sessions                    Sessions[]
   termsOfUseAndPrivatePolicy  Boolean             @default(false)
@@ -353,14 +354,18 @@ model Roles {
 }
 
 model Bans {
-  id         Int      @id @default(autoincrement())
-  bannedFrom DateTime @default(now())
-  bannedTill DateTime? 
-  pernament  Boolean @default(false)
-  reason     String?
-  userId     String
-  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          Int      @id @default(autoincrement())
+  bannedFrom  DateTime @default(now())
+  bannedTill  DateTime? 
+  permanent   Boolean  @default(false)
+  reason      String?
+  userId      String
+  fromUserId  String
+  user        Users    @relation("BannedUser", fields: [userId], references: [id], onDelete: Cascade)
+  fromUser    Users    @relation("BannedByUser", fields: [fromUserId], references: [id], onDelete: Cascade)
 }
+
+
 
 model Sessions {
   id         Int      @id @default(autoincrement())

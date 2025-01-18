@@ -3,6 +3,7 @@ import { prisma } from "@/app/database/db";
 import Link from "next/link";
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 import { getSession } from "@/app/authentication/actions";
+import NotFound from "@/app/not-found";
 const Page = async ({ params }) => {
   const [session,userAcc, posts, rankingOfUser, bansOfUser] = await Promise.all([
     getSession()
@@ -27,7 +28,23 @@ const Page = async ({ params }) => {
       where: { userId: params?.userId },
     }),
   ]);
-   let accType = await getUserAccountTypeOnStripe(userAcc.email);
+  if(!userAcc){
+    return <div className="p-4 text-center">
+    <h1 className="text-xl font-bold mt-2">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"  className="w-12 h-12 mx-auto text-red-500 mb-2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6" />
+      </svg>
+      Uživatel nenalezen
+      <br />
+     <Link  className="btn mt-2" href={"/"}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+<path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+</svg>
+</Link>
+    </h1>
+  </div>
+  }
+
+   let accType = await getUserAccountTypeOnStripe(userAcc?.email);
 
 let emojiForAcc = false
 if(accType?.priority > 1){
@@ -66,7 +83,7 @@ console.log('bans:',userAcc)
 
 
   <p className="text-lg font-semibold ">
- {session.userId === userAcc.id ? 'Můj účet   ' : 'Uživatelský účet'}  
+ {session.userId === userAcc?.id ? 'Můj účet   ' : 'Uživatelský účet'}  
   </p>
 </div>
         
@@ -122,7 +139,7 @@ console.log('bans:',userAcc)
 </svg>
 
   <p className="text-lg font-semibold">
-  {session.userId === userAcc.id ? 'Moje příspěvky   ' : ' Příspěvky uživatele'}  
+  {session.userId === userAcc?.id ? 'Moje příspěvky   ' : ' Příspěvky uživatele'}  
   </p>
 </div>
         
@@ -130,7 +147,7 @@ console.log('bans:',userAcc)
   
         {posts.length > 0 ? (
   posts
-    .filter((post) => session?.role?.privileges > userAcc?.role?.privileges && session.userId != userAcc.id || post?.visible) // Admins see all posts, others see only visible ones
+    .filter((post) => session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id || post?.visible) // Admins see all posts, others see only visible ones
     .map((post) => (
       <div key={post.id}>
         <div className="mb-4 mt-3 flex flex-row gap-2 max-w-48 break-all">
@@ -201,7 +218,7 @@ console.log('bans:',userAcc)
     <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
   </svg>
   <p className="text-lg font-semibold">
-  {session.userId === userAcc.id ? 'Hodnocení které jsem získal  ' : '  Hodnocení uživatele'} 
+  {session.userId === userAcc?.id ? 'Hodnocení které jsem získal  ' : '  Hodnocení uživatele'} 
 
   </p>
 </div>
@@ -258,7 +275,7 @@ console.log('bans:',userAcc)
       </div>
 
 
-        {session?.role?.privileges > userAcc?.role?.privileges && session.userId != params.userId &&
+        {session?.role?.privileges > userAcc?.role?.privileges && session?.userId != params.userId &&
       <div className="flex  w-3/3     scrollbar-hiddenflex flex-col justify-center items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full  " >
         <div className="flex items-center justify-start">
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-red-500 pb-4">
@@ -276,7 +293,8 @@ console.log('bans:',userAcc)
         </div>
   
         {bansOfUser.length > 0 ? (
- bansOfUser.map((ban) => (
+bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
+.map((ban) => (
   <div className="mb-10 mt-5" key={ban.id}>
     <div className=" flex flex-row gap-2 max-w-48 break-all">
     {ban.reason &&
@@ -303,7 +321,7 @@ console.log('bans:',userAcc)
       </div>
        }
     </div>
-    <div className="flex flex-row gap-4">
+    <div className="flex flex-row gap-4 mt-2">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
 </svg>
@@ -318,10 +336,12 @@ console.log('bans:',userAcc)
 )}
     </div>
    
-              <div className="flex flex-row gap-4">
+              <div className="mt-2">
                 Pernametní: {ban.pernament? 'Ano' : 'Ne'}
 
               </div>
+              <button className="btn btn-sm mr-2 mt-2">Smazat ban</button>
+              <button className="btn btn-sm">Upravit ban</button>  
   </div>
 ))
 ) : (
