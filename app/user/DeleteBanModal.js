@@ -9,12 +9,28 @@ export const openDeleteBanModal = (banId) => {
 };
 
 // DeleteBanModal Component
-function DeleteBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt }) {
+function DeleteBanModal({ banIdd}) {
   const [banId, setbanId] = useState(banIdd);
-  const [bannedFrom, setBannedFrom] = useState(bannedFromm);
-  const [bannedTo, setBannedTo] = useState(bannedToo);
-  const [reason, setReason] = useState(reasonn);
-  const [pernament, setPernament] = useState(pernamentt);
+
+  const updateBan = async () => {
+    try {
+      const response = await fetch('/api/updateBan', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(banId),
+      });
+
+      const result = await response.json();
+    window.location.reload()
+ 
+     
+    } catch (error) {
+      console.error('Error updating ban:', error);
+    }
+  };
+
 
   // Funkce pro zavření modalu
   const closeModal = () => {
@@ -44,14 +60,23 @@ function DeleteBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
             <p>Opravdu chcete zrušit tento ban?</p>
           </div>
 
-          <button
-            type="button"
-            className="btn"
-            onClick={closeModal}
-            onTouchStart={closeModal}
-          >
-            Zavřít
-          </button>
+          <div className="text-center"> 
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={updateBan}
+            >
+              Zrušit ban
+            </button>
+
+            <button
+              type="button"
+              className="btn ml-4"
+              onClick={closeModal}
+            >
+              Zavřít
+            </button>
+          </div>
         </div>
       </dialog>
     </div>
