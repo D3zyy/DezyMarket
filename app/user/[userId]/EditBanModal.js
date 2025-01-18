@@ -51,7 +51,7 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
     if (daysDifference < 1) {
       daysDifference = 0;
     } else {
-      daysDifference = Math.floor(daysDifference); // zaokrouhlení směrem dolů
+      daysDifference = Math.ceil(daysDifference); // zaokrouhlení směrem dolů
     }
     return daysDifference;
   }
