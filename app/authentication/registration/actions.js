@@ -18,8 +18,8 @@ const schema = z.object({
     .regex(/\d/, 'Heslo musí obsahovat alespoň jedno číslo.'),
     fullName: z.string()
     .regex(
-      /^(?!\d+$)[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]{3,10}$/,
-      'Uživatelské jméno nesmí obsahovat speciální znaky, musí mít 3 až 10 znaků a nesmí být pouze číslo'
+      /^(?!\d+$)[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]{3,20}$/,
+      'Uživatelské jméno nesmí obsahovat speciální znaky, musí mít 3 až 20 znaků a nesmí být pouze číslo'
     ),
   termsOfUseAndPrivatePolicy: z.boolean()
     .refine(val => val === true, 'Musíte souhlasit s podmínkami použití a zásadami zpracování osobních údajů.')
