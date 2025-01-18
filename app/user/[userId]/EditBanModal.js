@@ -1,11 +1,19 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { DateTime } from 'luxon'; // Nezapomeňte importovat Luxon
 
 export const openUpdateBanModal = (banId) => {
   const modal = document.getElementById(`ban_update-modal-${banId}`);
   if (modal) {
     modal.showModal(); // Použijeme showModal() pro dialogové okno
   }
+};
+
+const formatDate = (date) => {
+  if (date instanceof Date) {
+    return date.toLocaleString('cs-CZ');
+  }
+  return date; 
 };
 
 // UpdateBanModal Component
@@ -17,24 +25,22 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
   const [pernament, setPernament] = useState(pernamentt);
   const [selectedDuration, setSelectedDuration] = useState(null);
   const [isClient, setIsClient] = useState(false); // Flag to detect when the component is mounted on the client
-
+  const [newBannedTo, setNewBannedTo] = useState(bannedToo); // New bannedTo for the updated date
 
   const calculateDaysDifference = (startDate, endDate) => {
     if (startDate && endDate) {
-      // Získání časových hodnot bez hodin, minut a sekund (aby se zabránilo nechtěnému navýšení)
-      const start = new Date(startDate).setHours(0, 0, 0, 0);
-      const end = new Date(endDate).setHours(0, 0, 0, 0);
+      const start = DateTime.fromISO(startDate).setZone('Europe/Prague').startOf('day');
+      const end = DateTime.fromISO(endDate).setZone('Europe/Prague').startOf('day');
   
-      const diffTime = end - start; // Rozdíl v milisekundách
-      const diffDays = diffTime / (1000 * 3600 * 24); // Převod na dny
-      return Math.floor(diffDays); // Vrátí celé číslo dnů
+      const diffTime = end - start;
+      const diffDays = diffTime / (1000 * 3600 * 24);
+      return Math.floor(diffDays); 
     }
-    return 0; // Pokud nejsou data, vrátí 0
+    return 0; 
   };
 
-
   useEffect(() => {
-    setIsClient(true); // Set to true after the component has mounted on the client
+    setIsClient(true); 
   }, []);
 
   // Funkce pro zavření modalu
@@ -50,53 +56,82 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
     setSelectedDuration(duration);
   };
 
-  // Funkce pro uložení změn
+  // Funkce pro uložení změn a výpočet nového data
   const handleSave = () => {
-    const newBannedTo = new Date();
+    let newDate = DateTime.now().setZone('Europe/Prague');
+
+    // Vytvoření nového data na základě vybrané doby
     switch (selectedDuration) {
+      case '30minutes':
+        newDate = newDate.plus({ minutes: 30 });
+        break;
+      case '1day':
+        newDate = newDate.plus({ days: 1 });
+        break;
       case '3days':
-        newBannedTo.setDate(newBannedTo.getDate() + 3);
+        newDate = newDate.plus({ days: 3 });
         break;
       case '7days':
-        newBannedTo.setDate(newBannedTo.getDate() + 7);
+        newDate = newDate.plus({ days: 7 });
         break;
       case '1month':
-        newBannedTo.setMonth(newBannedTo.getMonth() + 1);
+        newDate = newDate.plus({ months: 1 });
         break;
       case '1year':
-        newBannedTo.setFullYear(newBannedTo.getFullYear() + 1);
+        newDate = newDate.plus({ years: 1 });
         break;
       case 'permanent':
-        newBannedTo.setFullYear(newBannedTo.getFullYear() + 100); // Trvalý ban
+        newDate = newDate.plus({ years: 100 }); // Permanent ban
         break;
       default:
         return;
     }
-    setBannedTo(newBannedTo);
+
+    // Nastavení nového data
+    setNewBannedTo(newDate.toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"));
+    setBannedTo(newDate.toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"));
     closeModal();
+
+    // Zpráva o změnách
+    const updatedBanData = {
+      banId,
+      bannedFrom,
+      bannedTo: newDate.toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"),
+      reason,
+      isPermanent: selectedDuration === 'permanent' // Určujeme, zda jde o trvalý ban
+    };
+
+    // API volání (nebo funkce pro aktualizaci banu)
+    updateBan(updatedBanData);
   };
 
-  // Převeď data na řetězec, používat stejné formátování na serveru i klientovi
-  const formatDate = (date) => {
-    if (date instanceof Date) {
-      return date.toLocaleString('cs-CZ'); // Používáme konstantní formát (např. český formát)
+  const updateBan = async (updatedBanData) => {
+    try {
+      const response = await fetch('/api/updateBan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedBanData),
+      });
+
+      const result = await response.json();
+      console.log('Ban updated successfully', result);
+    } catch (error) {
+      console.error('Error updating ban:', error);
     }
-    return date; // Pokud není objekt typu Date, vrátí původní hodnotu
   };
 
   if (!isClient) {
-    // Renderujeme pouze po montování komponenty na klientovi
     return null;
   }
 
   return (
     <div>
-      {/* Tlačítko pro otevření modalu */}
       <button onClick={() => openUpdateBanModal(banId)} className="btn btn-sm">
         Upravit ban
       </button>
 
-      {/* Modal */}
       <dialog
         id={`ban_update-modal-${banId}`}
         className="modal bg-slate-950/25 modal-bottom sm:modal-middle"
@@ -105,7 +140,6 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
         <div className="modal-box">
           <span className="block text-lg text-center font-bold mb-4">Upravit ban</span>
 
-          {/* Tabulka pro zobrazení informací */}
           <table className="table table-zebra w-full mb-4">
             <tbody>
               <tr>
@@ -118,14 +152,14 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
               </tr>
               <tr>
                 <td><strong>Banováno do:</strong></td>
-                <td>{formatDate(bannedTo)}</td>
+                <td>{formatDate(newBannedTo)}</td>
               </tr>
               <tr>
                 <td><strong>Důvod:</strong></td>
                 <td>
                   <textarea
                     className="textarea textarea-bordered w-full"
-                    style={{ height: '150px', resize: 'none' }} // Zvýšení výšky a zakázání resize
+                    style={{ height: '150px', resize: 'none' }}
                     placeholder="Bio"
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
@@ -135,59 +169,67 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
             </tbody>
           </table>
 
-          {/* Tlačítka pro výběr doby trvání */}
-          <div className="mb-4">
+          <div className="mb-6 ">
             <button
-              className={`btn btn-xs mr-2 ${selectedDuration === '3days' ? 'btn-primary' : ''}`}
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === '30minutes' ? 'btn-primary' : ''}`}
+              onClick={() => handleDurationClick('30minutes')}
+            >
+              30 minut
+            </button>
+            <button
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === '1day' ? 'btn-primary' : ''}`}
+              onClick={() => handleDurationClick('1day')}
+            >
+              1 den
+            </button>
+            <button
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === '3days' ? 'btn-primary' : ''}`}
               onClick={() => handleDurationClick('3days')}
             >
               3 dny
             </button>
             <button
-              className={`btn btn-xs mr-2 ${selectedDuration === '7days' ? 'btn-primary' : ''}`}
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === '7days' ? 'btn-primary' : ''}`}
               onClick={() => handleDurationClick('7days')}
             >
               7 dní
             </button>
             <button
-              className={`btn btn-xs mr-2 ${selectedDuration === '1month' ? 'btn-primary' : ''}`}
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === '1month' ? 'btn-primary' : ''}`}
               onClick={() => handleDurationClick('1month')}
             >
               1 měsíc
             </button>
             <button
-              className={`btn btn-xs mr-2 ${selectedDuration === '1year' ? 'btn-primary' : ''}`}
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === '1year' ? 'btn-primary' : ''}`}
               onClick={() => handleDurationClick('1year')}
             >
               1 rok
             </button>
             <button
-              className={`btn btn-xs mr-2 ${selectedDuration === 'permanent' ? 'btn-primary' : ''}`}
+              className={`btn mt-1 btn-xs mr-2 ${selectedDuration === 'permanent' ? 'btn-primary' : ''}`}
               onClick={() => handleDurationClick('permanent')}
             >
               Trvalý ban
             </button>
           </div>
 
-          {/* Tlačítko pro uložení změn */}
-          <div className='text-center'> 
-          <button
-            type="button"
-            className="btn  btn-primary"
-            onClick={handleSave}
-          >
-            Uložit změny
-          </button>
+          <div className="text-center"> 
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleSave}
+            >
+              Uložit změny
+            </button>
 
-          {/* Tlačítko pro zavření */}
-          <button
-            type="button"
-            className="btn ml-4"
-            onClick={closeModal}
-            onTouchStart={closeModal}
-          >
-            Zavřít
-          </button>
+            <button
+              type="button"
+              className="btn ml-4"
+              onClick={closeModal}
+            >
+              Zavřít
+            </button>
           </div>
          
         </div>
