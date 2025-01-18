@@ -20,11 +20,58 @@ export async function POST(request) {
     }
     let data = await request.json();
     console.log("Tohle jsem dostal na serveru update ban:",data)
+    console.log(session)
+    if(session?.role?.privileges <= 1){
+        return new Response(JSON.stringify({
+            message: "Na tento příkaz nemáte oprávnění"
+        }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+    const ban = await prisma.bans.findUnique({
+        where: {id: data?.banId},
+        include: {
+            fromUser: {
+              include: {
+                role: true, // Fetches the role of the user
+              },
+            },
+          },
 
+    })
+
+
+    console.log("tenhle ban chci upatnout:",ban)
+    if(session?.role?.privileges > ban?.fromUser?.role?.privileges &&  session?.userId != ban?.userId  || session?.userId === ban?.fromUser?.id &&  session?.userId != ban?.userId ){
+        const updateBan = await prisma.bans.update({
+            where: {
+              id: data.banId // Identifikátor banId, podle kterého se najde záznam
+            },
+            data: {
+              bannedFrom: data.bannedFrom, // Ujistěte se, že datetime je správně naformátován
+              bannedTill: data.bannedTo,     // Pokud je potřeba, upravte podle typu ve vaší databázi
+              reason: data.reason,
+              pernament: data.isPermanent
+            }
+          });
+          
+          console.log('Ban updated:', updateBan);
+
+
+    } else {
+        return new Response(JSON.stringify({
+            message: "Na tento příkaz nemáte oprávnění"
+        }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+  
    
       
     return new Response(
-      JSON.stringify('Ahoj'),
+      JSON.stringify({success: true}),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
