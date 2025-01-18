@@ -49,7 +49,24 @@ export async function POST(request) {
             headers: { 'Content-Type': 'application/json' }
         });
       }
+// Získání aktuálního času a doby vypršení banu
+const currentTime = DateTime.now().setZone('Europe/Prague').toMillis();
+const bannedTillTime = new Date(ban.bannedTill).getTime();
+const timeDifference = currentTime - bannedTillTime; // Rozdíl v milisekundách
 
+// Pokud je ban vypršený více než 2 hodiny, neumožníme prodloužení
+if(ban.bannedTill){
+
+
+if (timeDifference > 1000 * 3600 * 2 ) {
+  return new Response(JSON.stringify({
+    message: "Ban již vypršel o více než 2 hodiny, prodloužení není povoleno"
+  }), {
+    status: 400,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+}
       if (
         (session?.role?.privileges > ban?.fromUser?.role?.privileges || ban?.fromUser?.role?.privileges === null) ||
         session?.userId != ban?.userId ||
@@ -152,7 +169,10 @@ export async function PUT(request) {
     const timeDifference = currentTime - bannedTillTime; // Rozdíl v milisekundách
 
     // Pokud je ban vypršený více než 2 hodiny, neumožníme prodloužení
-    if (timeDifference > 1000 * 3600 * 2) {
+    if(ban.bannedTill){
+
+ 
+    if (timeDifference > 1000 * 3600 * 2 ) {
       return new Response(JSON.stringify({
         message: "Ban již vypršel o více než 2 hodiny, prodloužení není povoleno"
       }), {
@@ -160,7 +180,7 @@ export async function PUT(request) {
         headers: { 'Content-Type': 'application/json' }
       });
     }
-
+  }
     // Pokud je čas vypršení banu ještě v rámci tolerance 2 hodin, pokračujeme
     const dateAndTime = DateTime.now()
       .setZone('Europe/Prague')
