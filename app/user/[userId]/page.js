@@ -368,8 +368,14 @@ bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
                 Pernametní: {ban.pernament? 'Ano' : 'Ne'}
 
               </div>
-              <button className="btn btn-sm mr-2 mt-2">Smazat ban</button>
-              <button className="btn btn-sm">Upravit ban</button>  
+              {(session?.role?.privileges > ban.fromUser.role.privileges || session?.role?.privileges === 4 || session?.userId === ban?.fromUserId)  && <>
+
+               <button className="btn btn-sm mr-2 mt-2">Smazat ban</button>
+                <button className="btn btn-sm">Upravit ban</button> 
+                
+                
+                 </>}
+             
   </div>
 ))
 ) : (
