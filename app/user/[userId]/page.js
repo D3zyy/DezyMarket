@@ -34,7 +34,7 @@ if(accType?.priority > 1){
         select: { emoji: true }
     });
 }
-console.log('session:',session)
+console.log('bans:',bansOfUser)
   const formatDate = (date) => {
     const d = new Date(date);
     return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
@@ -256,7 +256,78 @@ console.log('session:',session)
       </div>
 
 
+        {session?.role?.privileges > 1 && session.userId != params.userId &&
+      <div className="flex  w-3/3     scrollbar-hiddenflex flex-col justify-center items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full  " >
+        <div className="flex items-center justify-start">
+        <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-red-500 pb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-10 w-10 mt-2 text-red-500">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+</svg>
 
+        
+
+  <p className="text-lg font-semibold">
+  Bany uživatele
+  </p>
+</div>
+        
+        </div>
+  
+        {bansOfUser.length > 0 ? (
+ bansOfUser.map((ban) => (
+  <div className="mb-10 mt-5" key={ban.id}>
+    <div className=" flex flex-row gap-2 max-w-48 break-all">
+      <div className="flex flex-row gap-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-6 flex-shrink-0"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+          />
+        </svg>
+        <div>
+         {ban.reason}
+        </div>
+        
+        
+      </div>
+      
+    </div>
+    <div className="flex flex-row gap-4">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
+</svg>
+
+{ban.pernament ? (
+  <span>{new Date(ban.bannedFrom).toLocaleString("cs-CZ")}</span>
+) : (
+  <span>
+    {new Date(ban.bannedFrom).toLocaleString("cs-CZ")} <br></br>
+    {new Date(ban.bannedTill).toLocaleString("cs-CZ")}
+  </span>
+)}
+    </div>
+   
+              <div className="flex flex-row gap-4">
+                Pernametní: {ban.pernament? 'Ano' : 'Ne'}
+
+              </div>
+  </div>
+))
+) : (
+  <p className="text-sm mt-2 text-gray-500">
+    Tento uživatel nemá žádné bany
+  </p>
+)}
+      </div>
+ }
 
 
     </div>
