@@ -4,6 +4,8 @@ import Link from "next/link";
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 import { getSession } from "@/app/authentication/actions";
 import NotFound from "@/app/not-found";
+import UpdateBanModal from "./EditBanModal";
+import DeleteBanModal from "../DeleteBanModal";
 const Page = async ({ params }) => {
   const [session,userAcc, posts, rankingOfUser, bansOfUser] = await Promise.all([
     getSession()
@@ -60,7 +62,7 @@ if(accType?.priority > 1){
         select: { emoji: true }
     });
 }
-console.log('bans:',bansOfUser)
+//console.log('bans:',bansOfUser)
   const formatDate = (date) => {
     const d = new Date(date);
     return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
@@ -289,7 +291,7 @@ console.log('bans:',bansOfUser)
         )}
       </div>
 
-
+ 
       {(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) &&
        
       <div className="flex  w-3/3     scrollbar-hiddenflex flex-col justify-center items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full  " >
@@ -378,10 +380,10 @@ bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
               </div>
               {(session?.role?.privileges > ban.fromUser.role.privileges || session?.role?.privileges === 4 || session?.userId === ban?.fromUserId)  && <>
 
-               <button className="btn btn-sm mr-2 mt-2">Smazat ban</button>
-                <button className="btn btn-sm">Upravit ban</button> 
-                
-                
+                <div className="flex flex-row gap-2">
+                <UpdateBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
+                <DeleteBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
+                </div>
                  </>}
              
   </div>
