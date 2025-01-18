@@ -50,18 +50,23 @@ export async function POST(request) {
         });
       }
 
-    if(session?.role?.privileges > ban?.fromUser?.role?.privileges &&  session?.userId != ban?.userId  || session?.userId === ban?.fromUser?.id &&  session?.userId != ban?.userId ){
+      if (
+        (session?.role?.privileges > ban?.fromUser?.role?.privileges || ban?.fromUser?.role?.privileges === null) ||
+        session?.userId != ban?.userId ||
+        (session?.userId === ban?.fromUser?.id && session?.userId != ban?.userId)
+      ) {
         const updateBan = await prisma.bans.update({
-            where: {
-              id: data.banId // Identifikátor banId, podle kterého se najde záznam
-            },
-            data: {
-              bannedFrom: data.bannedFrom, // Ujistěte se, že datetime je správně naformátován
-              bannedTill: data.isPermanent? null: data.bannedTo,     // Pokud je potřeba, upravte podle typu ve vaší databázi
-              reason: data.reason,
-              pernament: data.isPermanent
-            }
-          });
+          where: {
+            id: data.banId // Identifikátor banId, podle kterého se najde záznam
+          },
+          data: {
+            bannedFrom: data.bannedFrom, // Ujistěte se, že datetime je správně naformátován
+            bannedTill: data.isPermanent ? null : data.bannedTo, // Pokud je potřeba, upravte podle typu ve vaší databázi
+            reason: data.reason,
+            pernament: data.isPermanent
+          }
+        });
+      
           
           
 
@@ -160,22 +165,28 @@ export async function PUT(request) {
     const dateAndTime = DateTime.now()
       .setZone('Europe/Prague')
       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-
-    if (session?.role?.privileges > ban?.fromUser?.role?.privileges && session?.userId !== ban?.userId || session?.userId === ban?.fromUser?.id && session?.userId !== ban?.userId) {
-      console.log("taddy");
-
-      const updateBan = await prisma.bans.update({
-        where: {
-          id: data // Identifikátor banId, podle kterého se najde záznam
-        },
-        data: {
-          bannedTill: dateAndTime, 
-          pernament: false    // Pokud je potřeba, upravte podle typu ve vaší databázi
-        }
-      });
+console.log("tady")
+      if (
+        (session?.role?.privileges > ban?.fromUser?.role?.privileges || ban?.fromUser?.role?.privileges === null) ||
+        session?.userId !== ban?.userId ||
+        (session?.userId === ban?.fromUser?.id && session?.userId !== ban?.userId)
+      ) {
+        console.log("taddy");
+      
+        const updateBan = await prisma.bans.update({
+          where: {
+            id: data // Identifikátor banId, podle kterého se najde záznam
+          },
+          data: {
+            bannedTill: dateAndTime,
+            pernament: false // Pokud je potřeba, upravte podle typu ve vaší databázi
+          }
+        });
+      
 
       console.log("udate:", updateBan);
     } else {
+      console.log("tady nemam oprv")
       return new Response(JSON.stringify({
         message: "Na tento příkaz nemáte oprávnění"
       }), {
