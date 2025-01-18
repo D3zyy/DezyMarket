@@ -282,7 +282,8 @@ console.log('bans:',bansOfUser)
       </div>
 
 
-        {session?.role?.privileges > userAcc?.role?.privileges && session?.userId != params.userId &&
+      {(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) &&
+       
       <div className="flex  w-3/3     scrollbar-hiddenflex flex-col justify-center items-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full  " >
         <div className="flex items-center justify-start">
         <div className="flex flex-row gap-4 items-center justify-center border-b-4 border-red-500 pb-4">
@@ -316,7 +317,7 @@ bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
 </svg>
 
-<Link  className='underline'href={`/user/${ban.fromUser.id}`}>
+<Link  target="_blank" className='underline'href={`/user/${ban.fromUser.id}`}>
   {ban.fromUser.fullName}
 </Link>
 
