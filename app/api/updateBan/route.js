@@ -19,7 +19,7 @@ export async function POST(request) {
         });
     }
     let data = await request.json();
-    console.log("Tohle jsem dostal na serveru update ban:",data)
+
     console.log(session)
     if(session?.role?.privileges <= 1){
         return new Response(JSON.stringify({
@@ -42,7 +42,7 @@ export async function POST(request) {
     })
 
 
-    console.log("tenhle ban chci upatnout:",ban)
+
     if(session?.role?.privileges > ban?.fromUser?.role?.privileges &&  session?.userId != ban?.userId  || session?.userId === ban?.fromUser?.id &&  session?.userId != ban?.userId ){
         const updateBan = await prisma.bans.update({
             where: {
@@ -50,13 +50,13 @@ export async function POST(request) {
             },
             data: {
               bannedFrom: data.bannedFrom, // Ujistěte se, že datetime je správně naformátován
-              bannedTill: data.bannedTo,     // Pokud je potřeba, upravte podle typu ve vaší databázi
+              bannedTill: data.isPermanent? null: data.bannedTo,     // Pokud je potřeba, upravte podle typu ve vaší databázi
               reason: data.reason,
               pernament: data.isPermanent
             }
           });
           
-          console.log('Ban updated:', updateBan);
+          
 
 
     } else {

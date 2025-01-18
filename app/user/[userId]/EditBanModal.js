@@ -47,8 +47,10 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
         const dateFrom = new Date(fromDate);
         const dateTo = new Date(toDate);
         const timeDifference = dateTo - dateFrom; // rozdíl v milisekundách
-        const daysDifference = timeDifference / (1000 * 3600 * 24); // převod na dny
-        
+        let daysDifference = timeDifference / (1000 * 3600 * 24); // převod na dny
+            if (daysDifference < 1){
+                daysDifference = 0
+            }
         return daysDifference;
       }
 
