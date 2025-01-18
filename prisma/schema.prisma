@@ -360,9 +360,9 @@ model Bans {
   pernament   Boolean  @default(false)
   reason      String?
   userId      String
-  fromUserId  String
+  fromUserId  String?
   user        Users    @relation("BannedUser", fields: [userId], references: [id], onDelete: Cascade)
-  fromUser    Users    @relation("BannedByUser", fields: [fromUserId], references: [id], onDelete: Cascade)
+  fromUser    Users?    @relation("BannedByUser", fields: [fromUserId], references: [id], onDelete: Cascade)
 }
 
 
