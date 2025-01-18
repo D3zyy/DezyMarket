@@ -279,6 +279,7 @@ console.log('bans:',userAcc)
  bansOfUser.map((ban) => (
   <div className="mb-10 mt-5" key={ban.id}>
     <div className=" flex flex-row gap-2 max-w-48 break-all">
+    {ban.reason &&
       <div className="flex flex-row gap-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -300,7 +301,7 @@ console.log('bans:',userAcc)
         
         
       </div>
-      
+       }
     </div>
     <div className="flex flex-row gap-4">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
