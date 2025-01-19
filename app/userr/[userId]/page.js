@@ -91,7 +91,7 @@ return (
               d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
             />
           </svg>
-          <span className="font-semibold">{userAcc.fullName}</span>
+          <span className="font-semibold whitespace-nowrap">{userAcc.fullName}</span>
         </div>
 <div className="p-10 mt-2">
 
@@ -127,7 +127,7 @@ return (
   </span>
 </div>
  }
-<div className="flex flex-row gap-6 ml-3 mt-2 items-center">
+<div className="flex flex-row gap-6 ml-3 mt-2 items-center ">
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 flex-shrink-0">
   <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
 </svg>
@@ -139,7 +139,8 @@ return (
 </svg>
 
 {(posts.filter(post => post.visible).length > 0) || (posts.length > 0 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id ) || session?.role?.privileges === 4 ? (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"> {/* Tento div bude grid kontejner */}
+  <div className="flex  justify-center">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4  "> {/* Tento div bude grid kontejner */}
     {posts
       .filter((post) => session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id || post?.visible || session?.role?.privileges === 4) 
       .sort((a, b) => {
@@ -149,7 +150,7 @@ return (
         return a.visible ? -1 : 1;
       })
       .map((post) => (
-        <div key={post.id} className="relative mt-3 flex flex-col gap-2 max-w-48 break-all border-2 border-gray-700 border-dashed rounded-md p-3 ">
+        <div key={post.id} className="relative mt-3 flex flex-col gap-2 max-w-48 break-all border-2 border-gray-700 border-dashed rounded-md p-3  ">
           {/* Default icon */}
          
           <svg
@@ -229,6 +230,7 @@ return (
           </div>
         </div>
       ))}
+  </div>
   </div>
 ) : (
   <p className="text-sm mt-2 text-gray-500">
