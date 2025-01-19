@@ -43,7 +43,7 @@ const Page = async ({ params }) => {
         topinfo = await prisma.tops.findUnique({
           where: { id: postRecord?.topId }
         });
-        console.log("top::",topinfo)
+       
       }
      
     }
