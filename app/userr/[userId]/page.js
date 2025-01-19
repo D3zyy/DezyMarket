@@ -197,7 +197,7 @@ return (
 >
 <Link
       href={session?.isLoggedIn ? `/typeOfAccount` : ``}
-      style={{ fontWeight: 'bold', fontSize: '1rem', color: post?.top?.color }}
+      style={{ color: post?.top?.color }}
     >
  { post?.top?.emoji ? <span className="mr-1" dangerouslySetInnerHTML={{ __html: post?.top?.emoji }}></span> : ""}
      
