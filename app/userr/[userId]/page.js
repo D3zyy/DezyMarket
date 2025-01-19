@@ -189,9 +189,7 @@ return (
   style={{
     fontSize: '0.875rem',
     padding: '10px',
-    borderWidth: '1.2px',
-    borderStyle: 'solid',
-    height: '2rem', // Přidej pro větší výšku
+   
     borderColor: post?.top?.color
   }}
 >
