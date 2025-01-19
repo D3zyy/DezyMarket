@@ -74,7 +74,15 @@ return (
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-8 h-8"
+            className={`w-8 h-8 ${
+              userAcc.role.privileges === 4
+                ? "text-green-500"
+                : userAcc.role.privileges === 3
+                ? "text-yellow-500"
+                :userAcc.role.privileges === 2
+                ? "text-red-500"
+                : ""
+            }`}
           >
             <path
               strokeLinecap="round"
