@@ -150,7 +150,7 @@ return (
         return a.visible ? -1 : 1;
       })
       .map((post) => (
-        <div key={post.id} className="relative mt-3 flex flex-col gap-2 max-w-48 break-all border-2 border-gray-700 border-dashed rounded-md p-3  ">
+        <div key={post.id} className="relative mt-3 flex flex-col gap-2 max-w-48 break-all border-2 dark:border-gray-700 border-gray-300 border-dashed rounded-md p-3  ">
           {/* Default icon */}
          
           <svg
