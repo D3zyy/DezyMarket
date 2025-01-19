@@ -136,9 +136,9 @@ return (
   <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.25V18a2.25 2.25 0 0 0 2.25 2.25h13.5A2.25 2.25 0 0 0 21 18V8.25m-18 0V6a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 6v2.25m-18 0h18M5.25 6h.008v.008H5.25V6ZM7.5 6h.008v.008H7.5V6Zm2.25 0h.008v.008H9.75V6Z" />
 </svg>
 
-{ (posts.filter(post => post.visible).length > 0) || (posts.length > 0 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id )? (
+{ (posts.filter(post => post.visible).length > 0) || (posts.length > 0 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id ) || session?.role?.privileges === 4 ? (
   posts
-    .filter((post) => session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id || post?.visible) // Admins see all posts, others see only visible ones
+    .filter((post) => session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id || post?.visible || session?.role?.privileges === 4) // Admins see all posts, others see only visible ones
     .map((post) => (
       <div key={post.id}>
       <div className="relative mb-4 mt-3 flex flex-col gap-2 max-w-48 break-all border-2 border-gray-700 border-dashed rounded-md p-3">
