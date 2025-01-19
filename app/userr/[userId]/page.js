@@ -139,6 +139,15 @@ return (
 { (posts.filter(post => post.visible).length > 0) || (posts.length > 0 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id ) || session?.role?.privileges === 4 ? (
   posts
     .filter((post) => session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id || post?.visible || session?.role?.privileges === 4) // Admins see all posts, others see only visible ones
+    .sort((a, b) => {
+      // Nejprve řadíme podle viditelnosti (true první)
+      if (a.visible === b.visible) {
+        // Pokud jsou viditelnosti stejné, řadíme podle data (nejnovější první)
+        return new Date(b.dateAndTime) - new Date(a.dateAndTime);
+      }
+      // Pokud jsou různé, dáme ty s visible === true na začátek
+      return a.visible ? -1 : 1;
+    })
     .map((post) => (
       <div key={post.id}>
       <div className="relative mb-4 mt-3 flex flex-col gap-2 max-w-48 break-all border-2 border-gray-700 border-dashed rounded-md p-3">
