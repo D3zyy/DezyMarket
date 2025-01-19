@@ -140,12 +140,11 @@ return (
   posts
     .filter((post) => session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id || post?.visible || session?.role?.privileges === 4) // Admins see all posts, others see only visible ones
     .sort((a, b) => {
-      // Nejprve řadíme podle viditelnosti (true první)
+      // Pokud jsou obě položky stejné, seřadíme podle data
       if (a.visible === b.visible) {
-        // Pokud jsou viditelnosti stejné, řadíme podle data (nejnovější první)
         return new Date(b.dateAndTime) - new Date(a.dateAndTime);
       }
-      // Pokud jsou různé, dáme ty s visible === true na začátek
+      // Nejprve dáme viditelné (visible === true) na začátek
       return a.visible ? -1 : 1;
     })
     .map((post) => (
