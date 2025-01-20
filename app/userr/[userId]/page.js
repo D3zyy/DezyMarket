@@ -141,8 +141,10 @@ return (
 </svg>
       {/* Pravá strana - Sekce pro hodnocení */}
       <div
-  className={`flex scrollbar-hidden flex-col justify-center ${
-    rankingOfUser.length > 0 && rankingOfUser.length !=1   ? "items-center" : ""
+      justify-center 
+  className={`flex scrollbar-hidden flex-col items-center ${
+    rankingOfUser.length > 0 && rankingOfUser.length !=1    ? "items-center" : ""
+
   }`}
 >
 
@@ -154,7 +156,7 @@ return (
 
         
         {/* Hodnocení uživatele nebo zpráva, pokud žádná nejsou */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 ${rankingOfUser.length > 3 ? 'lg:grid-cols-3' : ''} gap-4`}>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4`}>
         {rankingOfUser.length > 0 ? ( 
       
           rankingOfUser.map((rating) => (
