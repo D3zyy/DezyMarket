@@ -142,7 +142,7 @@ return (
       {/* Pravá strana - Sekce pro hodnocení */}
       <div
       justify-center 
-  className={`flex scrollbar-hidden flex-col items-center ${
+  className={`flex scrollbar-hidden flex-col ${ rankingOfUser.length > 0&&"items-center"} ${
     rankingOfUser.length > 0 && rankingOfUser.length !=1    ? "items-center" : ""
 
   }`}
