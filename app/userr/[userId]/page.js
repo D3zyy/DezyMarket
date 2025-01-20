@@ -142,7 +142,7 @@ return (
       {/* Pravá strana - Sekce pro hodnocení */}
       <div
   className={`flex scrollbar-hidden flex-col justify-center ${
-    rankingOfUser.length > 0 ? "items-center" : ""
+    rankingOfUser.length > 0 && rankingOfUser.length !=1   ? "items-center" : ""
   }`}
 >
 
@@ -154,7 +154,7 @@ return (
 
         
         {/* Hodnocení uživatele nebo zpráva, pokud žádná nejsou */}
-        <div className="grid grid-cols-1   sm:grid-cols-2 lg:grid-cols-3 gap-4  "> 
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${rankingOfUser.length > 2 ? 'lg:grid-cols-3' : ''} gap-4`}>
         {rankingOfUser.length > 0 ? ( 
       
           rankingOfUser.map((rating) => (
@@ -216,7 +216,13 @@ return (
 </svg>
 
 {(posts.filter(post => post.visible).length > 0) || (posts.length > 0 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id ) || session?.role?.privileges === 4 ? (
-  <div className="flex  justify-center">
+  <div
+  className={`flex scrollbar-hidden ${
+    posts.length > 0 && posts.length !=1 ? "justify-center" : ""
+  }`}
+>
+ 
+
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4  "> {/* Tento div bude grid kontejner */}
     {posts
       .filter((post) => session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id || post?.visible || session?.role?.privileges === 4) 
