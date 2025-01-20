@@ -154,7 +154,7 @@ return (
 
         
         {/* Hodnocení uživatele nebo zpráva, pokud žádná nejsou */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 ${rankingOfUser.length > 2 ? 'lg:grid-cols-3' : ''} gap-4`}>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${rankingOfUser.length > 3 ? 'lg:grid-cols-3' : ''} gap-4`}>
         {rankingOfUser.length > 0 ? ( 
       
           rankingOfUser.map((rating) => (
@@ -217,9 +217,13 @@ return (
 
 {(posts.filter(post => post.visible).length > 0) || (posts.length > 0 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId != userAcc?.id ) || session?.role?.privileges === 4 ? (
   <div
-  className={`flex scrollbar-hidden ${
-    posts.length > 0 && posts.length !=1 ? "justify-center" : ""
-  }`}
+  className={`flex scrollbar-hidden 
+    justify-center 
+    ${session?.role?.privileges > 1 && posts.length > 1 ? "lg:justify-center" : "lg:justify-start"}
+    ${session?.role?.privileges <= 1 && posts.filter(post => post.visible).length > 1 ? "lg:justify-center" : "lg:justify-start"}
+
+
+  `}
 >
  
 
