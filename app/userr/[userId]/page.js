@@ -138,7 +138,7 @@ return (
 
 
       {/* Pravá strana - Sekce pro hodnocení */}
-      <div className="flex  w-3/3   min-w-72 scrollbar-hidden  flex-col justify-center md:items-start w-3/3 md:mr-16 mb-9 md:mb-0 h-full">
+      <div className="flex   min-w-72 scrollbar-hidden  flex-col justify-center  max-w-48 ">
         <div className="flex justify-start">
 
         
