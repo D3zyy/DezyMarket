@@ -65,7 +65,7 @@ function formatDateWithDotsWithoutTime(dateInput) {
 
 return (
   <>
-    <div className="flex justify-center gap-4 p-2 mt-9 md:mt-0">
+    <div className="flex justify-center gap-4 p-2 mt-9 ">
       <div className="relative border-2 border-dotted border-gray-900 w-[700px] min-h-[450px] rounded-md">
         {/* Text a SVG zarovnané nad rámeček bez přerušení borderu */}
         <div className="absolute -top-5 left-1/2 transform -translate-x-1/2  bg-base-100 px-4 flex items-center gap-2">
@@ -141,7 +141,7 @@ return (
 </svg>
       {/* Pravá strana - Sekce pro hodnocení */}
       <div
-      justify-center 
+     
   className={`flex scrollbar-hidden flex-col ${ rankingOfUser.length > 0&&"items-center"} ${
     rankingOfUser.length > 0 && rankingOfUser.length !=1    ? "items-center" : ""
 
