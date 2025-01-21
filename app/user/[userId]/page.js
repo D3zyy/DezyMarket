@@ -10,7 +10,7 @@ import { DateTime } from 'luxon';
 import RemoveBanModal from "./RemoveBanModal";
 
 const Page = async ({ params }) => {
-  const [session,userAcc, posts, rankingOfUser, bansOfUser] = await Promise.all([
+  const [session,userAcc, posts, rankingOfUser] = await Promise.all([
     getSession()
     , prisma.users.findUnique({
       where: { id: params?.userId },
@@ -31,18 +31,23 @@ const Page = async ({ params }) => {
         fromUser: true,  // Předpokládám, že vztah mezi userRatings a users je definován jako toUser
       },
     }),
-    prisma.bans.findMany({
-      where: { userId: params?.userId },
-       include: {
-        fromUser: {
-          include: {
-            role: true, // Fetches the role of the user
-          },
+  ]);
+   let accType = await getUserAccountTypeOnStripe(userAcc?.email);
+   let bansOfUser
+if(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId){
+  bansOfUser = await prisma.bans.findMany({
+    where: { userId: params?.userId },
+     include: {
+      fromUser: {
+        include: {
+          role: true, // Fetches the role of the user
         },
       },
-    }),
-  ]);
-   let accType = await getUserAccountTypeOnStripe(userAcc.email);
+    },
+  })
+}
+     
+
 
 let emojiForAcc = false
 if(accType?.priority > 1){
@@ -162,14 +167,14 @@ return (
 
 
 
-{(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) && 
+{(session?.role?.privileges > 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) && 
 
  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-14 mt-6">
  <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
 </svg>
 
 }
-{(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) &&
+{(session?.role?.privileges > 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) &&
        
 <div
   className={`flex flex-col  w-full md:mr-16 mb-9 md:mb-0  ${
@@ -281,13 +286,13 @@ return (
                
                  </div>
 
-                 {session?.role?.privileges > 3 && <>
+               
+
+
+                 </>}</>)}   {session?.role?.privileges > 3 && <>
                  <div className="flex flex-row gap-2 mt-2">
                  <RemoveBanModal  banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
-                </div></>}
-
-
-                 </>}</>)}</div>
+                </div></>} </div>
  
  
               
