@@ -10,7 +10,9 @@ import { DateTime } from 'luxon';
 import RemoveBanModal from "./RemoveBanModal";
 
 const Page = async ({ params }) => {
-  const [session,userAcc, posts, rankingOfUser] = await Promise.all([
+  let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser
+  try{
+   [session,userAcc, posts, rankingOfUser] = await Promise.all([
     getSession()
     , prisma.users.findUnique({
       where: { id: params?.userId },
@@ -32,8 +34,8 @@ const Page = async ({ params }) => {
       },
     }),
   ]);
-   let accType = await getUserAccountTypeOnStripe(userAcc?.email);
-   let bansOfUser
+    accType = await getUserAccountTypeOnStripe(userAcc?.email);
+    bansOfUser
 if(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId){
   bansOfUser = await prisma.bans.findMany({
     where: { userId: params?.userId },
@@ -49,7 +51,7 @@ if(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?
      
 
 
-let emojiForAcc = false
+ emojiForAcc = false
 if(accType?.priority > 1){
      emojiForAcc = await prisma.AccountType.findMany({
         where: { name: accType?.name },
@@ -57,9 +59,12 @@ if(accType?.priority > 1){
     });
 }
 
+  }catch(e){
+console.log(e)
+  }finally {
+          await prisma.$disconnect(); // Uzavřete připojení po dokončení
+      }
 
-
-console.log(bansOfUser)
 
 function formatDateWithDotsWithTime(dateInput) {
   // Zjistíme, zda je vstup instancí Date nebo ISO řetězec
