@@ -16,13 +16,20 @@ const Page = async ({ searchParams }) => {
   const failureMessage = redirectStatus === 'failed'; // Check for failure
   const unknownMessage = redirectStatus && redirectStatus !== 'succeeded' && redirectStatus !== 'failed' && redirectStatus !=="upgraded"; // Check for unknown status
   const noStatusMessage = !redirectStatus; // Check if no status is provided
+let accTypeOfUser, acctypes,typeOfTops
+  try{ 
 
-  let [accTypeOfUser, acctypes,typeOfTops] = await Promise.all([
+   [accTypeOfUser, acctypes,typeOfTops] = await Promise.all([
     getUserAccountTypeOnStripe(session.email),
     getTypeOfAccountDetails(),
      prisma.tops.findMany({}),
   ]);
-  
+} catch {
+  console.log("Error")
+} finally {
+  await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
+
 
   if (typeof acctypes === "string") {
     acctypes = JSON.parse(acctypes);
