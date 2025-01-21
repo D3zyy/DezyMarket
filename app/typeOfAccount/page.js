@@ -35,7 +35,7 @@ let accTypeOfUser, acctypes,typeOfTops
     acctypes = JSON.parse(acctypes);
   }
   const sortedAcctypes = acctypes?.slice().sort((a, b) => b.priority - a.priority);
-  console.log(accTypeOfUser)
+
 
 
   if (!session.isLoggedIn) redirect('/');
