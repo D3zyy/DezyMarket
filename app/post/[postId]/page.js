@@ -74,7 +74,9 @@ const Page = async ({ params }) => {
   } catch (error) {
     console.log("chyba:",error)
     //throw Error("Nastala chyba při načítání příspěvku.")
-  }
+  }finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 
 
 

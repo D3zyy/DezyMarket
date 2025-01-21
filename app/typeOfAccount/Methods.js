@@ -155,7 +155,9 @@ const DateAndTimeNowPrague = DateTime.now()
     } catch (error) {
       console.error('Error retrieving account types with active prices and perks:', error);
       return null;
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
   }
 
 
@@ -281,5 +283,7 @@ export async function getTypeOfTops() {
   } catch (error) {
     console.error('Error retrieving account types with active prices and perks:', error);
     return null;
-  }
+  }finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 }
