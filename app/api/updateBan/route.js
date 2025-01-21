@@ -55,6 +55,9 @@ const bannedTillTime = new Date(ban.bannedTill).getTime();
 const timeDifference = currentTime - bannedTillTime; // Rozdíl v milisekundách
 
 // Pokud je ban vypršený více než 2 hodiny, neumožníme prodloužení
+if(session?.role?.privileges <= 3){
+
+
 if(ban.bannedTill){
 
 
@@ -67,9 +70,10 @@ if (timeDifference > 1000 * 3600 * 2 ) {
   });
 }
 }
+}
       if (
-        (session?.role?.privileges > ban?.fromUser?.role?.privileges || ban?.fromUser?.role?.privileges === null) ||
-        session?.userId != ban?.userId ||
+        (session?.role?.privileges > ban?.fromUser?.role?.privileges && session?.userId != ban?.userId) ||
+
         (session?.userId === ban?.fromUser?.id && session?.userId != ban?.userId)
       ) {
         const updateBan = await prisma.bans.update({
@@ -172,6 +176,7 @@ export async function PUT(request) {
     const timeDifference = currentTime - bannedTillTime; // Rozdíl v milisekundách
 
     // Pokud je ban vypršený více než 2 hodiny, neumožníme prodloužení
+    if(session?.role?.privileges <= 3){
     if(ban.bannedTill){
 
  
@@ -184,14 +189,15 @@ export async function PUT(request) {
       });
     }
   }
+}
     // Pokud je čas vypršení banu ještě v rámci tolerance 2 hodin, pokračujeme
     const dateAndTime = DateTime.now()
       .setZone('Europe/Prague')
       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
 console.log("tady")
       if (
-        (session?.role?.privileges > ban?.fromUser?.role?.privileges || ban?.fromUser?.role?.privileges === null) ||
-        session?.userId !== ban?.userId ||
+        (session?.role?.privileges > ban?.fromUser?.role?.privileges &&  session?.userId !== ban?.userId) ||
+        
         (session?.userId === ban?.fromUser?.id && session?.userId !== ban?.userId)
       ) {
         console.log("taddy");
