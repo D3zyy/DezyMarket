@@ -281,7 +281,7 @@ return (
                
                  </div>
 
-                 {session?.role?.privileges > 2 && <>
+                 {session?.role?.privileges > 3 && <>
                  <div className="flex flex-row gap-2 mt-2">
                  <RemoveBanModal  banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
                 </div></>}

@@ -256,7 +256,7 @@ export async function DELETE(request) {
     let data = await request.json();
   
     console.log("data:", data);
-    if (session?.role?.privileges <= 2) {
+    if (session?.role?.privileges <= 3) {
       return new Response(JSON.stringify({
         message: "Na tento příkaz nemáte oprávnění"
       }), {
