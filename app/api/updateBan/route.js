@@ -233,3 +233,62 @@ console.log("tady")
     );
   }
 }
+
+
+
+
+
+export async function DELETE(request) {
+  try {
+
+    const session = await getSession();
+    if (!session || !session.isLoggedIn || !session.email) {
+      return new Response(JSON.stringify({
+        message: "Chyba na serveru [POST] požadavek na získání informací o předplatném pro upgrade. Session nebyla nalezena"
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+
+    
+    let data = await request.json();
+  
+    console.log("data:", data);
+    if (session?.role?.privileges <= 2) {
+      return new Response(JSON.stringify({
+        message: "Na tento příkaz nemáte oprávnění"
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+  
+    const ban = await prisma.bans.delete({
+      where: { id: data },
+    });
+  
+   
+
+      
+
+    
+    return new Response(
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    return new Response(
+      JSON.stringify({ message: 'Chyba na serveru při smazaní banu', success: false }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
+}
