@@ -162,9 +162,11 @@ return (
 
 
 {(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) && 
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-14 mt-6 ">
-   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
- </svg>
+
+ <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-14 mt-6">
+ <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+</svg>
+
 }
 {(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) &&
        
@@ -181,8 +183,11 @@ return (
          {bansOfUser.length > 0 ? (
  bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
  
- .map((ban) => (
-   
+ .map((ban) => ( <div key={ban.id} className="relative mt-3 flex flex-col gap-2 max-w-64 break-all border-2 dark:border-gray-700 border-gray-300 border-dashed rounded-md p-3" >
+ <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-base-100 p-1 rounded-full size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+</svg>
+
    <div className="mb-10 mt-5" key={ban.id}>
          <div className="flex flex-row gap-2 mb-2">
          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"   className={`size-6 ${
@@ -280,7 +285,7 @@ return (
               
               
    </div>
- ))
+  </div> ))
  ) : (
    <p className="text-sm mt-2 text-gray-500  whitespace-nowrap">
      Tento uživatel nemá žádné bany
