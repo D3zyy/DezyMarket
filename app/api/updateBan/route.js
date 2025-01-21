@@ -116,6 +116,9 @@ if (timeDifference > 1000 * 3600 * 2 ) {
       }
     );
   }
+      finally {
+              await prisma.$disconnect(); // Uzavřete připojení po dokončení
+      }
 }
 
 export async function PUT(request) {
@@ -231,7 +234,9 @@ console.log("tady")
         headers: { 'Content-Type': 'application/json' }
       }
     );
-  }
+  }finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 }
 
 
@@ -290,5 +295,7 @@ export async function DELETE(request) {
         headers: { 'Content-Type': 'application/json' }
       }
     );
-  }
+  }finally {
+    await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 }

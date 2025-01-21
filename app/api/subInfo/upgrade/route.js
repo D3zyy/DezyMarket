@@ -291,5 +291,7 @@ const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // S
             status: 500,
             headers: { 'Content-Type': 'application/json' }
         });
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 }
