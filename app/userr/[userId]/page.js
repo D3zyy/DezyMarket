@@ -57,7 +57,18 @@ console.log(bansOfUser)
 
 function formatDateWithDotsWithTime(dateInput) {
   // Zjistíme, zda je vstup instancí Date nebo ISO řetězec
-  const dateString = dateInput instanceof Date ? dateInput.toISOString() : dateInput;
+  const dateString =
+    dateInput instanceof Date
+      ? dateInput.toISOString()
+      : typeof dateInput === 'string'
+      ? dateInput
+      : null;
+
+  // Pokud není platný vstup, vrátíme prázdný řetězec nebo chybu
+  if (!dateString || !dateString.includes('T')) {
+    console.error('Invalid date input:', dateInput);
+    return '';
+  }
 
   // Rozdělíme ISO string na části (datum a čas)
   const [datePart, timePart] = dateString.split('T');
@@ -72,8 +83,8 @@ function formatDateWithDotsWithoutTime(dateInput) {
   const dateString = dateInput instanceof Date ? dateInput.toISOString() : dateInput;
 
   // Rozdělíme ISO string na datumovou část
-  const [datePart] = dateString.split('T');
-  const [year, month, day] = datePart.split('-'); // Rozdělíme datum
+  const [datePart] = dateString?.split('T');
+  const [year, month, day] = datePart?.split('-'); // Rozdělíme datum
   return `${day}.${month}.${year}`; // Sestavíme výstup
 }
 
