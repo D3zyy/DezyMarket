@@ -177,7 +177,7 @@ return (
 
          
          </div>
-   
+         <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4`}> 
          {bansOfUser.length > 0 ? (
  bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
  
@@ -282,10 +282,10 @@ return (
    </div>
  ))
  ) : (
-   <p className="text-sm mt-2 text-gray-500">
+   <p className="text-sm mt-2 text-gray-500  whitespace-nowrap">
      Tento uživatel nemá žádné bany
    </p>
- )}
+ )}</div>
        </div>
   }
 
