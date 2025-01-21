@@ -5,8 +5,8 @@ import { DateTime } from 'luxon';
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 import { getSession } from "@/app/authentication/actions";
 import NotFound from "@/app/not-found";
-import UpdateBanModal from "./EditBanModal";
-import DeleteBanModal from "../DeleteBanModal";
+import UpdateBanModal from "../../userr/[userId]/EditBanModal";
+import DeleteBanModal from "../../userr/[userId]/DeleteBanModal";
 const Page = async ({ params }) => {
 
   const [session,userAcc, posts, rankingOfUser, bansOfUser] = await Promise.all([

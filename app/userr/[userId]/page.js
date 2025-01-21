@@ -4,6 +4,9 @@ import Link from "next/link";
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 import { getSession } from "@/app/authentication/actions";
 import { user } from "@nextui-org/react";
+import DeleteBanModal from "./DeleteBanModal";
+import UpdateBanModal from "./EditBanModal";
+
 const Page = async ({ params }) => {
   const [session,userAcc, posts, rankingOfUser, bansOfUser] = await Promise.all([
     getSession()
@@ -133,6 +136,136 @@ return (
 </svg>
   <span>Registrace {formatDateWithDotsWithoutTime(userAcc?.dateOfRegistration)}</span>
 </div>
+
+
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-14 mt-6 ">
+   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+ </svg>
+
+{(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) &&
+       
+<div
+  className={`flex flex-col md:items-start w-full md:mr-16 mb-9 md:mb-0 h-full ${
+    bansOfUser.length > 0 ? "justify-center items-center" : ""
+  } scrollbar-hidden`}
+>
+         <div  className={`"flex  justify-start  scrollbar-hidden  ${bansOfUser.length > 0 > 0&&"items-center"} `}>
+
+         
+         </div>
+   
+         {bansOfUser.length > 0 ? (
+ bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
+ 
+ .map((ban) => (
+   
+   <div className="mb-10 mt-5" key={ban.id}>
+         <div className="flex flex-row gap-2 mb-2">
+         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"   className={`size-6 ${
+     ban?.fromUser?.role?.privileges === 4
+       ? "text-green-500"
+       : ban?.fromUser?.role?.privileges === 3
+       ? "text-yellow-500"
+       : ban?.fromUser?.role?.privileges === 2
+       ? "text-red-500"
+       : "text-red-500"
+   }`}>
+   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+ </svg>
+ 
+ {ban?.fromUser?.fullName ? (
+   <Link target="_blank" className='underline ml-2' href={`/user/${ban?.fromUser?.id}`}>
+     {ban?.fromUser?.fullName}
+   </Link>
+ ) : (
+   <span className="ml-2">{'Systém'}</span>
+ )}
+ 
+ 
+       </div>
+     <div className=" flex flex-row gap-2 max-w-48 break-all">
+   
+     {ban.reason &&
+       <div className="flex flex-row gap-4">
+         <svg
+           xmlns="http://www.w3.org/2000/svg"
+           fill="none"
+           viewBox="0 0 24 24"
+           strokeWidth={1.5}
+           stroke="currentColor"
+           className="size-6 flex-shrink-0"
+         >
+           <path
+             strokeLinecap="round"
+             strokeLinejoin="round"
+             d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+           />
+         </svg>
+         <div>
+          {ban.reason}
+         </div>
+         
+         
+       </div>
+        }
+     </div>
+     <div className="flex flex-row gap-4 mt-2">
+     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+   <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
+ </svg>
+ {ban.pernament ? (
+   
+   <span>{formatDate(ban.bannedFrom)}</span>
+ ) : (
+   <span>
+     {formatDate(ban.bannedFrom)} <br />
+     {formatDate(ban.bannedTill)}
+   </span>
+ )}
+ 
+     </div>
+     <div className="mt-2 flex flex-row gap-2">
+               Permanentní: {ban.pernament? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+   <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+ </svg>
+  : <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+ </svg>
+ }
+ 
+               </div>
+ 
+ 
+ <div>{ban.pernament ? <> {(session?.role?.privileges > ban?.fromUser?.role?.privileges   || session?.role?.privileges === 4 || session?.userId === ban?.fromUserId)  && <>
+ 
+ <div className="flex flex-row gap-2 mt-2">
+ <UpdateBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
+ <DeleteBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
+ </div>
+  </>}</> : (DateTime.now().setZone('Europe/Prague').toMillis() >= new Date(ban.bannedTill).getTime() ? "" : <> {(session?.role?.privileges > ban?.fromUser?.role?.privileges   || session?.role?.privileges === 4 || session?.userId === ban?.fromUserId)  && <>
+ 
+                 <div className="flex flex-row gap-2 mt-2">
+                 <UpdateBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
+                 <DeleteBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
+                 </div>
+                  </>}</>)}</div>
+ 
+ 
+              
+  
+              
+              
+   </div>
+ ))
+ ) : (
+   <p className="text-sm mt-2 text-gray-500">
+     Tento uživatel nemá žádné bany
+   </p>
+ )}
+       </div>
+  }
+
+
 
 
 
