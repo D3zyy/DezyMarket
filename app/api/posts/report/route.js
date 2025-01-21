@@ -152,7 +152,9 @@ export async function POST(req) {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       });
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
 }
 
 
@@ -272,5 +274,7 @@ export async function PUT(req) {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       });
-    }
+    }finally {
+      await prisma.$disconnect(); // Uzavřete připojení po dokončení
+  }
 }
