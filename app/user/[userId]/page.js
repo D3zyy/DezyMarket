@@ -65,7 +65,7 @@ console.log(e)
           await prisma.$disconnect(); // Uzavřete připojení po dokončení
       }
 
-
+//console.log(session)
 function formatDateWithDotsWithTime(dateInput) {
   // Zjistíme, zda je vstup instancí Date nebo ISO řetězec
   const dateString =
@@ -277,13 +277,13 @@ return (
  
  
  <div>{ban.pernament  || (session?.role?.privileges >3) ? <> {(session?.role?.privileges > ban?.fromUser?.role?.privileges   || session?.role?.privileges > 3 || session?.userId === ban?.fromUserId)  && <>
- 
+
  <div className="flex flex-row gap-2 mt-2">
  <UpdateBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
  <DeleteBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
  </div>
   </>}</> : (DateTime.now().setZone('Europe/Prague').toMillis() >= new Date(ban.bannedTill).getTime() ? "" : <> {(session?.role?.privileges > ban?.fromUser?.role?.privileges   || session?.role?.privileges > 3 || session?.userId === ban?.fromUserId)  && <>
- 
+
                  <div className="flex flex-row gap-2 mt-2">
                  <UpdateBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
                  <DeleteBanModal banIdd={ban.id} bannedFromm={ban.bannedFrom} bannedToo={ban.bannedTill} reasonn={ban.reason} pernamentt={ban.pernament}/>
