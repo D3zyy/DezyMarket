@@ -171,19 +171,19 @@ return (
 {(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) &&
        
 <div
-  className={`flex flex-col md:items-start w-full md:mr-16 mb-9 md:mb-0 h-full ${
+  className={`flex flex-col  w-full md:mr-16 mb-9 md:mb-0  ${
     bansOfUser.length > 0 ? "justify-center items-center" : ""
   } scrollbar-hidden`}
 >
-         <div  className={`"flex  justify-start  scrollbar-hidden  ${bansOfUser.length > 0 > 0&&"items-center"} `}>
+         <div  className={`"flex  scrollbar-hidden  ${bansOfUser.length > 0 > 0&&"items-center justify-center"} `}>
 
          
          </div>
-         <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4`}> 
+         <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2  gap-4`}> 
          {bansOfUser.length > 0 ? (
  bansOfUser.sort((a, b) => new Date(b.bannedFrom) - new Date(a.bannedFrom))
  
- .map((ban) => ( <div key={ban.id} className="relative mt-3 flex flex-col gap-2 max-w-64 break-all border-2 dark:border-gray-700 border-gray-300 border-dashed rounded-md p-3" >
+ .map((ban) => ( <div key={ban.id} className="relative mt-3 flex flex-col gap-2 max-w-96 break-all border-2 dark:border-gray-700 border-gray-300 border-dashed rounded-md p-3" >
  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-base-100 p-1 rounded-full size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
 </svg>
