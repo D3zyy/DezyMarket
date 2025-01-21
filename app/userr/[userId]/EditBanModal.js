@@ -73,57 +73,67 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
 
   // Funkce pro uložení změn a výpočet nového data
   const handleSave = () => {
-    console.log("Togle se snažím přidat:",new Date( bannedFromm).toISOString())
-
+  
     let newDate = DateTime.fromISO(new Date(bannedFromm).toISOString(), { zone: 'utc' });
-    console.log("tady to pridavam:",newDate)
-  // chci to ale odvozovat od bannedFrom
-    // Vytvoření nového data na základě vybrané doby
-    switch (selectedDuration) {
-      case '30minutes':
-        newDate = newDate.plus({ minutes: 30 });
-        break;
-      case '1day':
-        newDate = newDate.plus({ days: 1 });
-        break;
-      case '3days':
-        newDate = newDate.plus({ days: 3 });
-        break;
-      case '7days':
-        newDate = newDate.plus({ days: 7 });
-        break;
-      case '1month':
-        newDate = newDate.plus({ months: 1 });
-        break;
-      case '1year':
-        newDate = newDate.plus({ years: 1 });
-        break;
-      case 'permanent':
-        newDate = newDate.plus({ years: 100 }); // Permanent ban
-        break;
-      default:
-        return;
-    }
-    console.log("TOHLE nastavuji:",newDate)
+
+  
+    // Kontrola, zda je něco nastaveno v selectedDuration
+ 
+      // Vytvoření nového data na základě vybrané doby
+      switch (selectedDuration) {
+        case '30minutes':
+          newDate = newDate.plus({ minutes: 30 });
+          break;
+        case '1day':
+          newDate = newDate.plus({ days: 1 });
+          break;
+        case '3days':
+          newDate = newDate.plus({ days: 3 });
+          break;
+        case '7days':
+          newDate = newDate.plus({ days: 7 });
+          break;
+        case '1month':
+          newDate = newDate.plus({ months: 1 });
+          break;
+        case '1year':
+          newDate = newDate.plus({ years: 1 });
+          break;
+        case 'permanent':
+          newDate = newDate.plus({ years: 100 }); // Permanent ban
+          break;
+        default:
+          break;
+      }
+  
+  
+  
+    
     // Nastavení nového data
+    if( selectedDuration){
+
+ 
     setNewBannedTo(newDate.toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"));
     setBannedTo(newDate.toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"));
+  }
     closeModal();
-
+  
     // Zpráva o změnách
     const updatedBanData = {
       banId,
       bannedFrom,
-      bannedTo: newDate.toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"),
+      bannedTo: selectedDuration? newDate.toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'") : bannedToo,
       reason,
       isPermanent: selectedDuration === 'permanent' // Určujeme, zda jde o trvalý ban
     };
+  
 
     // API volání (nebo funkce pro aktualizaci banu)
     updateBan(updatedBanData);
   };
 
   const updateBan = async (updatedBanData) => {
+
     try {
       const response = await fetch('/api/updateBan', {
         method: 'POST',
@@ -132,12 +142,13 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
         },
         body: JSON.stringify(updatedBanData),
       });
-
+     
       const result = await response.json();
     window.location.reload()
  
       console.log('Ban updated successfully', result);
     } catch (error) {
+      
       console.error('Error updating ban:', error);
     }
   };
@@ -180,7 +191,7 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
                   <textarea
                     className="textarea textarea-bordered w-full"
                     style={{ height: '150px', resize: 'none' }}
-                    placeholder="Bio"
+                    placeholder="Důvod"
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                   />

@@ -55,7 +55,10 @@ function formatDateWithDotsWithTime(dateInput) {
   // Rozdělíme ISO string na části (datum a čas)
   const [datePart, timePart] = dateString.split('T');
   const [year, month, day] = datePart.split('-'); // Rozdělíme datum
-  return `${day}.${month}.${year} ${timePart.replace('Z', '')}`; // Sestavíme výstup
+  const [hours, minutes] = timePart.split(':'); // Vezmeme pouze hodiny a minuty
+
+  // Sestavíme výstup
+  return `${day}.${month}.${year} ${hours}:${minutes}`;
 }
 function formatDateWithDotsWithoutTime(dateInput) {
   // Zjistíme, zda je vstup instancí Date nebo ISO řetězec

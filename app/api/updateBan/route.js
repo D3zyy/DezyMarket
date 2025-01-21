@@ -20,7 +20,7 @@ export async function POST(request) {
     }
     let data = await request.json();
 
-    console.log(session)
+    console.log(data)
     if(session?.role?.privileges <= 1){
         return new Response(JSON.stringify({
             message: "Na tento příkaz nemáte oprávnění"
