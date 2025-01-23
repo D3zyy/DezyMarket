@@ -128,7 +128,7 @@ function checkBans(bansOfUser) {
     console.log("TILL in Prague:", bannedTillInPrague);
 
     // Pokud je ban permanentní
-    if (ban.permanent && ban.permanent === true) {
+    if (ban.pernament) {
       isBanned = true;
       break; // Pokud je permanentní ban, není třeba pokračovat
     }
