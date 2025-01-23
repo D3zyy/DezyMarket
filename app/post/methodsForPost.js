@@ -1,5 +1,5 @@
 import { prisma } from "../database/db";
-
+import { checkUserBan } from "../api/session/dbMethodsSession";
 export async function getPostFromDb(postId) {
   let postRecord = null;
 
@@ -21,6 +21,11 @@ export async function getPostFromDb(postId) {
         }
       },
     });
+    console.log("tady:",postRecord)
+    let cannotShow = await checkUserBan(postRecord.user.id)
+    if(cannotShow){
+      return false
+    }
   } catch (error) {
     console.error("Error fetching post:", error);
     // Handle the error as needed, e.g., throw it or return null
