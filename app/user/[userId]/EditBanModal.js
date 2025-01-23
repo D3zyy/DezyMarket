@@ -144,7 +144,8 @@ function UpdateBanModal({ banIdd, bannedFromm, bannedToo, reasonn, pernamentt })
       });
      
       const result = await response.json();
-    window.location.reload()
+    router.refresh()
+    closeModal()
  
       console.log('Ban updated successfully', result);
     } catch (error) {

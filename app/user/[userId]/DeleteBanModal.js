@@ -1,4 +1,5 @@
 'use client';
+import {  useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 export const openDeleteBanModal = (banId) => {
@@ -11,7 +12,7 @@ export const openDeleteBanModal = (banId) => {
 // DeleteBanModal Component
 function DeleteBanModal({ banIdd }) {
   const [banId, setbanId] = useState(banIdd);
-
+ const router = useRouter()
   const updateBan = async () => {
     try {
       const response = await fetch('/api/updateBan', {
@@ -23,7 +24,8 @@ function DeleteBanModal({ banIdd }) {
       });
 
       const result = await response.json();
-      window.location.reload();
+      router.refresh()
+      closeModal()
     } catch (error) {
       console.error('Error updating ban:', error);
     }
