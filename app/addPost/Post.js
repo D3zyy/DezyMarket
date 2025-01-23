@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 
 
-export function Post({ allTops,priority,allowedTops,name,emoji, benefits, hasThisType }) {
+export function Post({ isLogged,allTops,priority,allowedTops,name,emoji, benefits, hasThisType }) {
   const [loading, setLoading] = useState(false);
   console.log("Všechny tops:", allTops);
   console.log("Filtrované dovolené tops:", allowedTops);
@@ -261,7 +261,7 @@ if (firstStep && secondStep) {
 
   <div style={{ position: 'relative' }}>
   {/* Conditionally render badges on top of the blurred content */}
-  {!shouldDisable && (<>
+  {!shouldDisable && isLogged && (<>
 
     <div style={{ position: 'absolute', top: '0', left: '0', display: 'flex', gap: '8px', padding: '8px', zIndex: '10' }}>
    <Link className='btn btn-neutral btn-sm' href={"/typeOfAccount"}>Vylepšit předplatné<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">

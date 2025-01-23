@@ -101,7 +101,7 @@ const Page = async () => {
 
         return (
             <div>
-                {session.isLoggedIn ? (
+           
                     <>
                         <div id='scrollHereAddPost' style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
                             <ul style={{ paddingLeft: "15px", marginBottom: "20px" }} className="steps isolate">
@@ -110,9 +110,31 @@ const Page = async () => {
                             </ul>
                         </div>
                         <div
-            style={{ marginBottom: "40px" }}
-            className="typeOfPosts flex flex-col md:flex-row items-center justify-center gap-2 p-2"
-        >
+    style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}
+  >
+    <Link
+      className="btn btn-neutral btn-md"
+      href={"/typeOfAccount"}
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+</svg>
+
+      Přihlásit se
+     
+    </Link>
+  </div>
+                        <div
+                        
+  style={{
+    marginBottom: "40px",
+  
+    position: "relative", // Umožňuje absolutní pozicování vnořených prvků
+  }}
+  className={`typeOfPosts flex flex-col md:flex-row items-center justify-center gap-2 p-2`}
+>
+  
+
 
     {typeofPosts
     .sort((a, b) => a.priority - b.priority) // Řazení podle priority
@@ -131,6 +153,7 @@ const Page = async () => {
 
         return (
             <Post
+                isLogged={session.isLoggedIn}
                 allTops={typeTops}
                 priority={post.priority}
                 allowedTops={ableForTops&& post.priority <= 1? filteredTypeTops : false}
@@ -150,9 +173,7 @@ const Page = async () => {
                             <AddUI categories={CategoriesFromDb} sections={SectionsFromDb} allImgCount={allowedNumberOfImg} />
                         </div>
                     </>
-                ) : (
-                    <NotLoggedIn />
-                )}
+               
             </div>
         );
     } catch (error) {
