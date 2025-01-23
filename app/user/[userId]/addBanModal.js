@@ -104,7 +104,7 @@ const CreateBanModal = ({ userIdd }) => {
                 <td>
                   {selectedDuration === 0.5
                     ? "30 minut"
-                    : `${selectedDuration} den${selectedDuration > 1 ? "y" : ""}`}
+                    : selectedDuration}
                 </td>
               </tr>
               <tr>
