@@ -1,6 +1,7 @@
-"use client"
+"use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { DateTime } from 'luxon';
 
 // Open Modal function
 export const openAddBanModal = () => {
@@ -10,11 +11,12 @@ export const openAddBanModal = () => {
   }
 };
 
-const CreateBanModal = ({ userIdd }) => {  // Destructure userId from props
+const CreateBanModal = ({ userIdd }) => {
   const [userId, setUserId] = useState(userIdd);
   const [reason, setReason] = useState('');
   const [permanent, setPermanent] = useState(false);
-  const [numberOfDays, setNumberOfDays] = useState(null);
+  const [numberOfDays, setNumberOfDays] = useState(3); // Default to 30 minutes (0.5 day)
+  const [selectedDuration, setSelectedDuration] = useState(3); // Default selected duration
 
   const router = useRouter();
 
@@ -22,11 +24,30 @@ const CreateBanModal = ({ userIdd }) => {  // Destructure userId from props
   const closeModal = () => {
     const modal = document.getElementById('ban_add_modal');
     if (modal) {
-      modal.close();  // Close the modal
+      modal.close(); // Close the modal
     }
   };
 
-  const createBan = async (updatedBanData) => {
+  const createBan = async () => {
+    // Get the current UTC time
+    const bannedFrom = DateTime.utc().toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+
+    let bannedTo = null;
+    if (!permanent && numberOfDays) {
+      // Calculate bannedTo by adding the selected duration in UTC
+      bannedTo = DateTime.utc()
+        .plus({ minutes: numberOfDays * 24 * 60 }) // Convert days to minutes
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+    }
+
+    const updatedBanData = {
+      userId,
+      reason,
+      bannedFrom,
+      bannedTo,
+      permanent,
+    };
+
     try {
       const response = await fetch('/api/createBan', {
         method: 'POST',
@@ -37,30 +58,35 @@ const CreateBanModal = ({ userIdd }) => {  // Destructure userId from props
       });
 
       const result = await response.json();
-      window.location.reload();  // Reload the page after successful creation
+      window.location.reload(); // Reload the page after successful creation
       console.log('Ban created successfully', result);
     } catch (error) {
       console.error('Error creating ban:', error);
     }
   };
 
-  return (
-    <div className='mt-4'>
-   
+  // Function to handle button click and set the selected duration
+  const handleDurationClick = (days) => {
+    setNumberOfDays(days);
+    setSelectedDuration(days); // Set the selected duration to apply the bg-primary class
+    setPermanent(false); // Unset permanent if a duration is selected
+  };
 
+  return (
+    <div className="mt-4">
       <dialog
-        id="ban_add_modal"  // Correct the id here
-        className="modal bg-slate-950/25 modal-bottom sm:modal-middle "
+        id="ban_add_modal"
+        className="modal bg-slate-950/25 modal-bottom sm:modal-middle"
         data-backdrop="true"
       >
         <div className="modal-box">
-          <span className="block text-lg text-center font-bold mb-4 ">Přidat ban</span>
+          <span className="block text-lg text-center font-bold mb-4">Přidat ban</span>
 
           <table className="table table-zebra w-full mb-4">
             <tbody>
               <tr>
                 <td><strong>Počet dní:</strong></td>
-                <td>2</td>
+                <td>{selectedDuration === 0.5 ? '30 minut' : `${selectedDuration} den${selectedDuration > 1 ? 'y' : ''}`}</td>
               </tr>
               <tr>
                 <td><strong>Důvod:</strong></td>
@@ -77,45 +103,47 @@ const CreateBanModal = ({ userIdd }) => {  // Destructure userId from props
             </tbody>
           </table>
 
-          <div className="mb-6 ">
+          <div className="mb-6">
+            
             <button
-              className="btn mt-2 btn-xs mr-2"
-            >
-              30 minut
-            </button>
-            <button
-              className="btn mt-2 btn-xs mr-2"
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === 1 ? 'bg-primary' : ''}`}
+              onClick={() => handleDurationClick(1)}
             >
               1 den
             </button>
             <button
-              className="btn mt-2 btn-xs mr-2"
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === 3 ? 'bg-primary' : ''}`}
+              onClick={() => handleDurationClick(3)}
             >
               3 dny
             </button>
             <button
-              className="btn mt-2 btn-xs mr-2"
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === 7 ? 'bg-primary' : ''}`}
+              onClick={() => handleDurationClick(7)}
             >
               7 dní
             </button>
             <button
-              className="btn mt-2 btn-xs mr-2"
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === 30 ? 'bg-primary' : ''}`}
+              onClick={() => handleDurationClick(30)}
             >
               1 měsíc
             </button>
             <button
-              className="btn mt-2 btn-xs mr-2"
+              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === 365 ? 'bg-primary' : ''}`}
+              onClick={() => handleDurationClick(365)}
             >
               1 rok
             </button>
             <button
-              className="btn mt-1 btn-xs mr-2"
+              className={`btn mt-1 btn-xs mr-2 ${permanent ? 'bg-primary' : ''}`}
+              onClick={() => { setPermanent(true); setSelectedDuration(null); }} // Set permanent and clear the selected duration
             >
               Trvalý ban
             </button>
           </div>
 
-          <div className="text-center"> 
+          <div className="text-center">
             <button
               type="button"
               className="btn btn-primary"
