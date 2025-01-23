@@ -21,7 +21,7 @@ export async function getPostFromDb(postId,privi = 1) {
         }
       },
     });
-    console.log("privileges:",privi)
+   
     if(privi <=1){
 
 
