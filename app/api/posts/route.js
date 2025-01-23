@@ -922,7 +922,7 @@ export async function DELETE(req) {
         },
       },
     });
-    if(session.role.privileges  === 2 && numberOfActionsToday > 50 || session.role.privileges  === 3 && numberOfActionsToday > 100 ){
+    if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
       }), {

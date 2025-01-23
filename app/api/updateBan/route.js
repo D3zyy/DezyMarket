@@ -29,6 +29,26 @@ export async function POST(request) {
             headers: { 'Content-Type': 'application/json' }
         });
     }
+    const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd');
+    let numberOfActionsToday = await prisma.managementActions.count({
+      where: {
+        fromUserId: session.userId,
+        doneAt: {
+          gte: new Date(`${currentDate}T00:00:00.000Z`),
+          lt: new Date(`${currentDate}T23:59:59.999Z`),
+        },
+      },
+    });
+    if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      return new Response(JSON.stringify({
+        message: 'Již jste vyčerpal administrativních pravomocí dnes'
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
     const ban = await prisma.bans.findUnique({
         where: {id: data?.banId},
         include: {
@@ -87,7 +107,19 @@ if (timeDifference > 1000 * 3600 * 2 ) {
             pernament: data.isPermanent
           }
         });
-      
+        const nowww = DateTime.now()
+        .setZone('Europe/Prague')
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.managementActions.create({
+          data: {
+            fromUserId: session.userId,
+            doneAt: 
+              nowww,
+            
+            toUserId: ban?.userId,
+            info: 'Update ban'
+          },
+        });
           
           
 
@@ -148,7 +180,26 @@ export async function PUT(request) {
         headers: { 'Content-Type': 'application/json' }
       });
     }
-  
+    const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd');
+    let numberOfActionsToday = await prisma.managementActions.count({
+      where: {
+        fromUserId: session.userId,
+        doneAt: {
+          gte: new Date(`${currentDate}T00:00:00.000Z`),
+          lt: new Date(`${currentDate}T23:59:59.999Z`),
+        },
+      },
+    });
+    if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      return new Response(JSON.stringify({
+        message: 'Již jste vyčerpal administrativních pravomocí dnes'
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
     const ban = await prisma.bans.findUnique({
       where: { id: data },
       include: {
@@ -211,8 +262,19 @@ console.log("tady")
             pernament: false // Pokud je potřeba, upravte podle typu ve vaší databázi
           }
         });
-      
-
+        const nowww = DateTime.now()
+        .setZone('Europe/Prague')
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.managementActions.create({
+          data: {
+            fromUserId: session.userId,
+            doneAt: 
+              nowww,
+            
+            toUserId: ban?.userId,
+            info: 'Zrušení ban'
+          },
+        });
       console.log("udate:", updateBan);
     } else {
       console.log("tady nemam oprv")
@@ -280,7 +342,19 @@ export async function DELETE(request) {
       where: { id: data },
     });
   
-   
+    const nowww = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+    await prisma.managementActions.create({
+      data: {
+        fromUserId: session.userId,
+        doneAt: 
+          nowww,
+        
+        toUserId: ban?.userId,
+        info: 'Smazaní ban'
+      },
+    });
 
       
 
