@@ -10,7 +10,7 @@ import { DateTime } from 'luxon';
 import RemoveBanModal from "./RemoveBanModal";
 
 const Page = async ({ params }) => {
-  let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser
+  let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser,isBanned
   try{
    [session,userAcc, posts, rankingOfUser] = await Promise.all([
     getSession()
@@ -98,7 +98,28 @@ function formatDateWithDotsWithoutTime(dateInput) {
   const [year, month, day] = datePart?.split('-'); // Rozdělíme datum
   return `${day}.${month}.${year}`; // Sestavíme výstup
 }
+//console.log(bansOfUser)
+if (bansOfUser && bansOfUser.length > 0) {
+  const currentTimestamp = Date.now(); // Aktuální čas v milisekundách
 
+  isBanned = bansOfUser.some(ban => {
+    if (ban.pernament) return true; // Kontrola na permaban
+    
+    const bannedFromTimestamp = new Date(ban.bannedFrom).getTime();
+    const bannedTillTimestamp = new Date(ban.bannedTill).getTime();
+
+    console.log("from (ms):", bannedFromTimestamp);
+    console.log("Till (ms):", bannedTillTimestamp);
+    console.log("Aktuální čas (ms):", currentTimestamp);
+    console.log("Je tedka víc času než ban začal:", currentTimestamp >= bannedFromTimestamp);
+    console.log("Je tedka mín čas než konec banu:", currentTimestamp <= bannedTillTimestamp);
+    console.log("Oba dohromady:", currentTimestamp >= bannedFromTimestamp && currentTimestamp <= bannedTillTimestamp);
+
+    return currentTimestamp >= bannedFromTimestamp && currentTimestamp <= bannedTillTimestamp;
+  });
+}
+
+console.log('Is user banned:', isBanned);
 return (
   <>
     <div className="flex justify-center gap-4 p-2 mt-9 ">
@@ -127,8 +148,10 @@ return (
               d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
             />
           </svg>
-          <span className="font-semibold whitespace-nowrap">{userAcc.fullName}</span>
+          <span className="font-semibold whitespace-nowrap">{userAcc.fullName}  {isBanned &&  <span className="ml-2 text-red-500 text-sm badge border-red-500 ">Banned</span>}    </span>
+  
         </div>
+        
 <div className="p-10 mt-2">
 
 
