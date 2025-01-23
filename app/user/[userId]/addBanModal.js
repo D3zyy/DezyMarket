@@ -127,7 +127,7 @@ const CreateBanModal = ({ userIdd }) => {
           <div className="mb-6">
             <button
               className={`btn mt-2 btn-xs mr-2 ${
-                selectedDuration === 1 ? "bg-primary" : ""
+                selectedDuration === 1 ? "btn-primary" : ""
               }`}
               onClick={() => handleDurationClick(1)}
             >
@@ -135,7 +135,7 @@ const CreateBanModal = ({ userIdd }) => {
             </button>
             <button
               className={`btn mt-2 btn-xs mr-2 ${
-                selectedDuration === 3 ? "bg-primary" : ""
+                selectedDuration === 3 ? "btn-primary " : ""
               }`}
               onClick={() => handleDurationClick(3)}
             >
@@ -143,7 +143,7 @@ const CreateBanModal = ({ userIdd }) => {
             </button>
             <button
               className={`btn mt-2 btn-xs mr-2 ${
-                selectedDuration === 7 ? "bg-primary" : ""
+                selectedDuration === 7 ? "btn-primary" : ""
               }`}
               onClick={() => handleDurationClick(7)}
             >
@@ -151,7 +151,7 @@ const CreateBanModal = ({ userIdd }) => {
             </button>
             <button
               className={`btn mt-2 btn-xs mr-2 ${
-                selectedDuration === 30 ? "bg-primary" : ""
+                selectedDuration === 30 ? "btn-primary" : ""
               }`}
               onClick={() => handleDurationClick(30)}
             >
@@ -159,7 +159,7 @@ const CreateBanModal = ({ userIdd }) => {
             </button>
             <button
               className={`btn mt-2 btn-xs mr-2 ${
-                selectedDuration === 365 ? "bg-primary" : ""
+                selectedDuration === 365 ? "btn-primary" : ""
               }`}
               onClick={() => handleDurationClick(365)}
             >
@@ -182,7 +182,7 @@ const CreateBanModal = ({ userIdd }) => {
               className="btn btn-primary"
               onClick={createBan}
             >
-              Uložit změny
+              Přidat ban
             </button>
 
             <button
