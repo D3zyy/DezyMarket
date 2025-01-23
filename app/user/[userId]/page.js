@@ -12,7 +12,7 @@ import RemoveBanModal from "./RemoveBanModal";
 const Page = async ({ params }) => {
   let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser,isBanned
   try{
-   [session,userAcc, posts, rankingOfUser] = await Promise.all([
+   [session,userAcc, posts, rankingOfUser,bansOfUser] = await Promise.all([
     getSession()
     , prisma.users.findUnique({
       where: { id: params?.userId },
@@ -32,22 +32,19 @@ const Page = async ({ params }) => {
       include: {
         fromUser: true,  // Předpokládám, že vztah mezi userRatings a users je definován jako toUser
       },
-    }),
-  ]);
-    accType = await getUserAccountTypeOnStripe(userAcc?.email);
-    bansOfUser
-if(session?.role?.privileges === 4 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId){
-  bansOfUser = await prisma.bans.findMany({
-    where: { userId: params?.userId },
-     include: {
-      fromUser: {
-        include: {
-          role: true, // Fetches the role of the user
+    }),bansOfUser = await prisma.bans.findMany({
+      where: { userId: params?.userId },
+       include: {
+        fromUser: {
+          include: {
+            role: true, // Fetches the role of the user
+          },
         },
       },
-    },
-  })
-}
+    })
+  ]);
+    accType = await getUserAccountTypeOnStripe(userAcc?.email);
+    
      
 
 
@@ -99,27 +96,65 @@ function formatDateWithDotsWithoutTime(dateInput) {
   return `${day}.${month}.${year}`; // Sestavíme výstup
 }
 //console.log(bansOfUser)
-if (bansOfUser && bansOfUser.length > 0) {
-  const currentTimestamp = Date.now(); // Aktuální čas v milisekundách
 
-  isBanned = bansOfUser.some(ban => {
-    if (ban.pernament) return true; // Kontrola na permaban
+
+function checkBans(bansOfUser) {
+  // Aktuální čas v Praze
+  const currentTimeInPrague = DateTime.local().setZone("Europe/Prague");
+
+  let isBanned = false;
+
+  // Projdeme všechna data v bansOfUser
+  for (const ban of bansOfUser) {
+    // Convert bannedFrom and bannedTill to Date objects (they should be in a valid Date format, in UTC)
+    const bannedFrom = new Date(ban.bannedFrom);
+    const bannedTill = new Date(ban.bannedTill);
+
+    console.log("FROM:", bannedFrom);
+    console.log("TILL:", bannedTill);
+    console.log("NOW:", currentTimeInPrague.toJSDate()); // Convert DateTime to native JS Date for comparison
+
+    // Check if bannedFrom or bannedTill are invalid Date objects
+    if (isNaN(bannedFrom.getTime()) || isNaN(bannedTill.getTime())) {
+      console.error("Invalid date format for bannedFrom or bannedTill");
+      continue; // Skip invalid dates
+    }
+
+    // Convert the banned times from UTC to Prague time for accurate comparison
+    const bannedFromInPrague = DateTime.fromJSDate(bannedFrom).setZone("Europe/Prague").toJSDate();
+    const bannedTillInPrague = DateTime.fromJSDate(bannedTill).setZone("Europe/Prague").toJSDate();
     
-    const bannedFromTimestamp = new Date(ban.bannedFrom).getTime();
-    const bannedTillTimestamp = new Date(ban.bannedTill).getTime();
+    console.log("FROM in Prague:", bannedFromInPrague);
+    console.log("TILL in Prague:", bannedTillInPrague);
 
-    console.log("from (ms):", bannedFromTimestamp);
-    console.log("Till (ms):", bannedTillTimestamp);
-    console.log("Aktuální čas (ms):", currentTimestamp);
-    console.log("Je tedka víc času než ban začal:", currentTimestamp >= bannedFromTimestamp);
-    console.log("Je tedka mín čas než konec banu:", currentTimestamp <= bannedTillTimestamp);
-    console.log("Oba dohromady:", currentTimestamp >= bannedFromTimestamp && currentTimestamp <= bannedTillTimestamp);
+    // Pokud je ban permanentní
+    if (ban.permanent && ban.permanent === true) {
+      isBanned = true;
+      break; // Pokud je permanentní ban, není třeba pokračovat
+    }
 
-    return currentTimestamp >= bannedFromTimestamp && currentTimestamp <= bannedTillTimestamp;
-  });
+    // Compare the current time in Prague with the banned time range
+    const currentTime = currentTimeInPrague.toJSDate();
+
+    // Pokud je aktuální čas mezi bannedFrom a bannedTill
+    if (currentTime >= bannedFromInPrague && currentTime <= bannedTillInPrague) {
+      isBanned = true;
+      break; // Uživatel je zabanovaný
+    }
+  }
+
+  return isBanned;
 }
 
+
+
+
+isBanned = checkBans(bansOfUser)
 console.log('Is user banned:', isBanned);
+
+
+
+
 return (
   <>
     <div className="flex justify-center gap-4 p-2 mt-9 ">
