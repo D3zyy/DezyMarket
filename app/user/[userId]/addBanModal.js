@@ -71,7 +71,8 @@ const CreateBanModal = ({ userIdd }) => {
       });
 
       const result = await response.json();
-      window.location.reload(); // Reload the page after successful creation
+     router.refresh()
+     closeModal()
       console.log("Ban created successfully", result);
     } catch (error) {
       console.error("Error creating ban:", error);
