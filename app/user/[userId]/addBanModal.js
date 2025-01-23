@@ -1,11 +1,11 @@
 "use client";
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { DateTime } from 'luxon';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { DateTime } from "luxon";
 
 // Open Modal function
 export const openAddBanModal = () => {
-  const modal = document.getElementById('ban_add_modal');
+  const modal = document.getElementById("ban_add_modal");
   if (modal) {
     modal.showModal(); // Open the modal
   }
@@ -13,32 +13,45 @@ export const openAddBanModal = () => {
 
 const CreateBanModal = ({ userIdd }) => {
   const [userId, setUserId] = useState(userIdd);
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState("");
   const [permanent, setPermanent] = useState(false);
-  const [numberOfDays, setNumberOfDays] = useState(3); // Default to 30 minutes (0.5 day)
+  const [numberOfDays, setNumberOfDays] = useState(3); // Default to 3 days
   const [selectedDuration, setSelectedDuration] = useState(3); // Default selected duration
 
   const router = useRouter();
 
   // Function to close the modal
   const closeModal = () => {
-    const modal = document.getElementById('ban_add_modal');
+    const modal = document.getElementById("ban_add_modal");
     if (modal) {
       modal.close(); // Close the modal
     }
   };
 
   const createBan = async () => {
-    // Get the current UTC time
-    const bannedFrom = DateTime.utc().toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+    // Získání aktuálního času v Praze a správného formátu
+    const bannedFrom = DateTime.now()
+      .setZone("Europe/Prague")
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
 
     let bannedTo = null;
     if (!permanent && numberOfDays) {
-      // Calculate bannedTo by adding the selected duration in UTC
-      bannedTo = DateTime.utc()
-        .plus({ minutes: numberOfDays * 24 * 60 }) // Convert days to minutes
-        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-    }
+        // Výpočet bannedTo přidáním dnů/měsíců v Pražském čase
+        const nowInPrague = DateTime.now().setZone("Europe/Prague");
+      
+        if (numberOfDays === 30) {
+          // Přidání 1 měsíce a zajištění, že den zůstane konzistentní
+          bannedTo = nowInPrague
+            .plus({ months: 1 })
+            .set({ hour: nowInPrague.hour, minute: nowInPrague.minute, second: nowInPrague.second })
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        } else {
+          // Přidání dnů
+          bannedTo = nowInPrague
+            .plus({ days: numberOfDays })
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        }
+      }
 
     const updatedBanData = {
       userId,
@@ -49,19 +62,19 @@ const CreateBanModal = ({ userIdd }) => {
     };
 
     try {
-      const response = await fetch('/api/createBan', {
-        method: 'POST',
+      const response = await fetch("/api/createBan", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(updatedBanData),
       });
 
       const result = await response.json();
       window.location.reload(); // Reload the page after successful creation
-      console.log('Ban created successfully', result);
+      console.log("Ban created successfully", result);
     } catch (error) {
-      console.error('Error creating ban:', error);
+      console.error("Error creating ban:", error);
     }
   };
 
@@ -85,15 +98,23 @@ const CreateBanModal = ({ userIdd }) => {
           <table className="table table-zebra w-full mb-4">
             <tbody>
               <tr>
-                <td><strong>Počet dní:</strong></td>
-                <td>{selectedDuration === 0.5 ? '30 minut' : `${selectedDuration} den${selectedDuration > 1 ? 'y' : ''}`}</td>
+                <td>
+                  <strong>Počet dní:</strong>
+                </td>
+                <td>
+                  {selectedDuration === 0.5
+                    ? "30 minut"
+                    : `${selectedDuration} den${selectedDuration > 1 ? "y" : ""}`}
+                </td>
               </tr>
               <tr>
-                <td><strong>Důvod:</strong></td>
+                <td>
+                  <strong>Důvod:</strong>
+                </td>
                 <td>
                   <textarea
                     className="textarea textarea-bordered w-full"
-                    style={{ height: '150px', resize: 'none' }}
+                    style={{ height: "150px", resize: "none" }}
                     placeholder="Důvod"
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
@@ -104,40 +125,52 @@ const CreateBanModal = ({ userIdd }) => {
           </table>
 
           <div className="mb-6">
-            
             <button
-              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === 1 ? 'bg-primary' : ''}`}
+              className={`btn mt-2 btn-xs mr-2 ${
+                selectedDuration === 1 ? "bg-primary" : ""
+              }`}
               onClick={() => handleDurationClick(1)}
             >
               1 den
             </button>
             <button
-              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === 3 ? 'bg-primary' : ''}`}
+              className={`btn mt-2 btn-xs mr-2 ${
+                selectedDuration === 3 ? "bg-primary" : ""
+              }`}
               onClick={() => handleDurationClick(3)}
             >
               3 dny
             </button>
             <button
-              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === 7 ? 'bg-primary' : ''}`}
+              className={`btn mt-2 btn-xs mr-2 ${
+                selectedDuration === 7 ? "bg-primary" : ""
+              }`}
               onClick={() => handleDurationClick(7)}
             >
               7 dní
             </button>
             <button
-              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === 30 ? 'bg-primary' : ''}`}
+              className={`btn mt-2 btn-xs mr-2 ${
+                selectedDuration === 30 ? "bg-primary" : ""
+              }`}
               onClick={() => handleDurationClick(30)}
             >
               1 měsíc
             </button>
             <button
-              className={`btn mt-2 btn-xs mr-2 ${selectedDuration === 365 ? 'bg-primary' : ''}`}
+              className={`btn mt-2 btn-xs mr-2 ${
+                selectedDuration === 365 ? "bg-primary" : ""
+              }`}
               onClick={() => handleDurationClick(365)}
             >
               1 rok
             </button>
             <button
-              className={`btn mt-1 btn-xs mr-2 ${permanent ? 'bg-primary' : ''}`}
-              onClick={() => { setPermanent(true); setSelectedDuration(null); }} // Set permanent and clear the selected duration
+              className={`btn mt-1 btn-xs mr-2 ${permanent ? "bg-primary" : ""}`}
+              onClick={() => {
+                setPermanent(true);
+                setSelectedDuration(null); // Clear the selected duration
+              }}
             >
               Trvalý ban
             </button>
