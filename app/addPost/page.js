@@ -9,6 +9,7 @@ import AddUI from './AddUI';
 import { prisma } from '../database/db';
 import Link from 'next/link';
 import { DateTime } from 'luxon';
+import { openLoginModal } from '../components/modals/LoginModal';
 const Page = async () => {
     let session
     let accType
@@ -109,12 +110,14 @@ const Page = async () => {
                                 <li className="step secondStep">Vytvořit inzerát</li>
                             </ul>
                         </div>
+                        {!session.isLoggedIn &&
                         <div
     style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}
   >
     <Link
       className="btn btn-neutral btn-md"
-      href={"/typeOfAccount"}
+      href={""}
+      onClick={openLoginModal}
     >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
@@ -124,6 +127,7 @@ const Page = async () => {
      
     </Link>
   </div>
+  }
                         <div
                         
   style={{
