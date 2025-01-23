@@ -305,7 +305,7 @@ if (firstStep && secondStep) {
          
           
         >
-          {renderBenefitText(text)}
+         {isLogged ? renderBenefitText(text) : "Přihlaste se" } 
         </span>
       </li>
     );

@@ -115,7 +115,7 @@ const Page = async () => {
     style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}
   >
     <Link
-      className="btn btn-neutral btn-md"
+      className="btn  btn-md"
       href={""}
       onClick={openLoginModal}
     >
