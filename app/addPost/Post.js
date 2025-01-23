@@ -125,12 +125,26 @@ if (firstStep && secondStep) {
 
   
 
-  const renderBenefitText = (text) => {
+  const renderBenefitText = (text, log) => {
     const regex = /<Link href='([^']+)'>([^<]+)<\/Link>/g;
+  
+    if (!log) {
+      const placeholder = "přihlasitse";
+      let result = "";
+      const placeholderLength = placeholder.length;
+      const textLength = text.length;
+  
+      // Rozdělí náhradní text rovnoměrně podle délky původního textu
+      for (let i = 0; i < textLength; i++) {
+        result += i % 2 === 0 ? placeholder[Math.floor((i / textLength) * placeholderLength)] : " ";
+      }
+      return result.trim();
+    }
+  
     const parts = [];
     let lastIndex = 0;
     let match;
-
+  
     while ((match = regex.exec(text)) !== null) {
       if (match.index > lastIndex) {
         parts.push(text.substring(lastIndex, match.index));
@@ -145,7 +159,7 @@ if (firstStep && secondStep) {
     if (lastIndex < text.length) {
       parts.push(text.substring(lastIndex));
     }
-
+  
     return parts;
   };
 
@@ -305,7 +319,7 @@ if (firstStep && secondStep) {
          
           
         >
-         {isLogged ? renderBenefitText(text) : "Přihlaste se" } 
+         { renderBenefitText(text,isLogged) } 
         </span>
       </li>
     );
