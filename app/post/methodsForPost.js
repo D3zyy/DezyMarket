@@ -1,8 +1,8 @@
 import { prisma } from "../database/db";
 import { checkUserBan } from "../api/session/dbMethodsSession";
-export async function getPostFromDb(postId) {
+export async function getPostFromDb(postId,privi = 1) {
   let postRecord = null;
-
+  console.log('PostId:', postId, 'Privileges:', privi); 
   try {
 
     postRecord = await prisma.Posts.findUnique({
@@ -21,11 +21,15 @@ export async function getPostFromDb(postId) {
         }
       },
     });
-    console.log("tady:",postRecord)
+    console.log("privileges:",privi)
+    if(privi <=1){
+
+
     let cannotShow = await checkUserBan(postRecord.user.id)
     if(cannotShow){
       return false
     }
+  }
   } catch (error) {
     console.error("Error fetching post:", error);
     // Handle the error as needed, e.g., throw it or return null

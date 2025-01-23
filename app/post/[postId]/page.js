@@ -31,12 +31,14 @@ const Page = async ({ params }) => {
   let topinfo
 
   try {
-   
-     [session, postRecord, imageUrls] = (await Promise.allSettled([
-      getSession(),
-       getPostFromDb (params.postId),
-      getImageUrlsFromDb(params.postId),
-    ])).map(result => result.status === 'fulfilled' ? result.value : null);
+    session = await getSession();
+console.log(session);
+    const privileges = session ? session.role?.privileges : 1;
+
+[postRecord, imageUrls] = (await Promise.allSettled([
+  getPostFromDb(params.postId, privileges),
+  getImageUrlsFromDb(params.postId),
+])).map(result => result.status === 'fulfilled' ? result.value : null);
 
     if(postRecord?.topId !== null){
       if(postRecord?.topId) {

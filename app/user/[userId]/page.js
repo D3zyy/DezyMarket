@@ -110,9 +110,7 @@ function checkBans(bansOfUser) {
     const bannedFrom = new Date(ban.bannedFrom);
     const bannedTill = new Date(ban.bannedTill);
 
-    console.log("FROM:", bannedFrom);
-    console.log("TILL:", bannedTill);
-    console.log("NOW:", currentTimeInPrague.toJSDate()); // Convert DateTime to native JS Date for comparison
+
 
     // Check if bannedFrom or bannedTill are invalid Date objects
     if (isNaN(bannedFrom.getTime()) || isNaN(bannedTill.getTime())) {
