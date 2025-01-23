@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
-
+import { useEffect } from 'react';
 
 
 
@@ -35,33 +35,28 @@ const allowedIds = new Set(allowedArray.map(top => top.id));
   const [isOpen, setIsOpen] = useState(false);
   let canTop = allowedTops
 
-  const [selectedColor, setSelectedColor] = useState(() => {
-    // Zajistíme, že allowedTops je skutečně pole
-    if (Array.isArray(allowedTops) && allowedTops.length > 0) {
-      // Najděte top s největším numberOfMonthsToValid při inicializaci
-      const defaultTop = allowedTops.length > 0 
+  const getDefaultTop = () => {
+    return allowedTops.length > 0
       ? allowedTops.reduce((max, item) => 
           item.numberOfMonthsToValid > max.numberOfMonthsToValid ? item : max
         )
-      : null; // nebo použij výchozí hodnotu podle potřeby
-    
+      : null; // nebo výchozí hodnota, např. {}
+  };
 
-      
-      // Vraťte barvu výchozího topu pro inicializaci stavu
-      return defaultTop.color;
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedTop, setSelectedTop] = useState(null);
+
+  useEffect(() => {
+    // Nastavení výchozí hodnoty pro selectedTop
+    if (allowedTops && allowedTops.length > 0) {
+      const defaultTop = getDefaultTop();
+      setSelectedTop(defaultTop);
+      setSelectedColor(defaultTop ? defaultTop.color : null);
+    } else {
+      setSelectedTop({ name });
+      setSelectedColor(null); // nebo nějakou výchozí barvu, pokud je potřeba
     }
-  
-    // Pokud allowedTops není pole nebo je prázdné, nastavíme výchozí hodnotu
-  
-  });
-  const getDefaultTop = () => {
-    return allowedTops.length > 0
-    ? allowedTops.reduce((max, item) => 
-        item.numberOfMonthsToValid > max.numberOfMonthsToValid ? item : max
-      )
-    : null; // nebo výchozí hodnota, např. {}
-};
-const [selectedTop, setSelectedTop] = useState(allowedTops? getDefaultTop(): name);
+  }, [allowedTops, name]);
 //console.log(allowedTops)
 
 function toggleSteps() {
