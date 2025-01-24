@@ -131,7 +131,7 @@ if (firstStep && secondStep) {
   
       // Rozdělí náhradní text rovnoměrně podle délky původního textu
       for (let i = 0; i < textLength; i++) {
-        result += i % 2 === 0 ? placeholder[Math.floor((i / textLength) * placeholderLength)] : " ";
+        result += i % 2 === 0 ? placeholder[Math.floor((i / textLength) * placeholderLength)] : "";
       }
       return result.trim();
     }
