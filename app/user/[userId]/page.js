@@ -176,11 +176,11 @@ return (
             strokeWidth={1.5}
             stroke="currentColor"
             className={`w-8 h-8 ${
-              userAcc.role.privileges === 4
+              userAcc?.role?.privileges === 4
                 ? "text-green-500"
-                : userAcc.role.privileges === 3
+                : userAcc?.role?.privileges === 3
                 ? "text-yellow-500"
-                :userAcc.role.privileges === 2
+                :userAcc?.role?.privileges === 2
                 ? "text-red-500"
                 : ""
             }`}
@@ -247,7 +247,7 @@ return (
 }
 
 
-{(session?.role?.privileges > 3 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) && (
+{(session?.role?.privileges > 1 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) && (
   <>
     <div className="flex flex-row gap-4 mt-6 text-center items-center mb-4">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-14  ">
@@ -258,7 +258,7 @@ return (
     </div>
   </>
 )}
-{(session?.role?.privileges > 3 || session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) &&
+{(session?.role?.privileges > 1 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) &&
        
 <div
   className={`flex flex-col  w-full md:mr-16 mb-9 md:mb-0  ${
