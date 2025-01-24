@@ -34,6 +34,7 @@ export async function POST(request) {
     });
 
 
+
     if (!role) {
       return new NextResponse(
         JSON.stringify({ message: 'Role nenalezena' }),
@@ -43,6 +44,32 @@ export async function POST(request) {
         }
       );
     }
+    const usr = await prisma.users.findUnique({
+        where: { id: idOfUser },
+        include: {
+            role : true
+        }
+      });
+
+
+    if (!usr) {
+        return new NextResponse(
+          JSON.stringify({ message: 'Uživatel nenalezen' }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      if (usr.role.privileges >= session.role.privileges) {
+        return new NextResponse(
+          JSON.stringify({ message: 'Nemáte oprávnění na tento příkaz' }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
  await prisma.users.update({
       where: { id: idOfUser },
       data : {roleId : roleId }
