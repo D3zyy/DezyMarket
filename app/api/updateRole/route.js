@@ -79,6 +79,10 @@ export async function POST(request) {
       data : {roleId : roleId }
     });
 
+    await prisma.sessions.deleteMany({
+        where: { userId: idOfUser },
+      });
+
     return new NextResponse(
       JSON.stringify({ message: 'Úspěšná aktualizace role' }),
       {
