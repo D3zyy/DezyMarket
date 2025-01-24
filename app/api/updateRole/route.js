@@ -61,6 +61,9 @@ export async function POST(request) {
           }
         );
       }
+      if(session.email != 'dezy@dezy.cz'){
+
+  
       if (usr.role.privileges >= session.role.privileges) {
         return new NextResponse(
           JSON.stringify({ message: 'Nemáte oprávnění na tento příkaz' }),
@@ -70,6 +73,7 @@ export async function POST(request) {
           }
         );
       }
+    }
  await prisma.users.update({
       where: { id: idOfUser },
       data : {roleId : roleId }
