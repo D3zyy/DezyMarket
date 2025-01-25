@@ -41,6 +41,26 @@ const { DateTime } = require('luxon');
             }
           );
         }
+        const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd');
+    let numberOfActionsToday = await prisma.managementActions.count({
+      where: {
+        fromUserId: session.userId,
+        doneAt: {
+          gte: new Date(`${currentDate}T00:00:00.000Z`),
+          lt: new Date(`${currentDate}T23:59:59.999Z`),
+        },
+      },
+    });
+    if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      return new Response(JSON.stringify({
+        message: 'Již jste vyčerpal administrativních pravomocí dnes'
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
           if(session.email != 'dezy@dezy.cz') {
         if (session.role.privileges <= 2 || data.idOfUser == session.userId) {
           return new Response(
@@ -75,7 +95,22 @@ const { DateTime } = require('luxon');
             accountType: { connect: { id: data.idOfSub } },
           },
         });
-    
+       let gi= await prisma.accountType.findUnique({
+          where: {id: data.idOfSub}
+        });
+        const nowww = DateTime.now()
+        .setZone('Europe/Prague')
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.managementActions.create({
+          data: {
+            fromUserId: session.userId,
+            doneAt: 
+              nowww,
+            
+            toUserId: data.idOfUser,
+            info: `Gift sub ${gi.name} na ${data.NumberMont} měsíců od měsíce : ${data.nmbMontIn}`
+          },
+        });
         return new Response(JSON.stringify({ message: "Předplatné bylo úspěšně nastaveno." }), {
           status: 200,
           headers: { 'Content-Type': 'application/json' }
