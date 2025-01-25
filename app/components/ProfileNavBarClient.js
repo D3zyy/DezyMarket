@@ -80,7 +80,7 @@ const ProfileNavBarClient = ({ session }) => {
                 router.push(`/user/${session.userId}#PostsOfUser`);
               }}
              >
-                Moje príspěvky
+                Moje příspěvky
                 
               </a>
             </li>
