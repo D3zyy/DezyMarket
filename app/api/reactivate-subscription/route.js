@@ -27,32 +27,14 @@ export async function POST(req) {
             });
         }
 
- const currentDate = DateTime.now()
-    .setZone('Europe/Prague')
-    .toFormat('yyyy-MM-dd');
-    let numberOfActionsToday = await prisma.managementActions.count({
-      where: {
-        fromUserId: session.userId,
-        doneAt: {
-          gte: new Date(`${currentDate}T00:00:00.000Z`),
-          lt: new Date(`${currentDate}T23:59:59.999Z`),
-        },
-      },
-    });
-    if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
-      return new Response(JSON.stringify({
-        message: 'Již jste vyčerpal administrativních pravomocí dnes'
-      }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
+ 
 
 
         let usrToReactivate
         let myAcc = true
         if(data.usrId != null){
-            if(session.role.privileges > 1){
+            
+            if(session.role.privileges > 2){
 
          
                 usrToReactivate = await prisma.users.findFirst({
@@ -68,8 +50,8 @@ export async function POST(req) {
             });
         }
         console.log("THis uset wanna reactivte:",usrToReactivate )
- 
-        if(usrToReactivate.role.privileges > session.role.privileges){
+   
+        if(usrToReactivate.role.privileges > session.role.privileges ){
             console.log("tady nemam pravaaaaa")
             return new Response(JSON.stringify({
                 message: "Nemáte oprávnění "
@@ -90,9 +72,30 @@ export async function POST(req) {
     }
     }
 
+ if(!myAcc){
 
 
-
+    const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd');
+    let numberOfActionsToday = await prisma.managementActions.count({
+      where: {
+        fromUserId: session.userId,
+        doneAt: {
+          gte: new Date(`${currentDate}T00:00:00.000Z`),
+          lt: new Date(`${currentDate}T23:59:59.999Z`),
+        },
+      },
+    });
+    if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      return new Response(JSON.stringify({
+        message: 'Již jste vyčerpal administrativních pravomocí dnes'
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+}
     let customers
 
                 // stripe check commented

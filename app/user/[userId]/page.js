@@ -275,7 +275,7 @@ return (
 
 </div>
 }
-{ (session?.role?.privileges > 1&& userAcc?.id != session.userId&& session?.role?.privileges > userAcc?.role?.privileges || session?.role?.privileges > 3)&&
+{ (session?.role?.privileges > 2&& userAcc?.id != session.userId&& session?.role?.privileges > userAcc?.role?.privileges || session?.role?.privileges > 3)&&
 <div className="flex flex-row gap-6 ml-3 mt-3 items-center ">
 
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 flex-shrink-0">
@@ -287,7 +287,7 @@ return (
 <><button disabled={accType?.priority > 1} onClick={openGiftSubModal} className="btn btn-sm">Darovat</button>  < GiftSubModal idOfUser={userAcc.id} allSub={allSub}/></>
 
 }
-{(session.role.privileges > 1 ) && 
+{(session.role.privileges > 2 ) && 
 <>
 {   accType?.scheduleToCancel && !accType.gifted ? <ReNewSubButton  name={accType?.name} useToId={userAcc?.id}/> : <CancelSubButton pri={ accType?.priority} gifted={accType?.gifted} name={accType?.name} useToId={userAcc?.id}/>}
 <br />
@@ -299,7 +299,7 @@ return (
 
 </div>
 }
-{(session?.role?.privileges > 1&& userAcc?.id != session.userId&& session?.role?.privileges > userAcc?.role?.privileges && accType?.priority > 1|| session?.role?.privileges > 3 && accType?.priority > 1)&&  
+{(session?.role?.privileges > 2&& userAcc?.id != session.userId&& session?.role?.privileges > userAcc?.role?.privileges && accType?.priority > 1|| session?.role?.privileges > 3 && accType?.priority > 1)&&  
   <>
   <div className="ml-9 p-4 flex flex-col">
   <div className="flex flex-row gap-4 mb-2">

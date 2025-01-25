@@ -51,7 +51,7 @@ export async function POST(req) {
               });
             }
         if(data.usrId != null){
-            if(session.role.privileges > 1){
+            if(session.role.privileges > 2){
 
          
          usrToCancel = await prisma.users.findFirst({
