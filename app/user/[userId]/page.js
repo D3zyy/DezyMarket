@@ -14,7 +14,7 @@ import { ButtOp } from "./butt";
 import UpdRoleSelect from "./updRoleSelect";
 import {GiftSubModal, openGiftSubModal} from "./GiftSubModal";
 import CancelSubButton from "./CancelSub";
-
+import ReNewSubButton from "./ReNewSub";
 
 
 const Page = async ({ params }) => {
@@ -54,7 +54,7 @@ const Page = async ({ params }) => {
 
     accType = await getUserAccountTypeOnStripe(userAcc?.email);
 
-     
+
 
 
 if(session?.role?.privileges > 3){
@@ -272,13 +272,12 @@ return (
 }
 {(session.role.privileges > 1 ) && 
 <>
+{accType.scheduleToCancel ? <ReNewSubButton  name={accType.name} useToId={userAcc?.id}/> : <CancelSubButton name={accType.name} useToId={userAcc?.id}/>}
 
-<CancelSubButton name={accType.name} useToId={userAcc?.id}/>
+
 </>
 }
-{session?.role?.privileges > 2 && 
-<button  disabled={accType?.priority <= 1 || accType?.priority == null} onClick={openGiftSubModal} className="btn btn-sm">Odstranit</button>
-}
+
 
 </div>
 }
