@@ -77,20 +77,17 @@ const ProfileNavBarClient = ({ session }) => {
               className="mt-2 justify-between"
               onClick={() => {
                 handleDropdownClose();
-                router.push("/posts");
+                router.push(`/user/${session.userId}#PostsOfUser`);
               }}
              >
                 Moje príspěvky
-                <span className="badge">New</span>
+                
               </a>
             </li>
             <li>
-            <a onClick={() => { handleDropdownClose(); router.push(`/user/${session.userId}`); }}>Profil</a>
+            <a onClick={() => { handleDropdownClose(); router.push(`/user/${session.userId}`); }}>Můj profil</a>
             </li>
 
-            <li>
-              <a onClick={() => {handleDropdownClose();  router.push("/settings");}}>Nastavení</a>
-            </li>
            
 
             <li>
