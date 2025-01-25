@@ -2,14 +2,14 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-
-// DeleteBanModal Component
- function ReNewSubButton({ name , useToId}) {
+function ReNewSubButton({ name, useToId }) {
   const [nameToCancel, setnameToCancel] = useState(name);
   const [usrId, setusrId] = useState(useToId);
-  const router = useRouter()
-  console.log("ID uživatele:eeee",useToId)
+  const [loading, setLoading] = useState(false); // Add loading state
+  const router = useRouter();
+  
   const updateSub = async () => {
+    setLoading(true); // Set loading to true when request starts
     try {
       const response = await fetch('/api/reactivate-subscription', {
         method: 'POST',
@@ -18,30 +18,24 @@ import { useRouter } from 'next/navigation';
         },
         body: JSON.stringify({ name: nameToCancel, usrId: usrId }), // Properly structure the body as an object
       });
-  
-     
+
+    
         router.refresh(); // Refresh the page if the request is successful
-     
+    
     } catch (error) {
-      console.error('Error updating ban:', error);
-    }
+      console.error('Error reactivating subscription:', error);
+    } 
   };
 
-
-
   return (
-  
-       
-
-       
-            <button
-              type="button"
-              className="btn btn-sm"
-              onClick={updateSub}
-            >
-              Obnovit
-            </button>
-
+    <button
+      type="button"
+      className="btn btn-sm"
+      onClick={updateSub}
+      disabled={loading} // Disable the button when loading
+    >
+      {loading ? 'Obnovuji...' : 'Obnovit'} {/* Show loading text while request is in progress */}
+    </button>
   );
 }
 
