@@ -36,7 +36,7 @@ function CancelSubButton({pri, gifted, name, useToId }) {
       onClick={updateSub}
       disabled={loading || pri <= 1 || pri == null} // Disable the button when loading
     >
-      {loading ? 'Ruším...' : 'Zrušit'} {/* Show loading text while request is in progress */}
+      {loading ? 'Ruším předplatné..' : 'Zrušit předplatné'} {/* Show loading text while request is in progress */}
     </button>
   );
 }

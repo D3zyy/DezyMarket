@@ -34,7 +34,7 @@ function ReNewSubButton({ name, useToId }) {
       onClick={updateSub}
       disabled={loading} // Disable the button when loading
     >
-      {loading ? 'Obnovuji...' : 'Obnovit'} {/* Show loading text while request is in progress */}
+      {loading ? 'Obnovuji předplatné...' : 'Obnovit předplatné'} {/* Show loading text while request is in progress */}
     </button>
   );
 }
