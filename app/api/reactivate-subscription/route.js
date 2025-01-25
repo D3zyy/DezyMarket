@@ -82,7 +82,7 @@ export async function POST(req) {
         });
     } else{ 
          customers = await stripe.customers.list({
-            email: usrToCancel.email
+            email: usrToReactivate.email
         });
     }
 
