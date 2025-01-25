@@ -268,7 +268,7 @@ return (
 <button disabled={accType?.priority <= 1 || accType?.priority == null} onClick={openGiftSubModal} className="btn btn-sm">Zrušit</button>
 }
 {session?.role?.privileges > 2 && 
-<button onClick={openGiftSubModal} className="btn btn-sm">Odstranit</button>
+<button  disabled={accType?.priority <= 1 || accType?.priority == null} onClick={openGiftSubModal} className="btn btn-sm">Odstranit</button>
 }
 
 </div>
