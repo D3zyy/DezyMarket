@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
+import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 const { DateTime } = require('luxon');
 
 
@@ -41,6 +42,19 @@ const { DateTime } = require('luxon');
             }
           );
         }
+        let thisUserToGIft = await prisma.users.findUnique({where: {id: data.idOfUser}})
+        console.log("TOgle je ten user:",thisUserToGIft)
+      let  currentSub = await getUserAccountTypeOnStripe(thisUserToGIft.email)
+      console.log("Tohle má teďka :",currentSub)
+      if(currentSub?.priority > 1 && currentSub?.priority != null){
+        return new Response(JSON.stringify({
+          message: 'Tento uživatel již má aktivní předplatné'
+        }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      
         const currentDate = DateTime.now()
     .setZone('Europe/Prague')
     .toFormat('yyyy-MM-dd');
