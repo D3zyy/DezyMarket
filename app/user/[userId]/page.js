@@ -272,7 +272,7 @@ return (
 }
 {(session.role.privileges > 1 ) && 
 <>
-{accType.scheduleToCancel ? <ReNewSubButton  name={accType.name} useToId={userAcc?.id}/> : <CancelSubButton name={accType.name} useToId={userAcc?.id}/>}
+{ !accType.gifted && ( accType?.scheduleToCancel  ? <ReNewSubButton  name={accType?.name} useToId={userAcc?.id}/> : <CancelSubButton name={accType?.name} useToId={userAcc?.id}/>) }
 
 
 </>

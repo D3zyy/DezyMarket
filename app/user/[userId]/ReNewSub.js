@@ -19,11 +19,9 @@ import { useRouter } from 'next/navigation';
         body: JSON.stringify({ name: nameToCancel, usrId: usrId }), // Properly structure the body as an object
       });
   
-      if (response.ok) {
+     
         router.refresh(); // Refresh the page if the request is successful
-      } else {
-        console.error('Failed to reactivate subscription');
-      }
+     
     } catch (error) {
       console.error('Error updating ban:', error);
     }
