@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { prisma } from "@/app/database/db";
-
+import { DateTime } from "luxon";
 export async function POST(req) {
     try {
         let data 
@@ -26,6 +26,29 @@ export async function POST(req) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
+
+ const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd');
+    let numberOfActionsToday = await prisma.managementActions.count({
+      where: {
+        fromUserId: session.userId,
+        doneAt: {
+          gte: new Date(`${currentDate}T00:00:00.000Z`),
+          lt: new Date(`${currentDate}T23:59:59.999Z`),
+        },
+      },
+    });
+    if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      return new Response(JSON.stringify({
+        message: 'Již jste vyčerpal administrativních pravomocí dnes'
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+
         let usrToReactivate
         let myAcc = true
         if(data.usrId != null){
@@ -169,7 +192,19 @@ export async function POST(req) {
             headers: { 'Content-Type': 'application/json' }
         });
     }
-    
+    const nowww = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+    await prisma.managementActions.create({
+      data: {
+        fromUserId: session.userId,
+        doneAt: 
+          nowww,
+        
+        toUserId: usrToReactivate.id,
+        info: `Obnovení  předplatného `
+      },
+    });
 
 
         await stripe.subscriptions.update(

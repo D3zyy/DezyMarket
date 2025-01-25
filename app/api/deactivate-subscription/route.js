@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { prisma } from "@/app/database/db";
+import { DateTime } from "luxon";
 
 export async function POST(req) {
     try {
@@ -29,6 +30,26 @@ export async function POST(req) {
         console.log("nahore")
         let usrToCancel
         let myAcc = true
+         const currentDate = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat('yyyy-MM-dd');
+            let numberOfActionsToday = await prisma.managementActions.count({
+              where: {
+                fromUserId: session.userId,
+                doneAt: {
+                  gte: new Date(`${currentDate}T00:00:00.000Z`),
+                  lt: new Date(`${currentDate}T23:59:59.999Z`),
+                },
+              },
+            });
+            if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+              return new Response(JSON.stringify({
+                message: 'Již jste vyčerpal administrativních pravomocí dnes'
+              }), {
+                status: 403,
+                headers: { 'Content-Type': 'application/json' }
+              });
+            }
         if(data.usrId != null){
             if(session.role.privileges > 1){
 
@@ -69,6 +90,7 @@ export async function POST(req) {
     }
     console.log("Jeeee gifteeedd:",data.gifted)
     if(data.gifted){
+
         const accountType = await prisma.AccountType.findFirst({
             where: { name: data.name },
         });
@@ -95,6 +117,19 @@ export async function POST(req) {
             data: {
                active: false
             },
+        });
+        const nowww = DateTime.now()
+        .setZone('Europe/Prague')
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.managementActions.create({
+          data: {
+            fromUserId: session.userId,
+            doneAt: 
+              nowww,
+            
+            toUserId: usrToCancel.id,
+            info: `Zrušení giftlého předplatného`
+          },
         });
         console.log("Updatued:",updatedAccount)
         return new Response(JSON.stringify({
@@ -199,6 +234,23 @@ export async function POST(req) {
            scheduleToCancel: true
         },
     });
+    if(!myAcc){
+
+ 
+        const nowww = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.managementActions.create({
+              data: {
+                fromUserId: session.userId,
+                doneAt: 
+                  nowww,
+                
+                toUserId: usrToCancel.id,
+                info: `Deaktivace předplatného`
+              },
+            });
+        }
     console.log("tady po updatuji")
     if(!updatedAccount){
         return new Response(JSON.stringify({
