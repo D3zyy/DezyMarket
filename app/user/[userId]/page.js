@@ -48,11 +48,11 @@ const Page = async ({ params }) => {
       },
     })
   ]);
-  console.log("to hcek:",userAcc?.email)
+
     accType = await getUserAccountTypeOnStripe(userAcc?.email);
 
      
-console.log("accType:::::.",accType)
+
 
 if(session?.role?.privileges > 3){
   allRoles = await prisma.roles.findMany({});
@@ -157,8 +157,14 @@ function checkBans(bansOfUser) {
 
 if(accType?.priority <= 1 && session?.role?.privileges > 3 || accType?.priority == null && session?.role?.privileges > 3 ){
   // fetch all types
- allSub= await prisma.accountType.findMany({})
-     console.log(":::::::",allSub)
+   allSub = await prisma.accountType.findMany({
+    where: {
+      priority: {
+        gt: 1, // gt znamená "greater than" (větší než)
+      },
+    },
+  });
+
 }
 
 isBanned = checkBans(bansOfUser)
