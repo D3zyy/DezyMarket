@@ -282,7 +282,7 @@ return (
 
 </div>
 }
-{(session?.role?.privileges > 1&& userAcc?.id != session.userId&& session?.role?.privileges > userAcc?.role?.privileges || session?.role?.privileges > 3 && accType?.priority > 1)&&  
+{(session?.role?.privileges > 1&& userAcc?.id != session.userId&& session?.role?.privileges > userAcc?.role?.privileges && accType?.priority > 1|| session?.role?.privileges > 3 && accType?.priority > 1)&&  
   <>
   <div className="ml-9 p-4 flex flex-col">
   <div className="flex flex-row gap-4 mb-2">
