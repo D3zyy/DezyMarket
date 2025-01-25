@@ -258,7 +258,7 @@ return (
 
 </div>
 }
-{ session?.role?.privileges > 1&& userAcc?.id != session.userId&& session?.role?.privileges > userAcc?.role?.privileges&&
+{ (session?.role?.privileges > 1&& userAcc?.id != session.userId&& session?.role?.privileges > userAcc?.role?.privileges || session?.role?.privileges > 3)&&
 <div className="flex flex-row gap-6 ml-3 mt-3 items-center ">
 
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 flex-shrink-0">
@@ -266,7 +266,7 @@ return (
 </svg>
  
 
-{session?.role?.privileges > 2 &&  userAcc?.id != session.userId&&
+{(session?.role?.privileges > 2 &&  userAcc?.id != session.userId || session?.role?.privileges > 3)&&
 <><button disabled={accType?.priority > 1} onClick={openGiftSubModal} className="btn btn-sm">Darovat</button>  < GiftSubModal idOfUser={userAcc.id} allSub={allSub}/></>
 
 }

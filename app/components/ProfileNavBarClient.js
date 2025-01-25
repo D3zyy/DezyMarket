@@ -85,7 +85,7 @@ const ProfileNavBarClient = ({ session }) => {
               </a>
             </li>
             <li>
-              <a onClick={() => {handleDropdownClose();  router.push("/profile");}}>Profil </a>
+            <a onClick={() => { handleDropdownClose(); router.push(`/user/${session.userId}`); }}>Profil</a>
             </li>
 
             <li>
