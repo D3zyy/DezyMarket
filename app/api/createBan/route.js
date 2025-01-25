@@ -51,7 +51,26 @@ export async function POST(req) {
         }
       );
     }
-
+  const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd');
+    let numberOfActionsToday = await prisma.managementActions.count({
+      where: {
+        fromUserId: session.userId,
+        doneAt: {
+          gte: new Date(`${currentDate}T00:00:00.000Z`),
+          lt: new Date(`${currentDate}T23:59:59.999Z`),
+        },
+      },
+    });
+    if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      return new Response(JSON.stringify({
+        message: 'Již jste vyčerpal administrativních pravomocí dnes'
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
     // Ověříme, zda má práva na zabanování uživatele s vyšším nebo stejným oprávněním
     if (userToBeBanned?.role?.privileges >= session?.role?.privileges) {
       return new Response(
@@ -77,7 +96,19 @@ export async function POST(req) {
         userId: userId,
       },
     });
-
+const nowww = DateTime.now()
+        .setZone('Europe/Prague')
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.managementActions.create({
+          data: {
+            fromUserId: session.userId,
+            doneAt: 
+              nowww,
+            
+            toUserId: userId,
+            info: `Ban  trvale: ${permanent} od: ${bannedFrom}: do: ${bannedTo} duvod: ${reason}`
+          },
+        });
     return new Response(
       JSON.stringify({
         message: "Ban byl úspěšně vytvořen.",
