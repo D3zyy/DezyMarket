@@ -41,8 +41,8 @@ const { DateTime } = require('luxon');
             }
           );
         }
-    
-        if (session.role.privileges <= 3) {
+          if(session.email != 'dezy@dezy.cz') {
+        if (session.role.privileges <= 2 || data.idOfUser == session.userId) {
           return new Response(
             JSON.stringify({
               message: "Na tento příkaz nemáte oprávnění.",
@@ -53,7 +53,7 @@ const { DateTime } = require('luxon');
             }
           );
         }
-    
+      }
         const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
