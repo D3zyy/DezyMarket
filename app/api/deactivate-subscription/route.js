@@ -9,7 +9,7 @@ export async function POST(req) {
         try {
    
              data = await req.json();
-        
+            console.log("DATA NA DEAKTIVACI :",data)
           } catch (error) {
             return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
               status: 400,
@@ -26,18 +26,64 @@ export async function POST(req) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-        
+        console.log("nahore")
+        let usrToCancel
+        let myAcc = true
+        if(data.usrId != null){
+            if(session.role.privileges > 1){
 
+         
+         usrToCancel = await prisma.users.findFirst({
+            where: { id: data.usrId },
+            include: {role : true}
+        });
+        if(!usrToCancel){
+            return new Response(JSON.stringify({
+                message: "Uživatel na deaktivaci  nenalezen "
+            }), {
+                status: 403,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        console.log("THis uset wanna cancel:",usrToCancel )
+        console.log("nahore 1")
+        if(usrToCancel.role.privileges > session.role.privileges){
+            console.log("tady nemam pravaaaaa")
+            return new Response(JSON.stringify({
+                message: "Nemáte oprávnění "
+            }), {
+                status: 403,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        myAcc = false
+    }  else {
 
+        return new Response(JSON.stringify({
+            message: "Nemáte oprávnění "
+        }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+    }
 
                 // stripe check commented
 
+                let customers
+        if(myAcc) {
 
-
+    
         // Retrieve customer information from Stripe
-        const customers = await stripe.customers.list({
+         customers = await stripe.customers.list({
             email: session.email
         });
+    } else{ 
+         customers = await stripe.customers.list({
+            email: usrToCancel.email
+        });
+    }
+    console.log("tadyyyy dole")
 
       //  if (!customers.data.length) {
         //    return new Response(JSON.stringify({
@@ -49,13 +95,14 @@ export async function POST(req) {
         //}
 
         const customer = customers.data[0];
-        
+        console.log("tady")
         // Retrieve subscriptions for the customer
     const subscriptions = await stripe.subscriptions.list({
             customer: customer.id,
             status: "active"
         });
         if (!subscriptions.data.length) {
+            console.log("zadne prepdplatne")
            return new Response(JSON.stringify({
                 message: "Žádné předplatné nenalezeno pro tohoto zákazníka"
             }), {
@@ -63,8 +110,9 @@ export async function POST(req) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-
+   
        if(subscriptions.data[0].cancel_at_period_end){
+        console.log("zadne predplatne na cancel")
         return new Response(JSON.stringify({
             message: "Žádné aktivní předplatné nenalezeno"
         }), {
@@ -72,7 +120,7 @@ export async function POST(req) {
             headers: { 'Content-Type': 'application/json' }
         });
        }
-     
+       console.log("tady po kotrole")
         const subscription = subscriptions.data[0];
         //const subscriptionInfo = await stripe.subscriptions.retrieve(subscription.id);
        //const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
@@ -89,6 +137,7 @@ export async function POST(req) {
        const accountType = await prisma.AccountType.findFirst({
         where: { name: data.name },
     });
+    console.log("tady po kotrole doleleee")
     if(!accountType){
         return new Response(JSON.stringify({
             message: "Zadaný typ učtu nenalezen  "
@@ -97,10 +146,11 @@ export async function POST(req) {
             headers: { 'Content-Type': 'application/json' }
         });
     }
+    console.log("tady updatuji")
     const updatedAccount = await prisma.AccountTypeUsers.updateMany({
         where: {
             AND: [
-                {   userId: session.userId, },
+                {   userId: myAcc ? session.userId : usrToCancel.id, },
                 { accountTypeId: accountType.id },
                 { active: true },
                 {scheduleToCancel: false,},
@@ -112,6 +162,7 @@ export async function POST(req) {
            scheduleToCancel: true
         },
     });
+    console.log("tady po updatuji")
     if(!updatedAccount){
         return new Response(JSON.stringify({
             message: "Žádné aktivní předplatné nenalezeno"
@@ -121,7 +172,7 @@ export async function POST(req) {
         });
     }
     
-
+    console.log("tady po kontorla")
 
         await stripe.subscriptions.update(
             subscription.id,
@@ -130,7 +181,7 @@ export async function POST(req) {
       // }
        
 
-
+      console.log("tady po updatuji na stripe s")
 
 
 
