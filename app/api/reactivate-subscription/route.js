@@ -26,18 +26,67 @@ export async function POST(req) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-        
+        let usrToReactivate
+        let myAcc = true
+        if(data.usrId != null){
+            if(session.role.privileges > 1){
+
+         
+                usrToReactivate = await prisma.users.findFirst({
+            where: { id: data.usrId },
+            include: {role : true}
+        });
+        if(!usrToReactivate){
+            return new Response(JSON.stringify({
+                message: "Uživatel na reaktivaci  nenalezen "
+            }), {
+                status: 403,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        console.log("THis uset wanna reactivte:",usrToReactivate )
+ 
+        if(usrToReactivate.role.privileges > session.role.privileges){
+            console.log("tady nemam pravaaaaa")
+            return new Response(JSON.stringify({
+                message: "Nemáte oprávnění "
+            }), {
+                status: 403,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        myAcc = false
+    }  else {
+
+        return new Response(JSON.stringify({
+            message: "Nemáte oprávnění "
+        }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+    }
 
 
+
+
+    let customers
 
                 // stripe check commented
+ if(myAcc) {
 
-
-
+    
         // Retrieve customer information from Stripe
-        const customers = await stripe.customers.list({
+         customers = await stripe.customers.list({
             email: session.email
         });
+    } else{ 
+         customers = await stripe.customers.list({
+            email: usrToCancel.email
+        });
+    }
+
+
 
       //  if (!customers.data.length) {
         //    return new Response(JSON.stringify({
@@ -100,7 +149,7 @@ export async function POST(req) {
     const updatedAccount = await prisma.AccountTypeUsers.updateMany({
         where: {
             AND: [
-                {   userId: session.userId, },
+                {   userId: myAcc ? session.userId : usrToReactivate.id, },
                 { accountTypeId: accountType.id },
                 { active: true },
                 {scheduleToCancel: true,},
