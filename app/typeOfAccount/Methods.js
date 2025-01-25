@@ -222,6 +222,8 @@ const userAccountTypes = await prisma.users.findUnique({
       const sortedAccounts = userAccountTypes.accounts.sort((a, b) => b.accountType.priority - a.accountType.priority);
       sortedAccounts[0].accountType.monthIn = sortedAccounts[0].monthIn;
       sortedAccounts[0].accountType.scheduleToCancel = sortedAccounts[0].scheduleToCancel;
+      sortedAccounts[0].accountType.fromDate = sortedAccounts[0].fromDate;
+      sortedAccounts[0].accountType.toDate = sortedAccounts[0].toDate;
       sortedAccounts[0].accountType.gifted = sortedAccounts[0].gifted;
      
       return sortedAccounts[0].accountType;  // Vraťte název účtu s nejvyšší prioritou
