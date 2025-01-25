@@ -24,7 +24,9 @@ function CancelSubButton({pri, gifted, name, useToId }) {
       
     } catch (error) {
       console.error('Error updating subscription:', error);
-    } 
+    }  finally{
+        setLoading(false)
+    }
   };
 
   return (
