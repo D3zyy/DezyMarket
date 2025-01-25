@@ -4,9 +4,10 @@ import { useRouter } from 'next/navigation';
 
 
 // DeleteBanModal Component
- function CancelSubButton({ name , useToId}) {
+ function CancelSubButton({gifted, name , useToId}) {
   const [nameToCancel, setnameToCancel] = useState(name);
   const [usrId, setusrId] = useState(useToId);
+  console.log("Je giftnutý:",gifted)
   const router = useRouter()
   console.log("ID uživatele:eeee",useToId)
   const updateSub = async () => {
@@ -16,7 +17,7 @@ import { useRouter } from 'next/navigation';
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: nameToCancel, usrId: usrId }), // Properly structure the body as an object
+        body: JSON.stringify({ name: nameToCancel, usrId: usrId,gifted: gifted }), // Properly structure the body as an object
       });
   
      

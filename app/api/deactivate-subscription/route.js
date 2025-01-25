@@ -67,6 +67,43 @@ export async function POST(req) {
         });
     }
     }
+    console.log("Jeeee gifteeedd:",data.gifted)
+    if(data.gifted){
+        const accountType = await prisma.AccountType.findFirst({
+            where: { name: data.name },
+        });
+        if(!accountType){
+            return new Response(JSON.stringify({
+                message: "Zadaný typ učtu nenalezen  "
+            }), {
+                status: 403,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        console.log("YOOO")
+        const updatedAccount = await prisma.AccountTypeUsers.updateMany({
+            where: {
+                AND: [
+                    {   userId: myAcc ? session.userId : usrToCancel.id, },
+                    { accountTypeId: accountType.id },
+                    { active: true },
+                    {scheduleToCancel: true,},
+                    {gifted: true}
+                ]
+            
+            },
+            data: {
+               active: false
+            },
+        });
+        console.log("Updatued:",updatedAccount)
+        return new Response(JSON.stringify({
+            message: "Úspěšně deaktivoán giftlý sub"
+        }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
 
                 // stripe check commented
 

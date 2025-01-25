@@ -270,9 +270,9 @@ return (
 <><button disabled={accType?.priority > 1} onClick={openGiftSubModal} className="btn btn-sm">Darovat</button>  < GiftSubModal idOfUser={userAcc.id} allSub={allSub}/></>
 
 }
-{(session.role.privileges > 1 ) && 
+{(session.role.privileges > 1 && accType?.priority > 1 ) && 
 <>
-{ !accType.gifted && ( accType?.scheduleToCancel  ? <ReNewSubButton  name={accType?.name} useToId={userAcc?.id}/> : <CancelSubButton name={accType?.name} useToId={userAcc?.id}/>) }
+{   accType?.scheduleToCancel && !accType.gifted ? <ReNewSubButton  name={accType?.name} useToId={userAcc?.id}/> : <CancelSubButton gifted={accType?.gifted} name={accType?.name} useToId={userAcc?.id}/>}
 
 
 </>
