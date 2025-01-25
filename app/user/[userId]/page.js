@@ -12,9 +12,10 @@ import CreateBanModal from "./addBanModal";
 import { openAddBanModal } from "./addBanModal";
 import { ButtOp } from "./butt";
 import UpdRoleSelect from "./updRoleSelect";
+import {GiftSubModal, openGiftSubModal} from "./GiftSubModal";
 
 const Page = async ({ params }) => {
-  let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser,isBanned,allRoles
+  let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser,isBanned,allRoles,allSub
   try{
    [session,userAcc, posts, rankingOfUser,bansOfUser] = await Promise.all([
     getSession()
@@ -47,10 +48,11 @@ const Page = async ({ params }) => {
       },
     })
   ]);
+  console.log("to hcek:",userAcc?.email)
     accType = await getUserAccountTypeOnStripe(userAcc?.email);
 
      
-
+console.log("accType:::::.",accType)
 
 if(session?.role?.privileges > 3){
   allRoles = await prisma.roles.findMany({});
@@ -131,9 +133,7 @@ function checkBans(bansOfUser) {
     // Convert the banned times from UTC to Prague time for accurate comparison
     const bannedFromInPrague = DateTime.fromJSDate(bannedFrom).setZone("Europe/Prague").toJSDate();
     const bannedTillInPrague = DateTime.fromJSDate(bannedTill).setZone("Europe/Prague").toJSDate();
-    
-    console.log("FROM in Prague:", bannedFromInPrague);
-    console.log("TILL in Prague:", bannedTillInPrague);
+
 
     // Pokud je ban permanentní
     if (ban.pernament) {
@@ -155,7 +155,11 @@ function checkBans(bansOfUser) {
 }
 
 
-
+if(accType?.priority <= 1 && session?.role?.privileges > 3 || accType?.priority == null && session?.role?.privileges > 3 ){
+  // fetch all types
+ allSub= await prisma.accountType.findMany({})
+     console.log(":::::::",allSub)
+}
 
 isBanned = checkBans(bansOfUser)
 console.log('Is user banned:', isBanned);
@@ -245,7 +249,17 @@ return (
 
 </div>
 }
+{accType?.priority <= 1 && session?.role?.privileges > 3 || accType?.priority == null && session?.role?.privileges > 3 &&
+<div className="flex flex-row gap-6 ml-3 mt-3 items-center ">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 flex-shrink-0">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+</svg>
+< GiftSubModal idOfUser={userAcc.id} allSub={allSub}/>
+<button onClick={openGiftSubModal} className="btn btn-sm">Darovat</button>
 
+
+</div>
+}
 
 {(session?.role?.privileges > 1 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) && (
   <>

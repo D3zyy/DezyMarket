@@ -29,7 +29,7 @@ function UpdRoleSelect({ idOfUser,allroles, sessionroleid }) {
   return (
     <select
       onChange={(event) => updateRole(Number(event.target.value))}
-      className="select select-bordered w-full max-w-32"
+      className="select select-bordered w-full max-w-28"
       defaultValue={sessionroleid}
     >
       {allroles.map((role) => (
