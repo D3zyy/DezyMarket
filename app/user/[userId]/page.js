@@ -283,11 +283,14 @@ return (
 </svg>
  
 
-{(session?.role?.privileges > 2 &&  userAcc?.id != session.userId || session?.role?.privileges > 3)&&
-<><button disabled={accType?.priority > 1} onClick={openGiftSubModal} className="btn btn-sm">Darovat</button>  < GiftSubModal idOfUser={userAcc.id} allSub={allSub}/></>
+{(session?.role?.privileges > 2 &&  userAcc?.id != session.userId && accType?.priority <= 1 || session?.role?.privileges > 3 &&accType?.priority <= 1 )&&
+<> <button disabled={accType?.priority > 1} onClick={openGiftSubModal} className="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 text-green-500">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+</svg>
+ Darovat předplatné</button>  < GiftSubModal idOfUser={userAcc.id} allSub={allSub}/> </>
 
 }
-{(session.role.privileges > 2 ) && 
+{(session.role.privileges > 2 && accType?.priority > 1 ) && 
 <>
 {   accType?.scheduleToCancel && !accType.gifted ? <ReNewSubButton  name={accType?.name} useToId={userAcc?.id}/> : <CancelSubButton pri={ accType?.priority} gifted={accType?.gifted} name={accType?.name} useToId={userAcc?.id}/>}
 <br />
