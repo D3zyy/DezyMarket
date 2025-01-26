@@ -259,23 +259,8 @@ const EditPostModal = ({typePost,idUserOfEditor, idUserOfPost,roleOfEditor,postt
 
         <div className='mb-5' style={{textAlign: "left"}}>{printErrorValidation()}</div>
 
-          { roleOfEditore > 1 && idUserOfEditor != idUserOfPost ? 
-        <div className="w-full mt-4 flex items-center"> {/* Přidání items-center */}
-<label
-    htmlFor="location"
-    className="block "
-    style={{ fontSize: '14px', flex: '1', marginRight: '20px' }}
-  >
-    Typ příspěvku
-  </label>
-  <select defaultValue={typeOfPostt} className="ml-10 select select-bordered  w-full md:max-w-72 max-w-44">
-  <option  value={typeOfPostt}>{typeOfPostt}</option>
-  <option>Top</option>
-  <option>Top+</option>
-</select>
+   
 
-  </div>
-   : ""}
        
           <label htmlFor="name">Co nazízím</label>
           <input
