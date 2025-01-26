@@ -4,12 +4,12 @@ export async function getPostFromDb(postId,privi = 1) {
   let postRecord = null;
 
   try {
-
+   
     postRecord = await prisma.Posts.findUnique({
       
       where: {
         id: postId,
-        visible: true,
+        ...(privi > 1 ? {} : { visible: true }),
       },
       include: {
         category: true,
