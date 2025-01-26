@@ -32,7 +32,7 @@ const Page = async ({ params }) => {
 
   try {
     session = await getSession();
-console.log(session);
+
     const privileges = session ? session.role?.privileges : 1;
 
 [postRecord, imageUrls] = (await Promise.allSettled([
@@ -68,8 +68,7 @@ console.log(session);
     }
     accType = await getUserAccountTypeOnStripe(postRecord?.user.email);
     accType = accType?.name
-    //console.log("5. jdeme pro typ účtu na stripe ")
-   // console.log("6. výsledek callu na typ učtu na stripe:",accType)
+   
     description = postRecord?.description;
     isOverflowing = description.length >= 280;
   

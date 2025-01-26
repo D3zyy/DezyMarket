@@ -2,7 +2,7 @@ import { prisma } from "../database/db";
 import { checkUserBan } from "../api/session/dbMethodsSession";
 export async function getPostFromDb(postId,privi = 1) {
   let postRecord = null;
-  console.log('PostId:', postId, 'Privileges:', privi); 
+
   try {
 
     postRecord = await prisma.Posts.findUnique({
