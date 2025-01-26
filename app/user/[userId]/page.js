@@ -18,7 +18,7 @@ import ReNewSubButton from "./ReNewSub";
 import DeleteSessionBtn from "./BtnDeleteSession";
 
 const Page = async ({ params }) => {
-  let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser,isBanned,allRoles,allSub,sessionsOfUser
+  let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser,isBanned,allRoles,allSub,sessionsOfUser,ipsOfUser
   try{
    [session,userAcc, posts, rankingOfUser,bansOfUser] = await Promise.all([
     getSession()
@@ -75,12 +75,21 @@ const Page = async ({ params }) => {
     accType = await getUserAccountTypeOnStripe(userAcc?.email);
 
 
-  console.log(accType)
-if(session?.role?.privileges > 1){
-  sessionsOfUser = await prisma.sessions.findMany({where: {userId:userAcc.id}});
-  
+
+    if (session?.role?.privileges > 1) {
+      sessionsOfUser = await prisma.sessions.findMany({
+        where: { userId: userAcc.id },
+      });
+    
+      ipsOfUser = await prisma.ipAddressesOnUsers.findMany({
+        where: { userId: userAcc.id },
+        include: {
+          ipAddress: true, // Fetches the associated IP address details
+        },
+      });
 }
-console.log("Sessions uživatele:",sessionsOfUser)
+
+console.log("IP uživatele:",ipsOfUser)
 if(session?.role?.privileges > 3){
   allRoles = await prisma.roles.findMany({});
   
@@ -449,6 +458,101 @@ Bude ukončen: {accType?.scheduleToCancel ? 'Ano' : 'Ne'}
 
       </>
 }
+
+
+
+
+
+
+
+
+
+
+{(session?.role?.privileges > 1 &&  session?.role?.privileges > userAcc.role.privileges   ||session?.role?.privileges > 3) &&  <>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-14 mt-4">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+</svg>
+
+
+
+      {/* Pravá strana - Sekce pro hodnocení */}
+      <div
+     
+  className={`flex scrollbar-hidden flex-col ${ sessionsOfUser.length > 0&&"items-center"} ${
+    sessionsOfUser.length > 0 && sessionsOfUser.length !=1    ? "items-center" : ""
+
+  }`}
+>
+
+      
+
+        
+        {/* Hodnocení uživatele nebo zpráva, pokud žádná nejsou */}
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4`}>
+        {ipsOfUser.length > 0 ? ( 
+      
+      ipsOfUser.map((ip) => (
+        <div key={ip.id} className="relative mt-3 flex flex-col gap-2 max-w-96 max-h-[350px] break-all border-2 dark:border-gray-700 border-gray-300 border-dashed rounded-md p-3" >
+
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-base-100 p-1 rounded-full size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+</svg>
+
+          <>
+          <div className="flex flex-col gap-4">
+
+          
+               <span className="flex flex-row gap-4">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
+</svg>
+
+
+Přihlášeno {ip.usedForLogin}x
+</span>
+<span className="flex flex-row gap-4">
+
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+</svg>
+
+IP: {ip.ipAddress.value}
+
+</span>  
+
+</div>       
+</>
+
+       </div>
+          ) ) 
+        ) : (
+          <p className="text-sm mt-2 text-gray-500  whitespace-nowrap ">Tento uživatel nemá žádnou zaznamenanou IP adresu.</p>
+        )}
+        </div>
+      </div>
+
+
+
+
+
+
+
+      </>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
