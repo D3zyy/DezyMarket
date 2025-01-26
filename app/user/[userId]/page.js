@@ -578,16 +578,24 @@ Bude ukončen: {accType?.scheduleToCancel ? 'Ano' : 'Ne'}
 
           {ipWithUsers.otherUsers.length > 0 && (
             <div className="mt-2">
-              <h4 className="font-bold">Other users with this IP:</h4>
+              <h4 className="font-bold mb-2">Stejná ip</h4>
               <ul>
                 {ipWithUsers.otherUsers.map((user) => (
-                  <li key={user.id}>
-                    <a
+                  <li  className="mb-2" key={user.id}>
+                    
+                    <Link
                       href={`/user/${user.id}`}
-                      className="text-blue-500 underline hover:text-blue-700"
+                      target="_blank"
+                      className="underline  "
                     >
-                      {user.fullName}
-                    </a>
+                      <div className="flex flex-row gap-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+</svg>
+   {user.fullName}
+                      </div>
+                   
+                   </Link>
                   </li>
                 ))}
               </ul>
