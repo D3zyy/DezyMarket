@@ -944,7 +944,18 @@ export async function DELETE(req) {
       where: { postId: data.postId }
     });
 
-
+    const timeee = DateTime.now()
+    .setZone('Europe/Prague') // Čas zůstane v českém pásmu
+    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
+     await prisma.managementActions.create({
+       data: { 
+         doneAt: timeee, 
+         fromUserId: session.userId, 
+         toUserId: post.user.id, 
+         info: `${data.pernament ? 'Trvale smazat příspěvek' : 'Smazat příspěvek [zneviditelnit]'}`, 
+         postId: post.id 
+       },
+     });
     if(session.role.privileges > 1 && data.pernament == true){
 
       await prisma.posts.delete({
@@ -967,18 +978,7 @@ export async function DELETE(req) {
       });
     }
 
-     const timeee = DateTime.now()
-     .setZone('Europe/Prague') // Čas zůstane v českém pásmu
-     .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
-      await prisma.managementActions.create({
-        data: { 
-          doneAt: timeee, 
-          fromUserId: session.userId, 
-          toUserId: post.user.id, 
-          info: `${data.pernament ? 'Trvale smazat příspěvek' : 'Smazat příspěvek [zneviditelnit]'}`, 
-          postId: post.id 
-        },
-      });
+    
 
     //ještě z s3 deletnout
     return new Response(JSON.stringify({
