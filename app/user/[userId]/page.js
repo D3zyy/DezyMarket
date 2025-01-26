@@ -315,32 +315,6 @@ return (
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {session?.role?.privileges > 3 &&
 <div className="flex flex-row gap-6 ml-3 mt-2 items-center ">
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 flex-shrink-0">
@@ -437,9 +411,6 @@ Bude ukončen: {accType?.scheduleToCancel ? 'Ano' : 'Ne'}
 
   }`}
 >
-
-      
-
         
         {/* Hodnocení uživatele nebo zpráva, pokud žádná nejsou */}
       <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4`}>
@@ -482,12 +453,6 @@ Bude ukončen: {accType?.scheduleToCancel ? 'Ano' : 'Ne'}
         </div>
       </div>
 
-
-
-
-
-
-
       </>
 }
 
@@ -498,8 +463,6 @@ Bude ukončen: {accType?.scheduleToCancel ? 'Ano' : 'Ne'}
   <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
 </svg>
 
-
-
       {/* Pravá strana - Sekce pro hodnocení */}
       <div
      
@@ -508,9 +471,6 @@ Bude ukončen: {accType?.scheduleToCancel ? 'Ano' : 'Ne'}
 
   }`}
 >
-
-      
-
         
         {/* Hodnocení uživatele nebo zpráva, pokud žádná nejsou */}
      
@@ -615,36 +575,10 @@ Bude ukončen: {accType?.scheduleToCancel ? 'Ano' : 'Ne'}
   )}
 </div>
 
-
-
-
-
-
       </div>
-
-
-
-
-
-
 
       </>
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 {(session?.role?.privileges > 1 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) && (
