@@ -284,74 +284,6 @@ return (
 
 
 
-{(session?.role?.privileges > 1 &&  session?.role?.privileges > userAcc.role.privileges   ||session?.role?.privileges > 3) &&  <>
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-14 mt-4">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
-</svg>
-
-
-
-      {/* Pravá strana - Sekce pro hodnocení */}
-      <div
-     
-  className={`flex scrollbar-hidden flex-col ${ sessionsOfUser.length > 0&&"items-center"} ${
-    sessionsOfUser.length > 0 && sessionsOfUser.length !=1    ? "items-center" : ""
-
-  }`}
->
-
-      
-
-        
-        {/* Hodnocení uživatele nebo zpráva, pokud žádná nejsou */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4`}>
-        {sessionsOfUser.length > 0 ? ( 
-      
-      sessionsOfUser.map((session) => (
-        <div key={session.id} className="relative mt-3 flex flex-col gap-2 max-w-96 max-h-[350px] break-all border-2 dark:border-gray-700 border-gray-300 border-dashed rounded-md p-3" >
-       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-base-100 p-1 rounded-full size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
-</svg>
-
-          <>
-          <div className="flex flex-col gap-4">
-
-          
-               <span className="flex flex-row gap-4">
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-</svg>
-
-{formatDateWithDotsWithTime(session.validFrom)}
-</span>
-<span className="flex flex-row gap-4">
-
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-</svg>
-
-{formatDateWithDotsWithTime(session.validTill)}
-</span>  
-<DeleteSessionBtn sessionId={session.id}/>
-</div>       
-</>
-
-       </div>
-          ) ) 
-        ) : (
-          <p className="text-sm mt-2 text-gray-500  whitespace-nowrap ">Tento uživatel nemá žádnou aktivní session.</p>
-        )}
-        </div>
-      </div>
-
-
-
-
-
-
-
-      </>
-}
 
 
 
@@ -448,6 +380,78 @@ Bude ukončen: {accType?.scheduleToCancel ? 'Ano' : 'Ne'}
 
 </>
 }
+
+{(session?.role?.privileges > 1 &&  session?.role?.privileges > userAcc.role.privileges   ||session?.role?.privileges > 3) &&  <>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-14 mt-4">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
+</svg>
+
+
+
+      {/* Pravá strana - Sekce pro hodnocení */}
+      <div
+     
+  className={`flex scrollbar-hidden flex-col ${ sessionsOfUser.length > 0&&"items-center"} ${
+    sessionsOfUser.length > 0 && sessionsOfUser.length !=1    ? "items-center" : ""
+
+  }`}
+>
+
+      
+
+        
+        {/* Hodnocení uživatele nebo zpráva, pokud žádná nejsou */}
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4`}>
+        {sessionsOfUser.length > 0 ? ( 
+      
+      sessionsOfUser.map((session) => (
+        <div key={session.id} className="relative mt-3 flex flex-col gap-2 max-w-96 max-h-[350px] break-all border-2 dark:border-gray-700 border-gray-300 border-dashed rounded-md p-3" >
+       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-base-100 p-1 rounded-full size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
+</svg>
+
+          <>
+          <div className="flex flex-col gap-4">
+
+          
+               <span className="flex flex-row gap-4">
+               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+</svg>
+
+{formatDateWithDotsWithTime(session.validFrom)}
+</span>
+<span className="flex flex-row gap-4">
+
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+</svg>
+
+{formatDateWithDotsWithTime(session.validTill)}
+</span>  
+<DeleteSessionBtn sessionId={session.id}/>
+</div>       
+</>
+
+       </div>
+          ) ) 
+        ) : (
+          <p className="text-sm mt-2 text-gray-500  whitespace-nowrap ">Tento uživatel nemá žádnou aktivní session.</p>
+        )}
+        </div>
+      </div>
+
+
+
+
+
+
+
+      </>
+}
+
+
+
 {(session?.role?.privileges > 1 && session?.role?.privileges > userAcc?.role?.privileges && session?.userId !== params.userId) && (
   <>
     <div className="flex flex-row gap-4 mt-6 text-center items-center mb-4">
