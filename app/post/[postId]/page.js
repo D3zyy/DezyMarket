@@ -20,6 +20,8 @@ import { handleOpenModalReportLazy } from "@/app/components/ReportPostModalWrapp
 import { EditPostModalWrapperLazy } from "@/app/components/EditPostModalWrapperLazy";
 import { RatePostModalWrapperLazy } from "@/app/components/RateUserModalWrapperLazy";
 import { prisma } from "@/app/database/db";
+import DeletePernamentBtn from "./DeletePernamentBtn";
+import ReVisibleBtn from "./ReVisibleBtn";
 
 const Page = async ({ params }) => {
   let session;
@@ -120,32 +122,34 @@ const Page = async ({ params }) => {
   
 </div>
 <div className="md:mt-0 mt-4 pr-4 pl-4 lg:pr-8 lg:pl-8 md:pl-4  md:pr-4 breadcrumbs text-sm">
-  {!postRecord.visible && <>
-  
-  <div className="flex fley-row gap-4 ">
 
-<button className="btn border-dotted border-orange-600 border-2 flex-shrink hover:border-orange-600 ">  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-orange-500">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-</svg>Obnovit příspěvek</button>
+  
   
   
 
-  <button className="btn border-dotted border-red-600 border-2 flex-shrink hover:border-red-600 ">  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-red-500">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-</svg>Smazat trvale</button>
-  </div>
- 
-  
-  
-  
-  </>}
 {session?.isLoggedIn ? <> 
-      {session?.role?.privileges > postRecord?.user?.role?.privileges && 
+      {(session?.role?.privileges > postRecord?.user?.role?.privileges || session?.role?.privileges > 3) && 
 <div className="flex space-x-4 mt-8">
+
+{postRecord?.user.id != session?.userId && <> 
+
 <EditPostModalWrapperLazy typePost={postRecord?.typeOfPost} idUserOfEditor={session.userId} idUserOfPost={postRecord?.user.id}  roleOfEditor={session.role.privileges} descriptionPost={description} posttId={postRecord?.id} posttName={postRecord?.name} posttPrice={postRecord?.price} postPhoneNumber={postRecord?.phoneNumber} postLocation={postRecord?.location} postCategoryId={postRecord?.category?.id} postSectionId={postRecord?.section?.id} />
+</>}
+{!postRecord.visible && <> 
+
+<ReVisibleBtn />
+
 
   
+  
+{session?.role?.privileges > 2 && 
+<DeletePernamentBtn  postId={postRecord.id}/>
+  
 
+
+}
+</>}
+{postRecord.visible && 
   <a 
     href="#"
     className="btn border-dotted border-red-600 border-2 flex-shrink hover:border-red-600" 
@@ -157,6 +161,7 @@ const Page = async ({ params }) => {
 </svg>
 
   </a>
+}
   <ReportsPostModalWrapperLazy postId={postRecord?.id} />
 </div>
 }</> : ""}
