@@ -137,7 +137,7 @@ const Page = async ({ params }) => {
 </>}
 {!postRecord.visible && <> 
 
-<ReVisibleBtn />
+<ReVisibleBtn  postId={postRecord?.id}/>
 
 
   
