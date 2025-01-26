@@ -9,7 +9,10 @@ async function updatedPost(postId) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ postId }),
+        body: JSON.stringify({
+            postId: postId,
+            pernament: false, 
+          }),
       });
   
       const result = await response.json();

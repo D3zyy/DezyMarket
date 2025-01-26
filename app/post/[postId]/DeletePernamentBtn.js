@@ -10,14 +10,15 @@ function DeletePernamentBtn({postId}) {
     const deletePost = async () => {
         setLoading(true); // Nastavení loading stavu na true
         try {
-          const response = await fetch('/api/deletePostPernament', {
-            method: 'POST',
+          const response = await fetch('/api/posts', {
+            method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                postId
-            }),
+                postId: postId,
+                pernament: true, // Additional data
+              }),
           });
     
           const result = await response.json();

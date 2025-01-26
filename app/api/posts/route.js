@@ -848,11 +848,11 @@ export async function DELETE(req) {
     }
 
     const data = await req.json();
-
-
+    console.log("Togle:",data)
+     
     // Fetch the post and the creator's role
     const post = await prisma.posts.findUnique({
-      where: { id: data.postId , visible: true,},
+      where: { id: data.postId },
       include: { user: { include: { role: true } } }  // Include the user and their role
     });
 
@@ -868,27 +868,36 @@ export async function DELETE(req) {
 
     // If the session user is the post creator, allow removing
     if (post.userId === session.userId) {
-     let haveImages =  await prisma.Image.findMany({
+     let haveImages =  await prisma.image.findMany({
         where: { postId: data.postId }
       });
 
-        //sets its visibility to false istead of removing
-      await prisma.posts.update({
-        where: { id: data.postId },
-        data: { visible: false },
-      });
+      if(session.role.privileges > 1 && data.pernament == true){
 
-     // await prisma.posts.delete({
-      //  where: { id: data.postId }
-      //});
-          //ještě z s3 deletnout
-         // if(haveImages.length > 0){
+        await prisma.posts.delete({
+          where: { id: data.postId }
+        })
+
+              //ještě z s3 deletnout
+              if(haveImages.length > 0){
     
-         //  let res =  await  deleteImagesByPostId(data.postId)
-           // here invalidating path 1000 free per month
-          // let resCloudFront = await invalidateImagesOnCloudFrontByPostId(data.postId)
-               
-           
+                let res =  await  deleteImagesByPostId(data.postId)
+               //  here invalidating path 1000 free per month
+               //>>>  INVALIDATING HERE  <<<
+               // let resCloudFront = await invalidateImagesOnCloudFrontByPostId(data.postId)
+                    
+               }
+      } else{
+        await prisma.posts.update({
+          where: { id: data.postId },
+          data: { visible: false },
+        });
+      }
+        //sets its visibility to false istead of removing
+     
+
+ ;
+    
        
       return new Response(JSON.stringify({
         message: 'Příspěvek byl úspěšně smazán'
@@ -931,27 +940,44 @@ export async function DELETE(req) {
       });
     }
 
-    let haveImages =  await prisma.Image.findMany({
+    let haveImages =  await prisma.image.findMany({
       where: { postId: data.postId }
     });
 
-    await prisma.posts.update({
-      where: { id: data.postId },
-      data: { visible: false },
-    });
-  //  await prisma.posts.delete({
-    //  where: { id: data.postId }
-    //});
-    if(haveImages.length > 0){
- 
-      let res =  await  deleteImagesByPostId(data.postId)
-      
-     } 
+
+    if(session.role.privileges > 1 && data.pernament == true){
+
+      await prisma.posts.delete({
+        where: { id: data.postId }
+      })
+
+            //ještě z s3 deletnout
+            if(haveImages.length > 0){
+  
+              let res =  await  deleteImagesByPostId(data.postId)
+             //  here invalidating path 1000 free per month
+             //>>>  INVALIDATING HERE  <<<
+             // let resCloudFront = await invalidateImagesOnCloudFrontByPostId(data.postId)
+                  
+             }
+    } else{
+      await prisma.posts.update({
+        where: { id: data.postId },
+        data: { visible: false },
+      });
+    }
+
      const timeee = DateTime.now()
      .setZone('Europe/Prague') // Čas zůstane v českém pásmu
      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
       await prisma.managementActions.create({
-        data: { doneAt: timeee , fromUserId: session.userId,toUserId:  post.user.id, info: "Smazat příspěvek [zneviditelnit]" , postId: post.id },
+        data: { 
+          doneAt: timeee, 
+          fromUserId: session.userId, 
+          toUserId: post.user.id, 
+          info: `${data.pernament ? 'Trvale smazat příspěvek' : 'Smazat příspěvek [zneviditelnit]'}`, 
+          postId: post.id 
+        },
       });
 
     //ještě z s3 deletnout
