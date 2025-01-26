@@ -113,8 +113,7 @@ if(session?.role?.privileges > 3){
   allRoles = await prisma.roles.findMany({});
   
 }
-//console.log(session)
-//console.log(userAcc)
+
  emojiForAcc = false
 if(accType?.priority > 1){
      emojiForAcc = await prisma.AccountType.findMany({
@@ -129,7 +128,7 @@ console.log(e)
           await prisma.$disconnect(); // Uzavřete připojení po dokončení
       }
 
-//console.log(session)
+
 function formatDateWithDotsWithTime(dateInput) {
   // Zjistíme, zda je vstup instancí Date nebo ISO řetězec
   const dateString =
@@ -162,7 +161,7 @@ function formatDateWithDotsWithoutTime(dateInput) {
   const [year, month, day] = datePart?.split('-'); // Rozdělíme datum
   return `${day}.${month}.${year}`; // Sestavíme výstup
 }
-//console.log(bansOfUser)
+
 
 
 function checkBans(bansOfUser) {
@@ -223,7 +222,7 @@ if(session?.role?.privileges > 2   ){
 }
 
 isBanned = checkBans(bansOfUser)
-console.log('Is user banned:', isBanned);
+
 if(session?.role?.privileges > 3 && userAcc?.role?.privileges > 1   ){
   allManagementsActions = await prisma.managementActions.findMany({
     where: {
@@ -236,7 +235,7 @@ if(session?.role?.privileges > 3 && userAcc?.role?.privileges > 1   ){
 
     },
   });
-console.log("Mana act:",allManagementsActions)
+
 }
 
 
