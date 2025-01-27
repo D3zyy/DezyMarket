@@ -132,8 +132,7 @@ function MenuByRole({supTick,reports,privileges}) {
               </div>
             ))}
 
-            {/* Oddělovač mezi jednotlivými uživatelskými reporty */}
-            {idx < Object.values(group.reports).length - 1 && <hr className="my-2" />}
+          
           </div>
         ))}
       </div>
