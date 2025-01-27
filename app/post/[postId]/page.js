@@ -241,7 +241,7 @@ const Page = async ({ params }) => {
            
 
             <div className="flex items-center">
-  <Link  href={`/user/${postRecord?.user?.id}`}>
+  <Link  target="_blank" href={`/user/${postRecord?.user?.id}`}>
     <strong>
       <span className="underline mr-3  whitespace-nowrap">{postRecord?.user?.fullName}</span>
     </strong>
