@@ -26,8 +26,7 @@ export async function POST(request) {
     }
 
     const { ticketId,type } = await request.json();
-    console.log("ticketId:",ticketId)
-    console.log("Typ:",type)
+  
 
     if(type == 'report'){
         const foundActiveReport = await prisma.postReport.findFirst({
