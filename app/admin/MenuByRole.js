@@ -226,11 +226,31 @@ function MenuByRole({supTick,reports,privileges}) {
 
       {allrSupTick.map((ticket) => (
         <div className="space-y-4 w-2/4 min-w-72 bg-base-200 flex flex-col p-4 rounded-lg shadow-sm">
-        <div key={ticket.id}>
+        <div key={ticket.id} >
+          <div className="flex flex-row gap-4 items-center">
           <div className="badge badge-lg border-yellow-500 text-yellow-500 font-bold">
             Support
           </div>
-          <div className="flex flex-row gap-4">
+          <button
+  disabled={loading}
+  onClick={() => setDone(group.post.id, 'report')}
+  className="btn-sm btn bg-slate-300 dark:bg-neutral break-all"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="size-6"
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+  </svg>
+  <span className="hidden sm:inline">Vyřešeno</span>
+</button>
+          </div>
+         
+          <div className="flex flex-row gap-4 mt-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -247,7 +267,7 @@ function MenuByRole({supTick,reports,privileges}) {
             </svg>
             {ticket.email}
           </div>
-          <div className="flex flex-row gap-4">
+          <div className="flex flex-row gap-4 mt-4">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-orange-600 flex-shrink-0">
   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
 </svg>
@@ -255,7 +275,7 @@ function MenuByRole({supTick,reports,privileges}) {
            
             {formatDate(ticket.doneAt)}
           </div>
-          <div className="flex flex-row gap-4">
+          <div className="flex flex-row gap-4 mt-4">
           <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -270,8 +290,9 @@ function MenuByRole({supTick,reports,privileges}) {
                 d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
               />
             </svg>
+            {ticket.text}
           </div>
-          <div className="flex flex-row gap-4">
+          <div className="flex flex-row gap-4 mt-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

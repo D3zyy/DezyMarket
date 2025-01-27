@@ -315,6 +315,7 @@ model SupportTickets {
   id     Int      @id @default(autoincrement())
   email  String
   doneAt DateTime
+  text   String
   active Boolean  @default(true)
 }
 
