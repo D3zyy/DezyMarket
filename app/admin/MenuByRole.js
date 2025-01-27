@@ -26,94 +26,110 @@ function MenuByRole({supTick,reports,privileges}) {
       case "Errors":
         return <div>Chyby</div>;
       case "Tickets":
-          return<>   <div className="space-y-4 w-2/4">
-          {Object.values(
-            allReports.reduce((groups, report) => {
-              const userId = report.user.id;
-              if (!groups[userId]) {
-                groups[userId] = {
-                  user: report.user,
-                  reports: [],
-                  topic: report.topic,
-                  reportedAt: report.reportedAt,
-                };
-              }
-              groups[userId].reports.push(report);
-              return groups;
-            }, {})
-          ).map((group, index) => (
-            <div key={index} className="flex flex-col space-y-4 bg-base-200 p-4 rounded-lg shadow-sm">
-              <div className="flex items-center space-x-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 text-gray-600"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                  />
-                </svg>
-                <Link
-                  href={`/user/${group.user.id}`}
-                  className="underline  hover:underline"
-                  target="_blank"
-                >
-                  {group.user.fullName}
-                </Link>
-              </div>
-              {group.topic && (
-                <div className="flex items-center space-x-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 text-orange-600 flex-shrink-0"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                  />
-                </svg>
-                <span className="text-sm text-gray-600 break-all">{group.topic}</span>
-              </div>
-              )}
+          return<>  
+          
+          
+          
+          
+          <div className="space-y-4 w-2/4">
+  {Object.values(
+    allReports.reduce((groups, report) => {
+      const postId = report.postId;  // Group by postId instead of userId
+      if (!groups[postId]) {
+        groups[postId] = {
+          post: report.post,  // Keep the post data for display
+          reports: [],
+        };
+      }
+      groups[postId].reports.push(report);
+      return groups;
+    }, {})
+  ).map((group, index) => (
+    <div key={index} className="flex flex-col space-y-4 bg-base-200 p-4 rounded-lg shadow-sm">
+      <div className="flex items-center space-x-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6 text-gray-600"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+          />
+        </svg>
+        <Link
+          href={`/user/${group.reports[0].user.id}`}
+          className="underline hover:underline"
+          target="_blank"
+        >
+          {group.reports[0].user.fullName}
+        </Link>
+      </div>
+      {group.reports[0].topic && (
+        <div className="flex items-center space-x-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6 text-orange-600 flex-shrink-0"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+            />
+          </svg>
+          <span className="text-sm text-gray-600 break-all">{group.reports[0].topic}</span>
+        </div>
+      )}
 
-               <div className="flex items-center  space-x-4">
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-orange-600">
-<path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-</svg>
-
-<span className="text-sm text-gray-600">
-<span className="text-sm text-gray-600">
-{new Date(group.reportedAt).toISOString()
-.replace('T', ' ') // Nahrazení 'T' mezerou pro lepší formát
-.substring(0, 10) // Získá datum (YYYY-MM-DD)
-.split('-') // Rozdělí na jednotlivé části (rok, měsíc, den)
-.map((item, index) => index !== 0 ? parseInt(item, 10) : item) // Převede den a měsíc na čísla bez přední nuly
-.reverse() // Obrátí pořadí na [den, měsíc, rok]
-.join('.') // Spojí do požadovaného formátu s tečkou a mezerou
-+ ' ' + new Date(group.reportedAt).toISOString().substring(11, 19)} {/* Část pro čas */}
-</span>
-</span>
+      <div className="flex items-center space-x-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-6 text-orange-600"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+          />
+        </svg>
+        <span className="text-sm text-gray-600">
+          {new Date(group.reports[0].reportedAt)
+            .toISOString()
+            .replace('T', ' ') // Replace 'T' with a space for better formatting
+            .substring(0, 10) // Get the date (YYYY-MM-DD)
+            .split('-') // Split into parts (year, month, day)
+            .map((item, index) => (index !== 0 ? parseInt(item, 10) : item)) // Convert day and month to numbers without leading zero
+            .reverse() // Reverse to [day, month, year]
+            .join('.')} 
+          {` ${new Date(group.reports[0].reportedAt).toISOString().substring(11, 19)}`} {/* Time part */}
+        </span>
+      </div>
+      
+      <div className="space-y-2">
+        {group.reports.map((report, idx) => (
+          <div key={idx} className="p-4 rounded-lg bg-base-100">
+            <p className="font-semibold text-red-500">{report.reason}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  ))}
 </div>
-              <div className="space-y-2">
-                {group.reports.map((report, idx) => (
-                  <div key={idx} className="p-4 rounded-lg bg-base-100">
-                    <p className="font-semibold text-red-500">{report.reason}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div></> 
+          
+          
+          </> 
       case "Settings":
         return <div>{userPrivileges > 2 && 'Nastavení' }</div>;
     }
