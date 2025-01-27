@@ -27,21 +27,29 @@ function MenuByRole({supTick,reports,privileges}) {
         return <div>Chyby</div>;
       case "Tickets":
           return<>  
-          
-          
-          
-          
           <div className="space-y-4 w-2/4">
   {Object.values(
     allReports.reduce((groups, report) => {
-      const postId = report.postId;  // Group by postId instead of userId
+      const postId = report.postId;  // Sesbíráme reporty podle postId
       if (!groups[postId]) {
         groups[postId] = {
-          post: report.post,  // Keep the post data for display
+          post: report.post,  // Uchováme data o příspěvku
           reports: [],
         };
       }
-      groups[postId].reports.push(report);
+
+      // Seskupíme reporty podle uživatele a příspěvku
+      const userId = report.user.id;
+      if (!groups[postId].reports[userId]) {
+        groups[postId].reports[userId] = {
+          user: report.user,  // Uchováme data o uživatele
+          reasons: [],
+          reportedAt: report.reportedAt,  // Uchováme čas prvního reportu uživatele
+          topic: report.topic, // Uchováme téma (pokud existuje)
+        };
+      }
+      groups[postId].reports[userId].reasons.push(report.reason);  // Přidáme důvod reportu
+
       return groups;
     }, {})
   ).map((group, index) => (
@@ -53,7 +61,7 @@ function MenuByRole({supTick,reports,privileges}) {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-6 h-6 text-gray-600"
+          className="size-6 text-gray-600"
         >
           <path
             strokeLinecap="round"
@@ -62,80 +70,79 @@ function MenuByRole({supTick,reports,privileges}) {
           />
         </svg>
         <Link
-          href={`/user/${group.reports[0].user.id}`}
+          href={`/post/${group.post.id}`}  // Odkaz na příspěvek
           className="underline hover:underline"
           target="_blank"
         >
-          {group.reports[0].user.fullName}
+          {group.post.name} {/* Název příspěvku */}
         </Link>
       </div>
 
-      {/* Add SVG icon and link to the post */}
-      <div className="flex items-center space-x-4">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-600">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
-        </svg>
-        <Link
-          href={`/post/${group.post.id}`}  // Link to the post
-          className="underline"
-          target="_blank"
-        >
-          {group.post.name}
-        </Link>
-      </div>
-
-      {group.reports[0].topic && (
-        <div className="flex items-center space-x-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6 text-orange-600 flex-shrink-0"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-            />
-          </svg>
-          <span className="text-sm text-gray-600 break-all">{group.reports[0].topic}</span>
-        </div>
-      )}
-
-      <div className="flex items-center space-x-4">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="size-6 text-orange-600"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-          />
-        </svg>
-        <span className="text-sm text-gray-600">
-          {new Date(group.reports[0].reportedAt)
-            .toISOString()
-            .replace('T', ' ') // Replace 'T' with a space for better formatting
-            .substring(0, 10) // Get the date (YYYY-MM-DD)
-            .split('-') // Split into parts (year, month, day)
-            .map((item, index) => (index !== 0 ? parseInt(item, 10) : item)) // Convert day and month to numbers without leading zero
-            .reverse() // Reverse to [day, month, year]
-            .join('.')} 
-          {` ${new Date(group.reports[0].reportedAt).toISOString().substring(11, 19)}`} {/* Time part */}
-        </span>
-      </div>
-      
-      <div className="space-y-2">
-        {group.reports.map((report, idx) => (
+      <div className="space-y-4">
+        {Object.values(group.reports).map((userReport, idx) => (
           <div key={idx} className="p-4 rounded-lg bg-base-100">
-            <p className="font-semibold text-red-500">{report.reason}</p>
+            <div className="flex items-center space-x-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6 text-gray-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                />
+              </svg>
+              <Link
+                href={`/user/${userReport.user.id}`}  // Odkaz na uživatele
+                className="underline hover:underline"
+                target="_blank"
+              >
+                {userReport.user.fullName} {/* Jméno uživatele */}
+              </Link>
+            </div>
+
+            {/* Zobrazení data a času prvního reportu tohoto uživatele */}
+            <div className="flex items-center space-x-4 whitespace-nowrap flex-shrink-0 mt-2 mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-orange-600  flex-shrink-0 ">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+</svg>
+
+              <span className="text-sm text-gray-600 break-all">
+                {new Date(userReport.reportedAt).toISOString()
+                  .replace('T', ' ') // Nahrazení 'T' mezerou pro lepší formát
+                  .substring(0, 10) // Získá datum (YYYY-MM-DD)
+                  .split('-') // Rozdělí na jednotlivé části (rok, měsíc, den)
+                  .map((item, index) => index !== 0 ? parseInt(item, 10) : item) // Převede den a měsíc na čísla bez přední nuly
+                  .reverse() // Obrátí pořadí na [den, měsíc, rok]
+                  .join('.') // Spojí do požadovaného formátu s tečkou a mezerou
+                  + ' ' + new Date(userReport.reportedAt).toISOString().substring(11, 19)} {/* Část pro čas */}
+              </span>
+            </div>
+
+            {/* Pokud je k dispozici topic (téma), zobrazíme ho */}
+            {userReport.topic && (
+              <div className="flex flex-row gap-4  break-all flex-shrink-0 mb-4 ">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-orange-600 flex-shrink-0 ">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+</svg>
+
+                <span className="text-sm text-gray-600">{userReport.topic}</span>
+              </div>
+            )}
+
+            {/* Důvody reportu */}
+            {userReport.reasons.map((reason, reasonIdx) => (
+              <div key={reasonIdx} className="space-y-2">
+                <p className="font-semibold text-red-500">{reason}</p>  {/* Důvod reportu */}
+              </div>
+            ))}
+
+            {/* Oddělovač mezi jednotlivými uživatelskými reporty */}
+            {idx < Object.values(group.reports).length - 1 && <hr className="my-2" />}
           </div>
         ))}
       </div>
@@ -143,6 +150,11 @@ function MenuByRole({supTick,reports,privileges}) {
   ))}
 </div>
           
+
+
+
+
+
           
           </> 
       case "Settings":
