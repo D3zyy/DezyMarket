@@ -41,7 +41,7 @@ const Page = async () => {
      
     ]);
 
-    console.log(suppTickets); // Pretty print with indentation
+   // console.log(suppTickets); // Pretty print with indentation
   if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }

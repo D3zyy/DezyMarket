@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { DateTime } from "luxon";
+
 
 function MenuByRole({supTick,reports,privileges}) {
  const [loading, setLoading] = useState(false); 
@@ -228,12 +228,12 @@ function MenuByRole({supTick,reports,privileges}) {
         <div className="space-y-4 w-2/4 min-w-72 bg-base-200 flex flex-col p-4 rounded-lg shadow-sm">
         <div key={ticket.id} >
           <div className="flex flex-row gap-4 items-center">
-          <div className="badge badge-lg border-yellow-500 text-yellow-500 font-bold">
+          <div className="badge badge-lg border-blue-500  text-blue-700 font-bold">
             Support
           </div>
           <button
   disabled={loading}
-  onClick={() => setDone(group.post.id, 'report')}
+  onClick={() => setDone(ticket.id, 'support')}
   className="btn-sm btn bg-slate-300 dark:bg-neutral break-all"
 >
   <svg

@@ -46,6 +46,25 @@ export async function POST(request) {
             where: { postId: ticketId , active: true},
             data:{ active: false, doneByUserId: session.userId}
           });
+    } else if(type =='support'){
+
+
+      const foundActiveSupport = await prisma.supportTickets.findFirst({
+        where: { id: ticketId , active: true},
+      });
+      if(!foundActiveSupport){
+        return new Response(
+            JSON.stringify({ message: 'Tiket nenalezen nebo již vyřešen' }),
+            {
+              status: 404,
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+      }
+   await prisma.supportTickets.updateMany({
+        where: { id: ticketId , active: true},
+        data:{ active: false, doneByUserrrr: session.userId}
+      });
     }
    
 

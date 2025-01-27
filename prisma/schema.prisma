@@ -27,6 +27,7 @@ model Users {
   bans                       Bans[]               @relation("BannedUser")
   bansGiven                  Bans[]               @relation("BannedByUser")
   posts                      Posts[]
+  supportTickets              SupportTickets[]
   sessions                   Sessions[]
   termsOfUseAndPrivatePolicy Boolean              @default(false)
   verifiedEmail              Boolean              @default(false) // New field to track email verification status
@@ -317,6 +318,8 @@ model SupportTickets {
   doneAt DateTime
   text   String
   active Boolean  @default(true)
+  doneByUserrrr   String?
+  doneByUser    Users?     @relation(fields: [doneByUserrrr], references: [id],onDelete: Cascade)
 }
 
 model PostViews {
