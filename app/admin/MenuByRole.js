@@ -2,7 +2,7 @@
 "use client"
 import React, { useState } from "react";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 function MenuByRole({supTick,reports,privileges}) {
  const [loading, setLoading] = useState(false); 
   const [activeContent, setActiveContent] = useState("Tickets"); 
@@ -10,22 +10,25 @@ function MenuByRole({supTick,reports,privileges}) {
   const [allrSupTick, setAllrSupTick] = useState(supTick); 
   const [allReports, setallReports] = useState(reports); 
 
+  const router = useRouter()
 
-
-  async function setDone (ticketId,type){
+  const setDone = async (ticketId,type) => {
+  
+    setLoading(true)
     try {
-      const response = await fetch("/api/setDoneTicket", {
+     let  response =  await fetch("/api/setDoneTicket", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ticketId: ticketId, type: type }),
       });
-  
+      let result = await response.json();
+      window.location.reload()
      
     } catch (error) {
-     
-    } finally {
-      setLoading(false)
-    }
+      console.log("1")
+    } 
+
+
    }
 
 
@@ -82,12 +85,26 @@ function MenuByRole({supTick,reports,privileges}) {
         >
           {group.post.name} {/* Název příspěvku */}
         </Link>
-  
-        <button onClick={ () => {setDone(group.post.id,'report')}} className="btn-sm btn btn-neutral break-all"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-</svg>
-Vyřešeno</button>
- 
+
+    
+        <button
+  disabled={loading}
+  onClick={() => setDone(group.post.id, 'report')}
+  className="btn-sm btn btn-neutral break-all"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="size-6"
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+  </svg>
+  <span className="hidden sm:inline">Vyřešeno</span>
+</button>
+
         
       </div>
 

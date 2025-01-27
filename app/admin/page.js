@@ -3,7 +3,7 @@ import MenuByRole from './MenuByRole'
 import { getSession } from '../authentication/actions'
 import { redirect } from 'next/navigation';
 import { prisma } from '../database/db';
-import { select } from '@nextui-org/react';
+
 
 const Page = async () => {
 
@@ -41,7 +41,7 @@ const Page = async () => {
      
     ]);
 
-    console.log(JSON.stringify(reports, null, 2)); // Pretty print with indentation
+    console.log(suppTickets); // Pretty print with indentation
   if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }

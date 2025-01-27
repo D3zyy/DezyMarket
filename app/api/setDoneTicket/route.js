@@ -1,14 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
-import { DateTime } from "luxon"; // Pokud ještě není importováno
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 
 export async function POST(request) {
   try {
     const session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
-      return new NextResponse(
+      return new Response(
         JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na nastavení základní typ účtu. Session nebyla nalezena' }),
         {
           status: 500,
@@ -17,7 +16,7 @@ export async function POST(request) {
       );
     }
     if(session.role.privileges <= 1){
-        return new NextResponse(
+        return new Response(
             JSON.stringify({ message: 'Na tento příkaz nemáte práva' }),
             {
               status: 404,
@@ -35,7 +34,7 @@ export async function POST(request) {
             where: { postId: ticketId , active: true},
           });
           if(!foundActiveReport){
-            return new NextResponse(
+            return new Response(
                 JSON.stringify({ message: 'Tiket nenalezen nebo již vyřešen' }),
                 {
                   status: 404,
@@ -57,16 +56,16 @@ export async function POST(request) {
 
 
     return new NextResponse(
-      JSON.stringify({ message: 'Úspěšně označen ticket jako vyřešený' }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+        JSON.stringify({ message: 'Úspěšná aktualizace  ticketu' }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
 
   } catch (error) {
     console.error('Chyba při vytváření požadavku na nastavení základního typu předplatného: ', error);
-    return new NextResponse(
+    return new Response(
       JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na základní typ předplatného' }),
       {
         status: 500,
