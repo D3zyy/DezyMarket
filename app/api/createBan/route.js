@@ -97,6 +97,29 @@ export async function POST(req) {
         userId: userId,
       },
     });
+    function formatDateWithDotsWithTime(dateInput) {
+      // Zjistíme, zda je vstup instancí Date nebo ISO řetězec
+      const dateString =
+        dateInput instanceof Date
+          ? dateInput.toISOString()
+          : typeof dateInput === 'string'
+          ? dateInput
+          : null;
+    
+      // Pokud není platný vstup, vrátíme prázdný řetězec nebo chybu
+      if (!dateString || !dateString.includes('T')) {
+        console.error('Invalid date input:', dateInput);
+        return '';
+      }
+    
+      // Rozdělíme ISO string na části (datum a čas)
+      const [datePart, timePart] = dateString.split('T');
+      const [year, month, day] = datePart.split('-'); // Rozdělíme datum
+      const [hours, minutes] = timePart.split(':'); // Vezmeme pouze hodiny a minuty
+    
+      // Sestavíme výstup
+      return `${day}.${month}.${year} ${hours}:${minutes}`;
+    }
 const nowww = DateTime.now()
         .setZone('Europe/Prague')
         .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
@@ -107,7 +130,7 @@ const nowww = DateTime.now()
               nowww,
             
             toUserId: userId,
-            info: `Ban  trvale: ${permanent} od: ${bannedFrom}: do: ${bannedTo} duvod: ${reason}`
+            info: `Ban  trvale: ${permanent} od: ${formatDateWithDotsWithTime(bannedFrom)}: do: ${formatDateWithDotsWithTime(bannedTo)} duvod: ${reason}`
           },
         });
     return new Response(
