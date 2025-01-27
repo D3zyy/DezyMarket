@@ -83,7 +83,7 @@ function MenuByRole({supTick,reports,privileges}) {
 }
   </span>
 </p>
-</> : <span className="text-gray-500">  Žádny tikety nebyli nalezeny</span>}
+</> : <span className="text-gray-500">  Žádné tikety nebyli nalezeny</span>}
 
 </div>
 

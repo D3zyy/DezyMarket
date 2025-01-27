@@ -37,11 +37,11 @@ const Page = async () => {
           },
         },
       }),
-      prisma.supportTickets.findMany({where: { active: true }, }),
+      prisma.supportTickets.findMany({where: { active: true }, include : {ipOfusrOnsup : true} }),
      
     ]);
 
-   // console.log(suppTickets); // Pretty print with indentation
+    console.log(suppTickets); // Pretty print with indentation
   if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }

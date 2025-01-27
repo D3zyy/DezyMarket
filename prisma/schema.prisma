@@ -92,6 +92,7 @@ model ProfilePicture {
 model IpAddresses {
   id    Int                  @id @default(autoincrement())
   value String
+  supportTickets   SupportTickets[]   // One-to-many relation to SupportTickets
   users IpAddressesOnUsers[] // Relation to join table
 }
 
@@ -318,6 +319,8 @@ model SupportTickets {
   doneAt DateTime
   text   String
   active Boolean  @default(true)
+  ipOfUsr       Int?
+  ipOfusrOnsup  IpAddresses? @relation(fields: [ipOfUsr], references: [id], onDelete: Cascade)
   doneByUserrrr   String?
   doneByUser    Users?     @relation(fields: [doneByUserrrr], references: [id],onDelete: Cascade)
 }
