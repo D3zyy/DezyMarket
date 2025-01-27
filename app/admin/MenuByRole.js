@@ -68,19 +68,26 @@ function MenuByRole({supTick,reports,privileges}) {
   </span>
 </p>
 <p className="mb-3 text-sm font-medium text-gray-600">
-  Poslední ticket:  
+  Poslední ticket:
   <span className="ml-2 text-gray-500">
-  {allReports.length > 0 ? 
-  (() => {
-    const latestReportDate = new Date(Math.max(...reports.map(report => new Date(report.reportedAt).getTime())));
-    const isoString = latestReportDate.toISOString();
-    const [year, month, day] = isoString.substring(0, 10).split('-'); // Rozebereme datum na rok, měsíc a den
-    const datePart = `${parseInt(day, 10)}.${parseInt(month, 10)}.${year}`; // Odstranění nul na začátku
-    const timePart = isoString.substring(11, 19); // HH:MM:SS
-    return `${datePart} ${timePart}`;
-  })()
-  : 'Žádný report'
-}
+    {allReports.length > 0 ? 
+      (() => {
+        // Finding the latest ticket by 'doneAt' (compare with reportedAt)
+        const latestReportDate = new Date(Math.max(...allReports.map(report => new Date(report.reportedAt).getTime())));
+
+        // Check if there's a newer ticket (doneAt) than the latest report
+        const latestTicketDate = new Date(Math.max(...allrSupTick.map(ticket => new Date(ticket.doneAt).getTime())));
+
+        // If the latest ticket's doneAt is more recent than the latest report's reportedAt, use doneAt
+        const finalDate = latestTicketDate > latestReportDate ? latestTicketDate : latestReportDate;
+
+        const isoString = finalDate.toISOString();
+        const [year, month, day] = isoString.substring(0, 10).split('-'); // Split date into year, month, day
+        const datePart = `${parseInt(day, 10)}.${parseInt(month, 10)}.${year}`; // Remove leading zeros
+        const timePart = isoString.substring(11, 19); // HH:MM:SS
+        return `${datePart} ${timePart}`;
+      })()
+    : 'Žádný report'}
   </span>
 </p>
 </> : <span className="text-gray-500">  Žádné tikety nebyli nalezeny</span>}
@@ -113,7 +120,7 @@ function MenuByRole({supTick,reports,privileges}) {
       return groups;
     }, {})
   ).map((group, index) => (
-    <div key={index} className="flex flex-col space-y-4 bg-base-200 p-4 rounded-lg shadow-sm">
+    <div key={index + 14114} className="flex flex-col space-y-4 bg-base-200 p-4 rounded-lg shadow-sm">
             <div className="badge badge-lg  font-bold">Report</div>
       <div className="flex items-center space-x-4">
 
@@ -154,7 +161,7 @@ function MenuByRole({supTick,reports,privileges}) {
 
       <div className="space-y-4">
         {Object.values(group.reports).map((userReport, idx) => (
-          <div key={idx} className="p-4 rounded-lg bg-base-100">
+          <div key={idx + 52890} className="p-4 rounded-lg bg-base-100">
             <div className="flex items-center space-x-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -210,7 +217,7 @@ function MenuByRole({supTick,reports,privileges}) {
 
             {/* Důvody reportu */}
             {userReport.reasons.map((reason, reasonIdx) => (
-              <div key={reasonIdx} className="space-y-2">
+              <div key={reasonIdx + 5982} className="space-y-2">
                 <p className="font-semibold text-red-500">{reason}</p>  {/* Důvod reportu */}
               </div>
             ))}
@@ -226,7 +233,7 @@ function MenuByRole({supTick,reports,privileges}) {
 
       {allrSupTick.map((ticket) => (
         <div className="space-y-4 w-2/4 min-w-72 bg-base-200 flex flex-col p-4 rounded-lg shadow-sm">
-        <div key={ticket.id} >
+        <div key={ticket.id +42} >
           <div className="flex flex-row gap-4 items-center">
           <div className="badge badge-lg border-2    font-bold">
             Support
