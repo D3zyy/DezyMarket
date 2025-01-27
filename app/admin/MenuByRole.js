@@ -64,7 +64,7 @@ function MenuByRole({supTick,reports,privileges}) {
 <p className=" mb-2 text-sm font-medium text-gray-600">
   Počet ticketů: 
   <span className="ml-2 text-gray-500">
-    {[...new Set(reports.map(report => report.user.id))].length}
+    {[...new Set(allReports.map(report => report.user.id))].length + allrSupTick.length}
   </span>
 </p>
 <p className="mb-3 text-sm font-medium text-gray-600">
