@@ -93,6 +93,7 @@ const ProfileNavBarClient = ({ session }) => {
 </svg>
  Můj profil</a>
             </li>
+            {session.role.privileges > 1 &&
             <li>
                <a
               className="mt-2  text-red-500"
@@ -109,7 +110,7 @@ const ProfileNavBarClient = ({ session }) => {
               </a>
             </li>
            
-
+}
             <li className="mt-1">
               
               <LogOutButton
