@@ -312,9 +312,17 @@ model PostReport {
   topic        String?
   reason       String?  @default("")
   reportedAt   DateTime 
+  active       Boolean   @default(true)
   post         Posts    @relation(fields: [postId], references: [id], onDelete: Cascade) // Link to Posts table
   user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade) 
   @@index([postId]) // Ensure there is an index on postId if required
+}
+
+model SupportTickets {
+  id           Int      @id @default(autoincrement())
+  email        String
+  doneAt       DateTime 
+  active       Boolean   @default(true)
 }
 
 model PostViews {
