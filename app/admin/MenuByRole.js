@@ -114,7 +114,7 @@ function MenuByRole({supTick,reports,privileges}) {
     }, {})
   ).map((group, index) => (
     <div key={index} className="flex flex-col space-y-4 bg-base-200 p-4 rounded-lg shadow-sm">
-            <div className="badge badge-lg border-red-500 text-red-500 font-bold">Report</div>
+            <div className="badge badge-lg  font-bold">Report</div>
       <div className="flex items-center space-x-4">
 
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 text-gray-600 flex-shrink-0" >
@@ -228,7 +228,7 @@ function MenuByRole({supTick,reports,privileges}) {
         <div className="space-y-4 w-2/4 min-w-72 bg-base-200 flex flex-col p-4 rounded-lg shadow-sm">
         <div key={ticket.id} >
           <div className="flex flex-row gap-4 items-center">
-          <div className="badge badge-lg border-blue-500  text-blue-700 font-bold">
+          <div className="badge badge-lg border-2    font-bold">
             Support
           </div>
           <button
