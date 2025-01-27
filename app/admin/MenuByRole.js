@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 
 function MenuByRole({privileges}) {
-  const [activeContent, setActiveContent] = useState("Users"); // Výchozí obsah
-  const [userPrivileges, setUserPrivileges] = useState(privileges); // Výchozí obsah
+  const [activeContent, setActiveContent] = useState("Users"); 
+  const [userPrivileges, setUserPrivileges] = useState(privileges); 
+  const [users, setUsers] = useState([]); 
+  const [tickets, setTickets] = useState([]); 
 
   const renderContent = () => {
     switch (activeContent) {
