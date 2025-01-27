@@ -121,13 +121,18 @@ export async function POST(req) {
    
       for (const reason of data.reasons) {
         await prisma.postReport.create({
-            data: {
-                reportedAt: localISODateFixedOffset,
-                postId: data.postId,
-                userId: session.userId,
-                reason: reason,
-                topic: !insertedTopic && data.extraInfo ? data.extraInfo : null,
+          data: {
+            reportedAt: localISODateFixedOffset,
+  
+            reason: reason,
+            topic: !insertedTopic && data.extraInfo ? data.extraInfo : null,
+            post: {
+              connect: { id: data.postId }, // Připojení k existujícímu záznamu v Posts
             },
+            user: {
+              connect: { id: session.userId }, // Připojení k existujícímu záznamu v Users
+            },
+          },
         });
 
         if (data.extraInfo && !insertedTopic) {

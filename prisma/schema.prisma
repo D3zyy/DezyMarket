@@ -4,7 +4,6 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-
 //    !!!!!!!!!!§!!!!!! Poznámka je nutné po incializaci vložit do  Roles tabulky roly s name : uzivatel s privilegii 1  a admin  s privilegii 2 a role spravce s privilegii 3 a role Dezy s privilegii 4!!!!!!!!!!!!!!!!!!!
 
 generator client {
@@ -15,167 +14,159 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
 model Users {
-  id                          String                 @id @default(uuid()) @unique
-  fullName                    String
-  email                       String              @unique
-  password                    String              @db.VarChar(255)
-  dateOfRegistration          DateTime          
-  roleId                      Int
-  role                        Roles               @relation(fields: [roleId], references: [id])
-  bans        Bans[]   @relation("BannedUser")
-  bansGiven   Bans[]   @relation("BannedByUser")
-  posts                       Posts[]
-  sessions                    Sessions[]
-  termsOfUseAndPrivatePolicy  Boolean             @default(false)
-  verifiedEmail               Boolean             @default(false) // New field to track email verification status
-  verificationToken           VerificationTokens? // Optional relation to VerificationToken
-  numberOfTries               NumberOfTries?
-  postViews                   PostViews[]         // One-to-many relationship with PostViews
-  profilePicture              ProfilePicture[]    
-  postReport                  PostReport[]
-  ipAddresses                 IpAddressesOnUsers[] // Relation to join table
-  userRatingsGiven            UserRatings[]       @relation("RatingsGiven")
-  userRatingsReceived         UserRatings[]       @relation("RatingsReceived")
-  fromUser            ManagementActions[]       @relation("ActionDoneBy")
-  toUser         ManagementActions[]       @relation("ActionDoneTo")
-  accounts   AccountTypeUsers[] // Relace "jeden Users má mnoho AccountTypeUsers"
-  upgrades AccountUpgrades[] 
+  id                         String               @id @unique @default(uuid())
+  fullName                   String
+  email                      String               @unique
+  password                   String               @db.VarChar(255)
+  dateOfRegistration         DateTime
+  reportsDone                PostReport[]       @relation("DoneByUser") // Reference to reports where the user is "doneBy"
+  roleId                     Int
+  role                       Roles                @relation(fields: [roleId], references: [id])
+  bans                       Bans[]               @relation("BannedUser")
+  bansGiven                  Bans[]               @relation("BannedByUser")
+  posts                      Posts[]
+  sessions                   Sessions[]
+  termsOfUseAndPrivatePolicy Boolean              @default(false)
+  verifiedEmail              Boolean              @default(false) // New field to track email verification status
+  verificationToken          VerificationTokens? // Optional relation to VerificationToken
+  numberOfTries              NumberOfTries?
+  postViews                  PostViews[] // One-to-many relationship with PostViews
+  profilePicture             ProfilePicture[]
+  postReport                 PostReport[]         @relation("ToUser")
+  ipAddresses                IpAddressesOnUsers[] // Relation to join table
+  userRatingsGiven           UserRatings[]        @relation("RatingsGiven")
+  userRatingsReceived        UserRatings[]        @relation("RatingsReceived")
+  fromUser                   ManagementActions[]  @relation("ActionDoneBy")
+  toUser                     ManagementActions[]  @relation("ActionDoneTo")
+  accounts                   AccountTypeUsers[] // Relace "jeden Users má mnoho AccountTypeUsers"
+  upgrades                   AccountUpgrades[]
+
   @@index([verifiedEmail])
 }
 
-
-
 model ManagementActions {
-  id           Int      @id @default(autoincrement())
-  fromUserId   String   // Foreign key for the user giving the rating
-  toUserId     String   // Foreign key for the user receiving the rating
-  info         String?  // Optional topic of the rating
-  doneAt       DateTime 
-  fromUser     Users    @relation("ActionDoneBy", fields: [fromUserId], references: [id], onDelete: Cascade)
-  toUser       Users    @relation("ActionDoneTo", fields: [toUserId], references: [id], onDelete: Cascade)
-  postId       String?  // Foreign key for the related post
-  post         Posts?   @relation(fields: [postId], references: [id], onDelete: Cascade) // Relation to Posts
-  valueBefore  String?  @db.VarChar(2000)
-  valueAfter   String?  @db.VarChar(2000)
+  id          Int      @id @default(autoincrement())
+  fromUserId  String // Foreign key for the user giving the rating
+  toUserId    String // Foreign key for the user receiving the rating
+  info        String? // Optional topic of the rating
+  doneAt      DateTime
+  fromUser    Users    @relation("ActionDoneBy", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser      Users    @relation("ActionDoneTo", fields: [toUserId], references: [id], onDelete: Cascade)
+  postId      String? // Foreign key for the related post
+  post        Posts?   @relation(fields: [postId], references: [id], onDelete: Cascade) // Relation to Posts
+  valueBefore String?  @db.VarChar(2000)
+  valueAfter  String?  @db.VarChar(2000)
 
   @@index([fromUserId])
   @@index([toUserId])
   @@index([postId]) // Index for postId for faster lookups
 }
 
-
-
 model UserRatings {
-  id           Int      @id @default(autoincrement())
-  fromUserId   String      // Foreign key for the user giving the rating
-  toUserId     String      // Foreign key for the user receiving the rating
-  extraInfo    String?  // Optional topic of the rating
-  ratedAt      DateTime 
+  id            Int      @id @default(autoincrement())
+  fromUserId    String // Foreign key for the user giving the rating
+  toUserId      String // Foreign key for the user receiving the rating
+  extraInfo     String? // Optional topic of the rating
+  ratedAt       DateTime
   numberOfStars Int?
-  fromUser     Users    @relation("RatingsGiven", fields: [fromUserId], references: [id], onDelete: Cascade)
-  toUser       Users    @relation("RatingsReceived", fields: [toUserId], references: [id], onDelete: Cascade)
+  fromUser      Users    @relation("RatingsGiven", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser        Users    @relation("RatingsReceived", fields: [toUserId], references: [id], onDelete: Cascade)
 
   @@index([fromUserId])
   @@index([toUserId])
 }
 
-
 model ProfilePicture {
-  id       Int    @id @default(autoincrement())
-  url     String
-  userId   String
-  user     Users  @relation(fields: [userId], references: [id], onDelete: Cascade)  // Foreign key for the one-to-many relationship
+  id     Int    @id @default(autoincrement())
+  url    String
+  userId String
+  user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade) // Foreign key for the one-to-many relationship
+
   @@index([id])
   @@index([userId])
 }
 
-
 model IpAddresses {
-  id          Int                 @id @default(autoincrement())
-  value       String
-  users       IpAddressesOnUsers[] // Relation to join table
+  id    Int                  @id @default(autoincrement())
+  value String
+  users IpAddressesOnUsers[] // Relation to join table
 }
 
 model IpAddressesOnUsers {
-  id          Int          @id @default(autoincrement())
-  userId      String
-  ipAddressId Int
-  usedForLogin Int          @default(0)
-  user        Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ipAddress   IpAddresses  @relation(fields: [ipAddressId], references: [id], onDelete: Cascade)
+  id           Int         @id @default(autoincrement())
+  userId       String
+  ipAddressId  Int
+  usedForLogin Int         @default(0)
+  user         Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress    IpAddresses @relation(fields: [ipAddressId], references: [id], onDelete: Cascade)
 
   @@unique([userId, ipAddressId]) // Ensures a unique combination of userId and ipAddressId
   @@index([userId])
   @@index([ipAddressId])
 }
 
-
-
-
 model Tops {
-  id                    Int          @id @default(autoincrement())
+  id                    Int       @id @default(autoincrement())
   name                  String?
   emoji                 String?
   color                 String?
   numberOfMonthsToValid Int?
-  hidden                Boolean? 
-  posts Posts[]
-  postType              PostType?    @relation // Volitelný vztah s PostType
-  
+  hidden                Boolean?
+  posts                 Posts[]
+  postType              PostType? @relation // Volitelný vztah s PostType
+
   @@index([name])
 }
 
 model PostType {
-  id             Int             @id @default(autoincrement())
-  name           String
-  show          Boolean? @default(false)
-  priority      Int?
-  validFrom     DateTime?
-  validTo       DateTime?
-  perks          PerksPost[]     // Relace "jeden PostType má mnoho PerksPost"
-  topId          Int?            @unique // Cizí klíč na Top, nyní unikátní
-  top            Tops?           @relation(fields: [topId], references: [id], onDelete: Cascade)
-  
+  id        Int         @id @default(autoincrement())
+  name      String
+  show      Boolean?    @default(false)
+  priority  Int?
+  validFrom DateTime?
+  validTo   DateTime?
+  perks     PerksPost[] // Relace "jeden PostType má mnoho PerksPost"
+  topId     Int?        @unique // Cizí klíč na Top, nyní unikátní
+  top       Tops?       @relation(fields: [topId], references: [id], onDelete: Cascade)
+
   @@index([name])
 }
 
 model PerksPost {
-  id        Int           @id @default(autoincrement())
-  name      String
-  postTypeId Int          // Cizí klíč na PostType
-  valid     Boolean?
-  postType  PostType     @relation(fields: [postTypeId], references: [id], onDelete: Cascade)
+  id         Int      @id @default(autoincrement())
+  name       String
+  postTypeId Int // Cizí klíč na PostType
+  valid      Boolean?
+  postType   PostType @relation(fields: [postTypeId], references: [id], onDelete: Cascade)
 
   @@index([postTypeId])
   @@index([name])
 }
 
-
-
-
-
 model AccountTypeOnPrices {
-  id             Int             @id @default(autoincrement())
-  priceId         Int            // Cizí klíč na Prices
-  activeFrom      DateTime?      // Datum, od kdy je cena platná
-  activeTo        DateTime?      // Datum, do kdy je cena platná
-  
-  accountTypeId   Int            // Cizí klíč na AccountType
-  accountType     AccountType    @relation(fields: [accountTypeId], references: [id],onDelete: Cascade)
-  price           Prices         @relation(fields: [priceId], references: [id],onDelete: Cascade)
+  id         Int       @id @default(autoincrement())
+  priceId    Int // Cizí klíč na Prices
+  activeFrom DateTime? // Datum, od kdy je cena platná
+  activeTo   DateTime? // Datum, do kdy je cena platná
+
+  accountTypeId Int // Cizí klíč na AccountType
+  accountType   AccountType @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
+  price         Prices      @relation(fields: [priceId], references: [id], onDelete: Cascade)
 
   @@index([accountTypeId])
   @@index([priceId])
   @@index([activeFrom])
   @@index([activeTo])
 }
+
 model PerksAccount {
-  id        Int           @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   name      String
-  accId     Int           // Cizí klíč na AccountType
-  valid  Boolean?
-  typeOfAcc AccountType   @relation(fields: [accId], references: [id], onDelete: Cascade)
+  accId     Int // Cizí klíč na AccountType
+  valid     Boolean?
+  typeOfAcc AccountType @relation(fields: [accId], references: [id], onDelete: Cascade)
 
   @@index([id])
   @@index([accId])
@@ -183,183 +174,186 @@ model PerksAccount {
 }
 
 model AccountType {
-  id             Int             @id @default(autoincrement())
-  name           String
-  priority       Int?
-  emoji         String?
-  numberOfAllowedImages Int? @default(15)
+  id                    Int                   @id @default(autoincrement())
+  name                  String
+  priority              Int?
+  emoji                 String?
+  numberOfAllowedImages Int?                  @default(15)
   dependencyPriorityAcc Int?
-  perks          PerksAccount[]  // Relace "jeden AccountType má mnoho PerksAccount"
-  accountUsers   AccountTypeUsers[] // Relace "jeden AccountType má mnoho AccountTypeUsers"
-  codes Codes[]
-  accPrices      AccountTypeOnPrices[] // Relace na více cen pro tento AccountType
-  upgradesBefore AccountUpgrades[] @relation("AccountTypeBefore")
-  upgradesAfter  AccountUpgrades[] @relation("AccountTypeAfter")
+  perks                 PerksAccount[] // Relace "jeden AccountType má mnoho PerksAccount"
+  accountUsers          AccountTypeUsers[] // Relace "jeden AccountType má mnoho AccountTypeUsers"
+  codes                 Codes[]
+  accPrices             AccountTypeOnPrices[] // Relace na více cen pro tento AccountType
+  upgradesBefore        AccountUpgrades[]     @relation("AccountTypeBefore")
+  upgradesAfter         AccountUpgrades[]     @relation("AccountTypeAfter")
+
   @@index([name])
 }
 
-
-
 model Prices {
-  id             Int             @id @default(autoincrement())
-  value          Int             // Cena
-  priceCode      String?         // Unikátní kód pro cenu
-  discountedPrice Int?           // Sleva, pokud existuje
-  accountPrices  AccountTypeOnPrices[] // Relace s AccountTypeOnPrices
+  id              Int                   @id @default(autoincrement())
+  value           Int // Cena
+  priceCode       String? // Unikátní kód pro cenu
+  discountedPrice Int? // Sleva, pokud existuje
+  accountPrices   AccountTypeOnPrices[] // Relace s AccountTypeOnPrices
 
   @@index([priceCode])
 }
 
 model AccountUpgrades {
-  id                  Int           @id @default(autoincrement())
+  id                  Int       @id @default(autoincrement())
   dateTime            DateTime?
-  userId              String           // Cizí klíč na tabulku Users
-  AccountTypeIdBefore Int           // Cizí klíč na předchozí typ účtu
-  AccountTypeIdAfter  Int           // Cizí klíč na nový typ účtu
+  userId              String // Cizí klíč na tabulku Users
+  AccountTypeIdBefore Int // Cizí klíč na předchozí typ účtu
+  AccountTypeIdAfter  Int // Cizí klíč na nový typ účtu
   priceToUpgrade      Int?
 
-  user                Users         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accountTypeBefore   AccountType   @relation("AccountTypeBefore", fields: [AccountTypeIdBefore], references: [id], onDelete: Cascade)
-  accountTypeAfter    AccountType   @relation("AccountTypeAfter", fields: [AccountTypeIdAfter], references: [id], onDelete: Cascade)
+  user              Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountTypeBefore AccountType @relation("AccountTypeBefore", fields: [AccountTypeIdBefore], references: [id], onDelete: Cascade)
+  accountTypeAfter  AccountType @relation("AccountTypeAfter", fields: [AccountTypeIdAfter], references: [id], onDelete: Cascade)
 
   @@index([userId]) // Index na cizí klíč userId
 }
 
 model AccountTypeUsers {
-  id            Int           @id @default(autoincrement())
-  scheduleToCancel        Boolean?
-  priceId       String?
-  gifted        Boolean @default(false)
-  active        Boolean?
-  monthIn         Int?        @default(1)
-  nextPayment   String?
+  id               Int         @id @default(autoincrement())
+  scheduleToCancel Boolean?
+  priceId          String?
+  gifted           Boolean     @default(false)
+  active           Boolean?
+  monthIn          Int?        @default(1)
+  nextPayment      String?
   fromDate         DateTime?
-  toDate          DateTime?
-  userId        String           // Cizí klíč na Users (změna na Int pro správný odkaz na ID uživatele)
-  user          Users         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accountTypeId Int           // Cizí klíč na AccountType
-  accountType   AccountType   @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
+  toDate           DateTime?
+  userId           String // Cizí klíč na Users (změna na Int pro správný odkaz na ID uživatele)
+  user             Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountTypeId    Int // Cizí klíč na AccountType
+  accountType      AccountType @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-
 }
-
 
 model Codes {
-  id            Int           @id @default(autoincrement())
-  description   String?
-  numberOfMonthsIn  Int?
+  id                  Int         @id @default(autoincrement())
+  description         String?
+  numberOfMonthsIn    Int?
   NumberOfMontsForAcc Int?
-  active        Boolean @default(true)
+  active              Boolean     @default(true)
   ActivatedOn         DateTime?
-  validFromDate         DateTime?
-  validToDate          DateTime?
-  accountTypeId   Int            // Cizí klíč na AccountType
-  accountType     AccountType    @relation(fields: [accountTypeId], references: [id],onDelete: Cascade)
-
+  validFromDate       DateTime?
+  validToDate         DateTime?
+  accountTypeId       Int // Cizí klíč na AccountType
+  accountType         AccountType @relation(fields: [accountTypeId], references: [id], onDelete: Cascade)
 }
 
-
 model Sections {
-  id          Int         @id @default(autoincrement())
-  name        String      @unique
-  categoryId  Int         // Cizí klíč na model Categories
-  category    Categories   @relation(fields: [categoryId], references: [id], onDelete: Cascade) // Vytvoření vazby na Categories
-  posts Posts[]
- @@index([id])
- @@index([name])
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  categoryId Int // Cizí klíč na model Categories
+  category   Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade) // Vytvoření vazby na Categories
+  posts      Posts[]
+
+  @@index([id])
+  @@index([name])
 }
 
 model Categories {
-  id          Int         @id @default(autoincrement())
-  name        String      @unique
-  logo        String
-  sections    Sections[]   // Odpovídající pole pro vztah
-  posts Posts[]
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  logo     String
+  sections Sections[] // Odpovídající pole pro vztah
+  posts    Posts[]
+
   @@index([id])
   @@index([name])
   @@index([logo])
 }
 
 model Posts {
-  id           String          @id @default(uuid()) @unique
-  name         String       @db.VarChar(150)
-  description  String       @db.VarChar(2000)
-  price        String       @db.VarChar(100)
-  categoryId   Int
-  sectionId    Int
-  visible Boolean @default(true)
-  phoneNumber  String       @db.VarChar(9)
-  location     String       @db.VarChar(50)
-  topId         Int?    
-  top     Tops?   @relation(fields: [topId], references: [id], onDelete: Cascade) 
-  category     Categories   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  section      Sections     @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-  images       Image[]      // Define a one-to-many relation
-  userId       String 
-  dateAndTime  DateTime     
-  user         Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  actions   ManagementActions[] // Back-relation to ManagementActions
-  postViews    PostViews[]  // One-to-many relationship with PostViews
-  postReport    PostReport[]  // One-to-many relationship with PostViews
-@@index([id])
+  id          String              @id @unique @default(uuid())
+  name        String              @db.VarChar(150)
+  description String              @db.VarChar(2000)
+  price       String              @db.VarChar(100)
+  categoryId  Int
+  sectionId   Int
+  visible     Boolean             @default(true)
+  phoneNumber String              @db.VarChar(9)
+  location    String              @db.VarChar(50)
+  topId       Int?
+  top         Tops?               @relation(fields: [topId], references: [id], onDelete: Cascade)
+  category    Categories          @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  section     Sections            @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  images      Image[] // Define a one-to-many relation
+  userId      String
+  dateAndTime DateTime
+  user        Users               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  actions     ManagementActions[] // Back-relation to ManagementActions
+  postViews   PostViews[] // One-to-many relationship with PostViews
+  postReport  PostReport[] // One-to-many relationship with PostViews
+
+  @@index([id])
 }
 
 model PostReport {
   id           Int      @id @default(autoincrement())
-  postId       String      // Foreign key pointing to Posts
+  postId       String   // Foreign key pointing to Posts
   userId       String
   topic        String?
   reason       String?  @default("")
-  reportedAt   DateTime 
-  active       Boolean   @default(true)
+  reportedAt   DateTime
+  doneBy       Users?   @relation("DoneByUser", fields: [doneByUserId], references: [id], onDelete: Cascade) // Optional relation for doneBy
+  doneByUserId String?  // Optional foreign key to Users for doneBy
+  active       Boolean  @default(true)
   post         Posts    @relation(fields: [postId], references: [id], onDelete: Cascade) // Link to Posts table
-  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade) 
+  user         Users   @relation("ToUser", fields: [userId], references: [id], onDelete: Cascade)
+
+
   @@index([postId]) // Ensure there is an index on postId if required
 }
 
 model SupportTickets {
-  id           Int      @id @default(autoincrement())
-  email        String
-  doneAt       DateTime 
-  active       Boolean   @default(true)
+  id     Int      @id @default(autoincrement())
+  email  String
+  doneAt DateTime
+  active Boolean  @default(true)
 }
 
 model PostViews {
-  id           Int      @id @default(autoincrement())
-  postId       String      // Foreign key pointing to Posts
-  userId       String      // Foreign key pointing to Users
-  viewedAt     DateTime @default(now()) // Timestamp for when the post was viewed
-  post         Posts    @relation(fields: [postId], references: [id], onDelete: Cascade) // Link to Posts table
-  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade) // Link to Users table
-  
-  @@unique([postId, userId])  // Ensure each user can only view a post once (optional)
+  id       Int      @id @default(autoincrement())
+  postId   String // Foreign key pointing to Posts
+  userId   String // Foreign key pointing to Users
+  viewedAt DateTime @default(now()) // Timestamp for when the post was viewed
+  post     Posts    @relation(fields: [postId], references: [id], onDelete: Cascade) // Link to Posts table
+  user     Users    @relation(fields: [userId], references: [id], onDelete: Cascade) // Link to Users table
+
+  @@unique([postId, userId]) // Ensure each user can only view a post once (optional)
 }
+
 model Image {
-  id       Int    @id @default(autoincrement())
-  url      String
-  postId   String
-  post     Posts  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  id     Int    @id @default(autoincrement())
+  url    String
+  postId String
+  post   Posts  @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
-
-
 
 model NumberOfTries {
   id     Int    @id @default(autoincrement())
   number Int
   round  Int    @default(0)
-  userId String    @unique
+  userId String @unique
   user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
+
 model VerificationTokens {
-  id         Int      @id @default(autoincrement())
-  token      String
-  expiresAt  DateTime
-  userId     String     @unique
-  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  token     String
+  expiresAt DateTime
+  userId    String   @unique
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
 model Roles {
   id         Int     @id @default(autoincrement())
   name       String  @unique
@@ -368,24 +362,22 @@ model Roles {
 }
 
 model Bans {
-  id          Int      @id @default(autoincrement())
-  bannedFrom  DateTime @default(now())
-  bannedTill  DateTime? 
-  pernament   Boolean  @default(false)
-  reason      String?
-  userId      String
-  fromUserId  String?
-  user        Users    @relation("BannedUser", fields: [userId], references: [id], onDelete: Cascade)
-  fromUser    Users?    @relation("BannedByUser", fields: [fromUserId], references: [id], onDelete: Cascade)
+  id         Int       @id @default(autoincrement())
+  bannedFrom DateTime  @default(now())
+  bannedTill DateTime?
+  pernament  Boolean   @default(false)
+  reason     String?
+  userId     String
+  fromUserId String?
+  user       Users     @relation("BannedUser", fields: [userId], references: [id], onDelete: Cascade)
+  fromUser   Users?    @relation("BannedByUser", fields: [fromUserId], references: [id], onDelete: Cascade)
 }
 
-
-
 model Sessions {
-  id         Int      @id @default(autoincrement())
-  sessionId  String   @unique
-  userId     String
-  validFrom  DateTime @default(now())
-  validTill  DateTime
-  user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade) // Specify onDelete here
+  id        Int      @id @default(autoincrement())
+  sessionId String   @unique
+  userId    String
+  validFrom DateTime @default(now())
+  validTill DateTime
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade) // Specify onDelete here
 }
