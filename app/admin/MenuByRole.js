@@ -140,7 +140,7 @@ function MenuByRole({supTick,reports,privileges}) {
       return groups;
     }, {})
   ).map((group, index) => (
-    <div key={index + 14114} className="flex flex-col space-y-4 bg-base-200 p-4 rounded-lg shadow-sm">
+    <div key={index} className="flex flex-col space-y-4 bg-base-200 p-4 rounded-lg shadow-sm">
             <div className="badge badge-lg  font-bold">Report</div>
       <div className="flex items-center space-x-4">
 
@@ -181,7 +181,7 @@ function MenuByRole({supTick,reports,privileges}) {
 
       <div className="space-y-4">
         {Object.values(group.reports).map((userReport, idx) => (
-          <div key={idx + 52890} className="p-4 rounded-lg bg-base-100">
+          <div key={idx} className="p-4 rounded-lg bg-base-100">
             <div className="flex items-center space-x-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -237,7 +237,7 @@ function MenuByRole({supTick,reports,privileges}) {
 
             {/* Důvody reportu */}
             {userReport.reasons.map((reason, reasonIdx) => (
-              <div key={reasonIdx + 5982} className="space-y-2">
+              <div key={reasonIdx} className="space-y-2">
                 <p className="font-semibold text-red-500">{reason}</p>  {/* Důvod reportu */}
               </div>
             ))}
@@ -252,8 +252,8 @@ function MenuByRole({supTick,reports,privileges}) {
 
 
       {allrSupTick.map((ticket) => (
-        <div className="space-y-4 w-2/4 min-w-72 bg-base-200 flex flex-col p-4 rounded-lg shadow-sm">
-        <div key={ticket.id +42} >
+        <div key={ticket.id}   className="space-y-4 w-2/4 min-w-72 bg-base-200 flex flex-col p-4 rounded-lg shadow-sm">
+        <div >
           <div className="flex flex-row gap-4 items-center">
           <div className="badge badge-lg border-2    font-bold">
             Support
