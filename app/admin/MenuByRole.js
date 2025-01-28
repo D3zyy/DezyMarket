@@ -69,7 +69,7 @@ function MenuByRole({supTick,reports,privileges}) {
   </span>
 </p>
 <p className="mb-3 text-sm font-medium text-gray-600">
-  Poslední ticket:
+  Nejnovejší ticket:
   <span className="ml-2 text-gray-500">
     {(allReports?.length >  0 ) ? 
       (() => {
