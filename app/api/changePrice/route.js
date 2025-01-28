@@ -65,21 +65,21 @@ export async function POST(request) {
 
 console.log("Již mám tuto cenu v db :",alreadyHaveThisPrice)
 if(alreadyHaveThisPrice.length > 0){
+    console.log("Již eistuje tato cena")
 
 
 
 
 
-
-
-    await prisma.accountTypeOnPrices.updateMany({
+    console.log("Cislo typ:",accTypeId)
+  let upd =  await prisma.accountTypeOnPrices.updateMany({
         where: { accountTypeId: accTypeId },
-        data:{ priceId: alreadyHaveThisPrice.id}
+        data:{ priceId: alreadyHaveThisPrice[0].id}
       });
-
+console.log("updedd:",upd)
 
 }else{
-
+    console.log("Tato cena neexistuje vytvořím novou ")
     let   thisAcc =    await prisma.accountType.findFirst({
         where: { id: accTypeId }, });
     
