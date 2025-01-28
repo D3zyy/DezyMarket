@@ -384,6 +384,7 @@ let accTypeOfUser, acctypes,typeOfTops
 {sortedAcctypes?.map(accType => (
     
   <Account
+    priceOfBoughtSub={accTypeOfUser?.price}
     key={accType.id}
     hasThisType={accTypeOfUser?.name}
     emoji={accType.emoji}

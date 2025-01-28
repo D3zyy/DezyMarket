@@ -20,7 +20,7 @@ const UpgradeModalSubscription = dynamic(
 
 
 
-export function Account({ name,emoji, price, priceId, benefits, hasThisType, hasThisTypePriority, namePriority,gifted}) {
+export function Account({ priceOfBoughtSub,name,emoji, price, priceId, benefits, hasThisType, hasThisTypePriority, namePriority,gifted}) {
 
 
   const [loading, setLoading] = useState(false);
@@ -152,7 +152,7 @@ export function Account({ name,emoji, price, priceId, benefits, hasThisType, has
 
   <div className="flex items-baseline text-base-content dark:text-base-content">
     <span className="text-4xl sm:text-5xl font-extrabold tracking-tight">
-      {price === 0 ? "Zdarma" : price}
+      {price === 0 ? "Zdarma" : priceOfBoughtSub && isActive ? priceOfBoughtSub : price}
     </span>
     <span className="text-lg sm:text-xl font-semibold">
       {price === 0 ? "" : "Kč"}
