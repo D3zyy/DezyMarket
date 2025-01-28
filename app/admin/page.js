@@ -41,7 +41,7 @@ const Page = async () => {
       getTypeOfAccountDetails()
     ]);
 
-    console.log("types:",subscTypes)
+   // console.log("types:",subscTypes)
   if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }
