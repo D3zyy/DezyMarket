@@ -1,6 +1,7 @@
 import { prisma } from "../database/db";
 import { getSession } from "../authentication/actions";
 import { DateTime } from 'luxon';
+import { select } from "@nextui-org/react";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -176,27 +177,30 @@ export async function getUserAccountTypeOnStripe(email) {
 // Načtěte typy účtů uživatele z databáze a filtrujte pouze aktivní účty
 const userAccountTypes = await prisma.users.findUnique({
   where: {
-    email: email, // Filtrace podle emailu uživatele
+    email: email, // Filter by user email
   },
   select: {
     accounts: {
       where: {
-        active: true, // Filtrujte pouze aktivní účty
+        active: true, // Filter only active accounts
         fromDate: {
-          lte: DateAndTimeNowPrague, // Zkontrolujte, že fromDate je menší nebo rovno aktuálnímu datu
+          lte: DateAndTimeNowPrague, // Ensure fromDate <= current date
         },
         OR: [
           {
             toDate: {
-              gte: DateAndTimeNowPrague, // Záznamy, kde toDate >= dnešní datum
+              gte: DateAndTimeNowPrague, // toDate >= current date
             },
           },
           {
-            toDate: null, // Záznamy, kde toDate není nastaveno
+            toDate: null, // toDate is not set
           },
         ],
       },
       select: {
+        price: true,
+         
+       
         fromDate: true,
         toDate: true,
         monthIn: true,
@@ -204,9 +208,8 @@ const userAccountTypes = await prisma.users.findUnique({
         scheduleToCancel: true,
         accountType: {
           select: {
-            
             priority: true,
-            name: true, // Přístup k poli "name" v tabulce "accountType"
+            name: true, // Access the 'name' field in the 'accountType' table
           },
         },
       },
@@ -215,17 +218,21 @@ const userAccountTypes = await prisma.users.findUnique({
 });
 
 
-
+   console.log(JSON.stringify("tadyyyy:",userAccountTypes[0], null, 1));
     // Zkontrolujte, zda existují nějaké účty
     if (userAccountTypes && userAccountTypes.accounts && userAccountTypes.accounts.length > 0) {
       // Seřaďte účty podle priority sestupně
       const sortedAccounts = userAccountTypes.accounts.sort((a, b) => b.accountType.priority - a.accountType.priority);
+     // console.log(sortedAccounts[0])
+     // console.log(JSON.stringify("tadyyyy:",sortedAccounts[0], null, 2));
+
       sortedAccounts[0].accountType.monthIn = sortedAccounts[0].monthIn;
       sortedAccounts[0].accountType.scheduleToCancel = sortedAccounts[0].scheduleToCancel;
       sortedAccounts[0].accountType.fromDate = sortedAccounts[0].fromDate;
+      sortedAccounts[0].accountType.price = sortedAccounts[0].price.value;
       sortedAccounts[0].accountType.toDate = sortedAccounts[0].toDate;
       sortedAccounts[0].accountType.gifted = sortedAccounts[0].gifted;
-     
+      console.log(sortedAccounts[0].accountType)
       return sortedAccounts[0].accountType;  // Vraťte název účtu s nejvyšší prioritou
     } else {
       return null; // Žádný odpovídající účet nenalezen

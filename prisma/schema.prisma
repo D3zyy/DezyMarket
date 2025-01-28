@@ -195,7 +195,8 @@ model AccountType {
 model Prices {
   id              Int                   @id @default(autoincrement())
   value           Int // Cena
-  priceCode       String? // Unikátní kód pro cenu
+  userOnTyp         AccountTypeUsers[]
+  priceCode       String? @unique
   discountedPrice Int? // Sleva, pokud existuje
   accountPrices   AccountTypeOnPrices[] // Relace s AccountTypeOnPrices
 
@@ -226,6 +227,7 @@ model AccountTypeUsers {
   monthIn          Int?        @default(1)
   nextPayment      String?
   fromDate         DateTime?
+  price            Prices?      @relation(fields: [priceId], references: [priceCode]) // Link to the Price model
   toDate           DateTime?
   userId           String // Cizí klíč na Users (změna na Int pro správný odkaz na ID uživatele)
   user             Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
