@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
-function MenuByRole({supTick,reports,privileges}) {
+function MenuByRole({supTick,reports,privileges,subscTypes}) {
  const [loading, setLoading] = useState(false); 
  const [isLoadingSearch, setIsLoadingSearch] = useState(false); 
   const [activeContent, setActiveContent] = useState("Tickets"); 
@@ -13,6 +13,7 @@ function MenuByRole({supTick,reports,privileges}) {
   const [allrSupTick, setAllrSupTick] = useState(supTick); 
   const [allReports, setallReports] = useState(reports); 
   const [searchInfo, setSearchInfo] = useState(null); 
+  const [subTypes, setSubTypes] = useState(JSON.parse(subscTypes)); 
   const [foundUsers, setFoundUsers] = useState([]); 
 
   const router = useRouter()
@@ -29,7 +30,7 @@ function MenuByRole({supTick,reports,privileges}) {
     searchTimeout.current = setTimeout(async () => { // Spustí se až po určitém zpoždění
       setIsLoadingSearch(true); // Nastavení loading stavu na true
       try {
-        console.log("Togle posílá na server:", info);
+        
         const response = await fetch('/api/getUser', {
           method: 'POST',
           headers: {
@@ -42,7 +43,7 @@ function MenuByRole({supTick,reports,privileges}) {
 
         const result = await response.json();
         setFoundUsers(result?.users);
-        console.log("Togle odpověděl server", result?.users);
+       
 
       } catch (error) {
         console.error('Chyba získávání uživatele', error);
@@ -156,7 +157,61 @@ function MenuByRole({supTick,reports,privileges}) {
       
       </div>;
       case "Subscriptions":
-        return <div>{userPrivileges > 2 && 'Předplatné' } </div>;
+        return <div>{userPrivileges > 2 && <> 
+        
+        <div className="flex flex-col md:flex-row gap-6 ">
+      {subTypes.map((type) => (
+        <div
+          key={type.id}
+          className="p-6  bg-base-100 border  border-base-200 rounded-lg shadow-sm"
+        >
+          {/* Subscription header */}
+          <div className="flex  justify-between mb-4">
+            <div className="text-xl font-semibold">
+              {type.emoji ? (
+                <span dangerouslySetInnerHTML={{ __html: type.emoji }} />
+              ) : (
+                type.name
+              )}
+            </div>
+            <div className="text-lg text-gray-500">
+              {type.activePrice === 0 ? "Zdarma" : `${type.activePrice} Kč`}
+            </div>
+          </div>
+          {/* Perks list */}
+          <ul className="space-y-2">
+            {type.perks.map((perk) => (
+              <li
+                key={perk.id}
+                className={`flex items-center ${
+                  perk.valid ? "" : "text-gray-400 line-through"
+                }`}
+              >
+                <span className="mr-2">
+                 
+                  <svg
+            className={`flex-shrink-0 w-3 h-3 sm:w-4 sm:h-4 ${
+              perk.valid ? "text-[#8300ff]" : "text-gray-400 dark:text-gray-500"
+            }`}
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+          </svg>
+                </span>
+                {perk.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+        
+        
+        
+        </> } </div>;
       case "Stats":
         return <div>Statistiky</div>;
       case "Errors":
