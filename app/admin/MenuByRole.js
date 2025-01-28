@@ -269,9 +269,9 @@ function MenuByRole({supTick,reports,privileges,subscTypes}) {
         return <div>{userPrivileges > 2 && <> 
         
         <div className="flex flex-col md:flex-row gap-6 ">
-      {subTypes.map((type) => (
+      {subTypes.map((type,indexikk) => (
         <div
-          key={type.id}
+          key={indexikk}
           className="p-6  bg-base-100 border  border-base-200 rounded-lg shadow-sm"
         >
           {/* Subscription header */}
@@ -299,7 +299,7 @@ Kč
           {/* Perks list */}
           <ul className="space-y-2">
             {type.perks.map((perk) => (
-               <>
+              
               
               <li
                 key={perk.id}
@@ -334,7 +334,7 @@ Kč
 }
               </li>
               
-              </>
+             
             ))}
           </ul>
         </div>
