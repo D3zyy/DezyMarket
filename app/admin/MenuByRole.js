@@ -54,7 +54,7 @@ function MenuByRole({supTick,reports,privileges,subscTypes}) {
       }
     }, 1000); // 500 ms zpoždění
   } else {
-    setFoundUsers([]);
+   
   }
   };
 
@@ -228,7 +228,12 @@ function MenuByRole({supTick,reports,privileges,subscTypes}) {
         <input 
         autoFocus={true}
         disabled={isLoadingSearch}
-        onChange={(e) => searchUser(e.target.value)} 
+        onChange={(e) => {
+          const value = e.target.value;
+          if (value.trim() !== '') {
+            searchUser(value);
+          }
+        }}
         type="text" 
         className="grow" 
         placeholder="Uživatel.." 
