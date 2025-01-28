@@ -39,6 +39,7 @@ export async function POST(request) {
         },
       },
     });
+  
     if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -100,7 +101,7 @@ export async function POST(request) {
         },
       },
     });
-   console.log("vyřešeno")
+
 
 
    
