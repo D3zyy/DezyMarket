@@ -28,7 +28,15 @@ export async function POST(request) {
     }
 
     const { accTypeId,newPrice } = await request.json();
-  
+    if(newPrice <= 100){
+      return new Response(
+        JSON.stringify({ message: 'Cena není platná' }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
     const currentDate = DateTime.now()
     .setZone('Europe/Prague')
     .toFormat('yyyy-MM-dd');
