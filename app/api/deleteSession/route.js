@@ -62,9 +62,19 @@ export async function POST(req) {
 
      userToBreak = await prisma.sessions.findFirst({
       where: { id: data.sessionId },
-      include: { user: true },
+      include: { user: { include : {role:true}} },
     });
     console.log("tenhle:",userToBreak)
+
+    if(userToBreak.user.role.privileges >= session.role.privileges){
+      return new Response(
+        JSON.stringify({ message: "Na tento příkaz nemáte oprávnění" }),
+        {
+          status: 403,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
     await prisma.sessions.delete({
       where: { id: data.sessionId },
     });
