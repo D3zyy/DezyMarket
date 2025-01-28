@@ -9,6 +9,7 @@ function MenuByRole({supTick,reports,privileges,subscTypes}) {
  const [loading, setLoading] = useState(false); 
  const [isLoadingSearch, setIsLoadingSearch] = useState(false); 
  const [IsLoadingPerk, setIsLoadingPerk] = useState(false); 
+ const [IsLoadingPrice, setIsLoadingPrice] = useState(false); 
   const [activeContent, setActiveContent] = useState("Tickets"); 
   const [userPrivileges, setUserPrivileges] = useState(privileges); 
   const [allrSupTick, setAllrSupTick] = useState(supTick); 
@@ -56,6 +57,42 @@ function MenuByRole({supTick,reports,privileges,subscTypes}) {
     setFoundUsers([]);
   }
   };
+
+  const changePrice = async (accTypeId,newPrice) => {
+   
+    if (searchTimeout.current) {
+      clearTimeout(searchTimeout.current); // Pokud je aktivní timeout, zrušíme ho
+    }
+
+    searchTimeout.current = setTimeout(async () => { // Spustí se až po určitém zpoždění
+  
+      setIsLoadingPrice(true); // Nastavení loading stavu na true
+      try {
+        
+        const response = await fetch('/api/changePrice', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            accTypeId: accTypeId,
+            newPrice: newPrice,
+
+          }),
+        });
+
+        router.refresh()
+       
+
+      } catch (error) {
+        console.error('Chyba získávání uživatele', error);
+      } finally {
+        setIsLoadingPrice(false); // Po dokončení nebo chybě, nastavíme loading na false
+      }
+    }, 3000); 
+ 
+  };
+
 
 
   const changePerk = async (value,perkId,idOfAcc) => {
@@ -234,7 +271,7 @@ function MenuByRole({supTick,reports,privileges,subscTypes}) {
         >
           {/* Subscription header */}
           <div className="flex  justify-between mb-4">
-            <div className="text-xl font-semibold">
+            <div className="text-xl font-semibold items-center justify-center">
             {type.name}
               {type.emoji ? (
                 <span className="ml-2" dangerouslySetInnerHTML={{ __html: type.emoji }} />
@@ -242,8 +279,16 @@ function MenuByRole({supTick,reports,privileges,subscTypes}) {
                 <></>
               )}
             </div>
-            <div className="text-lg text-gray-500">
-              {type.activePrice === 0 ? "Zdarma" : `${type.activePrice} Kč`}
+            <div className="text-lg text-gray-500 flex items-center ">
+              {type.activePrice === 0 ? "Zdarma" :  <>  
+
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 mr-2">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+</svg>
+<input type="number" onChange={(e) => changePrice(type.id,e.target.value)} disabled={IsLoadingPrice} className="input max-w-16" defaultValue={type.activePrice} name="" id="" />
+Kč
+
+                </>}
             </div>
           </div>
           {/* Perks list */}
