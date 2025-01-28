@@ -1,7 +1,7 @@
 import {  NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
-
+import { DateTime } from "luxon";
 
 export async function POST(request) {
   try {
@@ -27,6 +27,28 @@ export async function POST(request) {
 
     const { ticketId,type } = await request.json();
   
+    const currentDate = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat('yyyy-MM-dd');
+    let numberOfActionsToday = await prisma.managementActions.count({
+      where: {
+        fromUserId: session.userId,
+        doneAt: {
+          gte: new Date(`${currentDate}T00:00:00.000Z`),
+          lt: new Date(`${currentDate}T23:59:59.999Z`),
+        },
+      },
+    });
+    if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      return new Response(JSON.stringify({
+        message: 'Již jste vyčerpal administrativních pravomocí dnes'
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+
 
     if(type == 'report'){
         const foundActiveReport = await prisma.postReport.findFirst({
@@ -66,8 +88,19 @@ export async function POST(request) {
       });
     }
    
-
-   
+    const nowww = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+    await prisma.managementActions.create({
+      data: {
+        doneAt: nowww,
+        info: `Vyřešen ticketId: ${ticketId} druh: ${type}`,
+        fromUser: {
+          connect: { id: session.userId }, // Link the user by its unique identifier
+        },
+      },
+    });
+   console.log("vyřešeno")
 
 
    

@@ -50,11 +50,11 @@ model Users {
 model ManagementActions {
   id          Int      @id @default(autoincrement())
   fromUserId  String // Foreign key for the user giving the rating
-  toUserId    String // Foreign key for the user receiving the rating
+  toUserId    String? // Foreign key for the user receiving the rating
   info        String? // Optional topic of the rating
   doneAt      DateTime
   fromUser    Users    @relation("ActionDoneBy", fields: [fromUserId], references: [id], onDelete: Cascade)
-  toUser      Users    @relation("ActionDoneTo", fields: [toUserId], references: [id], onDelete: Cascade)
+  toUser      Users?    @relation("ActionDoneTo", fields: [toUserId], references: [id], onDelete: Cascade)
   postId      String? // Foreign key for the related post
   post        Posts?   @relation(fields: [postId], references: [id], onDelete: Cascade) // Relation to Posts
   valueBefore String?  @db.VarChar(2000)
