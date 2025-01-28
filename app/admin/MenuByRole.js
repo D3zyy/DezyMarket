@@ -168,10 +168,11 @@ function MenuByRole({supTick,reports,privileges,subscTypes}) {
           {/* Subscription header */}
           <div className="flex  justify-between mb-4">
             <div className="text-xl font-semibold">
+            {type.name}
               {type.emoji ? (
-                <span dangerouslySetInnerHTML={{ __html: type.emoji }} />
+                <span className="ml-2" dangerouslySetInnerHTML={{ __html: type.emoji }} />
               ) : (
-                type.name
+                <></>
               )}
             </div>
             <div className="text-lg text-gray-500">
