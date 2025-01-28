@@ -218,14 +218,12 @@ const userAccountTypes = await prisma.users.findUnique({
 });
 
 
-   console.log(JSON.stringify("tadyyyy:",userAccountTypes[0], null, 1));
+  
     // Zkontrolujte, zda existují nějaké účty
     if (userAccountTypes && userAccountTypes.accounts && userAccountTypes.accounts.length > 0) {
       // Seřaďte účty podle priority sestupně
       const sortedAccounts = userAccountTypes.accounts.sort((a, b) => b.accountType.priority - a.accountType.priority);
-     // console.log(sortedAccounts[0])
-     // console.log(JSON.stringify("tadyyyy:",sortedAccounts[0], null, 2));
-
+    
       sortedAccounts[0].accountType.monthIn = sortedAccounts[0].monthIn;
       sortedAccounts[0].accountType.scheduleToCancel = sortedAccounts[0].scheduleToCancel;
       sortedAccounts[0].accountType.fromDate = sortedAccounts[0].fromDate;
