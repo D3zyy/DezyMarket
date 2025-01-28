@@ -171,7 +171,7 @@ function MenuByRole({supTick,reports,privileges,subscTypes}) {
         
       </label>
       {foundUsers.length > 0 && <>   
-      <div className="bg-base-300 mt-6 p-4 text-center rounded-lg  ">
+      <div className="bg-base-200 mt-6 p-4 text-center rounded-lg  ">
         <div className="">
         
 
