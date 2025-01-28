@@ -3,16 +3,60 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import { useRef } from "react";
 
 function MenuByRole({supTick,reports,privileges}) {
  const [loading, setLoading] = useState(false); 
+ const [isLoadingSearch, setIsLoadingSearch] = useState(false); 
   const [activeContent, setActiveContent] = useState("Tickets"); 
   const [userPrivileges, setUserPrivileges] = useState(privileges); 
   const [allrSupTick, setAllrSupTick] = useState(supTick); 
   const [allReports, setallReports] = useState(reports); 
+  const [searchInfo, setSearchInfo] = useState(null); 
+  const [foundUsers, setFoundUsers] = useState([]); 
 
   const router = useRouter()
+  const searchTimeout = useRef(null); // useRef pro zajištění, že timeout je uchován mezi renderováními
+
+  const searchUser = async (info) => {
+    if(info.length   > 0){
+
+   
+    if (searchTimeout.current) {
+      clearTimeout(searchTimeout.current); // Pokud je aktivní timeout, zrušíme ho
+    }
+
+    searchTimeout.current = setTimeout(async () => { // Spustí se až po určitém zpoždění
+      setIsLoadingSearch(true); // Nastavení loading stavu na true
+      try {
+        console.log("Togle posílá na server:", info);
+        const response = await fetch('/api/getUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            info: info,
+          }),
+        });
+
+        const result = await response.json();
+        setFoundUsers(result?.users);
+        console.log("Togle odpověděl server", result?.users);
+
+      } catch (error) {
+        console.error('Chyba získávání uživatele', error);
+      } finally {
+        setIsLoadingSearch(false); // Po dokončení nebo chybě, nastavíme loading na false
+      }
+    }, 1000); // 500 ms zpoždění
+  } else {
+    setFoundUsers([]);
+  }
+  };
+
+
+
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     const day = String(date.getDate()).padStart(2, '0');
@@ -48,7 +92,7 @@ function MenuByRole({supTick,reports,privileges}) {
   const renderContent = () => {
     switch (activeContent) {
       case "Users":
-        return <div> 
+        return <div className="min-w-72"> 
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -65,7 +109,7 @@ function MenuByRole({supTick,reports,privileges}) {
               </svg>
           
           
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input  mx-auto input-bordered flex items-center gap-2">
           <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
@@ -76,9 +120,41 @@ function MenuByRole({supTick,reports,privileges}) {
             d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
             clipRule="evenodd" />
         </svg>
-        <input type="text" className="grow" placeholder="Uživatel.." />
+        <input 
+        autoFocus={true}
+        disabled={isLoadingSearch}
+        onChange={(e) => searchUser(e.target.value)} 
+        type="text" 
+        className="grow" 
+        placeholder="Uživatel.." 
+      />
         
-      </label></div>;
+      </label>
+      {foundUsers.length > 0 && <>   
+      <div className="bg-base-300 mt-6 p-4 text-center rounded-lg  ">
+        <div className="">
+        
+
+{foundUsers.map((user) => {
+  return (
+    <div key={user.id} className="flex flex-row gap-6 mt-3 mb-3">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`size-6 ${user.privileges == 2 ? 'text-red-500' : user.privileges == 3 ? 'text-yellow-500' : user.privileges == 4 ? 'text-green-500' : ''}`}
+>
+  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+</svg>
+      <Link className="underline" href={`/user/${user.id}`}>{user.fullName}</Link>
+    </div>
+  );
+})}
+
+        </div>
+      
+
+    
+      </div>
+      </>}
+      
+      </div>;
       case "Subscriptions":
         return <div>{userPrivileges > 2 && 'Předplatné' } </div>;
       case "Stats":
