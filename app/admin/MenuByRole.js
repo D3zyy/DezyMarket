@@ -473,7 +473,7 @@ Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id
     </div>
     <div className="stat-title">Dnes registrováno</div>
     <div className="stat-value">{usersStats.numberOfRegistredUsrToday}</div>
-    <div className="stat-desc">{usersStats.numberOfRegistredUsrYestrday > usersStats.numberOfRegistredUsrToday ? '↘︎  ' : '↗︎ +'} {usersStats.numberOfRegistredUsrYestrday} ({usersStats.percentChangeTodayVsYesterday}) (včera)</div>
+    <div className="stat-desc">{usersStats.numberOfRegistredUsrYestrday > usersStats.numberOfRegistredUsrToday ? '↘︎ +' : '↗︎ +'}{usersStats.numberOfRegistredUsrYestrday} ({usersStats.percentChangeTodayVsYesterday}) (včera)</div>
   </div>
 
   <div className="stat">
@@ -485,7 +485,7 @@ Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id
     </div>
     <div className="stat-title">Tento měsíc registrováno</div>
     <div className="stat-value">{usersStats.numberOfRegistredUsrThisMonth}</div>
-    <div className="stat-desc">{usersStats.numberOfRegistredUsrLastMonth > usersStats.numberOfRegistredUsrThisMonth ? '↘︎  ' : '↗︎ +'} {usersStats.numberOfRegistredUsrLastMonth} {usersStats.percentChangeThisMonthVsLastMonth} (Minulý měsíc)</div>
+    <div className="stat-desc">{usersStats.numberOfRegistredUsrLastMonth > usersStats.numberOfRegistredUsrThisMonth ? '↘︎ +' : '↗︎ +'}{usersStats.numberOfRegistredUsrLastMonth} ({usersStats.percentChangeThisMonthVsLastMonth}) (Minulý měsíc)</div>
   </div>
 </div>
 

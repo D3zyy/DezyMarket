@@ -98,8 +98,23 @@ const Page = async () => {
     usersStats.numberOfRegistredUsrLastMonth = registredLastMonthyNumberOfUsr
     usersStats.percentChangeTodayVsYesterday = percentChangeTodayVsYesterday
     usersStats.percentChangeThisMonthVsLastMonth = percentChangeThisMonthVsLastMonth
-    console.log("Statistiky:",usersStats);
+
+
+
+    let subscriptionStats = {}
+
+
+
+
+
+    console.log("Statistiky:",subscriptionStats);
     //console.log("all tops:",allTops)
+
+
+
+
+
+
   if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }
