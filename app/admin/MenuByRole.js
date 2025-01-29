@@ -186,6 +186,38 @@ function MenuByRole({allTops,supTick,reports,privileges,subscTypes}) {
 
 
 };
+const changeTopSMonths = async (newMo,topId) => {
+  console.log("POuštím")
+  if (searchTimeout.current) {
+    clearTimeout(searchTimeout.current); // Pokud je aktivní timeout, zrušíme ho
+  }
+
+  searchTimeout.current = setTimeout(async () => { // Spustí se až po určitém zpoždění
+
+  setIsLoadingTop(true); // Nastavení loading stavu na true
+  try {
+    
+    const response = await fetch('/api/changeNuberOfMonthsTop', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nbrMnth: newMo,
+        topId : topId
+      }),
+    });
+
+   
+
+  } catch (error) {
+    console.error('Chyba získávání uživatele', error);
+  } finally {
+    setIsLoadingTop(false); // Po dokončení nebo chybě, nastavíme loading na false
+  }
+}, 3000); 
+
+};
 
 
 
@@ -381,7 +413,7 @@ Kč
   <span className="ml-4" dangerouslySetInnerHTML={{ __html: top.emoji }}></span>
 
   </div>
-  Počet měsíců na aktivaci: <input className="input max-w-14" defaultValue={top.numberOfMonthsToValid} type="number" />
+  Počet měsíců na aktivaci: <input disabled={IsLoadingTop}  onChange={(e) => { changeTopSMonths(e.target.value,top.id)}}  className="input max-w-14" defaultValue={top.numberOfMonthsToValid} type="number" />
 <div></div>
 <div className="flex gap-4">
 Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id)}} disabled={IsLoadingTop} defaultChecked={!top.hidden} className="checkbox ml-1" type="checkbox" name="" id="" />
