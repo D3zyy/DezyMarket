@@ -175,7 +175,7 @@ function MenuByRole({allTops,supTick,reports,privileges,subscTypes}) {
           topId : topId
         }),
       });
-     window.location.reload()
+
      
 
     } catch (error) {
