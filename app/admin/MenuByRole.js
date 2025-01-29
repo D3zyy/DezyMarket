@@ -384,7 +384,7 @@ Kč
   Počet měsíců na aktivaci: <input className="input max-w-14" defaultValue={top.numberOfMonthsToValid} type="number" />
 <div></div>
 <div className="flex gap-4">
-Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id)}} disabled={IsLoadingTop} defaultChecked={!top.hidden} className="checkbox" type="checkbox" name="" id="" />
+Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id)}} disabled={IsLoadingTop} defaultChecked={!top.hidden} className="checkbox ml-1" type="checkbox" name="" id="" />
 </div>
 
 </div>
