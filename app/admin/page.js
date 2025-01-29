@@ -17,11 +17,13 @@ const Page = async () => {
 
   let session,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr
 
-    
+    session = getSession()
+    if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
+      redirect('/');
+  }
+    [reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr] = await Promise.all([
 
-    [session,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr] = await Promise.all([
-      getSession()
-      , prisma.postReport.findMany({
+      prisma.postReport.findMany({
         where: {
           active: true,
         },
@@ -115,9 +117,7 @@ const Page = async () => {
 
 
 
-  if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
-      redirect('/');
-  }
+
   return (
     <div>
       {session.role.privileges > 1 && 
