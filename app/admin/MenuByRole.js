@@ -499,7 +499,7 @@ Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id
         <div className="stat" key={key}>
          
           <div className="stat-title">
-            {stat.name} {stat.emoji ? <span dangerouslySetInnerHTML={{ __html: stat.emoji }} /> : null}
+          <span className="mr-2">{stat.name}</span>   {stat.emoji ? <span dangerouslySetInnerHTML={{ __html: stat.emoji }} /> : null}
           </div>
           <div className="stat-value">
             <div className="flex items-center">
