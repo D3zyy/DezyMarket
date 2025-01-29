@@ -106,7 +106,7 @@ const Page = async () => {
   return (
     <div>
       {session.role.privileges > 1 && 
-       <MenuByRole allTops={allTops} supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
+       <MenuByRole usersStats={usersStats} allTops={allTops} supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
       }
      
 
