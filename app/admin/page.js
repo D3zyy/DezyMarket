@@ -108,8 +108,13 @@ const Page = async () => {
     let subscriptionStats = {};
     console.log(allSubToStats)
     for(let j = 0; j < allSubToStats.length; j++) {
-   
       
+      const numberOfUpgrades = await prisma.accountUpgrades.count({
+        where: {
+          AccountTypeIdAfter: allSubToStats[j].id, // Správný název pole podle modelu
+        }
+      });
+console.log("Počet uprgradů:",numberOfUpgrades)
       // Fetch all active users once
       const allUsers = await prisma.accountTypeUsers.findMany({
           where: {
@@ -161,6 +166,7 @@ const Page = async () => {
   
       // Store the results in subscriptionStats
       subscriptionStats[allSubToStats[j].name] = {
+          numberOfUpgrades: numberOfUpgrades,
           emoji: allSubToStats[j].emoji,
           name: allSubToStats[j].name,
           numberOfAllUsers: numberOfAllUsers,
