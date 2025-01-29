@@ -6,6 +6,7 @@ import { prisma } from '../database/db';
 import { getTypeOfAccountDetails } from '../typeOfAccount/Methods';
 import { DateTime } from 'luxon';
 const Page = async () => {
+  try{
   const now = DateTime.now().setZone('Europe/Prague');
   const today = now.startOf('day');
   const yesterday = today.minus({ days: 1 });
@@ -192,6 +193,11 @@ const Page = async () => {
 
     </div>
   )
+} catch (error) {
+  return <> Nastala chyba</>
+} finally {
+  await prisma.$disconnect(); // Uzavřete připojení po dokončení
+}
 }
 
-export default Page
+export default Page;
