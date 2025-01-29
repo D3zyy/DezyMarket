@@ -8,10 +8,10 @@ import { getTypeOfAccountDetails } from '../typeOfAccount/Methods';
 const Page = async () => {
 
 
-  let session,reports,suppTickets,subscTypes
+  let session,reports,suppTickets,subscTypes,allTops
     
 
-    [session,reports,suppTickets,subscTypes] = await Promise.all([
+    [session,reports,suppTickets,subscTypes,allTops] = await Promise.all([
       getSession()
       , prisma.postReport.findMany({
         where: {
@@ -38,17 +38,18 @@ const Page = async () => {
         },
       }),
       prisma.supportTickets.findMany({where: { active: true }, include : {ipOfusrOnsup : true} }),
-      getTypeOfAccountDetails()
+      getTypeOfAccountDetails(),
+       prisma.tops.findMany({}),
     ]);
 
-   // console.log("types:",subscTypes)
+    //console.log("all tops:",allTops)
   if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }
   return (
     <div>
       {session.role.privileges > 1 && 
-       <MenuByRole supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
+       <MenuByRole allTops={allTops} supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
       }
      
 

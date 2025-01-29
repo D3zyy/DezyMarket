@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
-function MenuByRole({supTick,reports,privileges,subscTypes}) {
+function MenuByRole({allTops,supTick,reports,privileges,subscTypes}) {
  const [loading, setLoading] = useState(false); 
  const [isLoadingSearch, setIsLoadingSearch] = useState(false); 
  const [IsLoadingPerk, setIsLoadingPerk] = useState(false); 
@@ -339,8 +339,30 @@ Kč
           </ul>
         </div>
       ))}
-    </div>
-        
+
+
+    </div >
+    {allTops.map((top,idxxk) => (<>
+      <div 
+          key={idxxk}
+          className="p-6  mt-4 bg-base-100 border  border-base-200 rounded-lg shadow-sm"
+        >
+          {/* Subscription header */}
+          <div className="flex   mb-4">
+  {top.name}
+  <span className="ml-4" dangerouslySetInnerHTML={{ __html: top.emoji }}></span>
+
+  </div>
+  Počet měsíců na aktivaci: <input className="input max-w-14" defaultValue={top.numberOfMonthsToValid} type="number" />
+<div></div>
+<div className="flex gap-4">
+Aktivní : <input defaultChecked={!top.hidden} className="checkbox" type="checkbox" name="" id="" />
+</div>
+
+</div>
+
+
+</>))}
         
         
         </> } </div>;
