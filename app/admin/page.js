@@ -83,13 +83,21 @@ const Page = async () => {
   })
 
     ]);
+    function calculatePercentageChange(newValue, oldValue) {
+      if (oldValue === 0) return "N/A"; // Nelze dělit nulou
+      return ((newValue - oldValue) / oldValue * 100).toFixed(2) + "%";
+  }
+
+  const percentChangeTodayVsYesterday = calculatePercentageChange(registredTodayNumberOfUsr, registredYestrdayNumberOfUsr);
+  const percentChangeThisMonthVsLastMonth = calculatePercentageChange(registredThisMonthyNumberOfUsr, registredLastMonthyNumberOfUsr);
     let usersStats = {}
     usersStats.numberOfAllUsers = countOfAllUSers;
     usersStats.numberOfRegistredUsrToday = registredTodayNumberOfUsr
     usersStats.numberOfRegistredUsrYestrday = registredYestrdayNumberOfUsr
     usersStats.numberOfRegistredUsrThisMonth = registredThisMonthyNumberOfUsr
     usersStats.numberOfRegistredUsrLastMonth = registredLastMonthyNumberOfUsr
-
+    usersStats.percentChangeTodayVsYesterday = percentChangeTodayVsYesterday
+    usersStats.percentChangeThisMonthVsLastMonth = percentChangeThisMonthVsLastMonth
     console.log("Statistiky:",usersStats);
     //console.log("all tops:",allTops)
   if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){

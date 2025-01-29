@@ -461,7 +461,11 @@ Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id
     </div>
     <div className="stat-title">Celkově uživatelů</div>
     <div className="stat-value">31K</div>
+    <div className="stat-desc">
 
+
+      
+    </div>
   </div>
 
   <div className="stat">
