@@ -8,6 +8,7 @@ import { useRef } from "react";
 function MenuByRole({allTops,supTick,reports,privileges,subscTypes}) {
  const [loading, setLoading] = useState(false); 
  const [isLoadingSearch, setIsLoadingSearch] = useState(false); 
+ const [IsLoadingTop, setIsLoadingTop] = useState(false); 
  const [IsLoadingPerk, setIsLoadingPerk] = useState(false); 
  const [IsLoadingPrice, setIsLoadingPrice] = useState(false); 
   const [activeContent, setActiveContent] = useState("Tickets"); 
@@ -17,7 +18,7 @@ function MenuByRole({allTops,supTick,reports,privileges,subscTypes}) {
   const [searchInfo, setSearchInfo] = useState(null); 
   const [subTypes, setSubTypes] = useState(JSON.parse(subscTypes)); 
   const [foundUsers, setFoundUsers] = useState([]); 
-
+  
   const router = useRouter()
   const searchTimeout = useRef(null); // useRef pro zajištění, že timeout je uchován mezi renderováními
 
@@ -158,6 +159,33 @@ function MenuByRole({allTops,supTick,reports,privileges,subscTypes}) {
   
  
   };
+
+  const changeTopVisibility = async (visibility,topId) => {
+   
+    setIsLoadingTop(true); // Nastavení loading stavu na true
+    try {
+      
+      const response = await fetch('/api/changeVisibilityTop', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          visibility: visibility,
+          topId : topId
+        }),
+      });
+     window.location.reload()
+     
+
+    } catch (error) {
+      console.error('Chyba získávání uživatele', error);
+    } finally {
+      setIsLoadingTop(false); // Po dokončení nebo chybě, nastavíme loading na false
+    }
+
+
+};
 
 
 
@@ -356,7 +384,7 @@ Kč
   Počet měsíců na aktivaci: <input className="input max-w-14" defaultValue={top.numberOfMonthsToValid} type="number" />
 <div></div>
 <div className="flex gap-4">
-Aktivní : <input defaultChecked={!top.hidden} className="checkbox" type="checkbox" name="" id="" />
+Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id)}} disabled={IsLoadingTop} defaultChecked={!top.hidden} className="checkbox" type="checkbox" name="" id="" />
 </div>
 
 </div>
