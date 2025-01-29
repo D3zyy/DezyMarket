@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
-function MenuByRole({usersStats,allTops,supTick,reports,privileges,subscTypes}) {
+function MenuByRole({subscriptionStats,usersStats,allTops,supTick,reports,privileges,subscTypes}) {
  const [loading, setLoading] = useState(false); 
  const [isLoadingSearch, setIsLoadingSearch] = useState(false); 
  const [IsLoadingTop, setIsLoadingTop] = useState(false); 
@@ -450,7 +450,7 @@ Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id
                 />
               </svg>
 
-
+<div>
           <div className="stats shadow stats-vertical lg:stats-horizontal">
   <div className="stat">
     <div className="stat-figure text-yellow-500">
@@ -489,44 +489,62 @@ Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id
   </div>
 </div>
 
-
-
-<div className="mt-6">
-<div className="stats shadow  mt- 2 stats-vertical lg:stats-horizontal">
-  <div className="stat">
-    <div className="stat-figure text-yellow-500">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8 text-yellow-500" >
-  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-</svg>
-
-
-    </div>
-    <div className="stat-title">(Jméno předplatného) (ikona)</div>
-    <div className="stat-value"><div className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-</svg>
- (Počet )
-      </div> </div>
-      <div className="stat-desc flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-3">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-</svg>
-  Z toho darovaných:  (počet)</div>
-    <div className="stat-desc">↗︎  Dnes: + (počet)</div>
-    <div className="stat-desc">↗︎ Tenhle měsíc: + (počet)</div>
-    <div className="stat-desc">↗︎  Minulý měsíc: + (počet)</div>
-    <div className="stat-desc">↘︎ Zrušení na konci měsíce : (počet)</div>
-    <div className="stat-desc">↘︎ Zrušeno minulý měsíc : (počet)</div>
-
- 
-    </div>
-    </div>
 </div>
 
+<div className="mt-6 flex items-center justify-center">
+  <div className="stats shadow mt-2 stats-vertical lg:stats-horizontal">
+    {Object.keys(subscriptionStats).map((key) => {
+      const stat = subscriptionStats[key]; // Get the data for each subscription type
+      return (
+        <div className="stat" key={key}>
+         
+          <div className="stat-title">
+            {stat.name} {stat.emoji ? <span dangerouslySetInnerHTML={{ __html: stat.emoji }} /> : null}
+          </div>
+          <div className="stat-value">
+            <div className="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                />
+              </svg>
+              {stat.numberOfAllUsers}
+            </div>
+          </div>
+          <div className="stat-desc flex items-center gap-1">
 
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-3">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"/>
+</svg>
 
+            Z toho darovaných: {stat.numberOfGifted}
+          </div>
+          <div className="stat-desc">↗︎ Dnes: +{stat.numberOfToday}</div>
+          <div className="stat-desc">↗︎ Včera: +{stat.numberOfYesterday}</div>
+          <div className="stat-desc">↗︎ Tento měsíc: +{stat.numberOfThisMonth}</div>
+          <div className="stat-desc">↗︎ Minulý měsíc: +{stat.numberOfLastMonth}</div>
+          <div className="stat-desc">
+            ↘︎ Zrušení na konci měsíce: {stat.numberOfScheduledToCancel}
+          </div>
+          <div className="stat-desc">
+            ↘︎ Zrušeno minulý měsíc: {stat.numberOfEndedLastMonth}
+          </div>
+        </div>
+      );
+    })}
+  </div>
 
-
-
+  
+</div>
 
 
 

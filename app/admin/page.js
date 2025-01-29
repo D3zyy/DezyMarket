@@ -104,7 +104,7 @@ const Page = async () => {
 
 
     let subscriptionStats = {};
-
+    console.log(allSubToStats)
     for(let j = 0; j < allSubToStats.length; j++) {
    
       
@@ -115,7 +115,7 @@ const Page = async () => {
               active: true
           }
       });
-      console.log(allUsers)
+      
       // Get the current date and calculate last month and yesterday
       const now = DateTime.now().setZone('Europe/Prague');
       const todayStart = now.startOf('day');
@@ -153,17 +153,14 @@ const Page = async () => {
       const numberOfScheduledToCancel = allUsers.filter(user => user.scheduleToCancel && !user.gifted).length;
   
       const numberOfEndedLastMonth = allUsers.filter(user => {
-
           const toDate = DateTime.fromJSDate(user.toDate);
-          console.log('lastMonthEnd',lastMonthEnd)
-          console.log("lastMonthStart:",lastMonthStart)
-          console.log("toDate:",toDate)
-         
           return !user.gifted && toDate >= lastMonthStart && toDate <= lastMonthEnd;
       }).length;
   
       // Store the results in subscriptionStats
       subscriptionStats[allSubToStats[j].name] = {
+          emoji: allSubToStats[j].emoji,
+          name: allSubToStats[j].name,
           numberOfAllUsers: numberOfAllUsers,
           numberOfGifted: numberOfGifted,
           numberOfToday: numberOfToday,
@@ -186,7 +183,7 @@ const Page = async () => {
   return (
     <div>
       {session.role.privileges > 1 && 
-       <MenuByRole usersStats={usersStats} allTops={allTops} supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
+       <MenuByRole subscriptionStats={subscriptionStats} usersStats={usersStats} allTops={allTops} supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
       }
      
 
