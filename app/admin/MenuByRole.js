@@ -326,8 +326,14 @@ const changeTopSMonths = async (newMo,topId) => {
       
       </div>;
       case "Subscriptions":
-        return <div>{userPrivileges > 2 && <> 
-        
+        return <div>
+          
+          
+          {userPrivileges > 2 && <> 
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className=" text-purple-500 size-12 mx-auto mb-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+</svg>
+
         <div className="flex flex-col md:flex-row gap-6 ">
       {subTypes.map((type,indexikk) => (
         <div
@@ -427,7 +433,84 @@ Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id
         
         </> } </div>;
       case "Stats":
-        return <div>Statistiky</div>;
+        return <div>
+          
+
+
+
+          <div className="stats shadow">
+  <div className="stat">
+    <div className="stat-figure text-secondary">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        className="inline-block h-8 w-8 stroke-current">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+    </div>
+    <div className="stat-title">Downloads</div>
+    <div className="stat-value">31K</div>
+    <div className="stat-desc">Jan 1st - Feb 1st</div>
+  </div>
+
+  <div className="stat">
+    <div className="stat-figure text-secondary">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        className="inline-block h-8 w-8 stroke-current">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+      </svg>
+    </div>
+    <div className="stat-title">New Users</div>
+    <div className="stat-value">4,200</div>
+    <div className="stat-desc">↗︎ 400 (22%)</div>
+  </div>
+
+  <div className="stat">
+    <div className="stat-figure text-secondary">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        className="inline-block h-8 w-8 stroke-current">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+      </svg>
+    </div>
+    <div className="stat-title">New Registers</div>
+    <div className="stat-value">1,200</div>
+    <div className="stat-desc">↘︎ 90 (14%)</div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>;
       case "Errors":
         return <div>Chyby</div>;
       case "Tickets":
