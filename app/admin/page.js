@@ -15,14 +15,14 @@ const Page = async () => {
   const endOfLastMonth = startOfThisMonth.minus({ milliseconds: 1 });
 
 
-  let session,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr
+  let session,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats
 
     session =  await getSession()
     if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }
 
-    [reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr] = await Promise.all([
+    [reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats] = await Promise.all([
 
       prisma.postReport.findMany({
         where: {
@@ -83,7 +83,7 @@ const Page = async () => {
               lt: endOfLastMonth.toISO()
           }
       }
-  })
+  }),   prisma.accountType.findMany(),
 
     ]);
     function calculatePercentageChange(newValue, oldValue) {
@@ -103,16 +103,80 @@ const Page = async () => {
     usersStats.percentChangeThisMonthVsLastMonth = percentChangeThisMonthVsLastMonth
 
 
+    let subscriptionStats = {};
 
-    let subscriptionStats = {}
+    for(let j = 0; j < allSubToStats.length; j++) {
+   
+      
+      // Fetch all active users once
+      const allUsers = await prisma.accountTypeUsers.findMany({
+          where: {
+              accountTypeId: allSubToStats[j].id, // Use id from allSubToStats
+              active: true
+          }
+      });
+      console.log(allUsers)
+      // Get the current date and calculate last month and yesterday
+      const now = DateTime.now().setZone('Europe/Prague');
+      const todayStart = now.startOf('day');
+      const yesterdayStart = now.minus({ days: 1 }).startOf('day');
+      const currentMonthStart = now.startOf('month');
+      const lastMonthStart = now.minus({ months: 1 }).startOf('month');
+      const lastMonthEnd = now.minus({ months: 1 }).endOf('month');
+      
+      // Get the count of users for each category
+      const numberOfAllUsers = allUsers.length;
+  
+      const numberOfGifted = allUsers.filter(user => user.gifted).length;
+  
+      const numberOfToday = allUsers.filter(user => {
+          const createdAt = DateTime.fromJSDate(user.fromDate);
+         
+          return createdAt >= todayStart;
+      }).length;
+  
+      const numberOfYesterday = allUsers.filter(user => {
+          const createdAt = DateTime.fromJSDate(user.fromDate);
+          return createdAt >= yesterdayStart && createdAt < todayStart;
+      }).length;
+  
+      const numberOfThisMonth = allUsers.filter(user => {
+          const createdAt = DateTime.fromJSDate(user.fromDate);
+          return createdAt >= currentMonthStart;
+      }).length;
+  
+      const numberOfLastMonth = allUsers.filter(user => {
+          const createdAt = DateTime.fromJSDate(user.fromDate);
+          return createdAt >= lastMonthStart && createdAt <= lastMonthEnd;
+      }).length;
+  
+      const numberOfScheduledToCancel = allUsers.filter(user => user.scheduleToCancel && !user.gifted).length;
+  
+      const numberOfEndedLastMonth = allUsers.filter(user => {
 
-
-
-
-
-    console.log("Statistiky:",subscriptionStats);
-    //console.log("all tops:",allTops)
-
+          const toDate = DateTime.fromJSDate(user.toDate);
+          console.log('lastMonthEnd',lastMonthEnd)
+          console.log("lastMonthStart:",lastMonthStart)
+          console.log("toDate:",toDate)
+         
+          return !user.gifted && toDate >= lastMonthStart && toDate <= lastMonthEnd;
+      }).length;
+  
+      // Store the results in subscriptionStats
+      subscriptionStats[allSubToStats[j].name] = {
+          numberOfAllUsers: numberOfAllUsers,
+          numberOfGifted: numberOfGifted,
+          numberOfToday: numberOfToday,
+          numberOfYesterday: numberOfYesterday,
+          numberOfThisMonth: numberOfThisMonth,
+          numberOfLastMonth: numberOfLastMonth,
+          numberOfScheduledToCancel: numberOfScheduledToCancel,
+          numberOfEndedLastMonth: numberOfEndedLastMonth
+      };
+  }
+  
+  console.log("Statistiky subs:", subscriptionStats);
+    
 
 
 
