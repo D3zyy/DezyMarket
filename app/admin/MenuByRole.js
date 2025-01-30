@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
-function MenuByRole({subscriptionStats,usersStats,allTops,supTick,reports,privileges,subscTypes}) {
+function MenuByRole({subscriptionStats,topsWithCounts,usersStats,allTops,supTick,reports,privileges,subscTypes}) {
  const [loading, setLoading] = useState(false); 
  const [isLoadingSearch, setIsLoadingSearch] = useState(false); 
  const [IsLoadingTop, setIsLoadingTop] = useState(false); 
@@ -563,7 +563,17 @@ Počet upgradů : {stat.numberOfUpgrades}
 
 
 
+{topsWithCounts.map((top,idxxk) => (<>
+      <div 
+          key={idxxk}
+          className="p-6  mt-4 bg-base-100 border  border-base-200 rounded-lg shadow-sm"
+        >
+          {top.name} {top.userCount}
+          </div>
 
+       
+       
+        </>))}
 
 
 

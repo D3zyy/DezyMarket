@@ -106,7 +106,7 @@ const Page = async () => {
 
 
     let subscriptionStats = {};
-    console.log(allSubToStats)
+    //console.log(allSubToStats)
 
    
 
@@ -140,13 +140,7 @@ const Page = async () => {
             active: true
         }
     });
-      console.log("všichni uživatel=:",allUsers)
-      const topCounts = allTops.map(top => ({
-        ...top,
-        userCount: allUsers.filter(user => user.monthIn === top.numberOfMonthsToValid &&user.active).length
-      }));
-      
-      console.log(topCounts);
+  
      
 
       // Get the current date and calculate last month and yesterday
@@ -216,6 +210,18 @@ const Page = async () => {
  // console.log("Statistiky subs:", subscriptionStats);
     
 
+ const allUsersCountt = await prisma.accountTypeUsers.findMany({
+  where: {
+      active: true
+  }
+});
+console.log("všichni uživatel=:",allUsersCountt)
+const topCounts = allTops.map(top => ({
+  ...top,
+  userCount: allUsersCountt.filter(user => user.monthIn === top.numberOfMonthsToValid ).length
+}));
+
+console.log("top count:",topCounts);
 
 
 
@@ -224,7 +230,7 @@ const Page = async () => {
   return (
     <div>
       {session.role.privileges > 1 && 
-       <MenuByRole subscriptionStats={subscriptionStats} usersStats={usersStats} allTops={allTops} supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
+       <MenuByRole subscriptionStats={subscriptionStats} topsWithCounts={topCounts} usersStats={usersStats} allTops={allTops} supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
       }
      
 
