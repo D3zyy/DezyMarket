@@ -17,16 +17,48 @@ const Page = async () => {
   const endOfLastMonth = startOfThisMonth.minus({ milliseconds: 1 });
 
 
-  let session,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats
+  let countOfAllPosts,activePostsCount,nmbrOfPostsToday,nmbrOfPostsYestrday,nmbrOfPostsThisMonth,nmbrOfPostsLastMonth,session,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats
 
     session =  await getSession()
     if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }
   try{
-    [reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats] = await Promise.all([
+    [countOfAllPosts,activePostsCount,nmbrOfPostsToday,nmbrOfPostsYestrday,nmbrOfPostsThisMonth,nmbrOfPostsLastMonth,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats] = await Promise.all([
+      prisma.posts.count(),
+      prisma.posts.count({where: {visible: true}})
+      ,
+      await prisma.posts.count({
+        where: {
+          dateAndTime: {
+                gte: today.toISO(), // Od začátku dne
+                lt: today.plus({ days: 1 }).toISO() // Do konce dne
+            }
+        }
+    }), await prisma.posts.count({
+      where: {
+        dateAndTime: {
+              gte: yesterday.toISO(), // Od začátku včerejšího dne
+              lt: today.toISO() // Do konce včerejšího dne
+          }
+      }
+  }),await prisma.posts.count({
+    where: {
+      dateAndTime: {
+            gte: startOfThisMonth.toISO(),
+            lt: endOfThisMonth.toISO()
+        }
+    }
+}),await prisma.posts.count({
+    where: {
+      dateAndTime: {
+            gte: startOfLastMonth.toISO(),
+            lt: endOfLastMonth.toISO()
+        }
+    }
+})
 
-      prisma.postReport.findMany({
+     , prisma.postReport.findMany({
         where: {
           active: true,
         },
@@ -87,7 +119,17 @@ const Page = async () => {
       }
   }),   prisma.accountType.findMany(),
 
+
     ]);
+
+    let poststats = {}
+    poststats.numberOfAllPosts = countOfAllPosts;
+    poststats.numberOfAllActivePosts = activePostsCount;
+    poststats.numberOPostsToday = nmbrOfPostsToday
+    poststats.numberOPostsYestrday = nmbrOfPostsYestrday
+    poststats.numberOPostsThisMonth = nmbrOfPostsThisMonth
+    poststats.numberOPostsLastMonth = nmbrOfPostsLastMonth
+console.log("STTS POSTS:",poststats)
     function calculatePercentageChange(newValue, oldValue) {
       if (oldValue === 0) return "N/A"; // Nelze dělit nulou
       return ((newValue - oldValue) / oldValue * 100).toFixed(2) + "%";
@@ -112,7 +154,7 @@ const Page = async () => {
 
    
 
-
+console.log("Počet příspěvku celkem:",countOfAllPosts)
 
 
     for(let j = 0; j < allSubToStats.length; j++) {
@@ -215,7 +257,7 @@ const Page = async () => {
       active: true
   }
 });
-console.log("všichni uživatel=:",allUsersCountt)
+
 const sortedTops = [...allTops].sort((a, b) => a.numberOfMonthsToValid - b.numberOfMonthsToValid);
 
 const topCounts = sortedTops.map(top => {
@@ -229,7 +271,7 @@ const topCounts = sortedTops.map(top => {
 });
 
 
-console.log("top count:",topCounts);
+
 
 
 
@@ -238,7 +280,7 @@ console.log("top count:",topCounts);
   return (
     <div>
       {session.role.privileges > 1 && 
-       <MenuByRole subscriptionStats={subscriptionStats} topsWithCounts={topCounts} usersStats={usersStats} allTops={allTops} supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
+       <MenuByRole poststats={poststats} subscriptionStats={subscriptionStats} topsWithCounts={topCounts} usersStats={usersStats} allTops={allTops} supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
       }
      
 
