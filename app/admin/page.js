@@ -177,7 +177,7 @@ const Page = async () => {
           return createdAt >= lastMonthStart && createdAt <= lastMonthEnd;
       }).length;
   
-      const numberOfScheduledToCancel = allUsers.filter(user => user.scheduleToCancel && !user.gifted).length;
+      const numberOfScheduledToCancel = allUsers.filter(user => user.scheduleToCancel && !user.gifted && user.active).length;
   
       const numberOfEndedLastMonth = allUsers.filter(user => {
           const toDate = DateTime.fromJSDate(user.toDate);
