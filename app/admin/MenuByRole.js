@@ -433,7 +433,7 @@ Aktivní : <input onChange={(e) => { changeTopVisibility(e.target.checked,top.id
         
         </> } </div>;
       case "Stats":
-        return <div>
+        return <> <div>
           
          < svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -563,22 +563,67 @@ Počet upgradů : {stat.numberOfUpgrades}
 
 
 
+
+
+        </div>
+<div className="flex lg:flex-row gap-2 flex-col"> 
 {topsWithCounts.map((top,idxxk) => (<>
       <div 
           key={idxxk}
-          className="p-6  mt-4 bg-base-100 border  border-base-200 rounded-lg shadow-sm"
+          className="border-2  border-solid  rounded-[12px] p-[6px_10px] inline-flex flex-col items-center justify-center m-[5px] w-[120px] opacity-100  bg-[#f5f5f5] text-[#757575] dark:border-[#2a2828] dark:bg-[#333333] dark:text-[#9b9a9a] dark:opacity-90"
         >
-          {top.name} {top.userCount}
+
+<div
+            dangerouslySetInnerHTML={{ __html: top.emoji }}
+            style={{
+              fontSize: '18px',
+              marginBottom: '5px'
+            
+            }}
+          />
+   
+         
+          <div
+            style={{
+              fontSize: '12px',
+              textAlign: 'center',
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "4px"
+            }}
+          >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+</svg>
+    {top.userCount} <br />
+          </div>
+        
+       
+   
+      
+
+
+
+
+
+
+
+
+
+
+
+
+        
           </div>
 
        
        
         </>))}
+        </div>
 
 
-
-
-        </div>;
+</> ;
       case "Errors":
         return <div>Chyby</div>;
       case "Tickets":
