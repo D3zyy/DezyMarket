@@ -9,7 +9,7 @@ export async function POST(req) {
         try {
    
              data = await req.json();
-        
+            console.log("DATA NA REAKTIVACI SUB:",data)
           } catch (error) {
             return new Response(JSON.stringify({ message: "Chybně formátovaný požadavek." }), {
               status: 400,
@@ -98,15 +98,16 @@ export async function POST(req) {
 }
     let customers
 
-                // stripe check commented
+            
  if(myAcc) {
-
+    console.log("Můj účet")
     
         // Retrieve customer information from Stripe
          customers = await stripe.customers.list({
             email: session.email
         });
     } else{ 
+        console.log("Z pohledu admina reatkivuji ")
          customers = await stripe.customers.list({
             email: usrToReactivate.email
         });
@@ -124,12 +125,13 @@ export async function POST(req) {
         //}
 
         const customer = customers.data[0];
-        
+            console.log("Tenhle uživatel:",customer)
         // Retrieve subscriptions for the customer
     const subscriptions = await stripe.subscriptions.list({
             customer: customer.id,
             status: "active"
         });
+        console.log("SUbs on stripe from this user:",subscriptions)
         if (!subscriptions.data.length) {
            return new Response(JSON.stringify({
                 message: "Žádné předplatné nenalezeno pro tohoto zákazníka"
@@ -149,6 +151,7 @@ export async function POST(req) {
        }
      
         const subscription = subscriptions.data[0];
+        console.log("Togle sub budu reaktivoavt:",subscription)
         //const subscriptionInfo = await stripe.subscriptions.retrieve(subscription.id);
        //const product = await stripe.products.retrieve(subscriptionInfo.plan.product);
        //let producName =product.name;
@@ -164,6 +167,7 @@ export async function POST(req) {
        const accountType = await prisma.AccountType.findFirst({
         where: { name: data.name },
     });
+    console.log("Tenhle účet:",accountType)
     if(!accountType){
         return new Response(JSON.stringify({
             message: "Zadaný typ učtu nenalezen  "
@@ -187,6 +191,7 @@ export async function POST(req) {
            scheduleToCancel: false
         },
     });
+    console.log("Po updatu tenhle účet updatnutuje:",updatedAccount)
     if(!updatedAccount){
         return new Response(JSON.stringify({
             message: "Žádné aktivní předplatné nenalezeno"
@@ -195,6 +200,16 @@ export async function POST(req) {
             headers: { 'Content-Type': 'application/json' }
         });
     }
+    console.log("Celé sub:",subscription)
+    console.log("SUB iD:",subscription.id)
+
+    await stripe.subscriptions.update(
+        subscription.id,
+        {cancel_at_period_end: false}
+      );
+if(!myAcc)
+{
+
     const nowww = DateTime.now()
     .setZone('Europe/Prague')
     .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
@@ -209,12 +224,9 @@ export async function POST(req) {
       },
     });
 
-
-        await stripe.subscriptions.update(
-            subscription.id,
-            {cancel_at_period_end: false}
-          );
-      // }
+}
+       
+   
        
 
 
