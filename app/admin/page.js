@@ -107,25 +107,48 @@ const Page = async () => {
 
     let subscriptionStats = {};
     console.log(allSubToStats)
+
+   
+
+   
+
+
+
+
     for(let j = 0; j < allSubToStats.length; j++) {
       
       const numberOfUpgrades = await prisma.accountUpgrades.findMany({
         where: {
           AccountTypeIdAfter: allSubToStats[j].id, // Správný název pole podle modelu
+          
         }
       });
 
-console.log("Počet uprgradů:",numberOfUpgrades.length)
+//console.log("Počet uprgradů:",numberOfUpgrades.length)
 
 
       // Fetch all active users once
       const allUsers = await prisma.accountTypeUsers.findMany({
           where: {
               accountTypeId: allSubToStats[j].id, // Use id from allSubToStats
-              active: true
+       
           }
       });
+      const allUsersCount = await prisma.accountTypeUsers.findMany({
+        where: {
+            accountTypeId: allSubToStats[j].id, // Use id from allSubToStats
+            active: true
+        }
+    });
+      console.log("všichni uživatel=:",allUsers)
+      const topCounts = allTops.map(top => ({
+        ...top,
+        userCount: allUsers.filter(user => user.monthIn === top.numberOfMonthsToValid &&user.active).length
+      }));
       
+      console.log(topCounts);
+     
+
       // Get the current date and calculate last month and yesterday
       const now = DateTime.now().setZone('Europe/Prague');
       const todayStart = now.startOf('day');
@@ -171,15 +194,15 @@ console.log("Počet uprgradů:",numberOfUpgrades.length)
         return createdAt >= currentMonthStart;
       }).length;
       
-      console.log("Počet uprgradů tento měsíc:",numberOfThisMonthUpgrades)
-      
+   //   console.log("Počet uprgradů tento měsíc:",numberOfThisMonthUpgrades)
+
       // Store the results in subscriptionStats
       subscriptionStats[allSubToStats[j].name] = {
         numberOfThisMonthUpgrades: numberOfThisMonthUpgrades,
           numberOfUpgrades: numberOfUpgrades.length,
           emoji: allSubToStats[j].emoji,
           name: allSubToStats[j].name,
-          numberOfAllUsers: numberOfAllUsers,
+          numberOfAllUsers: allUsersCount.length,
           numberOfGifted: numberOfGifted,
           numberOfToday: numberOfToday,
           numberOfYesterday: numberOfYesterday,
@@ -190,7 +213,7 @@ console.log("Počet uprgradů:",numberOfUpgrades.length)
       };
   }
   
-  console.log("Statistiky subs:", subscriptionStats);
+ // console.log("Statistiky subs:", subscriptionStats);
     
 
 
