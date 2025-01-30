@@ -216,10 +216,18 @@ const Page = async () => {
   }
 });
 console.log("všichni uživatel=:",allUsersCountt)
-const topCounts = allTops.map(top => ({
-  ...top,
-  userCount: allUsersCountt.filter(user => user.monthIn === top.numberOfMonthsToValid ).length
-}));
+const sortedTops = [...allTops].sort((a, b) => a.numberOfMonthsToValid - b.numberOfMonthsToValid);
+
+const topCounts = sortedTops.map(top => {
+  return {
+    ...top,
+    userCount: allUsersCountt.filter(user => 
+      user.monthIn >= top.numberOfMonthsToValid && 
+      (!sortedTops.find(t => t.numberOfMonthsToValid > top.numberOfMonthsToValid && user.monthIn >= t.numberOfMonthsToValid))
+    ).length
+  };
+});
+
 
 console.log("top count:",topCounts);
 
