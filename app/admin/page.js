@@ -7,7 +7,7 @@ import { getTypeOfAccountDetails } from '../typeOfAccount/Methods';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 const Page = async () => {
-  try{
+
   const now = DateTime.now().setZone('Europe/Prague');
   const today = now.startOf('day');
   const yesterday = today.minus({ days: 1 });
@@ -23,7 +23,7 @@ const Page = async () => {
     if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }
-
+  try{
     [reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats] = await Promise.all([
 
       prisma.postReport.findMany({
