@@ -34,6 +34,32 @@ export async function GET(req) {
       }
     );
   } catch (error) {
+    try{
+                  
+       
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/verify - GET - (catch) token: ${token} email: ${email}  `,
+              dateAndTime: dateAndTime,
+              errorPrinted: error,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
+          }catch(error){}
     // Handle errors
     console.error('Error during token verification:', error);
     return new Response(

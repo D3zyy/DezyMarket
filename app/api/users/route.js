@@ -7,11 +7,11 @@ import { handleLoginAttempt, resetUserTries } from "./handleLoginAttempts";
 
 // POST method for logging in
 export async function POST(req) {
-
+  let data;
   try {
    
     // Attempt to parse the request body
-    let data;
+  
     try {
       data = await req.json();
       
@@ -62,9 +62,9 @@ export async function POST(req) {
 
    
 
-      if(user && !ban && !isPasswordValid ){
-       await handleLoginAttempt(user.id);
-      }
+     // if(user && !ban && !isPasswordValid ){
+       //await handleLoginAttempt(user.id);
+      //}
     
       
    
@@ -176,6 +176,32 @@ export async function POST(req) {
       });
     }
   } catch (error) {
+    try{
+                  
+       
+          const rawIp =
+          req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+          req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+          req.socket?.remoteAddress ||                         // Lokální fallback
+          null;
+        
+        // Odstranění případného prefixu ::ffff:
+        const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+        
+      
+        
+              const dateAndTime = DateTime.now()
+              .setZone('Europe/Prague')
+              .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                await prisma.errors.create({
+                  info: `Chyba na /api/users - POST - (catch)data: ${data}  `,
+                  dateAndTime: dateAndTime,
+                  errorPrinted: error,
+                  userId: session?.userId,
+                  ipAddress:ip,
+                })
+    
+              }catch(error){}
     console.error("Chyba ze strany serveru:", error);
 
     return new Response(JSON.stringify({ message: "Chyba na serveru" }), {
