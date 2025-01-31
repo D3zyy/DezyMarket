@@ -25,6 +25,26 @@ export async function POST(request) {
       where: { name: data.nameToUpgrade },
   });
   if (!accToUpgradExist) {
+    const rawIp =
+    request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+    request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+    request.socket?.remoteAddress ||                         // Lokální fallback
+    null;
+  
+  // Odstranění případného prefixu ::ffff:
+  const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+  
+  
+  
+        const dateAndTime = DateTime.now()
+        .setZone('Europe/Prague')
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+          await prisma.errors.create({
+            info: `Chyba na /api/upgradeSubscription - POST - (Účet který byl poslán že chcete upgradovat neexistuje) data: ${data}  `,
+            dateAndTime: dateAndTime,
+            userId: session?.userId,
+            ipAddress:ip,
+          })
     return new NextResponse(
       JSON.stringify({ message: 'Účet který byl poslán že chcete upgradovat neexistuje' }),
       {
@@ -37,6 +57,26 @@ export async function POST(request) {
     where: { name: data.fromName},
 });
 if (!accThatAlreadyhaveExist) {
+  const rawIp =
+  request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  request.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/upgradeSubscription - POST - (Účet který byl poslán že máte neexistuje) data: ${data}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
   return new NextResponse(
     JSON.stringify({ message: 'Účet který byl poslán že máte neexistuje' }),
     {
@@ -46,6 +86,26 @@ if (!accThatAlreadyhaveExist) {
   );
 }
 if(accThatAlreadyhaveExist.priority >= accToUpgradExist.priority){
+  const rawIp =
+  request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  request.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/upgradeSubscription - POST - (Nelze upgradovat na daný účet má vetší prioritu) data: ${data}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
   return new NextResponse(
     JSON.stringify({ message: 'Nelze upgradovat na daný účet' }),
     {
@@ -70,6 +130,26 @@ const existWithuser = await prisma.AccountTypeUsers.findFirst({
 console.log("Má ten co říká že má:",existWithuser)
 
 if (!existWithuser) {
+  const rawIp =
+  request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  request.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/upgradeSubscription - POST - (Účet který byl poslán že máte nebyl nalezen s vaším účtem) data: ${data}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
   return new NextResponse(
     JSON.stringify({ message: 'Účet který byl poslán že máte nebyl nalezen s vaším účtem' }),
     {
@@ -90,6 +170,26 @@ const existWithuserWhichToUpgrade = await prisma.AccountTypeUsers.findFirst({
 });
 console.log("Má ten co říká že chce:",existWithuserWhichToUpgrade)
 if (existWithuserWhichToUpgrade) {
+  const rawIp =
+  request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  request.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/upgradeSubscription - POST - (Účet který byl poslán že chcete upgradovat již máte) data: ${data}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
   return new NextResponse(
     JSON.stringify({ message: 'Účet který byl poslán že chcete upgradovat již máte' }),
     {
@@ -107,6 +207,26 @@ const priceValueOfAlreadySub = await prisma.prices.findFirst({
 });
 
 if(!priceValueOfAlreadySub){
+  const rawIp =
+  request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  request.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/upgradeSubscription - POST - (Žádná cena předplatného které máte nenalezena) data: ${data}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
   return new Response(JSON.stringify({
     message: "Žádná cena předplatného které máte nenalezena"
   }), {
@@ -143,6 +263,26 @@ const pricevalueOfDesiredSub = await prisma.accountTypeOnPrices.findFirst({
 });
 
 if(!pricevalueOfDesiredSub){
+  const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+    
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/upgradeSubscription - POST - (Žádná cena předplatného které chcete upgradovat nenalezena) data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
   return new Response(JSON.stringify({
     message: "Žádná cena předplatného které chcete upgradovat nenalezena"
   }), {
@@ -165,6 +305,26 @@ const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // S
     });
     const customer = customers.data[0];
     if (!customers.data.length) {
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+    
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/upgradeSubscription - POST - (Žádný zákazník nenalezen s tímto emailem) data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: "Žádný zákazník nenalezen s tímto emailem"
       }), {
@@ -184,6 +344,26 @@ const cardFound = paymentMethods.data.find(card => card.id === data.cardId);
 if (cardFound) {
     console.log('Karta patří uživateli:', cardFound);
 }  else  {
+  const rawIp =
+  request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  request.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/upgradeSubscription - POST - (Karta nepatří uživateli) data: ${data}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
     console.log("Karta nepatří uživateli")
     return new Response(JSON.stringify({
         message: "Tuto platební metodu nelze použít s tímto účtem"
@@ -288,6 +468,26 @@ if (nonZeroPriceSubscription) {
      subscriptionInfo = await stripe.subscriptions.retrieve(nonZeroPriceSubscription.id);
     
 } else{
+  const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/upgradeSubscription - POST - (Upgradnout lze pouze pokud již máte předplatné) data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
     return new NextResponse(
         JSON.stringify({ message: 'Upgradnout lze pouze pokud již máte předplatné' }),
         {
@@ -398,6 +598,32 @@ console.log("Jeho nínejší produkt",product)
     );
 
   } catch (error) {
+    try{
+              
+      let data = await request.json();
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/upgradeSubscription - POST - (catch) data: ${data}  `,
+              dateAndTime: dateAndTime,
+              errorPrinted: error,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
+          }catch(error){}
     console.error('Chyba při vytvřání požadavku na nastavení základního typu předplatného : ', error);
     return new NextResponse(
       JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na zakladní typ předplatného' }),
