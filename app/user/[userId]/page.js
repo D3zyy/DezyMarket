@@ -16,7 +16,7 @@ import {GiftSubModal, openGiftSubModal} from "./GiftSubModal";
 import CancelSubButton from "./CancelSub";
 import ReNewSubButton from "./ReNewSub";
 import DeleteSessionBtn from "./BtnDeleteSession";
-
+import { headers } from "next/headers";
 const Page = async ({ params }) => {
   try{ 
   let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser,isBanned,allRoles,allSub,sessionsOfUser,ipsOfUser,ipsWithOtherUsers,allManagementsActions
@@ -1065,6 +1065,27 @@ Před: {action?.valueBefore}
   </>
 )
 } catch (error) {
+  try{
+    const rawIp =
+headers().get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+headers().get("x-real-ip") ||                      // Alternativní hlavička                   // Lokální fallback
+null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+    const dateAndTime = DateTime.now()
+    .setZone('Europe/Prague')
+    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+      await prisma.errors.create({
+        info: `Chyba na /user/[${params?.userId}] `,
+        errorPrinted: error,
+        dateAndTime: dateAndTime,
+        userId: session?.userId,
+        ipAddress:ip,
+      })
+    } catch(error){
+    }
   return (
     <div className="p-4 text-center">
       <h1 className="text-xl font-bold mt-2">
