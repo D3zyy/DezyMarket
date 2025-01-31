@@ -20,8 +20,28 @@ export async function POST(request) {
     }
     let data = await request.json();
 
-    console.log(data)
+
     if(session?.role?.privileges <= 1){
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateBan - POST - (Na tento příkaz nemáte oprávnění) data: ${data} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
         return new Response(JSON.stringify({
             message: "Na tento příkaz nemáte oprávnění"
         }), {
@@ -42,6 +62,26 @@ export async function POST(request) {
       },
     });
     if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateBan - POST - (Již jste vyčerpal adm. pravomocí) data: ${data} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
       }), {
@@ -125,6 +165,26 @@ if (timeDifference > 1000 * 3600 * 2 ) {
 
 
     } else {
+      const rawIp =
+    request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+    request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+    request.socket?.remoteAddress ||                         // Lokální fallback
+    null;
+  
+  // Odstranění případného prefixu ::ffff:
+  const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+  
+
+  
+        const dateAndTime = DateTime.now()
+        .setZone('Europe/Prague')
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+          await prisma.errors.create({
+            info: `Chyba na /api/updateBan - POST - (Na tento příkaz nemáte oprávnění) data: ${data} `,
+            dateAndTime: dateAndTime,
+            userId: session?.userId,
+            ipAddress:ip,
+          })
         return new Response(JSON.stringify({
             message: "Na tento příkaz nemáte oprávnění"
         }), {
@@ -143,6 +203,31 @@ if (timeDifference > 1000 * 3600 * 2 ) {
       }
     );
   } catch (error) {
+    try{
+    let data = await request.json();
+    const rawIp =
+    request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+    request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+    request.socket?.remoteAddress ||                         // Lokální fallback
+    null;
+  
+  // Odstranění případného prefixu ::ffff:
+  const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+  
+
+  
+        const dateAndTime = DateTime.now()
+        .setZone('Europe/Prague')
+        .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+          await prisma.errors.create({
+            info: `Chyba na /api/updateBan - POST - (catch) data: ${data} `,
+            dateAndTime: dateAndTime,
+            errorPrinted: error,
+            userId: session?.userId,
+            ipAddress:ip,
+          })
+
+        }catch(error){}
     console.log(error)
     return new Response(
       JSON.stringify({ message: 'Chyba na serceru update banu', success: false }),
@@ -173,6 +258,26 @@ export async function PUT(request) {
   
     console.log("data:", data);
     if (session?.role?.privileges <= 1) {
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateBan - PUT - (Na tento příkaz nemáte oprávnění) data: ${data} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: "Na tento příkaz nemáte oprávnění"
       }), {
@@ -193,6 +298,26 @@ export async function PUT(request) {
       },
     });
     if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateBan - PUT - (Již jste vyčerpal adm. pravomocí) data: ${data} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
       }), {
@@ -213,6 +338,26 @@ export async function PUT(request) {
   
     console.log("bannn:", ban);
     if (!ban) {
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateBan - PUT - ban nebyl nalezen) data: ${data} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: "Ban nebyl nalezen"
       }), {
@@ -277,7 +422,28 @@ console.log("tady")
         });
       console.log("udate:", updateBan);
     } else {
-      console.log("tady nemam oprv")
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateBan - PUT - (Na tento příkaz nemáte oprávnění) data: ${data} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
+
       return new Response(JSON.stringify({
         message: "Na tento příkaz nemáte oprávnění"
       }), {
@@ -294,6 +460,32 @@ console.log("tady")
       }
     );
   } catch (error) {
+    try{
+              
+      let data = await request.json();
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateBan - PUT - (catch) data: ${data} `,
+              dateAndTime: dateAndTime,
+              errorPrinted: error,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
+          }catch(error){}
     console.log(error);
     return new Response(
       JSON.stringify({ message: 'Chyba na serveru při update banu', success: false }),
@@ -330,6 +522,27 @@ export async function DELETE(request) {
   
     console.log("data:", data);
     if (session?.role?.privileges <= 3) {
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateBan - DELETE - (Na tento příkaz nemáte oprávnění) data: ${data} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
       return new Response(JSON.stringify({
         message: "Na tento příkaz nemáte oprávnění"
       }), {
@@ -367,6 +580,32 @@ export async function DELETE(request) {
       }
     );
   } catch (error) {
+    try{
+              
+      let data = await request.json();
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateBan - DELETE - (catch) data: ${data} `,
+              dateAndTime: dateAndTime,
+              errorPrinted: error,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
+          }catch(error){}
     console.log(error);
     return new Response(
       JSON.stringify({ message: 'Chyba na serveru při smazaní banu', success: false }),
