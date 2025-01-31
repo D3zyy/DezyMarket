@@ -160,6 +160,19 @@ console.log("Již má uživatel tuto ip adresu",ipToRegisterAlreadyExistWithThat
     }
 
   } catch (error) {
+    try{
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /authentication/registration/actions.js - (catch)   `,
+              dateAndTime: dateAndTime,
+              errorPrinted: error,
+            })
+
+          }catch(error){}
     console.error("Database error:", error);
     return {
       message: "Chyba při registraci, zkuste to prosím znovu později.",
