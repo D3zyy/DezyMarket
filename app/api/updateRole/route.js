@@ -17,6 +17,26 @@ export async function POST(request) {
       );
     }
     if(session.role.privileges <= 3){
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateRole - POST - (Na tento příkaz nemáte oprávnění) roleId: ${roleId} idOfUser: ${idOfUser}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
         return new NextResponse(
             JSON.stringify({ message: 'Na tento příkaz nemáte oprávnění' }),
             {
@@ -36,6 +56,26 @@ export async function POST(request) {
 
 
     if (!role) {
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateRole - POST - (Role nenalezena) roleId: ${roleId} idOfUser: ${idOfUser}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new NextResponse(
         JSON.stringify({ message: 'Role nenalezena' }),
         {
@@ -53,6 +93,27 @@ export async function POST(request) {
 
 
     if (!usr) {
+
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateRole - POST - (Uživatel nenalezen) roleId: ${roleId} idOfUser: ${idOfUser}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
         return new NextResponse(
           JSON.stringify({ message: 'Uživatel nenalezen' }),
           {
@@ -65,6 +126,27 @@ export async function POST(request) {
 
   
       if (usr.role.privileges >= session.role.privileges) {
+
+        const rawIp =
+        request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        request.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/updateRole - POST - (nemáte oprávnění na tento příkaz) roleId: ${roleId} idOfUser: ${idOfUser}  `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
         return new NextResponse(
           JSON.stringify({ message: 'Nemáte oprávnění na tento příkaz' }),
           {
@@ -92,6 +174,35 @@ export async function POST(request) {
     );
 
   } catch (error) {
+
+    try{
+              
+      let { roleId , idOfUser} = await request.json();
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/updateRole - POST - (catch) roleId: ${roleId} idOfUser: ${idOfUser}  `,
+              dateAndTime: dateAndTime,
+              errorPrinted: error,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
+          }catch(error){}
+
+
     console.error('Chyba při vytváření požadavku na nastavení základního typu předplatného: ', error);
     return new NextResponse(
       JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na základní typ předplatného' }),
