@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { prisma } from "@/app/database/db";
+import { DateTime } from "luxon";
 
 export async function POST(request) {
     try {
@@ -64,6 +65,32 @@ export async function POST(request) {
         });
 
     } catch (error) {
+        try{
+              
+              
+                const rawIp =
+                request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+                request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+                request.socket?.remoteAddress ||                         // Lokální fallback
+                null;
+              
+              // Odstranění případného prefixu ::ffff:
+              const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+              
+            
+              
+                    const dateAndTime = DateTime.now()
+                    .setZone('Europe/Prague')
+                    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                      await prisma.errors.create({
+                        info: `Chyba na /api/subInfo - POST - (catch) `,
+                        dateAndTime: dateAndTime,
+                        errorPrinted: error,
+                        userId: session?.userId,
+                        ipAddress:ip,
+                      })
+          
+                    }catch(error){}
         console.error('Chyba na serveru [POST] požadavek informace o předplatném:  ', error);
         return new NextResponse(JSON.stringify({
             message: 'Chyba na serveru [POST] požadavek informace o předplatném'

@@ -145,7 +145,7 @@ export const logOut = async (state,formData) => {
 
       // Get the current session
       const session = await getIronSession(cookies(),sessionOptions);
-      if (session && session.sessionId) {
+      if (session && session.sessionId && session.isLoggedIn) {
       
         // Remove the session from the database
         let sessionIdForDb = session.sessionId

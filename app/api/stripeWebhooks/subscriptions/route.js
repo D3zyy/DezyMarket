@@ -248,6 +248,31 @@ const endOfSubscription = DateTime.now()
             headers: { 'Content-Type': 'application/json' },
         });
     } catch (error) {
+        try{
+               
+      
+            const rawIp =
+            request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+            request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+            request.socket?.remoteAddress ||                         // Lokální fallback
+            null;
+          
+          // Odstranění případného prefixu ::ffff:
+          const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+          
+        
+          
+                const dateAndTime = DateTime.now()
+                .setZone('Europe/Prague')
+                .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                  await prisma.errors.create({
+                    info: `Chyba na /api/stripeWebHooks/subscriptions - POST - (catch)`,
+                    dateAndTime: dateAndTime,
+                    errorPrinted: error,
+                    ipAddress:ip,
+                  })
+      
+                }catch(error){}
         console.error('Chyba při zpracování Stripe webhooku:', error.message);
 
         return new NextResponse(JSON.stringify({

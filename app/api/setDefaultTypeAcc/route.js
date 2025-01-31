@@ -39,6 +39,26 @@ export async function POST(request) {
     });
 
     if (!accountType) {
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/setDefaultTypeAcc - POST - (Typ účtu nenalezen) name: ${name}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new NextResponse(
         JSON.stringify({ message: 'Typ účtu nenalezen' }),
         {
@@ -58,6 +78,27 @@ export async function POST(request) {
     });
 
     if (existingAccountTypeUser) {
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/setDefaultTypeAcc - POST - (Uživatel již má aktivní základní typ účtu) name: ${name}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
       return new NextResponse(
         JSON.stringify({ message: 'Uživatel již má aktivní základní typ účtu' }),
         {
@@ -91,6 +132,33 @@ export async function POST(request) {
     );
 
   } catch (error) {
+    let { name } = await request.json();
+    try{
+               
+      
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/setDefaultTypeAcc - POST - (catch) name: ${name}  `,
+              dateAndTime: dateAndTime,
+              errorPrinted: error,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
+          }catch(error){}
     console.error('Chyba při vytváření požadavku na nastavení základního typu předplatného: ', error);
     return new NextResponse(
       JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na základní typ předplatného' }),

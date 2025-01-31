@@ -1,5 +1,5 @@
 import { prisma } from "@/app/database/db";
-
+import { DateTime } from "luxon";
 export const checkUserBan = async (userId) => {
   try {
     const currentDate = new Date();
@@ -56,6 +56,17 @@ export const checkUserBan = async (userId) => {
       return false;
     }
   } catch (error) {
+    try{
+      const dateAndTime = DateTime.now()
+                                  .setZone('Europe/Prague')
+                                  .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                                    await prisma.errors.create({
+                                      info: `Chyba na /api/session/dbMethodSession.js - (catch) userId: ${userId} `,
+                                      dateAndTime: dateAndTime,
+                                      errorPrinted: error,
+                                    })
+                        
+                                  }catch(error){}
     console.error('Chyba kontrolovaní banu uživatele:', error);
     throw error;
   } finally {
