@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { prisma } from '@/app/database/db';
+import { DateTime } from 'luxon';
 
 export async function verifyToken(email, token) {
     try {
@@ -68,8 +69,18 @@ export async function verifyToken(email, token) {
             return { message: 'Odkaz je neplatný.', success: false };
         }
     } catch (error) {
-        // Log only critical errors
-        console.error('Chyba při ověřování tokenu:', error.message);
+         try{                
+                              const dateAndTime = DateTime.now()
+                              .setZone('Europe/Prague')
+                              .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                                await prisma.errors.create({
+                                  info: `Chyba na /api/email/verifyToken.js - (catch) email: ${email} ${token} `,
+                                  dateAndTime: dateAndTime,
+                                  errorPrinted: error,
+                                })
+                    
+                              }catch(error){}
+
         return { message: 'Chyba při ověřování emailu.', success: false };
     } finally {
         await prisma.$disconnect(); // Uzavřete připojení po dokončení

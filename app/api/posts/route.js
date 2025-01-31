@@ -213,12 +213,13 @@ async function uploadImagesToS3(files,postId) {
 
 
 export async function POST(req) {
+  let allowedTypeOfPost
+  let formData;
+  let allImages
+  let typPost
+  let isAllowed 
     try {
-        let allowedTypeOfPost
-        let formData;
-        let allImages
-        let typPost
-        let isAllowed 
+      
         try {
             formData = await req.formData();
            typPost =  formData.get('typeOfPost')
@@ -265,6 +266,26 @@ console.log("visible:",visiblePosts)
 console.log("invisiblePosts:",invisiblePosts)
 // Check the conditions
 if (visiblePosts > 30) {
+  const rawIp =
+  req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  req.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/posts - POST - (Již jste nahrál maximalní počet obrázků .)  formData: ${formData}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
   return new Response(JSON.stringify({ messageToDisplay: "Již jste nahráli maximální počet příspěvků." }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
@@ -272,6 +293,26 @@ if (visiblePosts > 30) {
 }
 
 if (invisiblePosts > 100) {
+  const rawIp =
+  req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  req.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/posts - POST - (Maximalní počet neviditelných obrázků byl dosažen .)  formData: ${formData}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
   return new Response(JSON.stringify({ messageToDisplay: "Maximální počet neviditelných příspěvků byl dosažen." }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
@@ -298,6 +339,26 @@ console.log("Jdu kontrolvat top")
 console.log("Nasel sem top:",isAllowed)
 
 if(isAllowed?.hidden){
+  const rawIp =
+  req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  req.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/posts - POST - (Tento typ topovaní je skrytý .)  formData: ${formData}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
   return new Response(JSON.stringify({ messageToDisplay: "Tento typ topovaní není dostupný" }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
@@ -310,6 +371,26 @@ const accOfUser = await prisma.accountType.findMany({
 });
 
 if(allImages?.length > accOfUser?.numberOfAllowedImages ){
+  const rawIp =
+  req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  req.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/posts - POST - (Bylo nahráno nedovolené množství obrázků .)  formData: ${formData}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
   return new Response(JSON.stringify({ messageToDisplay: "Bylo nahráno nedovolené množství obrázků." }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
@@ -319,7 +400,26 @@ console.log("Počet měsícu abych ho mohl tento top:",isAllowed?.numberOfMonths
 console.log("Počet měsícu které mám:", monthIn?.monthIn)
 console.log(isAllowed?.numberOfMonthsToValid  > monthIn?.monthIn)
  if(isAllowed?.numberOfMonthsToValid > monthIn?.monthIn)   {
-  console.log("Nemuzu!!")
+  const rawIp =
+  req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  req.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: `Chyba na /api/posts - POST - (Na tento druh topovaní nemáte právo .)  formData: ${formData}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
   return new Response(JSON.stringify({ messageToDisplay: "Tento druh topovaní není pro vás dostupný" }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
@@ -380,6 +480,26 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 where: { id: parseInt(formData.get('category')) }
               });
               if (!categoryExist) {
+                const rawIp =
+                req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+                req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+                req.socket?.remoteAddress ||                         // Lokální fallback
+                null;
+              
+              // Odstranění případného prefixu ::ffff:
+              const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+              
+            
+              
+                    const dateAndTime = DateTime.now()
+                    .setZone('Europe/Prague')
+                    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                      await prisma.errors.create({
+                        info: `Chyba na /api/posts - POST - (Tato kategorie neexistuje.)  formData: ${formData}  `,
+                        dateAndTime: dateAndTime,
+                        userId: session?.userId,
+                        ipAddress:ip,
+                      })
                 return new Response(JSON.stringify({ message: "Tato kategorie neexistuje." }), {
                   status: 404,
                   headers: { 'Content-Type': 'application/json' }
@@ -390,6 +510,26 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
               });
 
               if (!sectionExist) {
+                const rawIp =
+                req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+                req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+                req.socket?.remoteAddress ||                         // Lokální fallback
+                null;
+              
+              // Odstranění případného prefixu ::ffff:
+              const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+              
+            
+              
+                    const dateAndTime = DateTime.now()
+                    .setZone('Europe/Prague')
+                    .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                      await prisma.errors.create({
+                        info: `Chyba na /api/posts - POST - (Tato sekce neexistuje.)  formData: ${formData}  `,
+                        dateAndTime: dateAndTime,
+                        userId: session?.userId,
+                        ipAddress:ip,
+                      })
                 return new Response(JSON.stringify({ message: "Tato sekce neexistuje." }), {
                   status: 404,
                   headers: { 'Content-Type': 'application/json' }
@@ -399,6 +539,27 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 where: { id: parseInt(formData.get('section')) , categoryId:  parseInt(formData.get('category'))}
               });
               if (!categorySectionExist) {
+                                
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts - POST - (Tato kombinace kategorie sekce neexistuje.)  formData: ${formData}  `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
                 return new Response(JSON.stringify({ message: "Tato kategorie kombinace sekce neexistuje." }), {
                   status: 404,
                   headers: { 'Content-Type': 'application/json' }
@@ -454,6 +615,27 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
          
               } catch(error) {
                 
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts - POST - (Nastala chyba při přidávání příspěvku do db.)  formData: ${formData}  `,
+                dateAndTime: dateAndTime,
+                errorPrinted: error,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
                 return new Response(JSON.stringify({ message: "Nastala chyba při přidávání příspěvku do db." }), {
                   status: 403,
                   headers: { 'Content-Type': 'application/json' }
@@ -479,6 +661,33 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
 
 
     } catch (error) {
+      formData = await req.formData();
+      try{
+           
+  
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts - POST - (catch)  formData: ${formData}  `,
+                dateAndTime: dateAndTime,
+                errorPrinted: error,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+  
+            }catch(error){}
         console.error('Chyba na serveru [POST] požadavek vytvoření příspěvku: ', error);
         return new NextResponse(JSON.stringify({
             message: 'Chyba na serveru [POST] požadavek informace o předplatném'
@@ -522,6 +731,26 @@ export async function PUT(req) {
     });
 
     if (!post) {
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - PUT - (Příspěvek nenalezen)  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: "Příspěvek nenalezen"
       }), {
@@ -567,6 +796,26 @@ export async function PUT(req) {
         where: { id: parseInt(data.category) }
       });
       if (!categoryExist) {
+        const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - PUT - (Tato kategorie  neexistuje)  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
         return new Response(JSON.stringify({ message: "Tato kategorie neexistuje." }), {
           status: 404,
           headers: { 'Content-Type': 'application/json' }
@@ -577,6 +826,26 @@ export async function PUT(req) {
       });
 
       if (!sectionExist) {
+        const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - PUT - (Tato sekce neexistuje)  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
         return new Response(JSON.stringify({ message: "Tato sekce neexistuje." }), {
           status: 404,
           headers: { 'Content-Type': 'application/json' }
@@ -589,6 +858,27 @@ export async function PUT(req) {
         },
       });
       if (!categorySectionExist) {
+
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - PUT - (Tato kategorie sekce kombinace neexistuje)  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
         return new Response(JSON.stringify({ message: "Tato kategorie kombinace sekce neexistuje." }), {
           status: 404,
           headers: { 'Content-Type': 'application/json' }
@@ -625,6 +915,29 @@ export async function PUT(req) {
 
     // Check if the session user has strictly higher privileges than the post creator
     if (sessionUser.role.privileges <= post.user.role.privileges) {
+          
+  
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - PUT - (Nemáte pravomoce k editaci příspěvku uživatele s vyššími pravomocemi)  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
       return new Response(JSON.stringify({
         message: "Nemáte pravomoce k úpravě tohoto příspěvku"
       }), {
@@ -647,6 +960,29 @@ export async function PUT(req) {
     });
     
     if(session.role.privileges  === 2 && numberOfActionsToday > 50 || session.role.privileges  === 3 && numberOfActionsToday > 100 ){
+          
+  
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - PUT - (Již jste vyčerpal adm. pravomocí)  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
       }), {
@@ -686,6 +1022,29 @@ export async function PUT(req) {
       where: { id: parseInt(data.category) }
     });
     if (!categoryExist) {
+          
+  
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - PUT - (Tato kategoi neexistuje)  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
       return new Response(JSON.stringify({ message: "Tato kategorie neexistuje." }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
@@ -697,6 +1056,29 @@ export async function PUT(req) {
     });
 
     if (!sectionExist) {
+          
+  
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - PUT - (Tato sekce neexistuje)  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
       return new Response(JSON.stringify({ message: "Tato sekce neexistuje." }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
@@ -709,6 +1091,29 @@ export async function PUT(req) {
       },
     });
     if (!categorySectionExist) {
+          
+  
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - PUT - (Tato kombinace kategorii a sekcí neexistuje)  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
       return new Response(JSON.stringify({ message: "Tato kategorie kombinace sekce neexistuje." }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
@@ -728,6 +1133,29 @@ export async function PUT(req) {
         });
       
         if (!oldPost) {
+              
+  
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts - PUT - (Příspěvek nebyl nalezen (!oldPost))  data: ${data}  `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+  
           return new Response(JSON.stringify({ message: "Příspěvek nebyl nalezen." }), {
             status: 404,
             headers: { 'Content-Type': 'application/json' }
@@ -819,6 +1247,34 @@ export async function PUT(req) {
     });
 
   } catch (error) {
+    let data = await req.json();
+      try{
+           
+  
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts - PUT - (catch)  data: ${data}  `,
+                dateAndTime: dateAndTime,
+                errorPrinted: error,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+  
+            }catch(error){}
+
     console.error('Chyba na serveru [PUT] požadavek na editaci příspěvku: ', error);
     return new Response(JSON.stringify({
       message: 'Chyba na serveru [PUT] požadavek na editaci příspěvku'
@@ -848,7 +1304,7 @@ export async function DELETE(req) {
     }
 
     const data = await req.json();
-    console.log("Togle:",data)
+    
      
     // Fetch the post and the creator's role
     const post = await prisma.posts.findUnique({
@@ -857,6 +1313,26 @@ export async function DELETE(req) {
     });
 
     if (!post) {
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - DELETE - (Příspěvek nenalezen))  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: "Příspěvek nenalezen"
       }), {
@@ -911,6 +1387,26 @@ export async function DELETE(req) {
 
     // Check if the session user has strictly higher privileges than the post creator
     if (session.role.privileges <= post.user.role.privileges) {
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - DELETE - (Nemáte pravomoce k úpravě tohoto příspěvku(majitel příspěvků má vetší pravomoce))  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: "Nemáte pravomoce k úpravě tohoto příspěvku"
       }), {
@@ -932,6 +1428,26 @@ export async function DELETE(req) {
       },
     });
     if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/posts - DELETE - (Již jste vyčerpal adm. pravomocí)  data: ${data}  `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
       }), {
@@ -990,6 +1506,36 @@ export async function DELETE(req) {
 
 
   } catch (error) {
+
+    let data = await req.json();
+      try{
+           
+  
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts - DELETE - (catch)  data: ${data}  `,
+                dateAndTime: dateAndTime,
+                errorPrinted: error,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+  
+            }catch(error){}
+
+
     console.error('Chyba na serveru [DELETE] požadavek na smazání příspěvku: ', error);
     return new Response(JSON.stringify({
       message: 'Chyba na serveru [DELETE] požadavek  na smazání příspěvku'

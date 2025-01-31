@@ -9,6 +9,7 @@ import AddUI from './AddUI';
 import { prisma } from '../database/db';
 import Link from 'next/link';
 import { DateTime } from 'luxon';
+import { headers } from "next/headers";
 import { openLoginModal } from '../components/modals/LoginModal';
 const Page = async () => {
     let session
@@ -16,9 +17,7 @@ const Page = async () => {
 
     
             session = await getSession();
-            if (!session) {
-                throw new Error('Session nebyla nalezena');
-            }
+           
     
              accType = await getUserAccountTypeOnStripe(session.email);
             let accPriority = accType?.priority
@@ -181,6 +180,32 @@ const Page = async () => {
             </div>
         );
     } catch (error) {
+
+
+      try{
+
+        
+      const rawIp =
+  headers().get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  headers().get("x-real-ip") ||                      // Alternativní hlavička                   // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: 'Chyba na /addPost',
+          errorPrinted: error,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
+      } catch(error){
+
+      }
        return<> <div className="p-4 text-center">
           <h1 className="text-xl font-bold mt-2">
           <svg

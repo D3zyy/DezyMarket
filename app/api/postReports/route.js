@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
-
+import { DateTime } from "luxon";
 export async function POST(req) {
+  let data 
     try {
-        let data 
+      
         try {
 
              data = await req.json();
@@ -39,13 +40,52 @@ export async function POST(req) {
           });
        
           if(!postExist){
+            const rawIp =
+            req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+            req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+            req.socket?.remoteAddress ||                         // Lokální fallback
+            null;
+          
+          // Odstranění případného prefixu ::ffff:
+          const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+          
+          
+                const dateAndTime = DateTime.now()
+                .setZone('Europe/Prague')
+                .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                  await prisma.errors.create({
+                    info: `Chyba na /api/postReports - POST - (Příspěvek neexistuje)  data: ${data}  `,
+                    dateAndTime: dateAndTime,            
+                    userId: session?.userId,
+                    ipAddress:ip,
+                  })
             return new Response(JSON.stringify({
             }), {
                 status: 404,
                 headers: { 'Content-Type': 'application/json' }
             });
           }
-          if(postExist.user.role.privileges >= session.role.privileges){
+          if(postExist.user.role.privileges >= session.role.privileges && session.role.privileges <= 3){
+            
+              const rawIp =
+              req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+              req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+              req.socket?.remoteAddress ||                         // Lokální fallback
+              null;
+            
+            // Odstranění případného prefixu ::ffff:
+            const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+            
+            
+                  const dateAndTime = DateTime.now()
+                  .setZone('Europe/Prague')
+                  .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                    await prisma.errors.create({
+                      info: `Chyba na /api/postReports - POST - (Nemáte pravomoce zobrazit reporty uživatele s vetšími pravomocemi)  data: ${data}  `,
+                      dateAndTime: dateAndTime,            
+                      userId: session?.userId,
+                      ipAddress:ip,
+                    })
             return new Response(JSON.stringify({
             }), {
                 status: 403,
@@ -90,6 +130,32 @@ export async function POST(req) {
         });
 
     } catch (error) {
+      try{
+           
+  
+              const rawIp =
+              req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+              req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+              req.socket?.remoteAddress ||                         // Lokální fallback
+              null;
+            
+            // Odstranění případného prefixu ::ffff:
+            const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+            
+          
+            
+                  const dateAndTime = DateTime.now()
+                  .setZone('Europe/Prague')
+                  .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                    await prisma.errors.create({
+                      info: `Chyba na /api/postReports - POST - (catch)  data: ${data}  `,
+                      dateAndTime: dateAndTime,
+                      errorPrinted: error,
+                      userId: session?.userId,
+                      ipAddress:ip,
+                    })
+        
+                  }catch(error){}
         console.error('Chyba na serveru [POST] požadavek informace o předplatném:  ', error);
         return new NextResponse(JSON.stringify({
             message: 'Chyba na serveru [POST] požadavek informace o předplatném'

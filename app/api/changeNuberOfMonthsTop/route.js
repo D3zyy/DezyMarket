@@ -16,6 +16,27 @@ export async function POST(request) {
       );
     }
     if(session.role.privileges <= 2){
+      let { topId,nbrMnth } = await request.json();
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/changeNuberOfMonthsTop - POST - (Na tento příkaz nemáte práva) topId: ${topId} nový počet měsícu na top: ${nbrMnth} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
         return new Response(
             JSON.stringify({ message: 'Na tento příkaz nemáte práva' }),
             {
@@ -43,6 +64,27 @@ export async function POST(request) {
     });
   
     if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      let { topId,nbrMnth } = await request.json();
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/changeNuberOfMonthsTop - POST - (Již jste vyčerpal admn. pravomocí) topId: ${topId} nový počet měsícu na top: ${nbrMnth} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
       }), {
@@ -90,7 +132,32 @@ export async function POST(request) {
       );
 
   } catch (error) {
-    console.error('Chyba při vytváření požadavku na nastavení základního typu předplatného: ', error);
+    try{
+      let { topId,nbrMnth } = await request.json();
+      const rawIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      request.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/changeNuberOfMonthsTop - POST - (catch) topId: ${topId} nový počet měsícu na top: ${nbrMnth} `,
+              dateAndTime: dateAndTime,
+              errorPrinted: error,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
+          }catch(error){}
+   
     return new Response(
       JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na základní typ předplatného' }),
       {

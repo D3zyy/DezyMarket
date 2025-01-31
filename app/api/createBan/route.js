@@ -24,6 +24,26 @@ export async function POST(req) {
 
     // Zkontrolujeme, zda má uživatel práva na vytvoření banu
     if (session?.role?.privileges <= 1) {
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/createBan - POST - (Nemáte oprávněnína tento příkaz.) userIdToBeBanned: ${userId} zabanovat od: ${formatDateWithDotsWithTime(bannedFrom)}  zabanovaat do : ${formatDateWithDotsWithTime(bannedTo)} pernametní:${permanent} reason: ${reason} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(
         JSON.stringify({
           message: "Na tento příkaz nemáte oprávnění.",
@@ -42,6 +62,26 @@ export async function POST(req) {
     });
 
     if (!userToBeBanned) {
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/createBan - POST - (Uživatel kterého chcete zabanovat nebyl nalezen.) userIdToBeBanned: ${userId} zabanovat od: ${formatDateWithDotsWithTime(bannedFrom)}  zabanovaat do : ${formatDateWithDotsWithTime(bannedTo)} pernametní:${permanent} reason: ${reason} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(
         JSON.stringify({
           message: "Uživatel, kterého chcete zabanovat, nebyl nalezen.",
@@ -65,6 +105,26 @@ export async function POST(req) {
       },
     });
     if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/createBan - POST - (Vyčerpání adm. pravomocí .) userIdToBeBanned: ${userId} zabanovat od: ${formatDateWithDotsWithTime(bannedFrom)}  zabanovaat do : ${formatDateWithDotsWithTime(bannedTo)} pernametní:${permanent} reason: ${reason} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
       }), {
@@ -74,6 +134,29 @@ export async function POST(req) {
     }
     // Ověříme, zda má práva na zabanování uživatele s vyšším nebo stejným oprávněním
     if (userToBeBanned?.role?.privileges >= session?.role?.privileges) {
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/createBan - POST - (Nemáte oprávnění zabanovat uživatele s vyšším nebo stejným oprávněním.) userIdToBeBanned: ${userId} zabanovat od: ${formatDateWithDotsWithTime(bannedFrom)}  zabanovaat do : ${formatDateWithDotsWithTime(bannedTo)} pernametní:${permanent} reason: ${reason} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
+
+
       return new Response(
         JSON.stringify({
           message:
@@ -108,7 +191,7 @@ export async function POST(req) {
     
       // Pokud není platný vstup, vrátíme prázdný řetězec nebo chybu
       if (!dateString || !dateString.includes('T')) {
-        console.error('Invalid date input:', dateInput);
+        
         return '';
       }
     
@@ -144,7 +227,35 @@ const nowww = DateTime.now()
       }
     );
   } catch (error) {
-    console.error("Chyba při vytváření banu:", error);
+
+    try{
+      
+              
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/createBan - POST - (catch) userIdToBeBanned: ${userId} zabanovat od: ${formatDateWithDotsWithTime(bannedFrom)}  zabanovaat do : ${formatDateWithDotsWithTime(bannedTo)} pernametní:${permanent} reason: ${reason} `,
+              errorPrinted: error,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+          } catch(error){
+    
+          }
+
     return new Response(
       JSON.stringify({ message: "Interní chyba serveru", success: false }),
       {

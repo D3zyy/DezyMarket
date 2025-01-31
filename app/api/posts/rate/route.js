@@ -34,6 +34,26 @@ export async function POST(req) {
           });
       } 
       if (data.userId == session.userId) {
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts/rate - POST - (Nelze ohodnotit sám sebe)  data: ${data}  `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
         return new Response(JSON.stringify({
             message: "Nelze ohodnotit sám sebe.",
             success: false
@@ -44,6 +64,27 @@ export async function POST(req) {
       } 
 
       if (data.numberOfStars != 5 && data.numberOfStars != 4 && data.numberOfStars != 3&& data.numberOfStars != 2 && data.numberOfStars !=1) {
+       
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts/rate - POST - (Chybná počet hvězdiček)  data: ${data}  `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
         return new Response(JSON.stringify({
             message: "Chybný počet hvězdiček",
             success: false
@@ -65,6 +106,27 @@ export async function POST(req) {
      
   
       if (!userExists) {
+     
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts/rate - POST - (Uživatel na hodnocení nenalezen)  data: ${data}  `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
         return new Response(JSON.stringify({
           message: "Uživatel na hodnocení nenalezen",
           success: false
@@ -124,6 +186,34 @@ export async function POST(req) {
       });
   
     } catch (error) {
+      let data = await req.json();
+      try{
+           
+  
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts/rate - POST - (catch)  data: ${data}  `,
+                dateAndTime: dateAndTime,
+                errorPrinted: error,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+  
+            }catch(error){}
+
         console.log(error)
       return new Response(JSON.stringify({
         message: 'Chyba na serveru [POST] požadavek na hodnocení uživatele',
@@ -235,6 +325,33 @@ export async function PUT(req) {
 
 
     } catch (error) {
+      let data = await req.json();
+      try{
+           
+  
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/posts/rate - PUT - (catch)  data: ${data}  `,
+                dateAndTime: dateAndTime,
+                errorPrinted: error,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+  
+            }catch(error){}
         console.log(error)
       console.error('Chyba na serveru [PUT] požadavek na zjištění zda byl příspěvek uživatel již nahlášen: ', error);
       return new Response(JSON.stringify({

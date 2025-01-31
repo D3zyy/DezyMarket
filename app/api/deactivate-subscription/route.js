@@ -5,8 +5,9 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 
 export async function POST(req) {
+    let data 
     try {
-        let data 
+ 
         try {
    
              data = await req.json();
@@ -43,7 +44,29 @@ export async function POST(req) {
               },
             });
             if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
-              return new Response(JSON.stringify({
+             
+        data = await req.json();
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deactivate-subscription - POST - (Již jste vyčerpal adm. pravomocí) data: ${data} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+                return new Response(JSON.stringify({
                 message: 'Již jste vyčerpal administrativních pravomocí dnes'
               }), {
                 status: 403,
@@ -59,6 +82,28 @@ export async function POST(req) {
             include: {role : true}
         });
         if(!usrToCancel){
+
+        data = await req.json();
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deactivate-subscription - POST - (Uživatel na deaktivaci nenalezen) data: ${data} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
             return new Response(JSON.stringify({
                 message: "Uživatel na deaktivaci  nenalezen "
             }), {
@@ -69,7 +114,28 @@ export async function POST(req) {
         console.log("THis uset wanna cancel:",usrToCancel )
         console.log("nahore 1")
         if(usrToCancel.role.privileges > session.role.privileges){
-            console.log("tady nemam pravaaaaa")
+            
+        data = await req.json();
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deactivate-subscription - POST - Nemám oprávnění deaktivovat uživateli s vetšími právy) data: ${data} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
             return new Response(JSON.stringify({
                 message: "Nemáte oprávnění "
             }), {
@@ -80,6 +146,27 @@ export async function POST(req) {
         myAcc = false
     }  else {
 
+        data = await req.json();
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deactivate-subscription - POST - Nemáte oprávnění) data: ${data} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
         return new Response(JSON.stringify({
             message: "Nemáte oprávnění "
         }), {
@@ -95,6 +182,28 @@ export async function POST(req) {
             where: { name: data.name },
         });
         if(!accountType){
+
+        data = await req.json();
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deactivate-subscription - POST - Zadaný typ účtu nenalezen (gifted)) data: ${data} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
             return new Response(JSON.stringify({
                 message: "Zadaný typ učtu nenalezen  "
             }), {
@@ -174,7 +283,29 @@ export async function POST(req) {
             status: "active"
         });
         if (!subscriptions.data.length) {
-            console.log("zadne prepdplatne")
+
+        data = await req.json();
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deactivate-subscription - POST - (žádné předplatné nenalezeno pro tohoto zákazníka) data: ${data} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+ 
            return new Response(JSON.stringify({
                 message: "Žádné předplatné nenalezeno pro tohoto zákazníka"
             }), {
@@ -184,6 +315,29 @@ export async function POST(req) {
         }
    
        if(subscriptions.data[0].cancel_at_period_end){
+
+        data = await req.json();
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deactivate-subscription - POST - (žádné aktivní předplatné nenalezeno není aktivní) data: ${data} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+
         console.log("zadne predplatne na cancel")
         return new Response(JSON.stringify({
             message: "Žádné aktivní předplatné nenalezeno"
@@ -211,6 +365,31 @@ export async function POST(req) {
     });
     console.log("tady po kotrole doleleee")
     if(!accountType){
+
+
+        data = await req.json();
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deactivate-subscription - POST - (Zadaný typ účtu nenalezen ) data: ${data} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+
+
         return new Response(JSON.stringify({
             message: "Zadaný typ učtu nenalezen  "
         }), {
@@ -253,6 +432,33 @@ export async function POST(req) {
         }
     console.log("tady po updatuji")
     if(!updatedAccount){
+
+        data = await req.json();
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deactivate-subscription - POST - (žádné aktivní předplatné nenalezeno) data: ${data} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+
+
+
+
+
         return new Response(JSON.stringify({
             message: "Žádné aktivní předplatné nenalezeno"
         }), {
@@ -281,6 +487,33 @@ export async function POST(req) {
         });
 
     } catch (error) {
+        try{
+        data = await req.json();
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deactivate-subscription - POST - (catch) data: ${data} `,
+                dateAndTime: dateAndTime,
+                errorPrinted: error,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+
+            }catch(error){}
+
+
         console.error('Chyba na serveru [POST] požadavek na deaktivaci předplatného:  ', error);
         return new NextResponse(JSON.stringify({
             message: 'Chyba na serveru [POST] požadavek na deaktivaci  předplatném'

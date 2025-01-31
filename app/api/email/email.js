@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import { prisma } from '@/app/database/db';
+import { DateTime } from 'luxon';
 
 dotenv.config();
 
@@ -71,6 +72,17 @@ const localISODate = new Date(newDate.getTime() - localOffset).toISOString();
 
     return true;
   } catch (error) {
+    try{                
+                      const dateAndTime = DateTime.now()
+                      .setZone('Europe/Prague')
+                      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                        await prisma.errors.create({
+                          info: `Chyba na /api/email/email.js - (catch) email: ${email} `,
+                          dateAndTime: dateAndTime,
+                          errorPrinted: error,
+                        })
+            
+                      }catch(error){}
     console.error('Chyba při posílání emailu:', error);
     return false;
   }finally {

@@ -6,6 +6,7 @@ import { prisma } from '../database/db';
 import { getTypeOfAccountDetails } from '../typeOfAccount/Methods';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
+import { headers } from 'next/headers';
 const Page = async () => {
 
   const now = DateTime.now().setZone('Europe/Prague');
@@ -290,6 +291,34 @@ const topCounts = sortedTops.map(top => {
     </div>
   )
 } catch (error) {
+try{
+
+        
+      const rawIp =
+  headers().get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  headers().get("x-real-ip") ||                      // Alternativní hlavička                   // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          info: 'Chyba na /admin',
+          errorPrinted: error,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+        })
+      } catch(error){
+
+      }
+
+
+
+
   return (
     <div className="p-4 text-center">
       <h1 className="text-xl font-bold mt-2">

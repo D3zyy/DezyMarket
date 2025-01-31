@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import { prisma } from '@/app/database/db';
 import nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
+import { DateTime } from 'luxon';
 
 const smtpServer = process.env.SMTP_SERVER;
 const port = parseInt(process.env.SMTP_PORT, 10);
@@ -40,6 +41,28 @@ export async function POST(req) {
 
     // Kontrola, zda je email ověřený
     if (!user.verifiedEmail) {
+      let { email } = await req.json();
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/email/recovery - POST - (Váš email není ověřen. Ověřte svůj email, než budete moci obnovit heslo.) email: ${email} `,
+              dateAndTime: dateAndTime,
+              errorPrinted: error,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(
         JSON.stringify({ message: 'Váš email není ověřen. Ověřte svůj email, než budete moci obnovit heslo.' }),
         {
@@ -103,6 +126,32 @@ export async function POST(req) {
       }
     );
   } catch (error) {
+    try{
+      let { email } = await req.json();
+              const rawIp =
+              req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+              req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+              req.socket?.remoteAddress ||                         // Lokální fallback
+              null;
+            
+            // Odstranění případného prefixu ::ffff:
+            const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+            
+          
+            
+                  const dateAndTime = DateTime.now()
+                  .setZone('Europe/Prague')
+                  .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                    await prisma.errors.create({
+                      info: `Chyba na /api/email/recovery - POST - (catch) email: ${email} `,
+                      dateAndTime: dateAndTime,
+                      errorPrinted: error,
+                      userId: session?.userId,
+                      ipAddress:ip,
+                    })
+        
+                  }catch(error){}
+    
     console.error('Chyba při odesílání emailu:', error);
     return new Response(
       JSON.stringify({ message: 'Nastala chyba při odesílání požadavku na obnovení hesla.' }),

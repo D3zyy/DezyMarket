@@ -6,8 +6,9 @@ const { DateTime } = require('luxon');
 
 
     export async function POST(req) {
+      let data;
       try {
-        let data;
+ 
         try {
           data = await req.json();
           console.log("Data který sem dostal na gift subuuuu :", data);
@@ -47,6 +48,26 @@ const { DateTime } = require('luxon');
       let  currentSub = await getUserAccountTypeOnStripe(thisUserToGIft.email)
       console.log("Tohle má teďka :",currentSub)
       if(currentSub?.priority > 1 && currentSub?.priority != null){
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/giftSub - POST - (Tento uživatel již má aktivní předplatné) data: ${data} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
         return new Response(JSON.stringify({
           message: 'Tento uživatel již má aktivní předplatné'
         }), {
@@ -68,6 +89,26 @@ const { DateTime } = require('luxon');
       },
     });
     if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/giftSub - POST - (Již jste vyčerpa admn. pravomocí) data: ${data} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
       }), {
@@ -77,6 +118,26 @@ const { DateTime } = require('luxon');
     }
           if(session.email != 'dezy@dezy.cz') {
         if (session.role.privileges <= 2 || data.idOfUser == session.userId) {
+          const rawIp =
+          req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+          req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+          req.socket?.remoteAddress ||                         // Lokální fallback
+          null;
+        
+        // Odstranění případného prefixu ::ffff:
+        const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+        
+      
+        
+              const dateAndTime = DateTime.now()
+              .setZone('Europe/Prague')
+              .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                await prisma.errors.create({
+                  info: `Chyba na /api/giftSub - POST - (na tento příkaz nemáte oprvánění) data: ${data} `,
+                  dateAndTime: dateAndTime,
+                  userId: session?.userId,
+                  ipAddress:ip,
+                })
           return new Response(
             JSON.stringify({
               message: "Na tento příkaz nemáte oprávnění.",
@@ -131,6 +192,32 @@ const { DateTime } = require('luxon');
         });
     
       } catch (error) {
+        try{
+          const rawIp =
+          req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+          req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+          req.socket?.remoteAddress ||                         // Lokální fallback
+          null;
+        
+        // Odstranění případného prefixu ::ffff:
+        const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+        
+      
+        
+              const dateAndTime = DateTime.now()
+              .setZone('Europe/Prague')
+              .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                await prisma.errors.create({
+                  info: `Chyba na /api/giftSub - POST - (catch) data: ${data} `,
+                  dateAndTime: dateAndTime,
+                  errorPrinted: error,
+                  userId: session?.userId,
+                  ipAddress:ip,
+                })
+    
+              }catch(error){}
+
+
         console.error('Chyba na serveru [POST] požadavek informace o předplatném:  ', error);
         return new NextResponse(
           JSON.stringify({

@@ -3,8 +3,9 @@ import { getSession } from "@/app/authentication/actions";
 import { DateTime } from "luxon";
 
 export async function POST(req) {
+  let userToBreak
   try {
-    let userToBreak
+
     const session = await getSession();
     if (!session || !session.isLoggedIn) {
       return new Response(
@@ -16,6 +17,26 @@ export async function POST(req) {
       );
     }
     if(session.role.privileges <= 1){
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/deleteSession - POST - (Na tento příkaz nemáte oprávnění) ${userToBreak} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
         return new Response(
             JSON.stringify({ message: "Na tento příkaz nemáte oprávnění" }),
             {
@@ -39,6 +60,26 @@ export async function POST(req) {
         });
       
         if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
+          const rawIp =
+          req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+          req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+          req.socket?.remoteAddress ||                         // Lokální fallback
+          null;
+        
+        // Odstranění případného prefixu ::ffff:
+        const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+        
+      
+        
+              const dateAndTime = DateTime.now()
+              .setZone('Europe/Prague')
+              .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                await prisma.errors.create({
+                  info: `Chyba na /api/deleteSession - POST - (Již jste vyčerpal adm. pravomocí): ${userToBreak} `,
+                  dateAndTime: dateAndTime,
+                  userId: session?.userId,
+                  ipAddress:ip,
+                })
           return new Response(JSON.stringify({
             message: 'Již jste vyčerpal administrativních pravomocí dnes'
           }), {
@@ -51,6 +92,26 @@ export async function POST(req) {
     console.log("Data na ničení session:", data);
 
     if (!data.sessionId) {
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/deleteSession - POST - (sessionId nebyla poskytnuta) userToBreak: ${userToBreak} `,
+              dateAndTime: dateAndTime,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
       return new Response(
         JSON.stringify({ message: "sessionId není poskytován" }),
         {
@@ -67,6 +128,30 @@ export async function POST(req) {
     console.log("tenhle:",userToBreak)
 
     if(userToBreak.user.role.privileges >= session.role.privileges){
+      
+        const rawIp =
+        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+        req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+        req.socket?.remoteAddress ||                         // Lokální fallback
+        null;
+      
+      // Odstranění případného prefixu ::ffff:
+      const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+      
+    
+      
+            const dateAndTime = DateTime.now()
+            .setZone('Europe/Prague')
+            .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+              await prisma.errors.create({
+                info: `Chyba na /api/deleteSession - POST - (Uživatel na zničení session má vetší pravomoce než níčitel) userToBreak: ${userToBreak} `,
+                dateAndTime: dateAndTime,
+                userId: session?.userId,
+                ipAddress:ip,
+              })
+  
+           
+
       return new Response(
         JSON.stringify({ message: "Na tento příkaz nemáte oprávnění" }),
         {
@@ -104,6 +189,34 @@ export async function POST(req) {
       }
     );
   } catch (error) {
+    try{
+      const rawIp =
+      req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+      req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+      req.socket?.remoteAddress ||                         // Lokální fallback
+      null;
+    
+    // Odstranění případného prefixu ::ffff:
+    const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+    
+  
+    
+          const dateAndTime = DateTime.now()
+          .setZone('Europe/Prague')
+          .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+            await prisma.errors.create({
+              info: `Chyba na /api/deleteSession - POST - (catch) userToBreak: ${userToBreak} `,
+              dateAndTime: dateAndTime,
+              errorPrinted: error,
+              userId: session?.userId,
+              ipAddress:ip,
+            })
+
+          }catch(error){}
+
+
+
+
     console.error("Chyba při mazání session:", error);
     return new Response(
       JSON.stringify({ message: "Chyba na serveru při mazání session" }),
