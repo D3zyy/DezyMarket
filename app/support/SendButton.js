@@ -47,6 +47,7 @@ function SendButton({ sessionEmail }) {
                 <label className='form-control w-full'>
                     <span className='label-text text-lg font-medium'>Email</span>
                     <input 
+                        required
                         value={email} // Using value instead of defaultValue to control the input field
                         onChange={(e) => setEmail(e.target.value)} 
                         type='email' 
@@ -59,6 +60,7 @@ function SendButton({ sessionEmail }) {
                 <label className='form-control w-full'>
                     <span className='label-text text-lg font-medium'>Text</span>
                     <textarea 
+                     required
                         disabled={isLoading || success || Notsuccess} // Disable when loading or success
                         value={text} 
                         onChange={(e) => setText(e.target.value)} 
@@ -66,7 +68,11 @@ function SendButton({ sessionEmail }) {
                         placeholder='Text...'
                     ></textarea>
                 </label>
-
+                <div className="flex flex-row gap-2">
+                <span className="label-text"> Souhlasím se <a href="/termsOfUse" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Všeobecnými podmínkami použití</a> a <a href="/privacyPolicy" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Zásadami zpracování osobních údajů</a></span>
+               <input required type="checkbox"  className="checkbox" />
+                </div>
+                
                 <button 
     type='submit' 
     className={`btn btn-neutral w-full py-3 text-lg rounded-lg`}
