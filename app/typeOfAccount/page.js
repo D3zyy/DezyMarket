@@ -9,7 +9,8 @@ import { prisma } from '../database/db';
 import { headers } from 'next/headers';
 import { DateTime } from 'luxon';
 const Page = async ({ searchParams }) => {
-  try{
+
+
   const session = await getSession();
   
   const redirectStatus = searchParams.redirect_status // Get 'redirect_status' directly from searchParams
@@ -40,9 +41,9 @@ let accTypeOfUser, acctypes,typeOfTops
 
 
 
-  if (!session.isLoggedIn) redirect('/');
+  if (!session.isLoggedIn)  redirect('/');
     
-
+  try{
   return (
     <div>
       {session.isLoggedIn ? (
@@ -410,6 +411,7 @@ let accTypeOfUser, acctypes,typeOfTops
     </div>
   );
  } catch (error) {
+  console.log(error)
   try{
           const rawIp =
       headers().get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
