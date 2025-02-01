@@ -275,13 +275,13 @@ model Categories {
 }
 
 model Errors {
-  id       Int     @id @default(autoincrement())
-  info     String ?
+  id           Int      @id @default(autoincrement())
+  info         String?   @db.LongText
   errorPrinted String?
-  dateAndTime DateTime? 
-  ipAddress String?
-  userId   String?              
-  user     Users?  @relation(fields: [userId], references: [id], onDelete: Cascade) 
+  dateAndTime  DateTime? 
+  ipAddress    String?
+  userId       String?              
+  user         Users?  @relation(fields: [userId], references: [id], onDelete: Cascade) 
 }
 
 model Posts {

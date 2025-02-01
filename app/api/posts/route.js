@@ -213,20 +213,43 @@ async function uploadImagesToS3(files,postId) {
 
 
 export async function POST(req) {
+  
   let allowedTypeOfPost
-  let formData;
+  let formData
   let allImages
   let typPost
   let isAllowed 
     try {
-      
+      formData = await req.formData();
         try {
-            formData = await req.formData();
+          
            typPost =  formData.get('typeOfPost')
             console.log(formData.get('location'))
 
            allImages = formData.getAll("images")
            if(allImages.length > 25) {
+            const rawIp =
+  req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  req.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+const formDataObject = Object.fromEntries(formData.entries());
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          data : { 
+          info: `Chyba na /api/posts - POST - (Nahráno nedovolené množství obrázků >25 .)  formData: ${JSON.stringify(formDataObject)}  `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+          }
+        })
             return new Response(JSON.stringify({ message: "Chyba. Nahráno nedovolené množství obrázků!" }), {
               status: 403,
               headers: { 'Content-Type': 'application/json' }
@@ -276,15 +299,17 @@ if (visiblePosts > 30) {
 const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
 
 
-
+const formDataObject = Object.fromEntries(formData.entries());
       const dateAndTime = DateTime.now()
       .setZone('Europe/Prague')
       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
         await prisma.errors.create({
-          info: `Chyba na /api/posts - POST - (Již jste nahrál maximalní počet obrázků .)  formData: ${formData}  `,
+          data : { 
+          info: `Chyba na /api/posts - POST - (Již jste nahrál maximalní počet příspěvků .)  formData:  ${JSON.stringify(formDataObject)}   `,
           dateAndTime: dateAndTime,
           userId: session?.userId,
           ipAddress:ip,
+          }
         })
   return new Response(JSON.stringify({ messageToDisplay: "Již jste nahráli maximální počet příspěvků." }), {
     status: 403,
@@ -303,15 +328,17 @@ if (invisiblePosts > 100) {
 const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
 
 
-
+const formDataObject = Object.fromEntries(formData.entries());
       const dateAndTime = DateTime.now()
       .setZone('Europe/Prague')
       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
         await prisma.errors.create({
-          info: `Chyba na /api/posts - POST - (Maximalní počet neviditelných obrázků byl dosažen .)  formData: ${formData}  `,
+          data : { 
+          info: `Chyba na /api/posts - POST - (Maximalní počet neviditelných obrázků byl dosažen .)  formData: ${JSON.stringify(formDataObject)}  `,
           dateAndTime: dateAndTime,
           userId: session?.userId,
           ipAddress:ip,
+          }
         })
   return new Response(JSON.stringify({ messageToDisplay: "Maximální počet neviditelných příspěvků byl dosažen." }), {
     status: 403,
@@ -337,6 +364,32 @@ console.log("Jdu kontrolvat top")
   }
 });
 console.log("Nasel sem top:",isAllowed)
+console.log("POst name:",typPost)
+if(!isAllowed){
+  console.log("Píšu do db error!!!!")
+  const rawIp =
+  req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+  req.headers.get("x-real-ip") ||                      // Alternativní hlavička
+  req.socket?.remoteAddress ||                         // Lokální fallback
+  null;
+
+// Odstranění případného prefixu ::ffff:
+const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+
+const formDataObject = Object.fromEntries(formData.entries());
+
+      const dateAndTime = DateTime.now()
+      .setZone('Europe/Prague')
+      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+        await prisma.errors.create({
+          data : { 
+          info: `Chyba na /api/posts - POST - (Tento typ topovaní neexistuje .)  formData: ${JSON.stringify(formDataObject)} `,
+          dateAndTime: dateAndTime,
+          userId: session?.userId,
+          ipAddress:ip,
+          }
+        })
+}
 
 if(isAllowed?.hidden){
   const rawIp =
@@ -349,15 +402,17 @@ if(isAllowed?.hidden){
 const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
 
 
-
+const formDataObject = Object.fromEntries(formData.entries());
       const dateAndTime = DateTime.now()
       .setZone('Europe/Prague')
       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
         await prisma.errors.create({
-          info: `Chyba na /api/posts - POST - (Tento typ topovaní je skrytý .)  formData: ${formData}  `,
+          data : { 
+          info: `Chyba na /api/posts - POST - (Tento typ topovaní je skrytý .)  formData:  ${JSON.stringify(formDataObject)} `,
           dateAndTime: dateAndTime,
           userId: session?.userId,
           ipAddress:ip,
+          }
         })
   return new Response(JSON.stringify({ messageToDisplay: "Tento typ topovaní není dostupný" }), {
     status: 403,
@@ -381,15 +436,17 @@ if(allImages?.length > accOfUser?.numberOfAllowedImages ){
 const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
 
 
-
+const formDataObject = Object.fromEntries(formData.entries());
       const dateAndTime = DateTime.now()
       .setZone('Europe/Prague')
       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
         await prisma.errors.create({
-          info: `Chyba na /api/posts - POST - (Bylo nahráno nedovolené množství obrázků .)  formData: ${formData}  `,
+          data : { 
+          info: `Chyba na /api/posts - POST - (Bylo nahráno nedovolené množství obrázků .)  formData: ${JSON.stringify(formDataObject)}  `,
           dateAndTime: dateAndTime,
           userId: session?.userId,
           ipAddress:ip,
+          }
         })
   return new Response(JSON.stringify({ messageToDisplay: "Bylo nahráno nedovolené množství obrázků." }), {
     status: 403,
@@ -414,12 +471,15 @@ const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
       const dateAndTime = DateTime.now()
       .setZone('Europe/Prague')
       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-        await prisma.errors.create({
-          info: `Chyba na /api/posts - POST - (Na tento druh topovaní nemáte právo .)  formData: ${formData}  `,
-          dateAndTime: dateAndTime,
-          userId: session?.userId,
-          ipAddress:ip,
-        })
+      const formDataObject = Object.fromEntries(formData.entries());
+      await prisma.errors.create({
+        data : { 
+        info: `Chyba na /api/posts - POST - (Na tento druh topovaní nemáte právo.) formData: ${JSON.stringify(formDataObject)}`,
+        dateAndTime: dateAndTime,
+        userId: session?.userId,
+        ipAddress: ip,
+      }
+      });
   return new Response(JSON.stringify({ messageToDisplay: "Tento druh topovaní není pro vás dostupný" }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
@@ -490,15 +550,17 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
               const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
               
             
-              
+              const formDataObject = Object.fromEntries(formData.entries());
                     const dateAndTime = DateTime.now()
                     .setZone('Europe/Prague')
                     .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                       await prisma.errors.create({
-                        info: `Chyba na /api/posts - POST - (Tato kategorie neexistuje.)  formData: ${formData}  `,
+                        data : { 
+                        info: `Chyba na /api/posts - POST - (Tato kategorie neexistuje.)  formData: ${JSON.stringify(formDataObject)}  `,
                         dateAndTime: dateAndTime,
                         userId: session?.userId,
                         ipAddress:ip,
+                        }
                       })
                 return new Response(JSON.stringify({ message: "Tato kategorie neexistuje." }), {
                   status: 404,
@@ -519,16 +581,18 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
               // Odstranění případného prefixu ::ffff:
               const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
               
-            
+              const formDataObject = Object.fromEntries(formData.entries());
               
                     const dateAndTime = DateTime.now()
                     .setZone('Europe/Prague')
                     .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                       await prisma.errors.create({
-                        info: `Chyba na /api/posts - POST - (Tato sekce neexistuje.)  formData: ${formData}  `,
+                        data : { 
+                        info: `Chyba na /api/posts - POST - (Tato sekce neexistuje.)  formData: : ${JSON.stringify(formDataObject)}  `,
                         dateAndTime: dateAndTime,
                         userId: session?.userId,
                         ipAddress:ip,
+                        }
                       })
                 return new Response(JSON.stringify({ message: "Tato sekce neexistuje." }), {
                   status: 404,
@@ -550,16 +614,19 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
       const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
       
     
-      
+      const formDataObject = Object.fromEntries(formData.entries());
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
-                info: `Chyba na /api/posts - POST - (Tato kombinace kategorie sekce neexistuje.)  formData: ${formData}  `,
+                data : { 
+                info: `Chyba na /api/posts - POST - (Tato kombinace kategorie sekce neexistuje.)  formData: ${JSON.stringify(formDataObject)}   `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
                 ipAddress:ip,
+                }
               })
+            
                 return new Response(JSON.stringify({ message: "Tato kategorie kombinace sekce neexistuje." }), {
                   status: 404,
                   headers: { 'Content-Type': 'application/json' }
@@ -625,16 +692,18 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
       const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
       
     
-      
+      const formDataObject = Object.fromEntries(formData.entries());
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
-                info: `Chyba na /api/posts - POST - (Nastala chyba při přidávání příspěvku do db.)  formData: ${formData}  `,
+                data : { 
+                info: `Chyba na /api/posts - POST - (Nastala chyba při přidávání příspěvku do db.)  formData: ${JSON.stringify(formDataObject)}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
                 ipAddress:ip,
+                }
               })
                 return new Response(JSON.stringify({ message: "Nastala chyba při přidávání příspěvku do db." }), {
                   status: 403,
@@ -661,10 +730,10 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
 
 
     } catch (error) {
-      formData = await req.formData();
+
       try{
            
-  
+        const formDataObject = Object.fromEntries(formData.entries());
         const rawIp =
         req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
         req.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -680,11 +749,13 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
-                info: `Chyba na /api/posts - POST - (catch)  formData: ${formData}  `,
+                data : { 
+                info: `Chyba na /api/posts - POST - (catch)  formData: ${JSON.stringify(formDataObject)}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
                 ipAddress:ip,
+                }
               })
   
             }catch(error){}
@@ -710,6 +781,7 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
 
 
 export async function PUT(req) {
+  let data
   try {
     const session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
@@ -721,8 +793,8 @@ export async function PUT(req) {
       });
     }
 
-    const data = await req.json();
 
+     data = await req.json();
 
     // Fetch the post and the creator's role
     const post = await prisma.posts.findUnique({
@@ -746,10 +818,12 @@ export async function PUT(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - PUT - (Příspěvek nenalezen)  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
               ipAddress:ip,
+              }
             })
       return new Response(JSON.stringify({
         message: "Příspěvek nenalezen"
@@ -811,10 +885,11 @@ export async function PUT(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - PUT - (Tato kategorie  neexistuje)  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
         return new Response(JSON.stringify({ message: "Tato kategorie neexistuje." }), {
           status: 404,
@@ -841,10 +916,11 @@ export async function PUT(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - PUT - (Tato sekce neexistuje)  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
         return new Response(JSON.stringify({ message: "Tato sekce neexistuje." }), {
           status: 404,
@@ -874,10 +950,11 @@ export async function PUT(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - PUT - (Tato kategorie sekce kombinace neexistuje)  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
         return new Response(JSON.stringify({ message: "Tato kategorie kombinace sekce neexistuje." }), {
           status: 404,
@@ -932,10 +1009,11 @@ export async function PUT(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - PUT - (Nemáte pravomoce k editaci příspěvku uživatele s vyššími pravomocemi)  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
 
       return new Response(JSON.stringify({
@@ -977,10 +1055,11 @@ export async function PUT(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - PUT - (Již jste vyčerpal adm. pravomocí)  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
 
       return new Response(JSON.stringify({
@@ -1039,10 +1118,11 @@ export async function PUT(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
-              info: `Chyba na /api/posts - PUT - (Tato kategoi neexistuje)  data: ${data}  `,
+              data:{
+              info: `Chyba na /api/posts - PUT - (Tato kategorie neexistuje)  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
 
       return new Response(JSON.stringify({ message: "Tato kategorie neexistuje." }), {
@@ -1073,10 +1153,11 @@ export async function PUT(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - PUT - (Tato sekce neexistuje)  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
 
       return new Response(JSON.stringify({ message: "Tato sekce neexistuje." }), {
@@ -1108,10 +1189,11 @@ export async function PUT(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - PUT - (Tato kombinace kategorii a sekcí neexistuje)  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
 
       return new Response(JSON.stringify({ message: "Tato kategorie kombinace sekce neexistuje." }), {
@@ -1150,10 +1232,11 @@ export async function PUT(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts - PUT - (Příspěvek nebyl nalezen (!oldPost))  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
   
           return new Response(JSON.stringify({ message: "Příspěvek nebyl nalezen." }), {
@@ -1247,7 +1330,7 @@ export async function PUT(req) {
     });
 
   } catch (error) {
-    let data = await req.json();
+
       try{
            
   
@@ -1266,11 +1349,12 @@ export async function PUT(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts - PUT - (catch)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
   
             }catch(error){}
@@ -1291,6 +1375,8 @@ export async function PUT(req) {
 
 
 export async function DELETE(req) {
+  let data
+
   try {
     const session = await getSession();
 
@@ -1303,7 +1389,7 @@ export async function DELETE(req) {
       });
     }
 
-    const data = await req.json();
+     data = await req.json();
     
      
     // Fetch the post and the creator's role
@@ -1328,10 +1414,11 @@ export async function DELETE(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - DELETE - (Příspěvek nenalezen))  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
       return new Response(JSON.stringify({
         message: "Příspěvek nenalezen"
@@ -1402,10 +1489,11 @@ export async function DELETE(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - DELETE - (Nemáte pravomoce k úpravě tohoto příspěvku(majitel příspěvků má vetší pravomoce))  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
       return new Response(JSON.stringify({
         message: "Nemáte pravomoce k úpravě tohoto příspěvku"
@@ -1443,10 +1531,11 @@ export async function DELETE(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/posts - DELETE - (Již jste vyčerpal adm. pravomocí)  data: ${data}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -1507,7 +1596,6 @@ export async function DELETE(req) {
 
   } catch (error) {
 
-    let data = await req.json();
       try{
            
   
@@ -1526,11 +1614,12 @@ export async function DELETE(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts - DELETE - (catch)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
   
             }catch(error){}
