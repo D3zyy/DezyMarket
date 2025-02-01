@@ -420,7 +420,7 @@ let accTypeOfUser, acctypes,typeOfTops
     
     // Odstranění případného prefixu ::ffff:
     const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
-    
+    let session = await getSession();
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
