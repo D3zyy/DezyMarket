@@ -123,7 +123,7 @@ const usersAll = await prisma.users.findMany({
                   const dateAndTime = DateTime.now()
                   .setZone('Europe/Prague')
                   .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                    await prisma.errors.create({
+                    await prisma.errors.create({ 
                       data:{
                       info: `Chyba na /api/getUser - POST - (catch) data: ${data} `,
                       dateAndTime: dateAndTime,

@@ -6,7 +6,9 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 
 export async function POST(request) {
+  let   accTypeId, newPrice
   try {
+    ({ accTypeId, newPrice } = await request.json());
     const session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(
@@ -18,7 +20,7 @@ export async function POST(request) {
       );
     }
     if(session.role.privileges <= 2){
-      let { accTypeId,newPrice } = await request.json();
+     
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -33,11 +35,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changePrice - POST - (Na tento příkaz nemáte pravomoce) newPrice: ${newPrice} accId: ${accTypeId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
         return new Response(
             JSON.stringify({ message: 'Na tento příkaz nemáte práva' }),
@@ -48,7 +50,7 @@ export async function POST(request) {
           );
     }
 
-    const { accTypeId,newPrice } = await request.json();
+
     if(newPrice <= 100){
       
       const rawIp =
@@ -65,11 +67,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changePrice - POST - (Cena není platná) newPrice: ${newPrice} accId: ${accTypeId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
       return new Response(
         JSON.stringify({ message: 'Cena není platná' }),
@@ -93,7 +95,7 @@ export async function POST(request) {
     });
   
     if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
-      let { accTypeId,newPrice } = await request.json();
+
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -108,11 +110,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changePrice - POST - (Již jste vyčerpal admn. pravomocí) newPrice: ${newPrice} accId: ${accTypeId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
       return new Response(JSON.stringify({
@@ -227,7 +229,7 @@ console.log("updedd:",upd)
 
   } catch (error) {
     try{
-      let { accTypeId,newPrice } = await request.json();
+
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -242,12 +244,12 @@ console.log("updedd:",upd)
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changePrice - POST - (catch) newPrice: ${newPrice} accId: ${accTypeId} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
           }catch(error){}

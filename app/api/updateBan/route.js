@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 export async function POST(request) {
 
 
-
+let data
 
   try {
     console.log("HIT")
@@ -18,7 +18,7 @@ export async function POST(request) {
             headers: { 'Content-Type': 'application/json' }
         });
     }
-    let data = await request.json();
+     data = await request.json();
 
 
     if(session?.role?.privileges <= 1){
@@ -36,11 +36,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/updateBan - POST - (Na tento příkaz nemáte oprávnění) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
         return new Response(JSON.stringify({
             message: "Na tento příkaz nemáte oprávnění"
@@ -76,11 +76,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/updateBan - POST - (Již jste vyčerpal adm. pravomocí) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -179,11 +179,11 @@ if (timeDifference > 1000 * 3600 * 2 ) {
         const dateAndTime = DateTime.now()
         .setZone('Europe/Prague')
         .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-          await prisma.errors.create({
+          await prisma.create({ data: {
             info: `Chyba na /api/updateBan - POST - (Na tento příkaz nemáte oprávnění) data: ${data} `,
             dateAndTime: dateAndTime,
             userId: session?.userId,
-            ipAddress:ip,
+            ipAddress:ip },
           })
         return new Response(JSON.stringify({
             message: "Na tento příkaz nemáte oprávnění"
@@ -204,7 +204,6 @@ if (timeDifference > 1000 * 3600 * 2 ) {
     );
   } catch (error) {
     try{
-    let data = await request.json();
     const rawIp =
     request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
     request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -219,12 +218,12 @@ if (timeDifference > 1000 * 3600 * 2 ) {
         const dateAndTime = DateTime.now()
         .setZone('Europe/Prague')
         .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-          await prisma.errors.create({
+          await prisma.create({ data: {
             info: `Chyba na /api/updateBan - POST - (catch) data: ${data} `,
             dateAndTime: dateAndTime,
             errorPrinted: error,
             userId: session?.userId,
-            ipAddress:ip,
+            ipAddress:ip },
           })
 
         }catch(error){}
@@ -243,6 +242,7 @@ if (timeDifference > 1000 * 3600 * 2 ) {
 }
 
 export async function PUT(request) {
+  let data
   try {
     console.log("HITtttttt");
     const session = await getSession();
@@ -254,7 +254,7 @@ export async function PUT(request) {
         headers: { 'Content-Type': 'application/json' }
       });
     }
-    let data = await request.json();
+     data = await request.json();
   
     console.log("data:", data);
     if (session?.role?.privileges <= 1) {
@@ -272,11 +272,11 @@ export async function PUT(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/updateBan - PUT - (Na tento příkaz nemáte oprávnění) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
       return new Response(JSON.stringify({
         message: "Na tento příkaz nemáte oprávnění"
@@ -312,11 +312,11 @@ export async function PUT(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/updateBan - PUT - (Již jste vyčerpal adm. pravomocí) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -352,11 +352,11 @@ export async function PUT(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/updateBan - PUT - ban nebyl nalezen) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
       return new Response(JSON.stringify({
         message: "Ban nebyl nalezen"
@@ -436,11 +436,11 @@ console.log("tady")
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/updateBan - PUT - (Na tento příkaz nemáte oprávnění) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
 
@@ -462,7 +462,6 @@ console.log("tady")
   } catch (error) {
     try{
               
-      let data = await request.json();
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -477,12 +476,12 @@ console.log("tady")
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/updateBan - PUT - (catch) data: ${data} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
           }catch(error){}
@@ -504,6 +503,7 @@ console.log("tady")
 
 
 export async function DELETE(request) {
+  let data
   try {
 
     const session = await getSession();
@@ -518,7 +518,7 @@ export async function DELETE(request) {
 
 
     
-    let data = await request.json();
+     data = await request.json();
   
     console.log("data:", data);
     if (session?.role?.privileges <= 3) {
@@ -536,11 +536,11 @@ export async function DELETE(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/updateBan - DELETE - (Na tento příkaz nemáte oprávnění) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
       return new Response(JSON.stringify({
@@ -582,7 +582,6 @@ export async function DELETE(request) {
   } catch (error) {
     try{
               
-      let data = await request.json();
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -597,12 +596,12 @@ export async function DELETE(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/updateBan - DELETE - (catch) data: ${data} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
           }catch(error){}

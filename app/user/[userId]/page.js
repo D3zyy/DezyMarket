@@ -1077,12 +1077,12 @@ const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
     const dateAndTime = DateTime.now()
     .setZone('Europe/Prague')
     .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-      await prisma.errors.create({
+      await prisma.create({ data: {
         info: `Chyba na /user/[${params?.userId}] `,
         errorPrinted: error,
         dateAndTime: dateAndTime,
         userId: session?.userId,
-        ipAddress:ip,
+        ipAddress:ip },
       })
     } catch(error){
     }

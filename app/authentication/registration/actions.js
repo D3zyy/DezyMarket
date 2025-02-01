@@ -162,15 +162,15 @@ console.log("Již má uživatel tuto ip adresu",ipToRegisterAlreadyExistWithThat
   } catch (error) {
     try{
   
-    
+      const formDataObject = Object.fromEntries(formData.entries());
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
-              info: `Chyba na /authentication/registration/actions.js - (catch)   `,
+            await prisma.create({ data: {
+              info: `Chyba na /authentication/registration/actions.js - (catch) data: ${JSON.stringify(formDataObject)}  `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
-            })
+            }})
 
           }catch(error){}
     console.error("Database error:", error);

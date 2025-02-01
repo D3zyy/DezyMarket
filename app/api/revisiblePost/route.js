@@ -2,6 +2,7 @@ import { prisma } from "@/app/database/db";
 import { getSession } from "@/app/authentication/actions";
 import { DateTime } from "luxon";
 export async function POST(req) {
+  let data
   try {
     const session = await getSession();
     if (!session || !session.isLoggedIn) {
@@ -13,9 +14,9 @@ export async function POST(req) {
         }
       );
     }
-
+    data = await req.json();
    if(session.role.privileges <= 1){
-    let data = await req.json();
+  
     const rawIp =
     req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
     req.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -30,11 +31,11 @@ export async function POST(req) {
         const dateAndTime = DateTime.now()
         .setZone('Europe/Prague')
         .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-          await prisma.errors.create({
+          await prisma.create({ data: {
             info: `Chyba na /api/revisiblePost - POST - (Na tento příkaz nemáte pravomoce)  data: ${data}  `,
             dateAndTime: dateAndTime,
             userId: session?.userId,
-            ipAddress:ip,
+            ipAddress:ip },
           })
     return new Response(
         JSON.stringify({ message: 'Na tento příkaz nemáte oprávnění' }),
@@ -44,7 +45,7 @@ export async function POST(req) {
         }
       );
    }
-   let data = await req.json();
+
 
    await prisma.posts.update({
     where: {
@@ -63,7 +64,7 @@ export async function POST(req) {
     );
 
   } catch (error) {
-      let data = await req.json();
+   
           try{
                
       
@@ -81,12 +82,12 @@ export async function POST(req) {
                 const dateAndTime = DateTime.now()
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                  await prisma.errors.create({
+                  await prisma.create({ data: {
                     info: `Chyba na /api/revisiblePost - POST - (catch)  data: ${data}  `,
                     dateAndTime: dateAndTime,
                     errorPrinted: error,
                     userId: session?.userId,
-                    ipAddress:ip,
+                    ipAddress:ip },
                   })
       
                 }catch(error){}

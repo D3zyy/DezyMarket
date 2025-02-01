@@ -4,8 +4,8 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 
 export async function POST(request) {
+  let ticketId,type
   try {
-    const { ticketId,type } = await request.json();
     const session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(
@@ -16,6 +16,7 @@ export async function POST(request) {
         }
       );
     }
+    ({ ticketId,type} = await request.json());
     if(session.role.privileges <= 1){
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
@@ -31,11 +32,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/setDoneTicket - POST - Na tento příkaz nemáte pravomoce) ticketId: ${ticketId} type: ${type}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
         return new Response(
             JSON.stringify({ message: 'Na tento příkaz nemáte práva' }),
@@ -76,11 +77,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/setDoneTicket - POST - (Již jste vyčerpal adm. pravomocí) ticketId: ${ticketId} type: ${type}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -111,11 +112,11 @@ export async function POST(request) {
                 const dateAndTime = DateTime.now()
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                  await prisma.errors.create({
+                  await prisma.create({ data: {
                     info: `Chyba na /api/setDoneTicket - POST - (Ticket nenalezen nebo již vyřešen) ticketId: ${ticketId} type: ${type}  `,
                     dateAndTime: dateAndTime,
                     userId: session?.userId,
-                    ipAddress:ip,
+                    ipAddress:ip },
                   })
             return new Response(
                 JSON.stringify({ message: 'Tiket nenalezen nebo již vyřešen' }),
@@ -151,11 +152,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/setDoneTicket - POST - (Ticket nenalezen nebo již vyřešen) ticketId: ${ticketId} type: ${type}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
         return new Response(
             JSON.stringify({ message: 'Tiket nenalezen nebo již vyřešen' }),
@@ -198,7 +199,6 @@ export async function POST(request) {
       );
 
   } catch (error) {
-    let { ticketId,type } = await request.json();
     try{
                
       
@@ -216,12 +216,12 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/setDoneTicket - POST - (catch) ticketId: ${ticketId} type: ${type}  `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
           }catch(error){}

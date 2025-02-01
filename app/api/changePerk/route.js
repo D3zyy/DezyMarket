@@ -4,7 +4,9 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 
 export async function POST(request) {
+  let   perkId, newValue,accId
   try {
+
     const session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(
@@ -15,8 +17,9 @@ export async function POST(request) {
         }
       );
     }
+    ({ perkId, newValue,accId } = await request.json());
     if(session.role.privileges <= 2){
-      let { perkId,newValue,accId } = await request.json();
+
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -31,11 +34,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changePerk - POST - (Nemáte práva na tento příkaz) perkId: ${perkId} newValue: ${newValue} accId: ${accId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
         return new Response(
             JSON.stringify({ message: 'Na tento příkaz nemáte práva' }),
@@ -46,7 +49,7 @@ export async function POST(request) {
           );
     }
 
-    const { perkId,newValue,accId } = await request.json();
+
   
     const currentDate = DateTime.now()
     .setZone('Europe/Prague')
@@ -62,7 +65,7 @@ export async function POST(request) {
     });
   
     if(session.role.privileges  === 2 && numberOfActionsToday > 100 || session.role.privileges  === 3 && numberOfActionsToday > 200 ){
-      let { perkId,newValue,accId } = await request.json();
+
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -77,11 +80,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changePerk - POST - (Již jste vyčerpal adm. pravomocí) perkId: ${perkId} newValue: ${newValue} accId: ${accId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -92,12 +95,6 @@ export async function POST(request) {
     }
 
 
-
-
-
-       console.log("PerkID:",perkId)
-       console.log("accId:",accId)
-       console.log("New value:",newValue)
        await prisma.perksAccount.update({
             where: { id: perkId  , accId: accId},
             data:{ name: newValue}
@@ -134,7 +131,7 @@ export async function POST(request) {
 
   } catch (error) {
     try{
-      let { perkId,newValue,accId } = await request.json();
+    
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -149,12 +146,12 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changePerk - POST - (catch) perkId: ${perkId} newValue: ${newValue} accId: ${accId} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
           }catch(error){}

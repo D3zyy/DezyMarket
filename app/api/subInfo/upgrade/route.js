@@ -6,9 +6,9 @@ import { DateTime } from 'luxon';
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
- 
+  let data
     try {
-      let data = await request.json();
+     
         // Ensure the session is retrieved correctly
         const session = await getSession();
         if (!session || !session.isLoggedIn || !session.email) {
@@ -19,7 +19,7 @@ export async function POST(request) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-      
+        data = await request.json();
         console.log("Na co chci upgradovat infoUpgrade:",data.nameToUpgrade)
         console.log("Z čeho chci upgradovat infoUpgrade:",data.fromNameUp)
 
@@ -42,11 +42,11 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (Účet který byl poslán že chcete upgradovat neexistuje) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
           return new NextResponse(
             JSON.stringify({ message: 'Účet který byl poslán že chcete upgradovat neexistuje' }),
@@ -74,11 +74,11 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (Účet který byl poslán že máte neexistuje) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
         return new NextResponse(
           JSON.stringify({ message: 'Účet který byl poslán že máte neexistuje' }),
@@ -103,11 +103,11 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (Nelze upgradovat na daný účet má vetší prioritu) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
         return new NextResponse(
           JSON.stringify({ message: 'Nelze upgradovat na daný účet' }),
@@ -150,11 +150,11 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (Účet který byl poslán že máte nebyl nalezen s vaším účtem) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
         return new NextResponse(
           JSON.stringify({ message: 'Účet který byl poslán že máte nebyl nalezen s vaším účtem' }),
@@ -192,11 +192,11 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (Účet který byl poslán že chcete upgradovat již máte) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
         return new NextResponse(
           JSON.stringify({ message: 'Účet který byl poslán že chcete upgradovat již máte' }),
@@ -229,11 +229,11 @@ export async function POST(request) {
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.errors.create({
+                await prisma.create({ data: {
                   info: `Chyba na /api/subInfo/upgrade - POST - (Žádná cena předplatného které máte nenalezena) data: ${data}  `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
-                  ipAddress:ip,
+                  ipAddress:ip },
                 })
         return new Response(JSON.stringify({
           message: "Žádná cena předplatného které máte nenalezena"
@@ -284,11 +284,11 @@ export async function POST(request) {
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.errors.create({
+                await prisma.create({ data: {
                   info: `Chyba na /api/subInfo/upgrade - POST - (Žádná cena předplatného které chcete upgradovat nenalezena) data: ${data}  `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
-                  ipAddress:ip,
+                  ipAddress:ip },
                 })
       return new Response(JSON.stringify({
         message: "Žádná cena předplatného které chcete upgradovat nenalezena"
@@ -329,11 +329,11 @@ const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // S
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.errors.create({
+                await prisma.create({ data: {
                   info: `Chyba na /api/subInfo/upgrade - POST - (Žádný zákazník nenalezen s tímto emailem) data: ${data}  `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
-                  ipAddress:ip,
+                  ipAddress:ip },
                 })
             return new Response(JSON.stringify({
                 message: "Žádný zákazník nenalezen s tímto emailem"
@@ -448,7 +448,6 @@ const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // S
     } catch (error) {
       
       try{
-        let data = await request.json();
       
         const rawIp =
         request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
@@ -464,12 +463,12 @@ const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // S
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (catch) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
   
             }catch(error){}

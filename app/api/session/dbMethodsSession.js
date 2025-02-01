@@ -60,11 +60,11 @@ export const checkUserBan = async (userId) => {
       const dateAndTime = DateTime.now()
                                   .setZone('Europe/Prague')
                                   .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                                    await prisma.errors.create({
+                                    await prisma.create({ data: {
                                       info: `Chyba na /api/session/dbMethodSession.js - (catch) userId: ${userId} `,
                                       dateAndTime: dateAndTime,
                                       errorPrinted: error,
-                                    })
+     } })
                         
                                   }catch(error){}
     console.error('Chyba kontrolovaní banu uživatele:', error);

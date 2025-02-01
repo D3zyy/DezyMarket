@@ -4,6 +4,7 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 
 export async function POST(request) {
+  let   topId, visibility
   try {
     const session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
@@ -15,8 +16,11 @@ export async function POST(request) {
         }
       );
     }
+
+    ({ topId, visibility } = await request.json());
+
     if(session.role.privileges <= 2){
-      let { topId,visibility } = await request.json();
+
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -31,11 +35,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changeVisibilityTop - POST - (Na tento příkaz nemáte pravomoce)  topId ${topId} visibility: ${visibility}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
         return new Response(
             JSON.stringify({ message: 'Na tento příkaz nemáte práva' }),
@@ -46,7 +50,7 @@ export async function POST(request) {
           );
     }
 
-    const { topId,visibility } = await request.json();
+
     console.log("Topid:",topId)
     console.log("visivbility:",visibility)
 
@@ -79,11 +83,11 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/changeVisibilityTop - POST - (Již jste vyčerpal admn. pravomocí)  topId ${topId} visibility: ${visibility}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
   
       return new Response(JSON.stringify({
@@ -135,7 +139,7 @@ export async function POST(request) {
   } catch (error) {
     try{
      
-      let { topId,visibility } = await request.json();
+      
         const rawIp =
         request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
         request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -150,12 +154,12 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/changeVisibilityTop - POST - (catch)  topId ${topId} visibility: ${visibility}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
   
             }catch(error){}

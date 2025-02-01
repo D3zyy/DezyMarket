@@ -5,6 +5,7 @@ import { DateTime } from "luxon"; // Pokud ještě není importováno
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
+  let name
   try {
     const session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
@@ -16,7 +17,7 @@ export async function POST(request) {
         }
       );
     }
-
+    ({ name} = await request.json());
     const user = await prisma.Users.findFirst({
       where: { email: session.email },
     });
@@ -31,7 +32,7 @@ export async function POST(request) {
       );
     }
 
-    const { name } = await request.json();
+
 
     // Najdi AccountType podle názvu
     const accountType = await prisma.AccountType.findFirst({
@@ -53,11 +54,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/setDefaultTypeAcc - POST - (Typ účtu nenalezen) name: ${name}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
       return new NextResponse(
         JSON.stringify({ message: 'Typ účtu nenalezen' }),
@@ -92,11 +93,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/setDefaultTypeAcc - POST - (Uživatel již má aktivní základní typ účtu) name: ${name}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
       return new NextResponse(
@@ -132,7 +133,6 @@ export async function POST(request) {
     );
 
   } catch (error) {
-    let { name } = await request.json();
     try{
                
       
@@ -150,12 +150,12 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/setDefaultTypeAcc - POST - (catch) name: ${name}  `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
           }catch(error){}

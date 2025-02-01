@@ -62,11 +62,11 @@ const { DateTime } = require('luxon');
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/giftSub - POST - (Tento uživatel již má aktivní předplatné) data: ${data} `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
         return new Response(JSON.stringify({
           message: 'Tento uživatel již má aktivní předplatné'
@@ -103,11 +103,11 @@ const { DateTime } = require('luxon');
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/giftSub - POST - (Již jste vyčerpa admn. pravomocí) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -132,11 +132,11 @@ const { DateTime } = require('luxon');
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.errors.create({
+                await prisma.create({ data: {
                   info: `Chyba na /api/giftSub - POST - (na tento příkaz nemáte oprvánění) data: ${data} `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
-                  ipAddress:ip,
+                  ipAddress:ip },
                 })
           return new Response(
             JSON.stringify({
@@ -207,12 +207,12 @@ const { DateTime } = require('luxon');
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.errors.create({
+                await prisma.create({ data: {
                   info: `Chyba na /api/giftSub - POST - (catch) data: ${data} `,
                   dateAndTime: dateAndTime,
                   errorPrinted: error,
                   userId: session?.userId,
-                  ipAddress:ip,
+                  ipAddress:ip },
                 })
     
               }catch(error){}

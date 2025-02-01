@@ -57,11 +57,11 @@ export async function POST(req) {
                 const dateAndTime = DateTime.now()
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                  await prisma.errors.create({
+                  await prisma.create({ data: {
                     info: `Chyba na /api/reactivate-subscription - POST - Uživatel na reaktivaci nenalezen)  data: ${data}  `,
                     dateAndTime: dateAndTime,
                     userId: session?.userId,
-                    ipAddress:ip,
+                    ipAddress:ip },
                   })
             return new Response(JSON.stringify({
                 message: "Uživatel na reaktivaci  nenalezen "
@@ -88,11 +88,11 @@ export async function POST(req) {
                 const dateAndTime = DateTime.now()
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                  await prisma.errors.create({
+                  await prisma.create({ data: {
                     info: `Chyba na /api/reactivate-subscription - POST - (Nemáte právo reaktivovat uživateli s vetšími privilegii))  data: ${data}  `,
                     dateAndTime: dateAndTime,
                     userId: session?.userId,
-                    ipAddress:ip,
+                    ipAddress:ip },
                   })
             return new Response(JSON.stringify({
                 message: "Nemáte oprávnění "
@@ -143,11 +143,11 @@ export async function POST(req) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/reactivate-subscription - POST - (Již jste vyčerpal adm. pravomocí)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
         return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -208,11 +208,11 @@ export async function POST(req) {
                 const dateAndTime = DateTime.now()
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                  await prisma.errors.create({
+                  await prisma.create({ data: {
                     info: `Chyba na /api/reactivate-subscription - POST - (Žádné  předplatné nenalezeno pro tohoto zákazníka)  data: ${data}  `,
                     dateAndTime: dateAndTime,
                     userId: session?.userId,
-                    ipAddress:ip,
+                    ipAddress:ip },
                   })
            return new Response(JSON.stringify({
                 message: "Žádné předplatné nenalezeno pro tohoto zákazníka"
@@ -237,11 +237,11 @@ export async function POST(req) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/reactivate-subscription - POST - (Žádné aktivní předplatné nenalezeno (končí na kocni))  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
         return new Response(JSON.stringify({
             message: "Žádné neaktivní předplatné nenalezeno"
@@ -284,11 +284,11 @@ export async function POST(req) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/reactivate-subscription - POST - (Žádné typ účtu nenalezen)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
         return new Response(JSON.stringify({
             message: "Zadaný typ učtu nenalezen  "
@@ -328,11 +328,11 @@ export async function POST(req) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/reactivate-subscription - POST - (Žádné aktivní předplatné nenalezeno)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
         return new Response(JSON.stringify({
             message: "Žádné aktivní předplatné nenalezeno"
@@ -381,7 +381,7 @@ if(!myAcc)
         });
 
     } catch (error) {
-        let data = await req.json();
+    
       try{
            
   
@@ -399,12 +399,12 @@ if(!myAcc)
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.errors.create({
+              await prisma.create({ data: {
                 info: `Chyba na /api/reactivate-subscription - POST - (catch)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip },
               })
   
             }catch(error){}

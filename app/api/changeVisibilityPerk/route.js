@@ -4,7 +4,9 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 
 export async function POST(request) {
+  let   perkId, visibility,accId
   try {
+    ({ perkId, visibility,accId } = await request.json());
     const session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(
@@ -16,7 +18,6 @@ export async function POST(request) {
       );
     }
     if(session.role.privileges <= 2){
-      let { perkId,visibility,accId } = await request.json();
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -31,11 +32,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changeVisibilityPerk - POST - (Na tento příkaz nemáte pravomoce)  perkId ${perkId} visibility: ${visibility} accId: ${accId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
         return new Response(
             JSON.stringify({ message: 'Na tento příkaz nemáte práva' }),
@@ -46,7 +47,7 @@ export async function POST(request) {
           );
     }
 
-    const { perkId,visibility,accId } = await request.json();
+
     console.log("PerkID:",perkId)
     console.log("accId:",accId)
     console.log("visivbility:",visibility)
@@ -79,11 +80,11 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changeVisibilityPerk - POST - (Již jste vyčerpal admn. pravomocí)  perkId ${perkId} visibility: ${visibility} accId: ${accId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -134,7 +135,7 @@ export async function POST(request) {
   } catch (error) {
     try{
      
-    let { perkId,visibility,accId } = await request.json();
+
       const rawIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
       request.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -149,12 +150,12 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.errors.create({
+            await prisma.create({ data: {
               info: `Chyba na /api/changeVisibilityPerk - POST - (catch)  perkId ${perkId} visibility: ${visibility} accId: ${accId} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip },
             })
 
           }catch(error){}
