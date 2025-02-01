@@ -124,11 +124,13 @@ const usersAll = await prisma.users.findMany({
                   .setZone('Europe/Prague')
                   .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                     await prisma.errors.create({
+                      data:{
                       info: `Chyba na /api/getUser - POST - (catch) data: ${data} `,
                       dateAndTime: dateAndTime,
                       errorPrinted: error,
                       userId: session?.userId,
                       ipAddress:ip,
+                      }
                     })
         
                   }catch(error){}
