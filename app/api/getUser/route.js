@@ -89,18 +89,39 @@ const usersAll = await prisma.users.findMany({
       }
     }
   });
+  let foundUsersByIp = await prisma.ipAddressesOnUsers.findMany({
+    where: {
+      ipAddress: {
+        value:{ contains: data.info }  // Query based on the 'value' field in the IpAddresses model
+      }
+    },
+    include: {
+      user: {
+        include: {
+          role: true  // Include the full role relation
+        }
+      }
+    }
+  });
+ 
   
-  // Transform the result to only include the desired fields
-  const users = usersAll.map(user => ({
-    id: user.id,
-    fullName: user.fullName,
-    privileges: user.role?.privileges || null // Handle cases where role might be null
-  }));
-  
+  const userss = [
+    ...usersAll.map(user => ({
+      id: user.id,
+      fullName: user.fullName,
+      privileges: user.role?.privileges || null // Handle cases where role might be null
+    })),
+    ...foundUsersByIp.map(fu => ({
+      id: fu.user.id,
+      fullName: fu.user.fullName,
+      privileges: fu.user.role?.privileges || null // Get privileges from the found user
+    }))
+  ];
 
-          console.log("tyhle uživagtele jsem našel:",users)
 
-        return new Response(JSON.stringify({ users: users }), {
+          console.log("tyhle uživagtele jsem našel:",userss)
+
+        return new Response(JSON.stringify({ users: userss }), {
           status: 200,
           headers: { 'Content-Type': 'application/json' }
         });
