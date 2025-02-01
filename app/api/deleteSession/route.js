@@ -118,7 +118,7 @@ export async function POST(req) {
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
               data:{ 
-              info: `Chyba na /api/deleteSession - POST - (sessionId nebyla poskytnuta) userToBreak: userIdToBreak: ${userToBreak.user.id} `,
+              info: `Chyba na /api/deleteSession - POST - (sessionId nebyla poskytnuta) userIdToBreak: ${userToBreak.user.id} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
               ipAddress:ip,}
@@ -152,7 +152,7 @@ export async function POST(req) {
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
                 data:{ 
-                info: `Chyba na /api/deleteSession - POST - (Uživatel na zničení session má vetší pravomoce než níčitel) userToBreak:userIdToBreak: ${userToBreak.user.id} `,
+                info: `Chyba na /api/deleteSession - POST - (Uživatel na zničení session má vetší pravomoce než níčitel) userToBreak: ${userToBreak.user.id} `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
                 ipAddress:ip,}
@@ -214,7 +214,7 @@ export async function POST(req) {
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
               data:{ 
-              info: `Chyba na /api/deleteSession - POST - (catch) userToBreak: userIdToBreak: ${userToBreak.user.id} `,
+              info: `Chyba na /api/deleteSession - POST - (catch)  userIdToBreak: ${userToBreak.user.id} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
               userId: session?.userId,
