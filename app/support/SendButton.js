@@ -4,6 +4,7 @@ import { useEffect } from "react";
 function SendButton({ sessionEmail }) {
     const [isLoading, setIsLoading] = useState(false); 
     const [success, setSuccess] = useState(false); 
+    const [Notsuccess, setNotSuccess] = useState(false); 
     const [text, setText] = useState('');  // Text should be a string
     const [email, setEmail] = useState(sessionEmail ? sessionEmail : '');
 
@@ -30,6 +31,7 @@ function SendButton({ sessionEmail }) {
             if(result.success){
                 setSuccess(true);
             } else {
+                setNotSuccess(true)
                 console.log("Ticket submission failed:", result.message);
             }
         } catch (error) {
@@ -49,7 +51,7 @@ function SendButton({ sessionEmail }) {
                         onChange={(e) => setEmail(e.target.value)} 
                         type='email' 
                         placeholder='email..' 
-                        disabled={isLoading || success || sessionEmail}  // Disable when loading or success
+                        disabled={isLoading || success || sessionEmail || Notsuccess}  // Disable when loading or success
                         className='input input-bordered w-full p-3 text-lg rounded-lg' 
                     />
                 </label>
@@ -57,7 +59,7 @@ function SendButton({ sessionEmail }) {
                 <label className='form-control w-full'>
                     <span className='label-text text-lg font-medium'>Text</span>
                     <textarea 
-                        disabled={isLoading || success} // Disable when loading or success
+                        disabled={isLoading || success || Notsuccess} // Disable when loading or success
                         value={text} 
                         onChange={(e) => setText(e.target.value)} 
                         className='textarea textarea-bordered w-full h-32 p-3 text-lg rounded-lg' 
@@ -68,13 +70,13 @@ function SendButton({ sessionEmail }) {
                 <button 
     type='submit' 
     className={`btn btn-neutral w-full py-3 text-lg rounded-lg`}
-    disabled={isLoading || success} // Disable when loading or success
+    disabled={isLoading || success || Notsuccess} // Disable when loading or success
 >
     {isLoading 
         ? 'Odesílání...' 
         : (success 
             ? 'Úspěšně odesláno' 
-            : 'Odeslat')}  {/* Show 'Odeslat' when success is false */}
+            : Notsuccess? 'Nelze odeslat zprávu': 'Odeslat')}  {/* Show 'Odeslat' when success is false */}
 </button>
             </form>
         </>
