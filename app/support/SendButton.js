@@ -1,12 +1,15 @@
 "use client";
 import { useState } from "react";
-
+import { useEffect } from "react";
 function SendButton({ sessionEmail }) {
     const [isLoading, setIsLoading] = useState(false); 
     const [success, setSuccess] = useState(false); 
     const [text, setText] = useState('');  // Text should be a string
     const [email, setEmail] = useState(sessionEmail ? sessionEmail : '');
 
+    useEffect(() => {
+        setEmail(sessionEmail)
+    }, [sessionEmail]);     
     async function sendSupTicket(e) {
         e.preventDefault(); // Prevent form submission
         
@@ -46,7 +49,7 @@ function SendButton({ sessionEmail }) {
                         onChange={(e) => setEmail(e.target.value)} 
                         type='email' 
                         placeholder='email..' 
-                        disabled={isLoading || success} // Disable when loading or success
+                        disabled={isLoading || success || sessionEmail}  // Disable when loading or success
                         className='input input-bordered w-full p-3 text-lg rounded-lg' 
                     />
                 </label>
