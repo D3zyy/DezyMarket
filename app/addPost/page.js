@@ -24,14 +24,14 @@ const Page = async () => {
           let   accMonthIn= accType?.monthIn
              accType = accType?.name
 
-     
+             try {
        
 
         // Perform redirect if no account type is found and the user is logged in
         if (!accType && session.isLoggedIn) {
             redirect('/typeOfAccount'); // Call redirect without await
         }
-        try {
+
               const dateAndTime = DateTime.now()
                       .setZone('Europe/Prague')
                       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
@@ -197,11 +197,12 @@ const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
       .setZone('Europe/Prague')
       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
         await prisma.errors.create({
+          data:{
           info: 'Chyba na /addPost',
           errorPrinted: error,
           dateAndTime: dateAndTime,
           userId: session?.userId,
-          ipAddress:ip,
+          ipAddress:ip,}
         })
       } catch(error){
 
