@@ -44,6 +44,7 @@ export async function POST(request) {
         .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
     const addedTicke = await prisma.supportTickets.create({
         data:{
+          acceptedTermsAndPrivacyPolicy: true,
       ipOfUsr: ipVal.id, 
       active: true,
       email:data.email,
