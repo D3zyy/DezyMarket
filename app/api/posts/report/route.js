@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 
 
 export async function POST(req) {
+  let data
     try {
       console.log("tady")
       const session = await getSession();
@@ -36,7 +37,7 @@ export async function POST(req) {
         'Nevhodný obsah',
         'Jiné',
     ];
-      const data = await req.json();
+       data = await req.json();
     console.log("data od klienta:",data)
       if (data.extraInfo.length > 200) {
         return new Response(JSON.stringify({
@@ -63,10 +64,12 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/report - POST - (Žádný důvod nebyl uveden)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
                 ipAddress:ip,
+                }
               })
         return new Response(JSON.stringify({
             message: "Žádný z důvodů nebyl nalezen",
@@ -97,10 +100,12 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/report - POST - (Nějaký z důvodů není platný)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
                 ipAddress:ip,
+                }
               })
         return new Response(JSON.stringify({
             message: "Nějaký z důvodů není platný",
@@ -132,10 +137,11 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/report - POST - (Příspěvek nenalezen)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
         return new Response(JSON.stringify({
           message: "Příspěvek nenalezen",
@@ -163,10 +169,11 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/report - POST - (Nelze nahlásit vlastní příspěvek)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
     
         return new Response(JSON.stringify({
@@ -202,10 +209,11 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/report - POST - (Příspěvek již nahlásil)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
 
 
@@ -254,7 +262,6 @@ export async function POST(req) {
       });
   
     } catch (error) {
-      let data = await req.json();
       try{
            
   
@@ -273,11 +280,12 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/report - POST - (catch)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
   
             }catch(error){}
@@ -333,6 +341,7 @@ console.log("Dnes je :", currentDate)
 
 
 export async function PUT(req) {
+  let data
     try {
       const session = await getSession();
     
@@ -346,7 +355,7 @@ export async function PUT(req) {
         });
       }
       
-      const data = await req.json();
+       data = await req.json();
       
     
 
@@ -372,10 +381,11 @@ export async function PUT(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/report - PUT - (Příspěvek nenalezen)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
         return new Response(JSON.stringify({
           message: "Příspěvek nenalezen",
@@ -423,7 +433,6 @@ export async function PUT(req) {
 
 
     } catch (error) {
-      let data = await req.json();
       try{
            
   
@@ -442,11 +451,12 @@ export async function PUT(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/report - PUT - (catch)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
   
             }catch(error){}
