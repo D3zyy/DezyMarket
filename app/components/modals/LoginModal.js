@@ -60,7 +60,7 @@ const handleLogin = async (event, setError, setLoading, setSuccess) => {
               </div>
               <div className="layer2">
                 {errorData.message}{' '}
-                <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
+                <Link href="/support" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Podpora</Link>
               </div>
             </div>
           </span>
@@ -75,7 +75,7 @@ const handleLogin = async (event, setError, setLoading, setSuccess) => {
               </div>
               <div className="layer2">
                 {errorData.message}{' '}
-                <Link href="/kontakty" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Kontakty</Link>
+                <Link href="/support" style={{ color: 'gray', textDecoration: 'underline' }} target="_blank">Podpora</Link>
               </div>
             </div>
           </span>
