@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 
 
 export async function POST(req) {
+  let data 
     try {
       const session = await getSession();
     
@@ -18,7 +19,7 @@ export async function POST(req) {
         });
       } 
 
-      const data = await req.json();
+       data = await req.json();
       
       console.log(session.userId)
       console.log(data.userId)
@@ -49,10 +50,11 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/rate - POST - (Nelze ohodnotit sám sebe)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
         return new Response(JSON.stringify({
             message: "Nelze ohodnotit sám sebe.",
@@ -80,10 +82,11 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/rate - POST - (Chybná počet hvězdiček)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
         return new Response(JSON.stringify({
             message: "Chybný počet hvězdiček",
@@ -122,10 +125,11 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/rate - POST - (Uživatel na hodnocení nenalezen)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
         return new Response(JSON.stringify({
           message: "Uživatel na hodnocení nenalezen",
@@ -186,7 +190,6 @@ export async function POST(req) {
       });
   
     } catch (error) {
-      let data = await req.json();
       try{
            
   
@@ -205,11 +208,12 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/rate - POST - (catch)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
   
             }catch(error){}
@@ -281,6 +285,7 @@ console.log("Dnes je :", currentDate)
 
 
 export async function PUT(req) {
+  let data
     try {
       const session = await getSession();
     
@@ -294,7 +299,7 @@ export async function PUT(req) {
         });
       }
       
-      const data = await req.json();
+       data = await req.json();
   
       const alreadyEnoughRating = await checkIfEnoughRatings(data.userTorate,session.userId)
       console.log("Již má dostatek hodnocení :",alreadyEnoughRating)
@@ -325,7 +330,6 @@ export async function PUT(req) {
 
 
     } catch (error) {
-      let data = await req.json();
       try{
            
   
@@ -344,11 +348,12 @@ export async function PUT(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/posts/rate - PUT - (catch)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
   
             }catch(error){}
