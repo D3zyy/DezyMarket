@@ -74,9 +74,11 @@ export async function verifyToken(email, token) {
                               .setZone('Europe/Prague')
                               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                                 await prisma.errors.create({
+                                    data:{
                                   info: `Chyba na /api/email/verifyToken.js - (catch) email: ${email} ${token} `,
                                   dateAndTime: dateAndTime,
                                   errorPrinted: error,
+                                    }
                                 })
                     
                               }catch(error){}

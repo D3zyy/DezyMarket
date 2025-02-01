@@ -32,10 +32,11 @@ export async function POST(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{ 
               info: `Chyba na /api/deleteSession - POST - (Na tento příkaz nemáte oprávnění) ${userToBreak} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
         return new Response(
             JSON.stringify({ message: "Na tento příkaz nemáte oprávnění" }),
@@ -75,10 +76,11 @@ export async function POST(req) {
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                 await prisma.errors.create({
+                  data:{ 
                   info: `Chyba na /api/deleteSession - POST - (Již jste vyčerpal adm. pravomocí): ${userToBreak} `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
-                  ipAddress:ip,
+                  ipAddress:ip,}
                 })
           return new Response(JSON.stringify({
             message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -107,10 +109,11 @@ export async function POST(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{ 
               info: `Chyba na /api/deleteSession - POST - (sessionId nebyla poskytnuta) userToBreak: ${userToBreak} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
       return new Response(
         JSON.stringify({ message: "sessionId není poskytován" }),
@@ -144,10 +147,11 @@ export async function POST(req) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{ 
                 info: `Chyba na /api/deleteSession - POST - (Uživatel na zničení session má vetší pravomoce než níčitel) userToBreak: ${userToBreak} `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
   
            
@@ -205,11 +209,12 @@ export async function POST(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{ 
               info: `Chyba na /api/deleteSession - POST - (catch) userToBreak: ${userToBreak} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip}
             })
 
           }catch(error){}

@@ -6,9 +6,9 @@ import { DateTime } from "luxon";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 export async function POST(request) {
-
-    try {
-
+  let priceId, agreed, nameOfSub;
+  try {
+      ({ priceId, agreed, nameOfSub } = await request.json());
 
         const session = await getSession();  
         if (!session.isLoggedIn)   return new NextResponse(
@@ -20,7 +20,7 @@ export async function POST(request) {
           );
 
    
-       const { priceId , agreed, nameOfSub} = await request.json()
+  
  
  
        const accTohaveExist = await prisma.accountType.findFirst({ // or find him where userId =session.userId
@@ -45,10 +45,11 @@ export async function POST(request) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info:  `Chyba na /api/create-subscription -  POST - (Zadaný účet neexistuje) priceId: ${priceId} nameOfSub: ${nameOfSub} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
       return new NextResponse(
         JSON.stringify({ message: 'Účet který byl poslán že chcete neexistuje' }),
@@ -89,10 +90,11 @@ export async function POST(request) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info:  `Chyba na /api/create-subscription -  POST - (Zadaný účet již máte)  priceId: ${priceId} nameOfSub: ${nameOfSub} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
   
 
@@ -156,10 +158,11 @@ export async function POST(request) {
         .setZone('Europe/Prague')
         .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
           await prisma.errors.create({
+            data:{
             info:  `Chyba na /api/create-subscription -  POST - (Zadaná cena není aktuálně platná pro tento účet)  data: priceId: ${priceId} nameOfSub: ${nameOfSub} `,
             dateAndTime: dateAndTime,
             userId: session?.userId,
-            ipAddress:ip,
+            ipAddress:ip,}
           })
 
 
@@ -248,11 +251,12 @@ export async function POST(request) {
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
+                data:{
                 info: `Chyba na /api/create-subscription - POST - (catch) priceId: ${priceId} nameOfSub: ${nameOfSub}`,
                 errorPrinted: error,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
-                ipAddress:ip,
+                ipAddress:ip,}
               })
             } catch(error){
       

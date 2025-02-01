@@ -3,6 +3,7 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 
 export async function POST(req) {
+  let   userId, bannedFrom, bannedTo, permanent, reason 
   try {
     const session = await getSession();
 
@@ -20,7 +21,7 @@ export async function POST(req) {
     }
 
     const data = await req.json();
-    const { userId, bannedFrom, bannedTo, permanent, reason } = data;
+    ({ userId, bannedFrom, bannedTo,permanent,reason } =data);
 
     // Zkontrolujeme, zda má uživatel práva na vytvoření banu
     if (session?.role?.privileges <= 1) {
@@ -39,10 +40,11 @@ export async function POST(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/createBan - POST - (Nemáte oprávněnína tento příkaz.) userIdToBeBanned: ${userId} zabanovat od: ${formatDateWithDotsWithTime(bannedFrom)}  zabanovaat do : ${formatDateWithDotsWithTime(bannedTo)} pernametní:${permanent} reason: ${reason} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
       return new Response(
         JSON.stringify({
@@ -77,10 +79,11 @@ export async function POST(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/createBan - POST - (Uživatel kterého chcete zabanovat nebyl nalezen.) userIdToBeBanned: ${userId} zabanovat od: ${formatDateWithDotsWithTime(bannedFrom)}  zabanovaat do : ${formatDateWithDotsWithTime(bannedTo)} pernametní:${permanent} reason: ${reason} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
       return new Response(
         JSON.stringify({
@@ -120,10 +123,11 @@ export async function POST(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/createBan - POST - (Vyčerpání adm. pravomocí .) userIdToBeBanned: ${userId} zabanovat od: ${formatDateWithDotsWithTime(bannedFrom)}  zabanovaat do : ${formatDateWithDotsWithTime(bannedTo)} pernametní:${permanent} reason: ${reason} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
       return new Response(JSON.stringify({
         message: 'Již jste vyčerpal administrativních pravomocí dnes'
@@ -149,10 +153,11 @@ export async function POST(req) {
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/createBan - POST - (Nemáte oprávnění zabanovat uživatele s vyšším nebo stejným oprávněním.) userIdToBeBanned: ${userId} zabanovat od: ${formatDateWithDotsWithTime(bannedFrom)}  zabanovaat do : ${formatDateWithDotsWithTime(bannedTo)} pernametní:${permanent} reason: ${reason} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
 
 
@@ -246,11 +251,12 @@ const nowww = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
+              data:{
               info: `Chyba na /api/createBan - POST - (catch) userIdToBeBanned: ${userId} zabanovat od: ${formatDateWithDotsWithTime(bannedFrom)}  zabanovaat do : ${formatDateWithDotsWithTime(bannedTo)} pernametní:${permanent} reason: ${reason} `,
               errorPrinted: error,
               dateAndTime: dateAndTime,
               userId: session?.userId,
-              ipAddress:ip,
+              ipAddress:ip,}
             })
           } catch(error){
     

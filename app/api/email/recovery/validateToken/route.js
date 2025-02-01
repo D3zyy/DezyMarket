@@ -4,9 +4,9 @@ import { z } from 'zod';
 import { DateTime } from 'luxon';
 
 export async function POST(req) {
+  let token, newPassword
   try {
-    const { token, newPassword } = await req.json();
-    
+     ({ token, newPassword } = await req.json());
     if (!token || !newPassword) {
       return new Response(
         JSON.stringify({ message: 'Token a nové heslo jsou povinné.' }),
@@ -38,7 +38,7 @@ export async function POST(req) {
    
     // Check if the token record exists
     if (!tokenRecord) {
-      let { token, newPassword } = await req.json();
+    
           const rawIp =
           req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
           req.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -54,10 +54,11 @@ export async function POST(req) {
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                 await prisma.errors.create({
+                  data:{ 
                   info: `Chyba na /api/email/recovery/validateToken - POST - (odkaz je neplatný) token: ${token} newPassword: ${newPassword} `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
-                  ipAddress:ip,
+                  ipAddress:ip,}
                 })
       return new Response(
         JSON.stringify({ message: 'Odkaz je neplatný.' }),
@@ -86,7 +87,7 @@ export async function POST(req) {
    
 
     if (localISODate > tokenRecord.expiresAt) {
-      let { token, newPassword } = await req.json();
+  
           const rawIp =
           req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
           req.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -102,10 +103,11 @@ export async function POST(req) {
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                 await prisma.errors.create({
+                  data:{ 
                   info: `Chyba na /api/email/recovery/validateToken - POST - (odkaz již vypršel) token: ${token} newPassword: ${newPassword} `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
-                  ipAddress:ip,
+                  ipAddress:ip,}
                 })
       return new Response(
         JSON.stringify({ message: 'Odkaz již vypršel' }),
@@ -140,7 +142,7 @@ export async function POST(req) {
         }
       );
     } else {
-      let { token, newPassword } = await req.json();
+     
           const rawIp =
           req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
           req.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -156,10 +158,12 @@ export async function POST(req) {
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                 await prisma.errors.create({
+                  data:{ 
                   info: `Chyba na /api/email/recovery/validateToken - POST - (odkaz je neplatný) token: ${token} newPassword: ${newPassword} `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
                   ipAddress:ip,
+                  }
                 })
       return new Response(
         JSON.stringify({ message: 'Odkaz je neplatný.' }),
@@ -171,7 +175,6 @@ export async function POST(req) {
     }
   } catch (error) {
     try{
-      let { token, newPassword } = await req.json();
           const rawIp =
           req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
           req.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -187,11 +190,12 @@ export async function POST(req) {
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                 await prisma.errors.create({
+                  data:{ 
                   info: `Chyba na /api/email/recovery/validateToken - POST - (catch) token: ${token} newPassword: ${newPassword} `,
                   dateAndTime: dateAndTime,
                   errorPrinted: error,
                   userId: session?.userId,
-                  ipAddress:ip,
+                  ipAddress:ip,}
                 })
     
               }catch(error){}

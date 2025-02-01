@@ -306,11 +306,12 @@ const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
       .setZone('Europe/Prague')
       .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
         await prisma.errors.create({
+          data:{
           info: 'Chyba na /admin',
           errorPrinted: error,
           dateAndTime: dateAndTime,
           userId: session?.userId,
-          ipAddress:ip,
+          ipAddress:ip,}
         })
       } catch(error){
 
