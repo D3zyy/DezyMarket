@@ -3,7 +3,9 @@ import { getSession } from "@/app/authentication/actions";
 import { DateTime } from "luxon";
 
 export async function POST(req) {
+  let data
   let userToBreak
+
   try {
 
     const session = await getSession();
@@ -16,6 +18,13 @@ export async function POST(req) {
         }
       );
     }
+    const data = await req.json();
+    userToBreak = await prisma.sessions.findFirst({
+      where: { id: data.sessionId },
+      include: { user: { include : {role:true}} },
+    });
+    console.log("tenhle:",userToBreak)
+    console.log("DATA:",data)
     if(session.role.privileges <= 1){
       const rawIp =
       req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
@@ -33,7 +42,7 @@ export async function POST(req) {
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
               data:{ 
-              info: `Chyba na /api/deleteSession - POST - (Na tento příkaz nemáte oprávnění) ${userToBreak} `,
+              info: `Chyba na /api/deleteSession - POST - (Na tento příkaz nemáte oprávnění) userIdToBreak: ${userToBreak.user.id} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
               ipAddress:ip,}
@@ -77,7 +86,7 @@ export async function POST(req) {
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                 await prisma.errors.create({
                   data:{ 
-                  info: `Chyba na /api/deleteSession - POST - (Již jste vyčerpal adm. pravomocí): ${userToBreak} `,
+                  info: `Chyba na /api/deleteSession - POST - (Již jste vyčerpal adm. pravomocí): userIdToBreak: ${userToBreak.user.id} `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
                   ipAddress:ip,}
@@ -90,8 +99,7 @@ export async function POST(req) {
           });
         }
 
-    const data = await req.json();
-    console.log("Data na ničení session:", data);
+
 
     if (!data.sessionId) {
       const rawIp =
@@ -110,7 +118,7 @@ export async function POST(req) {
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
               data:{ 
-              info: `Chyba na /api/deleteSession - POST - (sessionId nebyla poskytnuta) userToBreak: ${userToBreak} `,
+              info: `Chyba na /api/deleteSession - POST - (sessionId nebyla poskytnuta) userToBreak: userIdToBreak: ${userToBreak.user.id} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
               ipAddress:ip,}
@@ -124,11 +132,7 @@ export async function POST(req) {
       );
     }
 
-     userToBreak = await prisma.sessions.findFirst({
-      where: { id: data.sessionId },
-      include: { user: { include : {role:true}} },
-    });
-    console.log("tenhle:",userToBreak)
+
 
     if(userToBreak.user.role.privileges >= session.role.privileges){
       
@@ -148,7 +152,7 @@ export async function POST(req) {
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
               await prisma.errors.create({
                 data:{ 
-                info: `Chyba na /api/deleteSession - POST - (Uživatel na zničení session má vetší pravomoce než níčitel) userToBreak: ${userToBreak} `,
+                info: `Chyba na /api/deleteSession - POST - (Uživatel na zničení session má vetší pravomoce než níčitel) userToBreak:userIdToBreak: ${userToBreak.user.id} `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
                 ipAddress:ip,}
@@ -210,7 +214,7 @@ export async function POST(req) {
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             await prisma.errors.create({
               data:{ 
-              info: `Chyba na /api/deleteSession - POST - (catch) userToBreak: ${userToBreak} `,
+              info: `Chyba na /api/deleteSession - POST - (catch) userToBreak: userIdToBreak: ${userToBreak.user.id} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
               userId: session?.userId,
