@@ -19,7 +19,7 @@ const ProfileNavBarClient = ({ session }) => {
   };
 
   if (!session.isLoggedIn) return null;
-
+  console.log("session:",session)
   return (
     <div className="flex items-center">
       <div className="hidden sm:flex items-center">
@@ -45,7 +45,11 @@ const ProfileNavBarClient = ({ session }) => {
             ? "border border-yellow-500" 
             : session?.role?.privileges === 4 
             ? "border border-green-500"
-            : "" // případ, kdy žádná podmínka není splněna
+            : session?.accPriority === 2 ?
+            "border border-orange-500":
+            session?.accPriority === 3 ?
+            "border border-purple-500":
+            ""
         }`}
       >
             <svg
