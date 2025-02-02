@@ -43,12 +43,12 @@ export const handleRegistration = async (formData) => {
 
 
     // Zkontrolujte, zda uživatel s daným e-mailem již existuje
-    const existingUser = await prisma.Users.findUnique({
+    const existingUser = await prisma.users.findUnique({
       where: {
         email: validatedFields.data.email,
       }
     });
-    console.log("uživael již exostuje",existingUser)
+
     if (existingUser) {
       return {
         message: "Email již existuje.",
@@ -60,7 +60,7 @@ export const handleRegistration = async (formData) => {
     const hashedPassword = await bcrypt.hash(validatedFields.data.password, 10);
 
     // Získejte ID role pro roli "uživatel"
-    const role = await prisma.Roles.findUnique({
+    const role = await prisma.roles.findUnique({
       where: {
         name: 'uzivatel'
       }
@@ -83,7 +83,7 @@ export const handleRegistration = async (formData) => {
 console.log(localISODateFixedOffset); // Např. "2024-11-26T23:10:30+00:00"
 
     // Uložení uživatele do databáze
-  const createdUser =   await prisma.Users.create({
+  const createdUser =   await prisma.users.create({
       data: {
         dateOfRegistration: localISODateFixedOffset,
         email: validatedFields.data.email,
@@ -135,9 +135,7 @@ if (!ipToRegisterAlreadyExistWithThatUser) {
     },
   });
 }
-console.log("IP:",ip)
-console.log("Již exstuje ip adresa :",ipToRegister)
-console.log("Již má uživatel tuto ip adresu",ipToRegisterAlreadyExistWithThatUser)
+
 
     // Odeslání verifikačního emailu
     const result = await sendVerificationEmail(validatedFields.data.email);

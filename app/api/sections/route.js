@@ -2,8 +2,9 @@ import { prisma } from "@/app/database/db";
 import { getSession } from "@/app/authentication/actions";
 import { DateTime } from "luxon";
 export async function GET(req) {
+  let session
   try {
-    const session = await getSession();
+     session = await getSession();
     if (!session || !session.isLoggedIn) {
       return new Response(
         JSON.stringify({ message: 'Uživatel není přihlášen' }),

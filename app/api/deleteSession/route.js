@@ -4,11 +4,11 @@ import { DateTime } from "luxon";
 
 export async function POST(req) {
   let data
-  let userToBreak
+  let userToBreak,session
 
   try {
 
-    const session = await getSession();
+     session = await getSession();
     if (!session || !session.isLoggedIn) {
       return new Response(
         JSON.stringify({ message: "Uživatel není přihlášen" }),

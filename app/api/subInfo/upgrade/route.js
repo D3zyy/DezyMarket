@@ -6,11 +6,11 @@ import { DateTime } from 'luxon';
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
-  let data
+  let data,session
     try {
      
         // Ensure the session is retrieved correctly
-        const session = await getSession();
+         session = await getSession();
         if (!session || !session.isLoggedIn || !session.email) {
             return new Response(JSON.stringify({
                 message: "Chyba na serveru [POST] požadavek na získání informací o předplatném pro upgrade. Session nebyla nalezena"

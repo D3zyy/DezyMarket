@@ -6,8 +6,9 @@ import { DateTime } from 'luxon';
 
 export async function POST(request) {
   let data
+  let session
   try {
-    const session = await getSession();
+     session = await getSession();
     if (!session.isLoggedIn) {
       return new NextResponse(
         JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na nastavení zakladní typ účtu. Session nebyla nalezena' }),

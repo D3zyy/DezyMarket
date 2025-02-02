@@ -57,7 +57,7 @@ export async function POST(req) {
                   data:{ 
                   info: `Chyba na /api/email/recovery/validateToken - POST - (odkaz je neplatný) token: ${token} newPassword: ${newPassword} `,
                   dateAndTime: dateAndTime,
-                  userId: session?.userId,
+                  
                   ipAddress:ip,}
                 })
       return new Response(
@@ -106,7 +106,6 @@ export async function POST(req) {
                   data:{ 
                   info: `Chyba na /api/email/recovery/validateToken - POST - (odkaz již vypršel) token: ${token} newPassword: ${newPassword} `,
                   dateAndTime: dateAndTime,
-                  userId: session?.userId,
                   ipAddress:ip,}
                 })
       return new Response(
@@ -161,7 +160,6 @@ export async function POST(req) {
                   data:{ 
                   info: `Chyba na /api/email/recovery/validateToken - POST - (odkaz je neplatný) token: ${token} newPassword: ${newPassword} `,
                   dateAndTime: dateAndTime,
-                  userId: session?.userId,
                   ipAddress:ip,
                   }
                 })
@@ -194,7 +192,6 @@ export async function POST(req) {
                   info: `Chyba na /api/email/recovery/validateToken - POST - (catch) token: ${token} newPassword: ${newPassword} `,
                   dateAndTime: dateAndTime,
                   errorPrinted: error,
-                  userId: session?.userId,
                   ipAddress:ip,}
                 })
     

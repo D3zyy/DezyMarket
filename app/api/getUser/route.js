@@ -3,7 +3,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
     export async function POST(req) {
-      let data;
+      let data,session;
       try {
  
         try {
@@ -28,7 +28,7 @@ import { DateTime } from "luxon";
           );
         }
         
-        const session = await getSession();
+         session = await getSession();
         if (!session || !session.isLoggedIn || !session.email) {
           return new Response(
             JSON.stringify({

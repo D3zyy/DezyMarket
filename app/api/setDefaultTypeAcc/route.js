@@ -5,9 +5,9 @@ import { DateTime } from "luxon"; // Pokud ještě není importováno
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
-  let name
+  let name,session
   try {
-    const session = await getSession();
+     session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
       return new NextResponse(
         JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na nastavení základní typ účtu. Session nebyla nalezena' }),

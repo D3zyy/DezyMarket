@@ -3,9 +3,9 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 
 export async function POST(req) {
-  let   userId, bannedFrom, bannedTo, permanent, reason 
+  let   userId, bannedFrom, bannedTo, permanent, reason ,session
   try {
-    const session = await getSession();
+     session = await getSession();
 
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(

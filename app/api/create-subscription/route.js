@@ -6,11 +6,11 @@ import { DateTime } from "luxon";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 export async function POST(request) {
-  let priceId, agreed, nameOfSub;
+  let priceId, agreed, nameOfSub,session
   try {
       ({ priceId, agreed, nameOfSub } = await request.json());
 
-        const session = await getSession();  
+         session = await getSession();  
         if (!session.isLoggedIn)   return new NextResponse(
             JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na subscription. Session nebyla nalezena'}),
             {

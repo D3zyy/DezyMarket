@@ -5,10 +5,10 @@ import { DateTime } from "luxon";
 
 
   export async function GET(req) {
- 
+ let session
     try {
      
-      const session = await getSession();
+       session = await getSession();
       
       if (!session || !session.isLoggedIn) {
        

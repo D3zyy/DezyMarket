@@ -25,7 +25,6 @@ import ReVisibleBtn from "./ReVisibleBtn";
 import { headers } from "next/headers";
 
 const Page = async ({ params }) => {
-  try{  
   let session;
   let accType;
   let postRecord;
@@ -33,6 +32,8 @@ const Page = async ({ params }) => {
   let isOverflowing;
   let imageUrls
   let topinfo
+  try{  
+  
 
   try {
     session = await getSession();

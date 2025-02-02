@@ -4,10 +4,10 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 
 export async function POST(request) {
-  let   perkId, visibility,accId
+  let   perkId, visibility,accId,session
   try {
     ({ perkId, visibility,accId } = await request.json());
-    const session = await getSession();
+     session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(
         JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na nastavení základní typ účtu. Session nebyla nalezena' }),

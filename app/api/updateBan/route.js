@@ -5,11 +5,11 @@ import { DateTime } from 'luxon';
 export async function POST(request) {
 
 
-let data
+let data,session
 
   try {
     console.log("HIT")
-    const session = await getSession();
+     session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
         return new Response(JSON.stringify({
             message: "Chyba na serveru [POST] požadavek na získání informací o předplatném pro upgrade. Session nebyla nalezena"

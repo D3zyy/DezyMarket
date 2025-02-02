@@ -18,8 +18,9 @@ import ReNewSubButton from "./ReNewSub";
 import DeleteSessionBtn from "./BtnDeleteSession";
 import { headers } from "next/headers";
 const Page = async ({ params }) => {
-  try{ 
   let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser,isBanned,allRoles,allSub,sessionsOfUser,ipsOfUser,ipsWithOtherUsers,allManagementsActions
+  try{ 
+
   try{
    [session,userAcc, posts, rankingOfUser,bansOfUser] = await Promise.all([
     getSession()
@@ -1065,6 +1066,7 @@ Před: {action?.valueBefore}
   </>
 )
 } catch (error) {
+  
   try{
     const rawIp =
 headers().get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci

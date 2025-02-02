@@ -219,13 +219,14 @@ export async function POST(req) {
   let allImages
   let typPost
   let isAllowed 
+  let session
     try {
       formData = await req.formData();
         try {
           
            typPost =  formData.get('typeOfPost')
             console.log(formData.get('location'))
-
+            session = await getSession();
            allImages = formData.getAll("images")
            if(allImages.length > 25) {
             const rawIp =
@@ -265,7 +266,7 @@ const formDataObject = Object.fromEntries(formData.entries());
             });
           }
        // Inside your POST function
-const session = await getSession();
+
 if (!session || !session.isLoggedIn || !session.email) {
     return new Response(JSON.stringify({
         message: "Chyba na serveru [POST] požadavek na vytvoření příspěvku. Session nebyla nalezena "
@@ -781,9 +782,9 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
 
 
 export async function PUT(req) {
-  let data
+  let data,session
   try {
-    const session = await getSession();
+     session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(JSON.stringify({
         message: "Chyba na serveru [PUT] požadavek na editaci příspěvku. Session nebyla nalezena "
@@ -1375,10 +1376,10 @@ export async function PUT(req) {
 
 
 export async function DELETE(req) {
-  let data
+  let data,session
 
   try {
-    const session = await getSession();
+     session = await getSession();
 
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(JSON.stringify({

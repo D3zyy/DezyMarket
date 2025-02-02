@@ -55,7 +55,6 @@ export async function GET(req) {
               info: `Chyba na /api/verify - GET - (catch) token: ${token} email: ${email}  `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
-              userId: session?.userId,
               ipAddress:ip },
             })
 

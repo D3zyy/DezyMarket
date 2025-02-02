@@ -60,7 +60,7 @@ export async function POST(req) {
               info: `Chyba na /api/email/recovery - POST - (Váš email není ověřen. Ověřte svůj email, než budete moci obnovit heslo.) email: ${email} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
-              userId: session?.userId,
+             
               ipAddress:ip,}
             })
       return new Response(
@@ -146,7 +146,7 @@ export async function POST(req) {
                       info: `Chyba na /api/email/recovery - POST - (catch) email: ${email} `,
                       dateAndTime: dateAndTime,
                       errorPrinted: error,
-                      userId: session?.userId,
+                    
                       ipAddress:ip,}
                     })
         

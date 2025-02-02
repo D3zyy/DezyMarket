@@ -38,7 +38,6 @@ export async function DELETE(req) {
               info: `Chyba na /api/session - DELETE - (catch)  `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
-              userId: session?.userId,
               ipAddress:ip },
             })
 

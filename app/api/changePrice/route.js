@@ -6,10 +6,10 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 
 export async function POST(request) {
-  let   accTypeId, newPrice
+  let   accTypeId, newPrice,session
   try {
     ({ accTypeId, newPrice } = await request.json());
-    const session = await getSession();
+     session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(
         JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na nastavení základní typ účtu. Session nebyla nalezena' }),

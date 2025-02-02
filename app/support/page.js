@@ -1,6 +1,6 @@
 import React from 'react';
 import { getSession } from '../authentication/actions';
-import SendButton from './sendButton';
+import SendButton from './SendButton';
 
 async function Page() {
   let session = await getSession();

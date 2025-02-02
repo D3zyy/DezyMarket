@@ -157,7 +157,7 @@ export async function POST(req) {
 
     console.log("Již exstuje ip adresa :",ipToRegister)
     console.log("Již má uživatel tuto ip adresu",ipToRegisterAlreadyExistWithThatUser)
-      await resetUserTries(user.id)
+//      await resetUserTries(user.id)
       await createSession(user,plainPassword);
       return new Response(JSON.stringify({ message: "Přihlášení úspěšné"}), {
         status: 200,
@@ -197,7 +197,6 @@ export async function POST(req) {
                   info: `Chyba na /api/users - POST - (catch)data: ${data}  `,
                   dateAndTime: dateAndTime,
                   errorPrinted: error,
-                  userId: session?.userId,
                   ipAddress:ip },
                 })
     

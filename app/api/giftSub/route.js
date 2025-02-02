@@ -6,7 +6,7 @@ const { DateTime } = require('luxon');
 
 
     export async function POST(req) {
-      let data;
+      let data,session;
       try {
  
         try {
@@ -31,7 +31,7 @@ const { DateTime } = require('luxon');
               );
         }
         // Ensure the session is retrieved correctly
-        const session = await getSession();
+         session = await getSession();
         if (!session || !session.isLoggedIn || !session.email) {
           return new Response(
             JSON.stringify({

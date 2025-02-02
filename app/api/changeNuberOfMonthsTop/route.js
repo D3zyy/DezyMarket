@@ -5,10 +5,10 @@ import { DateTime } from "luxon";
 
 export async function POST(request) {
 
-  let   topId, nbrMnth
+  let   topId, nbrMnth,session
   try {
   ({ topId, nbrMnth } = await request.json());
-    const session = await getSession();
+     session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(
         JSON.stringify({ message: 'Chyba na serveru [POST] požadavek na nastavení základní typ účtu. Session nebyla nalezena' }),
