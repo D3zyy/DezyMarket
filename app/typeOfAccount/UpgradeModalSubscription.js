@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { openCardsModal } from "../components/modals/SavedCardsModal";
+import { openCardsModal , CardsModal} from "../components/modals/SavedCardsModal";
+
 async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFromPayment, setSuccess, router,fromNameUp,nameToUpgrade) {
     try {
         setloadingPayment(true);
@@ -89,8 +90,9 @@ export function openUpgradeModalSubscriptionModal(nameToUpgrade) {
 
     return (
         <div>
-            <dialog id={`upgradeModalSubscriptionModal_${nameToUpgrade}`} className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box flex flex-col justify-center items-center p-6">
+            
+            <dialog id={`upgradeModalSubscriptionModal_${nameToUpgrade}`} className="modal  modal-bottom sm:modal-middle">
+                <div className="modal-box bg-base-100 flex flex-col justify-center items-center p-6">
                     {/* Hlavní SVG */}
                     <div className="mb-6">
                         <svg
@@ -145,7 +147,7 @@ export function openUpgradeModalSubscriptionModal(nameToUpgrade) {
                             </ul>
 
                             {/* Select pro karty */}
-            
+            <CardsModal/>
                             <div className="mt-6 w-full flex items-center">
                             {lastDigits.length > 0 ?<>
     <svg

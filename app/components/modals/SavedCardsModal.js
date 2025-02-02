@@ -88,9 +88,11 @@ export function openCardsModal() {
             if (!response.ok) {
                 throw new Error("Nepodařilo se přidat kartu.");
             }
-
-            setShowCardForm(false);
+            if (response.ok) {
+                setShowCardForm(false);
             setSuccess(true);
+            }
+           
         } catch (error) {
             console.error("Chyba při přidávání karty:", error);
             setErrorFromPayment(error.message || "Nepodařilo se přidat kartu.");

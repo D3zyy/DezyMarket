@@ -50,8 +50,15 @@ export async function POST(request) {
                     expYear: paymentMethod.card.exp_year,
                 };
             } catch (error) {
-                console.error('Chyba při přidávání karty:', error);
-                throw error;
+
+        return new Response(JSON.stringify({    
+            message: 'Úspěch karta přidána'
+
+       }), {
+           status: 403,
+           headers: { 'Content-Type': 'application/json' }
+       });
+
             }
         }
       let  cardsOfUser = await addCardToCustomer(customer.id,data.paymentMethodId)
