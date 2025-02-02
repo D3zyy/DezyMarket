@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+import { openCardsModal } from "../components/modals/SavedCardsModal";
 async function upgradeSubscription(name, cardId, setloadingPayment, setErrorFromPayment, setSuccess, router,fromNameUp,nameToUpgrade) {
     try {
         setloadingPayment(true);
@@ -145,7 +145,9 @@ export function openUpgradeModalSubscriptionModal(nameToUpgrade) {
                             </ul>
 
                             {/* Select pro karty */}
+            
                             <div className="mt-6 w-full flex items-center">
+                            {lastDigits.length > 0 ?<>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -160,6 +162,7 @@ export function openUpgradeModalSubscriptionModal(nameToUpgrade) {
             d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"
         />
     </svg>
+
     <select
   className="w-full p-3 border rounded-lg flex-1 bg-white text-black border-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600"
   value={selectedCardId || ""}
@@ -171,7 +174,9 @@ export function openUpgradeModalSubscriptionModal(nameToUpgrade) {
     </option>
   ))}
 </select>
-</div>
+</> : <button onClick={(e)=> {openCardsModal(true)}} className="btn mx-auto btn-sm">+ Přidat kartu</button>
+ }
+</div> 
 <ul>
 <li className="flex items-center mb-5 mt-5 text-gray-400 text-opacity-75 text-sm">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 mr-2 text-gray-500">
