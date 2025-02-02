@@ -168,8 +168,12 @@ export function openCardsModal() {
                     </div>
                 ) : (
                     <>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-16 mx-auto">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+</svg>
                         <div className="mt-6 w-full flex flex-row items-center">
-                        {lastDigits.length > 0 ? <>     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8 flex-shrink-0 mr-2">
+                        
+                        {lastDigits.length > 0 && <>     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8 flex-shrink-0 mr-2">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
                             </svg>
                       
@@ -187,7 +191,7 @@ export function openCardsModal() {
     .sort((a, b) => b.isDefault - a.isDefault) // Seřadí tak, že true (1) bude před false (0)
     .map((card) => (
         <option key={card.id} value={card.id}>
-            {`**** ${card.last4} ${card.brand.toUpperCase()} ${card.isDefault ? '(defaultní)' : ''}`}
+            {`**** ${card.last4} ${card.brand.toUpperCase()} ${card.expMnth}/${card.expYr} ${card.isDefault ? '(defaultní)' : ''} `}
         </option>
     ))}
 
@@ -197,9 +201,7 @@ export function openCardsModal() {
                             <button disabled={loadingPayment} onClick={() => handleDelete(selectedCardId)} className="btn btn-sm ml-4 rounded-box text-red-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
 </svg>
-</button>      </>  : <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-16 mx-auto">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
-</svg>
+</button>      </>  
  }
                         </div>
 <div>
@@ -215,7 +217,7 @@ export function openCardsModal() {
  <button  disabled={loadingPayment}onClick={() => setShowCardForm(true)} className="btn btn-sm mt-3 ml-2">
                                + Přidat kartu
                             </button>
-                          ) : <button onClick={() => setShowCardForm(false)} className="btn btn-sm mt-3 ml-2">Zavřit</button>}
+                          ) : <button onClick={() => setShowCardForm(false)} className="btn btn-sm mt-3 ml-2">Skrýt</button>}
                             </div>
 
                             {showCardForm && (
