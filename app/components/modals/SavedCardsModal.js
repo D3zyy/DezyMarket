@@ -5,6 +5,7 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import {loadStripe} from '@stripe/stripe-js/pure';
 
+
 export function openCardsModal() {
     const modal = document.getElementById(`cardsModal`);
     if (modal) {
@@ -202,9 +203,11 @@ export function openCardsModal() {
                                 Nastavit jako defaultní
                             </button>
                         )}
+                          {!showCardForm ? (
  <button  disabled={loadingPayment}onClick={() => setShowCardForm(true)} className="btn btn-sm mt-3 ml-2">
                                + Přidat kartu
                             </button>
+                          ) : <button onClick={() => setShowCardForm(false)} className="btn btn-sm mt-3 ml-2">Zavřit</button>}
                             </div>
 
                             {showCardForm && (
