@@ -57,6 +57,7 @@ export function openCardsModal() {
                 console.error("Chyba při získávání informací o předplatném:", error);
                 setError("Nastala chyba na serveru. Zkuste to později");
                 setLoading(false);
+                router.refresh()
             }
         }
 
@@ -96,6 +97,7 @@ export function openCardsModal() {
         } finally {
             setLoadingPayment(false);
             setSuccess(true);
+            setTimeout(() => setSuccess(false), 500); // Reset pro další změny
             router.refresh();
         }
     };
@@ -123,7 +125,7 @@ export function openCardsModal() {
                 setSuccess(true);  // Vyvolá nový fetch
                 setLoadingPayment(false);
                 setTimeout(() => setSuccess(false), 500); // Reset pro další změny
-                
+                router.refresh()
             }
     };
 
@@ -150,7 +152,7 @@ export function openCardsModal() {
                 setSuccess(true);  // Vyvolá nový fetch
                 setLoadingPayment(false);
                 setTimeout(() => setSuccess(false), 500); // Reset pro další změny
-               
+                router.refresh()
             }
     };
 
@@ -167,10 +169,10 @@ export function openCardsModal() {
                 ) : (
                     <>
                         <div className="mt-6 w-full flex flex-row items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8 flex-shrink-0 mr-2">
+                        {lastDigits.length > 0 ? <>     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8 flex-shrink-0 mr-2">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
                             </svg>
-
+                      
                             <select
                             disabled={loadingPayment}
                                 className="w-full p-3 border rounded-lg"
@@ -181,24 +183,30 @@ export function openCardsModal() {
                                     setSelectedCardIsDefault(selectedCard.isDefault);
                                 }}
                             >
-                               {[...lastDigits]
+                             {[...lastDigits]
     .sort((a, b) => b.isDefault - a.isDefault) // Seřadí tak, že true (1) bude před false (0)
     .map((card) => (
         <option key={card.id} value={card.id}>
             {`**** ${card.last4} ${card.brand.toUpperCase()} ${card.isDefault ? '(defaultní)' : ''}`}
         </option>
     ))}
+
+
                             </select>
+                      
                             <button disabled={loadingPayment} onClick={() => handleDelete(selectedCardId)} className="btn btn-sm ml-4 rounded-box text-red-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
 </svg>
-</button>
+</button>      </>  : <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-16 mx-auto">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+</svg>
+ }
                         </div>
 <div>
 
 
                         {/* Zobrazit tlačítko pouze pokud karta NENÍ defaultní */}
-                        {!selectedCardIsDefault && (
+                        {!selectedCardIsDefault &&  lastDigits.length > 0&&  (
                             <button  disabled={loadingPayment}onClick={() => handleSetDefaultPm(selectedCardId)} className="btn btn-sm mt-3">
                                 Nastavit jako defaultní
                             </button>
