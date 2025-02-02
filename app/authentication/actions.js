@@ -81,9 +81,9 @@ export const getSession = async () => {
 
 
   export const createSession = async (userToCreate,pass) => {
-    console.log("chci vytvorit novou sesion api hit")
+   
     const sessionId = uuidv4(); // Generate a unique session ID
-    console.log(userToCreate.roleId)
+
     try {
       const now = new Date();
       now.setHours(now.getHours() + 2); // Add 2 hours to the current date for validFrom
@@ -91,7 +91,7 @@ export const getSession = async () => {
       validTill.setDate(now.getDate() + 2); // Adds 7 days
       let userId = userToCreate.id
       // Create session in the database
-      console.log("ukladam tu seassion do db")
+      
       await prisma.Sessions.create({
         data: {
           sessionId,
@@ -102,7 +102,7 @@ export const getSession = async () => {
       });
       let roleName
       let accountTypeName
-      console.log("hledam roli uživatele v db pro zakladni")
+     
       if(userToCreate.roleId ){
          roleName = await prisma.Roles.findUnique({
           where: {
@@ -114,11 +114,9 @@ export const getSession = async () => {
        accountTypeName = await getUserAccountTypeOnStripe(userToCreate.email)
        let acgifted = accountTypeName?.gifted
        let accPriority = accountTypeName?.priority
-       console.log(accountTypeName)
+       
        accountTypeName = accountTypeName?.name
   
-      console.log(accPriority)
-      console.log(acgifted)
       
       // Use iron-session to set the session ID in a cookie
       const session = await getIronSession( cookies(), sessionOptions);

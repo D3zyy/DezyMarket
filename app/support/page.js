@@ -4,7 +4,7 @@ import SendButton from './SendButton';
 
 async function Page() {
   let session = await getSession();
-    console.log(session)
+
 
 
   return (

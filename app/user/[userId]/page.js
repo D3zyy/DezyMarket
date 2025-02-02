@@ -54,7 +54,7 @@ const Page = async ({ params }) => {
     })
   ]);
 
-console.log(session)
+
 
  if(!userAcc){
   return (
@@ -240,7 +240,7 @@ if(session?.role?.privileges > 3 && userAcc?.role?.privileges > 1   ){
 
 }
 
-console.log("Acc:",accType)
+
 
 return (
   <>

@@ -20,7 +20,7 @@ function MenuByRole({errorsfromServer,poststats,subscriptionStats,topsWithCounts
   const [subTypes, setSubTypes] = useState(JSON.parse(subscTypes)); 
   const [foundUsers, setFoundUsers] = useState([]); 
 
-  console.log(reports)
+
   const router = useRouter()
   const searchTimeout = useRef(null); // useRef pro zajištění, že timeout je uchován mezi renderováními
 
