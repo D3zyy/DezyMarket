@@ -217,7 +217,7 @@ export function openCardsModal() {
  <button  disabled={loadingPayment}onClick={() => setShowCardForm(true)} className="btn btn-sm mt-3 ml-2">
                                + Přidat kartu
                             </button>
-                          ) : <button onClick={() => setShowCardForm(false)} className="btn btn-sm mt-3 ml-2">Skrýt</button>}
+                          ) : <button disabled={loadingPayment} onClick={() => setShowCardForm(false)} className="btn btn-sm mt-3 ml-2">Skrýt</button>}
                             </div>
 
                             {showCardForm && (
