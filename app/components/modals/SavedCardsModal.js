@@ -262,46 +262,67 @@ export function openCardsModal() {
     );
 }
 
+
 export function CardsModal() {
-    const [isvisible, setisvisible] = useState(false);
-    const [stripePromise, setStripePromise] = useState(null);  // Use useState to store stripePromise
+    const [isVisible, setIsVisible] = useState(false);
+    const [stripePromise, setStripePromise] = useState(null);
+    const [isStripeLoaded, setIsStripeLoaded] = useState(false); // Track if Stripe has been loaded
 
     useEffect(() => {
-        if (isvisible) {
-            // Dynamically import the Stripe library only when modal is visible
+        if (isVisible && !isStripeLoaded) {
+            // Dynamically import the Stripe library only when modal is visible and Stripe isn't loaded yet
             import("@stripe/stripe-js").then(({ loadStripe }) => {
                 const stripeInstance = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
                 setStripePromise(stripeInstance); // Set the stripe instance in state
-                openCardsModal();  // Open modal when it's visible
+                setIsStripeLoaded(true); // Mark Stripe as loaded
+                openCardsModal();
             }).catch((error) => {
                 console.error("Failed to load Stripe library", error);
             });
+        } else {
+            // On subsequent openings, just trigger the modal
+            openCardsModal();
         }
-    }, [isvisible]);
+    }, [isVisible, isStripeLoaded]);
+
+    const handleOpenModal = () => {
+      
+            if (!isVisible && !isStripeLoaded) {
+                // Dynamically import the Stripe library only when modal is visible and Stripe isn't loaded yet
+                import("@stripe/stripe-js").then(({ loadStripe }) => {
+                    const stripeInstance = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
+                    setStripePromise(stripeInstance); // Set the stripe instance in state
+                    setIsStripeLoaded(true); // Mark Stripe as loaded
+                    setIsVisible(true); // Open modal when clicked
+                    openCardsModal();
+                }).catch((error) => {
+                    console.error("Failed to load Stripe library", error);
+                });
+            } else {
+                // On subsequent openings, just trigger the modal
+                openCardsModal();
+            }
+    
+      
+    };
+
 
     return (
-        <div>
+<>
             {/* Button to open the modal */}
-            <a
-                className="mt-2"
-                onClick={() => {
-                    setisvisible(true); // Set 'isvisible' to true when the button is clicked
-                }}
-            >
-                <div className="flex gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
-                    </svg>
+            <button  onClick={handleOpenModal}  className="">
+                <div className="flex gap-2 btn items-center  btn-sm">
+                    
                     Uložené karty
                 </div>
-            </a>
+            </button>
 
-            {/* Show the modal only when 'isvisible' is true */}
-            {isvisible  && (
+            {/* Show the modal only when 'isVisible' is true */}
+            {isVisible  && (
                 <Elements stripe={stripePromise} options={{ hidePostalCode: true }}>
                     <Rest />
                 </Elements>
             )}
-        </div>
+ </>
     );
 }

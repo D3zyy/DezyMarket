@@ -68,9 +68,10 @@ const ProfileNavBarClient = ({ session }) => {
           </div>
         </div>
         {dropdownOpen && (
-          <ul
+          <>
+          <div
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[10] mt-3 w-52 p-2 "
           >
             <li className="sm:hidden">
               {/* Zavřít dropdown při kliknutí na AddOfferButton */}
@@ -134,14 +135,10 @@ Moje předplatné
            
            
 }
-{session.showCards &&
-<li >
-  
-{session.showCards && < CardsModal />} 
 
-              
-            </li>
-             }
+
+
+
 
             <li className="mt-1">
               
@@ -149,11 +146,16 @@ Moje předplatné
                 onClick={() => handleDropdownClose(() => console.log("Logout"))}
               />
             </li>
-
-          </ul>
-          
+           
+           <div>
+            
+           </div>
+          </div>
+  </>
         )}
       </div>
+      
+    
     </div>
   );
 };
