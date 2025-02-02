@@ -57,7 +57,7 @@ export async function POST(req) {
                 const dateAndTime = DateTime.now()
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                  await prisma.create({ data: {
+                  await prisma.errors.create({ data: {
                     info: `Chyba na /api/reactivate-subscription - POST - Uživatel na reaktivaci nenalezen)  data: ${data}  `,
                     dateAndTime: dateAndTime,
                     userId: session?.userId,
@@ -88,7 +88,7 @@ export async function POST(req) {
                 const dateAndTime = DateTime.now()
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                  await prisma.create({ data: {
+                  await prisma.errors.create({ data: {
                     info: `Chyba na /api/reactivate-subscription - POST - (Nemáte právo reaktivovat uživateli s vetšími privilegii))  data: ${data}  `,
                     dateAndTime: dateAndTime,
                     userId: session?.userId,
@@ -143,7 +143,7 @@ export async function POST(req) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/reactivate-subscription - POST - (Již jste vyčerpal adm. pravomocí)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -208,7 +208,7 @@ export async function POST(req) {
                 const dateAndTime = DateTime.now()
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                  await prisma.create({ data: {
+                  await prisma.errors.create({ data: {
                     info: `Chyba na /api/reactivate-subscription - POST - (Žádné  předplatné nenalezeno pro tohoto zákazníka)  data: ${data}  `,
                     dateAndTime: dateAndTime,
                     userId: session?.userId,
@@ -237,7 +237,7 @@ export async function POST(req) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/reactivate-subscription - POST - (Žádné aktivní předplatné nenalezeno (končí na kocni))  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -284,7 +284,7 @@ export async function POST(req) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/reactivate-subscription - POST - (Žádné typ účtu nenalezen)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -328,7 +328,7 @@ export async function POST(req) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/reactivate-subscription - POST - (Žádné aktivní předplatné nenalezeno)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -399,7 +399,7 @@ if(!myAcc)
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/reactivate-subscription - POST - (catch)  data: ${data}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,

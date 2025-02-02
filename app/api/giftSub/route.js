@@ -62,7 +62,7 @@ const { DateTime } = require('luxon');
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/giftSub - POST - (Tento uživatel již má aktivní předplatné) data: ${data} `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -103,7 +103,7 @@ const { DateTime } = require('luxon');
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/giftSub - POST - (Již jste vyčerpa admn. pravomocí) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -132,7 +132,7 @@ const { DateTime } = require('luxon');
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.create({ data: {
+                await prisma.errors.create({ data: {
                   info: `Chyba na /api/giftSub - POST - (na tento příkaz nemáte oprvánění) data: ${data} `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
@@ -207,7 +207,7 @@ const { DateTime } = require('luxon');
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.create({ data: {
+                await prisma.errors.create({ data: {
                   info: `Chyba na /api/giftSub - POST - (catch) data: ${data} `,
                   dateAndTime: dateAndTime,
                   errorPrinted: error,

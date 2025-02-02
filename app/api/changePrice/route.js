@@ -35,7 +35,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/changePrice - POST - (Na tento příkaz nemáte pravomoce) newPrice: ${newPrice} accId: ${accTypeId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -67,7 +67,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/changePrice - POST - (Cena není platná) newPrice: ${newPrice} accId: ${accTypeId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -110,7 +110,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/changePrice - POST - (Již jste vyčerpal admn. pravomocí) newPrice: ${newPrice} accId: ${accTypeId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -244,7 +244,7 @@ console.log("updedd:",upd)
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/changePrice - POST - (catch) newPrice: ${newPrice} accId: ${accTypeId} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,

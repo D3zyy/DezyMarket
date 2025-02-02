@@ -36,7 +36,7 @@ let data,session
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateBan - POST - (Na tento příkaz nemáte oprávnění) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -76,7 +76,7 @@ let data,session
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateBan - POST - (Již jste vyčerpal adm. pravomocí) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -179,7 +179,7 @@ if (timeDifference > 1000 * 3600 * 2 ) {
         const dateAndTime = DateTime.now()
         .setZone('Europe/Prague')
         .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-          await prisma.create({ data: {
+          await prisma.errors.create({ data: {
             info: `Chyba na /api/updateBan - POST - (Na tento příkaz nemáte oprávnění) data: ${data} `,
             dateAndTime: dateAndTime,
             userId: session?.userId,
@@ -218,7 +218,7 @@ if (timeDifference > 1000 * 3600 * 2 ) {
         const dateAndTime = DateTime.now()
         .setZone('Europe/Prague')
         .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-          await prisma.create({ data: {
+          await prisma.errors.create({ data: {
             info: `Chyba na /api/updateBan - POST - (catch) data: ${data} `,
             dateAndTime: dateAndTime,
             errorPrinted: error,
@@ -272,7 +272,7 @@ export async function PUT(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateBan - PUT - (Na tento příkaz nemáte oprávnění) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -312,7 +312,7 @@ export async function PUT(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateBan - PUT - (Již jste vyčerpal adm. pravomocí) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -352,7 +352,7 @@ export async function PUT(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateBan - PUT - ban nebyl nalezen) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -436,7 +436,7 @@ console.log("tady")
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateBan - PUT - (Na tento příkaz nemáte oprávnění) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -476,7 +476,7 @@ console.log("tady")
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateBan - PUT - (catch) data: ${data} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
@@ -536,7 +536,7 @@ export async function DELETE(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateBan - DELETE - (Na tento příkaz nemáte oprávnění) data: ${data} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -596,7 +596,7 @@ export async function DELETE(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateBan - DELETE - (catch) data: ${data} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,

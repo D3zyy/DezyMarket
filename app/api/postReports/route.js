@@ -53,7 +53,7 @@ export async function POST(req) {
                 const dateAndTime = DateTime.now()
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                  await prisma.create({ data: {
+                  await prisma.errors.create({ data: {
                     info: `Chyba na /api/postReports - POST - (Příspěvek neexistuje)  data: ${data}  `,
                     dateAndTime: dateAndTime,            
                     userId: session?.userId,
@@ -80,7 +80,7 @@ export async function POST(req) {
                   const dateAndTime = DateTime.now()
                   .setZone('Europe/Prague')
                   .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                    await prisma.create({ data: {
+                    await prisma.errors.create({ data: {
                       info: `Chyba na /api/postReports - POST - (Nemáte pravomoce zobrazit reporty uživatele s vetšími pravomocemi)  data: ${data}  `,
                       dateAndTime: dateAndTime,            
                       userId: session?.userId,
@@ -147,7 +147,7 @@ export async function POST(req) {
                   const dateAndTime = DateTime.now()
                   .setZone('Europe/Prague')
                   .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                    await prisma.create({ data: {
+                    await prisma.errors.create({ data: {
                       info: `Chyba na /api/postReports - POST - (catch)  data: ${data}  `,
                       dateAndTime: dateAndTime,
                       errorPrinted: error,

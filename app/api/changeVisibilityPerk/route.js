@@ -32,7 +32,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/changeVisibilityPerk - POST - (Na tento příkaz nemáte pravomoce)  perkId ${perkId} visibility: ${visibility} accId: ${accId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -80,7 +80,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/changeVisibilityPerk - POST - (Již jste vyčerpal admn. pravomocí)  perkId ${perkId} visibility: ${visibility} accId: ${accId} `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -150,7 +150,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/changeVisibilityPerk - POST - (catch)  perkId ${perkId} visibility: ${visibility} accId: ${accId} `,
               dateAndTime: dateAndTime,
               errorPrinted: error,

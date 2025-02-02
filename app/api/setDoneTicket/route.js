@@ -32,7 +32,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/setDoneTicket - POST - Na tento příkaz nemáte pravomoce) ticketId: ${ticketId} type: ${type}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -77,7 +77,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/setDoneTicket - POST - (Již jste vyčerpal adm. pravomocí) ticketId: ${ticketId} type: ${type}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -112,7 +112,7 @@ export async function POST(request) {
                 const dateAndTime = DateTime.now()
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                  await prisma.create({ data: {
+                  await prisma.errors.create({ data: {
                     info: `Chyba na /api/setDoneTicket - POST - (Ticket nenalezen nebo již vyřešen) ticketId: ${ticketId} type: ${type}  `,
                     dateAndTime: dateAndTime,
                     userId: session?.userId,
@@ -152,7 +152,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/setDoneTicket - POST - (Ticket nenalezen nebo již vyřešen) ticketId: ${ticketId} type: ${type}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -216,7 +216,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/setDoneTicket - POST - (catch) ticketId: ${ticketId} type: ${type}  `,
               dateAndTime: dateAndTime,
               errorPrinted: error,

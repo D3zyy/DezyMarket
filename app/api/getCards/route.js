@@ -86,7 +86,7 @@ export async function POST(request) {
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.create({ data: {
+                await prisma.errors.create({ data: {
                   info: `Chyba na /api/subInfo/upgrade - POST - (catch) data: ${data}  `,
                   dateAndTime: dateAndTime,
                   errorPrinted: error,

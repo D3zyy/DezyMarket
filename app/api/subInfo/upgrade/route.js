@@ -42,7 +42,7 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (Účet který byl poslán že chcete upgradovat neexistuje) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -74,7 +74,7 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (Účet který byl poslán že máte neexistuje) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -103,7 +103,7 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (Nelze upgradovat na daný účet má vetší prioritu) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -150,7 +150,7 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (Účet který byl poslán že máte nebyl nalezen s vaším účtem) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -192,7 +192,7 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (Účet který byl poslán že chcete upgradovat již máte) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -229,7 +229,7 @@ export async function POST(request) {
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.create({ data: {
+                await prisma.errors.create({ data: {
                   info: `Chyba na /api/subInfo/upgrade - POST - (Žádná cena předplatného které máte nenalezena) data: ${data}  `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
@@ -284,7 +284,7 @@ export async function POST(request) {
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.create({ data: {
+                await prisma.errors.create({ data: {
                   info: `Chyba na /api/subInfo/upgrade - POST - (Žádná cena předplatného které chcete upgradovat nenalezena) data: ${data}  `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
@@ -329,7 +329,7 @@ const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // S
               const dateAndTime = DateTime.now()
               .setZone('Europe/Prague')
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-                await prisma.create({ data: {
+                await prisma.errors.create({ data: {
                   info: `Chyba na /api/subInfo/upgrade - POST - (Žádný zákazník nenalezen s tímto emailem) data: ${data}  `,
                   dateAndTime: dateAndTime,
                   userId: session?.userId,
@@ -463,7 +463,7 @@ const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // S
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/subInfo/upgrade - POST - (catch) data: ${data}  `,
                 dateAndTime: dateAndTime,
                 errorPrinted: error,

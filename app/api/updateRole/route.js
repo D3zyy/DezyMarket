@@ -33,7 +33,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateRole - POST - (Na tento příkaz nemáte oprávnění) roleId: ${roleId} idOfUser: ${idOfUser}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -72,7 +72,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateRole - POST - (Role nenalezena) roleId: ${roleId} idOfUser: ${idOfUser}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -110,7 +110,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateRole - POST - (Uživatel nenalezen) roleId: ${roleId} idOfUser: ${idOfUser}  `,
               dateAndTime: dateAndTime,
               userId: session?.userId,
@@ -143,7 +143,7 @@ export async function POST(request) {
             const dateAndTime = DateTime.now()
             .setZone('Europe/Prague')
             .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-              await prisma.create({ data: {
+              await prisma.errors.create({ data: {
                 info: `Chyba na /api/updateRole - POST - (nemáte oprávnění na tento příkaz) roleId: ${roleId} idOfUser: ${idOfUser}  `,
                 dateAndTime: dateAndTime,
                 userId: session?.userId,
@@ -193,7 +193,7 @@ export async function POST(request) {
           const dateAndTime = DateTime.now()
           .setZone('Europe/Prague')
           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-            await prisma.create({ data: {
+            await prisma.errors.create({ data: {
               info: `Chyba na /api/updateRole - POST - (catch) roleId: ${roleId} idOfUser: ${idOfUser}  `,
               dateAndTime: dateAndTime,
               errorPrinted: error,
