@@ -72,7 +72,7 @@ export async function DELETE(request) {
                 .setZone('Europe/Prague')
                 .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
                   await prisma.errors.create({ data: {
-                    info: `Chyba na /api/deleteCard - DELETE - (Karta neptaří uživateli) data: ${data}  `,
+                    info: `Chyba na /api/deleteCard - DELETE - (Karta neptaří uživateli) data: ${data.cardId}  `,
                     dateAndTime: dateAndTime,
                     userId: session?.userId,
                     ipAddress:ip },
