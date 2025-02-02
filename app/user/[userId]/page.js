@@ -240,7 +240,7 @@ if(session?.role?.privileges > 3 && userAcc?.role?.privileges > 1   ){
 
 }
 
-
+console.log("Acc:",accType)
 
 return (
   <>
@@ -261,7 +261,11 @@ return (
                 ? "text-yellow-500"
                 :userAcc?.role?.privileges === 2
                 ? "text-red-500"
-                : ""
+                : accType?.priority === 2 ?
+                " text-orange-500":
+                accType?.priority === 3 ?
+                " text-purple-500":
+                ""
             }`}
           >
             <path

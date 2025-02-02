@@ -19,7 +19,7 @@ const ProfileNavBarClient = ({ session }) => {
   };
 
   if (!session.isLoggedIn) return null;
-  console.log("session:",session)
+  
   return (
     <div className="flex items-center">
       <div className="hidden sm:flex items-center">
