@@ -1,6 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import {loadStripe} from '@stripe/stripe-js/pure';
 
 export function openCardsModal() {
     const modal = document.getElementById(`cardsModal`);
@@ -9,7 +12,12 @@ export function openCardsModal() {
     }
 }
 
-export function CardsModal() {
+ function Rest() {
+   
+    const stripe = useStripe();
+    const elements = useElements();
+    const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
+    const stripePromise = loadStripe(publicKey);
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(true);
     const [loadingPayment, setLoadingPayment] = useState(false);
@@ -19,6 +27,7 @@ export function CardsModal() {
     const [error, setError] = useState(null);
     const [errorFromPayment, setErrorFromPayment] = useState(null);
     const router = useRouter();
+    const [showCardForm, setShowCardForm] = useState(false); // Nový stav pro zobrazení Card Elementu
 
     useEffect(() => {
         async function fetchSubscriptionInfo() {
@@ -52,7 +61,43 @@ export function CardsModal() {
 
         fetchSubscriptionInfo();
     }, [success]);
+    const handleAddCard = async () => {
+        if (!stripe || !elements) return;
 
+        setLoadingPayment(true);
+        try {
+            const cardElement = elements.getElement(CardElement);
+
+            const { paymentMethod, error } = await stripe.createPaymentMethod({
+                type: "card",
+                card: cardElement,
+            });
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            const response = await fetch("/api/addCard", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ paymentMethodId: paymentMethod.id }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Nepodařilo se přidat kartu.");
+            }
+
+            setShowCardForm(false);
+            setSuccess(true);
+        } catch (error) {
+            console.error("Chyba při přidávání karty:", error);
+            setErrorFromPayment(error.message || "Nepodařilo se přidat kartu.");
+        } finally {
+            setLoadingPayment(false);
+            setSuccess(true);
+            router.refresh();
+        }
+    };
     const handleSetDefaultPm = async (cardId) => {
         if (!cardId) return;
 
@@ -148,6 +193,8 @@ export function CardsModal() {
 </svg>
 </button>
                         </div>
+<div>
+
 
                         {/* Zobrazit tlačítko pouze pokud karta NENÍ defaultní */}
                         {!selectedCardIsDefault && (
@@ -155,6 +202,37 @@ export function CardsModal() {
                                 Nastavit jako defaultní
                             </button>
                         )}
+ <button  disabled={loadingPayment}onClick={() => setShowCardForm(true)} className="btn btn-sm mt-3 ml-2">
+                               + Přidat kartu
+                            </button>
+                            </div>
+
+                            {showCardForm && (
+                            <div className="mt-4 w-full">
+                                 
+                                 <CardElement options={{ hidePostalCode: true,
+    
+  }}  className="p-3 border rounded-lg"  />
+                                 
+                         
+                                
+                              
+                            
+                               
+                                <button
+                                    disabled={loadingPayment}
+                                    onClick={handleAddCard}
+                                    className="btn btn-sm mt-3 w-full"
+                                >
+                                    {loadingPayment ? "Přidávám..." : "Přidat kartu"}
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Zobrazit tlačítko pouze pokud karta NENÍ defaultní */}
+                      
+
+
 
                         <div className="flex justify-center mt-6 space-x-4">
                             <button disabled={loadingPayment} className="btn" onClick={() => document.getElementById("cardsModal").close()}>
@@ -167,3 +245,22 @@ export function CardsModal() {
         </dialog>
     );
 }
+
+
+
+
+export function CardsModal() {
+  
+     const publicKey = process.env.NEXT_PUBLIC_STRIPE_KEY;
+      const stripePromise = loadStripe(publicKey);
+  return (
+    <div>
+    
+    <Elements stripe={stripePromise} options={{hidePostalCode: true}}>
+    <Rest/>
+    
+    </Elements>
+    </div>
+  )
+}
+
