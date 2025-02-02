@@ -4,7 +4,7 @@ import { CheckCircleIcon, XCircleIcon , LockClosedIcon} from '@heroicons/react/2
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-
+import { openRegisterModal } from './RegistrationModal';
 export function openLoginModal() {
   try{
     const modal =   document.getElementById('login_modal');
@@ -271,6 +271,27 @@ const LoginModal = () => {
             setError={setError} 
           />
         )}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span style={{ textDecoration: 'none', color: 'gray', padding: "0px 16px"}}>
+                Ještě nemáte účet?
+            </span>
+            <button
+                className="btn btn-link"
+                style={{padding: "0px", color: "#a063ff"}}
+                onClick={ () => {
+                
+                  document.getElementById('login_modal').close(); 
+                  openRegisterModal()
+                }}
+                onTouchStart={() => {
+                  
+                  document.getElementById('login_modal').close(); 
+                  openRegisterModal()
+                }}
+            >
+                Registrace
+            </button>
+        </div>
       </div>
     </dialog>
   </>
