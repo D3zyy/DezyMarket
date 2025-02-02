@@ -73,10 +73,11 @@ export function CardsModal() {
             console.error("Chyba při nastavování defaultní karty:", error);
             setErrorFromPayment("Nepodařilo se nastavit kartu jako výchozí. Zkuste to znovu.");
          } finally {
-                setLoadingPayment(false);
+                
                 setSuccess(true);  // Vyvolá nový fetch
+                setLoadingPayment(false);
                 setTimeout(() => setSuccess(false), 500); // Reset pro další změny
-                router.refresh();
+                
             }
     };
 
@@ -99,10 +100,11 @@ export function CardsModal() {
             console.error("Chyba při mazání karty:", error);
             setErrorFromPayment("Nepodařilo se nám odstranit vaši kartu. Zkuste to znovu.");
          } finally {
-                setLoadingPayment(false);
+     
                 setSuccess(true);  // Vyvolá nový fetch
+                setLoadingPayment(false);
                 setTimeout(() => setSuccess(false), 500); // Reset pro další změny
-                router.refresh();
+               
             }
     };
 
