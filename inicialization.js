@@ -50,9 +50,8 @@ async function main() {
         ["Neomezený počet inzerátů", true],
         ["až 15 fotografií u inzerátu", true],
         ["Základní typ inzerátu", true],
-        ["Topování na hlavní stránce", false],
         ["Topování v kategorii", false],
-        ["Statistika zobrazení inzerátu", false],
+        ["Topování v sekci", false],
         ["Odznáček vedle jména", false],
         ["Prioritní zákaznická podpora", false]
       ]
@@ -65,13 +64,12 @@ async function main() {
       priceAmountCZKMonthly: "134", 
       perks: [
         ["Neomezený počet inzerátů", true],
+        ["Neomezené topování", true],
         ["až 20 fotografie u inzerátu", true],
-        ["Šikula inzerát", true],
-        ["Topování v kategorii", true],
         ["Odznáček vedle jména", true],
+        ["Topování v kategorii", true],
         ["Prioritní zákaznická podpora", true],
-        ["Topování na hlavní stránce", false],
-        ["Statistika zobrazení inzerátu", false]
+        ["Topování v sekci", false],
       ]
     },
     { 
@@ -82,11 +80,10 @@ async function main() {
       priceAmountCZKMonthly: "152", 
       perks: [
         ["Neomezený počet inzerátů", true],
+        ["Neomezené topování", true],
         ["až 25 fotografií u inzerátu", true],
-        ["Profík inzerát", true],
-        ["Statistika zobrazení inzerátu", true],
-        ["Topování na hlavní stránce", true],
         ["Topování v kategorii", true],
+        ["Topování v sekci", true],
         ["Odznáček vedle jména", true],
         ["Prioritní zákaznická podpora", true]
       ]

@@ -131,7 +131,7 @@ const Page = async () => {
     poststats.numberOPostsYestrday = nmbrOfPostsYestrday
     poststats.numberOPostsThisMonth = nmbrOfPostsThisMonth
     poststats.numberOPostsLastMonth = nmbrOfPostsLastMonth
-console.log("STTS POSTS:",poststats)
+
     function calculatePercentageChange(newValue, oldValue) {
       if (oldValue === 0) return "N/A"; // Nelze dělit nulou
       return ((newValue - oldValue) / oldValue * 100).toFixed(2) + "%";
@@ -156,7 +156,7 @@ console.log("STTS POSTS:",poststats)
 
    
 
-console.log("Počet příspěvku celkem:",countOfAllPosts)
+
 
 
     for(let j = 0; j < allSubToStats.length; j++) {
@@ -274,9 +274,6 @@ const topCounts = sortedTops.map(top => {
 
 
 
-
-
-console.log("ERRORS:",errorsfromServer)
 
 
   return (
