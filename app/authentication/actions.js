@@ -112,14 +112,16 @@ export const getSession = async () => {
       }
 
        accountTypeName = await getUserAccountTypeOnStripe(userToCreate.email)
+       let acgifted = accountTypeName?.gifted
        let accPriority = accountTypeName?.priority
+       console.log(accountTypeName)
        accountTypeName = accountTypeName?.name
   
       
       
       // Use iron-session to set the session ID in a cookie
-      const session = await getIronSession(await cookies(), sessionOptions);
-
+      const session = await getIronSession( cookies(), sessionOptions);
+      session.showCards = (accPriority > 0 &&!acgifted)
       session.userId = userId;
       session.accPriority = accPriority
       session.fullName = userToCreate.fullName

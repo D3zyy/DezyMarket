@@ -134,7 +134,8 @@ Moje předplatné
            
            
 }
-< CardsModal/>
+{session.showCards && < CardsModal/>} 
+{session.showCards &&
 <li>
 
                <a
@@ -152,12 +153,14 @@ Moje předplatné
               </a>
               
             </li>
+             }
             <li className="mt-1">
               
               <LogOutButton
                 onClick={() => handleDropdownClose(() => console.log("Logout"))}
               />
             </li>
+
           </ul>
         )}
       </div>
