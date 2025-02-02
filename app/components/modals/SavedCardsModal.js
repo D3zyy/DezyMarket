@@ -37,9 +37,9 @@ export function CardsModal() {
                 setLastDigits(data.cards || []);
 
                 if (data.cards?.length) {
-                    const firstCard = data.cards[0];
-                    setSelectedCardId(firstCard.id);
-                    setSelectedCardIsDefault(firstCard.isDefault); // Nastavení isDefault podle první karty
+                    const defaultCard = data.cards.find((card) => card.isDefault) || data.cards[0]; // Najde defaultní kartu nebo vezme první
+                    setSelectedCardId(defaultCard.id);
+                    setSelectedCardIsDefault(defaultCard.isDefault);
                 }
 
                 setLoading(false);
@@ -51,10 +51,11 @@ export function CardsModal() {
         }
 
         fetchSubscriptionInfo();
-    }, []);
+    }, [success]);
 
     const handleSetDefaultPm = async (cardId) => {
         if (!cardId) return;
+
         try {
             setLoadingPayment(true);
             const response = await fetch("/api/deleteCard", {
@@ -71,9 +72,12 @@ export function CardsModal() {
         } catch (error) {
             console.error("Chyba při nastavování defaultní karty:", error);
             setErrorFromPayment("Nepodařilo se nastavit kartu jako výchozí. Zkuste to znovu.");
-        } finally {
-            setLoadingPayment(false);
-        }
+         } finally {
+                setLoadingPayment(false);
+                setSuccess(true);  // Vyvolá nový fetch
+                setTimeout(() => setSuccess(false), 500); // Reset pro další změny
+                router.refresh();
+            }
     };
 
     const handleDelete = async (cardId) => {
@@ -94,9 +98,12 @@ export function CardsModal() {
         } catch (error) {
             console.error("Chyba při mazání karty:", error);
             setErrorFromPayment("Nepodařilo se nám odstranit vaši kartu. Zkuste to znovu.");
-        } finally {
-            setLoadingPayment(false);
-        }
+         } finally {
+                setLoadingPayment(false);
+                setSuccess(true);  // Vyvolá nový fetch
+                setTimeout(() => setSuccess(false), 500); // Reset pro další změny
+                router.refresh();
+            }
     };
 
     return (
@@ -117,6 +124,7 @@ export function CardsModal() {
                             </svg>
 
                             <select
+                            disabled={loadingPayment}
                                 className="w-full p-3 border rounded-lg"
                                 value={selectedCardId || ""}
                                 onChange={(e) => {
@@ -125,13 +133,15 @@ export function CardsModal() {
                                     setSelectedCardIsDefault(selectedCard.isDefault);
                                 }}
                             >
-                                {lastDigits.map((card) => (
-                                    <option key={card.id} value={card.id}>
-                                        {`**** ${card.last4} ${card.brand.toUpperCase()} ${card.isDefault ? '(defaultní)' : ''}`}
-                                    </option>
-                                ))}
+                               {[...lastDigits]
+    .sort((a, b) => b.isDefault - a.isDefault) // Seřadí tak, že true (1) bude před false (0)
+    .map((card) => (
+        <option key={card.id} value={card.id}>
+            {`**** ${card.last4} ${card.brand.toUpperCase()} ${card.isDefault ? '(defaultní)' : ''}`}
+        </option>
+    ))}
                             </select>
-                            <button onClick={() => handleDelete(selectedCardId)} className="btn btn-sm ml-4 rounded-box text-red-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <button disabled={loadingPayment} onClick={() => handleDelete(selectedCardId)} className="btn btn-sm ml-4 rounded-box text-red-500"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
 </svg>
 </button>
@@ -139,13 +149,13 @@ export function CardsModal() {
 
                         {/* Zobrazit tlačítko pouze pokud karta NENÍ defaultní */}
                         {!selectedCardIsDefault && (
-                            <button onClick={() => handleSetDefaultPm(selectedCardId)} className="btn btn-sm mt-3">
+                            <button  disabled={loadingPayment}onClick={() => handleSetDefaultPm(selectedCardId)} className="btn btn-sm mt-3">
                                 Nastavit jako defaultní
                             </button>
                         )}
 
                         <div className="flex justify-center mt-6 space-x-4">
-                            <button className="btn" onClick={() => document.getElementById("cardsModal").close()}>
+                            <button disabled={loadingPayment} className="btn" onClick={() => document.getElementById("cardsModal").close()}>
                                 Zavřít
                             </button>
                         </div>

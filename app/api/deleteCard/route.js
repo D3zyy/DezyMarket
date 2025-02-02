@@ -103,7 +103,7 @@ export async function DELETE(request) {
 
 
         return new Response(JSON.stringify({    
-            
+             message: 'Úspěch'
 
         }), {
             status: 200,
