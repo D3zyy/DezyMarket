@@ -37,7 +37,7 @@ const Page = async () => {
         </span>
       </div>
 
-      <div  className={`  flex justify-center font-bold sticky md:static top-0   p-2 rounded-lg  max-w-[600px] mx-auto mt-2 mb-2 `}>
+      <div  className={`  flex justify-center font-bold sticky md:static mdtop-0   top-4  p-2 rounded-lg  max-w-[600px] mx-auto  mt-2  mb-2 `}>
       <label className="input input-bordered flex items-center  gap-2">
       <svg
     xmlns="http://www.w3.org/2000/svg"
