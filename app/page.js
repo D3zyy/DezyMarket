@@ -25,7 +25,7 @@ const Page = async () => {
     });
 
     return (<>         
-      <div  className={`${bebas.className} flex justify-center text-3xl font-bold   p-2  `}>
+      <div  className={`${bebas.className} flex justify-center text-4xl font-bold   p-2  `}>
       <h1>Dezy</h1>
       </div>
       <div className="flex justify-center text-lg font-bold   p-2">
