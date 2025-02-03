@@ -1,6 +1,7 @@
 import React from 'react'
 import { prisma } from './database/db';
 import localFont from 'next/font/local';
+import Link from 'next/link';
 
 const pacifico = localFont({
   src: '../public/fonts/Pacifico/Pacifico-Regular.ttf', // Začíná lomítkem
@@ -58,12 +59,14 @@ const Page = async () => {
               {categories.map((category) => (
                 <div key={category.id} className="p-2  rounded-md ">
                   <h2 className="text-lg font-bold  flex  gap-2 ">
-                  <span className='underline'> {category.name} </span> 
+                    <Link href={`/category?categoryName=${category.name}`} className='underline'>{category.name}</Link>
+                
                     <span dangerouslySetInnerHTML={{ __html: category.logo }}></span>
                   </h2>
                   <ul className="">
                     {category.sections.map((section) => (
-                      <li key={section.id} className="text-sm underline">{section.name}</li>
+                     <li>   <Link  key={section.id}  href={`/section?categoryName=${category.name}&sectionName=${section.name}`} className='underline text-sm'>{section.name}</Link> </li>
+        
                     ))}
                   </ul>
                 </div>
@@ -76,7 +79,7 @@ const Page = async () => {
       </> );
   } catch (e) {
     console.error("Chyba při načítání dat:", e);
-    return <div className="flex items-center justify-center min-h-screen">Chyba při načítání dat.</div>;
+    return <div className="flex items-center justify-center min-h-screen">Nastala chyba.</div>;
   }
 };
 
