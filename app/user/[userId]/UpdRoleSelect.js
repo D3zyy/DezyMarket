@@ -4,9 +4,7 @@ import { useRouter } from 'next/navigation';
 
 function UpdRoleSelect({ idOfUser,allroles, sessionroleid }) {
   const router = useRouter();
-    console.log("All roles:",allroles)
-    console.log("Session role id:",sessionroleid)
-    console.log("idOfEditing User:",idOfUser)
+
   async function updateRole(roleId) {
     try {
       const res = await fetch('/api/updateRole', {
