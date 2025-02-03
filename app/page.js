@@ -57,7 +57,7 @@ const Page = async () => {
                   </h2>
                   <ul className="">
                     {category.sections.map((section) => (
-                     <li>   <Link  key={section.id}  href={`/section?categoryName=${category.name}&sectionName=${section.name}`} className='underline text-sm'>{section.name}</Link> </li>
+                     <li  key={section.id}>   <Link   href={`/section?categoryName=${category.name}&sectionName=${section.name}`} className='underline text-sm'>{section.name}</Link> </li>
         
                     ))}
                   </ul>

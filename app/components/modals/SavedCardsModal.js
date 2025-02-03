@@ -63,7 +63,7 @@ export function openCardsModal() {
         }
 
         fetchSubscriptionInfo();
-    }, [success]);
+    }, [success,router]);
     const handleAddCard = async () => {
         if (!stripe || !elements) return;
 
