@@ -1,7 +1,22 @@
 import React from 'react'
 import { prisma } from './database/db';
+import localFont from 'next/font/local';
 
+const pacifico = localFont({
+  src: '../public/fonts/Pacifico/Pacifico-Regular.ttf', // Začíná lomítkem
+  weight: '400',
+  style: 'normal',
+});
+
+const bebas = localFont({
+  src: '../public/fonts/Bebas_Neue/BebasNeue-Regular.ttf', // Začíná lomítkem
+  weight: '400',
+  style: 'normal',
+});
 const Page = async () => {
+ 
+  
+
   try {
     const categories = await prisma.categories.findMany({
       include: {
@@ -10,12 +25,16 @@ const Page = async () => {
     });
 
     return (<>         
-      <div className="flex justify-center text-2xl font-bold   p-2">
+      <div  className={`${bebas.className} flex justify-center text-3xl font-bold   p-2  `}>
       <h1>Dezy</h1>
       </div>
-
-
-     
+      <div className="flex justify-center text-lg font-bold   p-2">
+      <span
+          className={pacifico.className}
+        >
+          „Lepší místo pro vaše inzeráty.“
+        </span>
+      </div>
 
           <div className="flex justify-center items-center mx-auto border-2 border-dotted max-w-[300px]  md:max-w-[800px] border-gray-900  rounded-md p-4 ">
             <div className="grid grid-cols-1 md:grid-cols-4  gap-4 ml-14">
