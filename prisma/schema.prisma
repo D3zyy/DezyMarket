@@ -11,8 +11,8 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "postgres"
+  url      = env("DATABASE_URL_POSTGRES")
 }
 
 model Users {
@@ -276,7 +276,7 @@ model Categories {
 
 model Errors {
   id           Int      @id @default(autoincrement())
-  info         String?   @db.LongText
+  info         String?   @db.Text
   errorPrinted String?
   dateAndTime  DateTime? 
   ipAddress    String?

@@ -148,7 +148,7 @@ export function openUpgradeModalSubscriptionModal(nameToUpgrade) {
 
                             {/* Select pro karty */}
             <CardsModal/>
-                            <div className="mt-6 w-full flex items-center">
+                            <div className="mt-6 mt-2 w-full flex items-center">
                             {lastDigits.length > 0 ?<>
     <svg
         xmlns="http://www.w3.org/2000/svg"

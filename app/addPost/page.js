@@ -24,13 +24,14 @@ const Page = async () => {
           let   accMonthIn= accType?.monthIn
              accType = accType?.name
 
+              // Perform redirect if no account type is found and the user is logged in
+        if (!accType && session.isLoggedIn) {
+          redirect('/typeOfAccount'); // Call redirect without await
+      }
              try {
        
 
-        // Perform redirect if no account type is found and the user is logged in
-        if (!accType && session.isLoggedIn) {
-            redirect('/typeOfAccount'); // Call redirect without await
-        }
+       
 
               const dateAndTime = DateTime.now()
                       .setZone('Europe/Prague')
@@ -181,10 +182,10 @@ const Page = async () => {
         );
     } catch (error) {
 
-
+      console.log(error)
       try{
 
-        
+
       const rawIp =
   headers().get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
   headers().get("x-real-ip") ||                      // Alternativní hlavička                   // Lokální fallback
