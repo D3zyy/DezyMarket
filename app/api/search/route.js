@@ -2,7 +2,7 @@ import {  NextResponse } from "next/server";
 import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
-import { elasticClient } from "@/app/Elastic/elasticsearch";
+
 
     export async function POST(req) {
       let data,session;
