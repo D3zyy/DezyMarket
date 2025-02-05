@@ -26,31 +26,11 @@ export async function POST(req) {
           { description: { search: `+${data.searchQuery}*` } },
         ],
       },
-      select: {
-        name: true,
-        description: true,
-        id: true,
-      },
+      include: {
+        top: true
+       }
     });
-    console.timeEnd("Full-text search time");
-
-    // LIKE vyhledávání
-    console.time("LIKE search time");
-    const foundPostsLike = await prisma.posts.findMany({
-      where: {
-        OR: [
-          { name: { contains: data.searchQuery } },
-          { description: { contains: data.searchQuery } },
-        ],
-      },
-      select: {
-        name: true,
-        description: true,
-        id: true,
-      },
-    });
-    console.timeEnd("LIKE search time");
-
+  
     // Funkce pro zvýraznění výsledků
     const highlightText = (text) => {
       const regex = new RegExp(data.searchQuery, "gi");
@@ -62,6 +42,7 @@ export async function POST(req) {
       name: highlightText(post.name),
       description: highlightText(post.description),
       id: highlightText(post.id),
+      top: post.top
     }));
 
     // Náhodné vybírání prvních 20 výsledků z full-textového vyhledávání
@@ -69,7 +50,7 @@ export async function POST(req) {
 
     // Porovnání výsledků (můžeš vypisovat počet záznamů nebo jiné metriky)
     console.log("Počet výsledků FULLTEXT:", randomFullTextPosts.length);
-    console.log("Počet výsledků LIKE:", foundPostsLike.length);
+
 
     return new Response(JSON.stringify({
       data: randomFullTextPosts, // Vrátí náhodně vybrané příspěvky
