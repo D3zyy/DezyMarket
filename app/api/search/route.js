@@ -6,41 +6,66 @@ import { DateTime } from "luxon";
 export async function POST(req) {
   let data, session;
   try {
-    const data = await req.json();
+    // Přečteme JSON data z požadavku
+    data = await req.json();
     if (!data || !data.searchQuery) {
       return new Response(
-        JSON.stringify({ message: "Chybějící vyhledávací dotaz." }),
+        JSON.stringify({ message: "Chybný nebo chybějící vyhledávací dotaz." }),
         { status: 400 }
       );
     }
-    console.log("Hedám:",data.searchQuery)
-    // Začátek měření času
-    console.time('searchTime');
 
-    const foundPosts = await prisma.posts.findMany({
-      orderBy: {
-        _relevance: {
-          fields: ['name', 'description'],
-          search: `${data.searchQuery}*`,
-          sort: 'asc',
-        },
-      },
+    console.log("Hledám:", data.searchQuery);
+
+    // Měření času pro full-textové vyhledávání
+    console.time('fullTextSearchTime'); // Začínáme měření
+    const foundPostsFullText = await prisma.posts.findMany({
+     
       where: {
         name: {
-          search: `+${data.searchQuery}*`,
+          search: `${data.searchQuery}*`,
         },
         description: {
-          search: `+${data.searchQuery}*`,
+          search: `${data.searchQuery}*`,
         },
       },
     });
+    console.timeEnd('fullTextSearchTime'); // Konec měření
 
-    // Konec měření času
-    console.timeEnd('searchTime');
+    // Měření času pro LIKE vyhledávání
+    const likeSearchTimeLabel = 'likeSearchTime_' + Date.now(); // unikátní label pro LIKE
+    console.time(likeSearchTimeLabel); // Začínáme měření
+    const foundPostsLike = await prisma.posts.findMany({
+      where: {
+        OR: [
+          {
+            name: {
+              contains: data.searchQuery, // LIKE equivalent pro název
+            },
+          },
+          {
+            description: {
+              contains: data.searchQuery, // LIKE equivalent pro popis
+            },
+          },
+        ],
+      },
+    });
+    console.timeEnd(likeSearchTimeLabel); // Konec měření pro LIKE
 
-    console.log("Výsledky hledání:", foundPosts.length);
+    // Výpis výsledků a časů
+    console.log("=============================================");
+    console.log("Výsledky full-textového vyhledávání:");
+    console.log(`Počet nalezených příspěvků: ${foundPostsFullText.length}`);
+    console.log("=============================================");
+    console.log("Výsledky LIKE vyhledávání:");
+    console.log(`Počet nalezených příspěvků: ${foundPostsLike.length}`);
+    console.log("=============================================");
 
-    return new Response(JSON.stringify({ data: foundPosts }), {
+    return new Response(JSON.stringify({ 
+      dataFullText: foundPostsFullText, 
+      dataLike: foundPostsLike 
+    }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
@@ -49,12 +74,11 @@ export async function POST(req) {
     try {
       session = await getSession();
       const rawIp =
-        req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
-        req.headers.get("x-real-ip") || // Alternativní hlavička
-        req.socket?.remoteAddress || // Lokální fallback
+        req.headers.get("x-forwarded-for")?.split(",")[0] || 
+        req.headers.get("x-real-ip") || 
+        req.socket?.remoteAddress || 
         null;
 
-      // Odstranění případného prefixu ::ffff:
       const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
 
       const dateAndTime = DateTime.now()

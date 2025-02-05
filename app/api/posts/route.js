@@ -38,7 +38,7 @@ const schema = z.object({
 
   description: z.string()
     .min(15, 'Popis musí mít alespoň 15 znaků.')
-    .max(2000, 'Popis může mít maximálně 2000 znaků.')
+    .max(1000, 'Popis může mít maximálně 1000 znaků.')
     .refine((value) => !/[<>]/.test(value), {
       message: 'Popis nesmí obsahovat znaky < a >.',
     })
@@ -650,11 +650,11 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 console.log( "Nasel sem top",isAllowed?.length > 0)
                 console.log("tento top:",isAllowed?.id)
                 const price = validatedFields?.data?.price;
+                console.log("CENA:",price)
                 const validatedPrice = typeof price === 'number' && Number.isInteger(price) ? price.toString() : price;
                 console.log("pred vytvorenim")
+                console.log("VALIDATED PRICE:",validatedPrice)
 
-              
-              
                  newPost = await prisma.posts.create({
                   data: {
                     dateAndTime: localISODateFixedOffset,
