@@ -52,7 +52,7 @@ async function main() {
         ["Základní typ inzerátu", true],
         ["Topování v kategorii", false],
         ["Topování v sekci", false],
-        ["Topovaný ve vyhledávání", false],
+        ["Topovaní ve vyhledávání", false],
         ["Odznáček vedle jména", false],
         ["Prioritní zákaznická podpora", false]
       ]
@@ -70,7 +70,7 @@ async function main() {
         ["Odznáček vedle jména", true],
         ["Topování v kategorii", true],
         ["Prioritní zákaznická podpora", true],
-        ["Topovaný ve vyhledávání", true],
+        ["Topovaní ve vyhledávání", true],
         ["Topování v sekci", false],
 
       ]
@@ -89,7 +89,7 @@ async function main() {
         ["Topování v sekci", true],
         ["Odznáček vedle jména", true],
         ["Prioritní zákaznická podpora", true]
-        ["Topovaný ve vyhledávání", true],
+        ["Topovaní ve vyhledávání", true],
       ]
     }
   ];
