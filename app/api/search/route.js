@@ -46,7 +46,6 @@ export async function POST(req) {
     // Zvýraznění textu pro full-text výsledky
     const highlightedPostsFullText = foundPostsFullText.map(post => ({
       name: highlightText(post?.name),
-      description: highlightText(post?.description),
       id: highlightText(post?.id),
       top: post?.top,
       numberOfMonthsToValid: post?.top?.numberOfMonthsToValid

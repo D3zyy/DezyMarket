@@ -83,30 +83,9 @@ function SearchComponent() {
             {foundData.map((post, index) => (
               <Link key={index} href={`/post/${post.id}`}>
                 <div className="p-2 hover:bg-base-300">
-                <div
-  className="mt-4 lg:mt-0 badge badge-md badge-outline mb-5"
-  style={{
-    fontSize: '0.875rem',
-    padding: '10px',
-    borderWidth: '1.2px',
-    borderStyle: 'solid',
-    height: '1rem', // Přidej pro větší výšku
-    borderColor: post?.top?.color
-  }}
->
-  
-<Link
-      href={'/'}
-      style={{ fontWeight: 'bold', fontSize: '1rem', color: post?.top?.color }}
-    >
- { post?.top?.emoji ? <span className="mr-1" dangerouslySetInnerHTML={{ __html: post?.top?.emoji }}></span> : ""}
-     
-      {post?.top.name}
-
-    </Link>
-  </div>
+               
                   <h3 dangerouslySetInnerHTML={{ __html: post.name }} className="font-semibold" />
-                  <p dangerouslySetInnerHTML={{ __html: post.description }} className="text-sm text-gray-600" />
+               
                 </div>
               </Link>
             ))}
