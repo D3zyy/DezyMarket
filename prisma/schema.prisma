@@ -8,12 +8,11 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL_POSTGRES")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Users {
@@ -277,8 +276,8 @@ model Categories {
 
 model Errors {
   id           Int      @id @default(autoincrement())
-  info         String?   @db.Text
-  errorPrinted String?
+  info         String?   
+  errorPrinted String?    @db.VarChar(15000)
   dateAndTime  DateTime? 
   ipAddress    String?
   userId       String?              
@@ -306,9 +305,9 @@ model Posts {
   actions     ManagementActions[] // Back-relation to ManagementActions
   postViews   PostViews[] // One-to-many relationship with PostViews
   postReport  PostReport[] // One-to-many relationship with PostViews
-searchVector Unsupported("tsvector") 
   
-  @@index([searchVector], type: Gin)
+    
+  @@fulltext([name,description])
   @@index([id])
 }
 

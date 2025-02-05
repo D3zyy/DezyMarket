@@ -648,8 +648,9 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
               try{
                 console.log( "Nasel sem top",isAllowed?.length > 0)
                 console.log("tento top:",isAllowed?.id)
-                const price = validatedFields.data.price;
+                const price = validatedFields?.data?.price;
                 const validatedPrice = typeof price === 'number' && Number.isInteger(price) ? price.toString() : price;
+                console.log("pred vytvorenim")
                  newPost = await prisma.posts.create({
                   data: {
                     dateAndTime: localISODateFixedOffset,
@@ -661,7 +662,8 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                     categoryId: validatedFields.data.category,
                     sectionId : validatedFields.data.section,
                     phoneNumber : validatedFields.data.phoneNumber,
-                    userId : session.userId
+                    userId : session.userId,
+                 
                   }
                 });
                 
@@ -683,7 +685,7 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 );  
          
               } catch(error) {
-                
+                  console.log(error)
         const rawIp =
         req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
         req.headers.get("x-real-ip") ||                      // Alternativní hlavička

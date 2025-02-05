@@ -15,13 +15,17 @@ import { DateTime } from "luxon";
         { status: 400 }
       );
     }
-
-    const foundPosts = await prisma.$queryRaw`
-  SELECT * FROM "Posts"
-  WHERE to_tsvector('english', name || ' ' || description) @@ plainto_tsquery('english', ${data.searchQuery})
-  ORDER BY ts_rank(to_tsvector('english', name || ' ' || description), plainto_tsquery('english', ${data.searchQuery})) DESC
-  LIMIT 50;
-`;
+    console.log(data.searchQuery)
+    const foundPosts = await prisma.posts.findMany({
+      where: {
+        name: {
+          search: data.searchQuery,
+        },
+        description: {
+          search: data.searchQuery,
+        },
+      },
+    })
 
     console.log("Výsledky hledání:", foundPosts);
 
