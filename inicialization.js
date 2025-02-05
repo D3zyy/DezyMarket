@@ -62,7 +62,7 @@ async function main() {
       priority: 2, 
       numberOfAllowedImages: 20,
       emoji: `<div class="badge badge-lg badge-secondary badge-outline" style="color: #ff7d5c; border-color: #ff7d5c;">Šikula</div>`,
-      priceAmountCZKMonthly: "134", 
+      priceAmountCZKMonthly: "215", 
       perks: [
         ["Neomezený počet inzerátů", true],
         ["Neomezené topování", true],
@@ -80,7 +80,7 @@ async function main() {
       numberOfAllowedImages: 25, 
       emoji: `<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>`,
       priority: 3, 
-      priceAmountCZKMonthly: "152", 
+      priceAmountCZKMonthly: "242", 
       perks: [
         ["Neomezený počet inzerátů", true],
         ["Neomezené topování", true],
