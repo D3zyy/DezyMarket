@@ -60,7 +60,7 @@ export async function POST(req) {
       .slice(0, 20);  // Vezmeme prvních 20 výsledků
 
     // Porovnání výsledků (můžeš vypisovat počet záznamů nebo jiné metriky)
-    console.log("Počet výsledků FULLTEXT:", sortedPosts.length);
+    console.log("Počet výsledků FULLTEXT:", foundPostsFullText.length);
 
     return new Response(JSON.stringify({
       data: sortedPosts, // Vrátí seřazené příspěvky
