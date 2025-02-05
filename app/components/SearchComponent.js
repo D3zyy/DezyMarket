@@ -56,12 +56,17 @@ function SearchComponent() {
             clipRule="evenodd"
           />
         </svg>
-        <input 
-          type="text" 
-          className="grow" 
-          onChange={(e) => searchUser(e.target.value)} 
-          placeholder="Vyhledat.." 
-        />
+        <input
+  type="text"
+  className="grow"
+  onChange={(e) => {
+    const value = e.target.value;
+    if (value.length >= 2) {
+      searchUser(value);
+    }
+  }}
+  placeholder="Vyhledat.."
+/>
       </label>
 
       {/* Dropdown pro výsledky */}

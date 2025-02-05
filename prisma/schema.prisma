@@ -306,8 +306,9 @@ model Posts {
   postViews   PostViews[] // One-to-many relationship with PostViews
   postReport  PostReport[] // One-to-many relationship with PostViews
   
-  @@index([description])
-  @@index([name])
+  
+  @@fulltext([description])
+  @@fulltext([name])
   @@fulltext([name,description])
   @@index([id])
 }
