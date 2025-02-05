@@ -17,8 +17,10 @@ export async function POST(req) {
       );
     }
 
-    // Full-textové vyhledávání
+    // Začátek měření času
     console.time("Full-text search time");
+
+    // Full-textové vyhledávání
     const foundPostsFullText = await prisma.posts.findMany({
       where: {
         OR: [
@@ -27,33 +29,42 @@ export async function POST(req) {
         ],
       },
       include: {
-        top: true
-       }
+        top: true,
+       
+      }
     });
-  
+
+    // Konec měření času
+    console.timeEnd("Full-text search time");
+
     // Funkce pro zvýraznění výsledků
     const highlightText = (text) => {
       const regex = new RegExp(data.searchQuery, "gi");
-      return text.replace(regex, (match) => `<span style="font-weight: 900; color: gray;">${match}</span>`);
+      return text.replace(regex, (match) => `<span style="font-weight: 600; color: gray;">${match}</span>`);
     };
 
     // Zvýraznění textu pro full-text výsledky
     const highlightedPostsFullText = foundPostsFullText.map(post => ({
-      name: highlightText(post.name),
-      description: highlightText(post.description),
-      id: highlightText(post.id),
-      top: post.top
+      name: highlightText(post?.name),
+      description: highlightText(post?.description),
+      id: highlightText(post?.id),
+      top: post?.top,
+      numberOfMonthsToValid: post?.top?.numberOfMonthsToValid
     }));
 
-    // Náhodné vybírání prvních 20 výsledků z full-textového vyhledávání
-    const randomFullTextPosts = highlightedPostsFullText.sort(() => 0.5 - Math.random()).slice(0, 20);
+    // Seřadíme nejprve podle toho, zda má příspěvek top (nebo ne), a pak podle numberOfMonthsToValid
+    const sortedPosts = highlightedPostsFullText
+      .sort((a, b) => {
+      
+        return b.numberOfMonthsToValid - a.numberOfMonthsToValid; // Pokud oba mají stejný top, seřadíme podle numberOfMonthsToValid
+      })
+      .slice(0, 20);  // Vezmeme prvních 20 výsledků
 
     // Porovnání výsledků (můžeš vypisovat počet záznamů nebo jiné metriky)
-    console.log("Počet výsledků FULLTEXT:", randomFullTextPosts.length);
-
+    console.log("Počet výsledků FULLTEXT:", sortedPosts.length);
 
     return new Response(JSON.stringify({
-      data: randomFullTextPosts, // Vrátí náhodně vybrané příspěvky
+      data: sortedPosts, // Vrátí seřazené příspěvky
     }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
