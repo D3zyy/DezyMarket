@@ -367,31 +367,7 @@ console.log("Jdu kontrolvat top")
 });
 console.log("Nasel sem top:",isAllowed)
 console.log("POst name:",typPost)
-if(!isAllowed){
-  console.log("Píšu do db error!!!!")
-  const rawIp =
-  req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
-  req.headers.get("x-real-ip") ||                      // Alternativní hlavička
-  req.socket?.remoteAddress ||                         // Lokální fallback
-  null;
 
-// Odstranění případného prefixu ::ffff:
-const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
-
-const formDataObject = Object.fromEntries(formData.entries());
-
-      const dateAndTime = DateTime.now()
-      .setZone('Europe/Prague')
-      .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
-        await prisma.errors.create({
-          data : { 
-          info: `Chyba na /api/posts - POST - (Tento typ topovaní neexistuje .)  formData: ${JSON.stringify(formDataObject)} `,
-          dateAndTime: dateAndTime,
-          userId: session?.userId,
-          ipAddress:ip,
-          }
-        })
-}
 
 if(isAllowed?.hidden){
   const rawIp =

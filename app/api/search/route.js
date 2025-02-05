@@ -55,7 +55,6 @@ export async function POST(req) {
     // Seřadíme nejprve podle toho, zda má příspěvek top (nebo ne), a pak podle numberOfMonthsToValid
     const sortedPosts = highlightedPostsFullText
       .sort((a, b) => {
-      
         return b.numberOfMonthsToValid - a.numberOfMonthsToValid; // Pokud oba mají stejný top, seřadíme podle numberOfMonthsToValid
       })
       .slice(0, 20);  // Vezmeme prvních 20 výsledků
