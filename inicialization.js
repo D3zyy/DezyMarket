@@ -127,7 +127,7 @@ async function main() {
         ["až 15 fotografií u inzerátu", true],
         ["Doba uložení ař 2 měsíce", true],
         ["Počet zobrazení inzerátu", true],
-        ["Kdo si zobrazil inzerát", false],
+        ["Topovaný ve vyhledávání", false],
         ["Topovaný v kategorii", false],
         ["Topovaný v sekci", false],
       ]
@@ -140,7 +140,7 @@ async function main() {
         ["až X fotografií u inzerátu", true],
         ["Doba uložení až X měsíců", true],
         ["Počet zobrazení inzerátu", true],
-        ["Kdo si zobrazil inzerát", true],
+        ["Topovaný ve vyhledávání", true],
         ["Topovaný v kategorii", true],
         ["Topovaný v sekci", true],
       ]
@@ -150,9 +150,9 @@ async function main() {
         ["až 20 fotografií u inzerátu", true],
         ["Doba uložení až 3 měsíce", true],
         ["Počet zobrazení inzerátu", true],
+        ["Topovaný ve vyhledávání", true],
         ["Topovaný v kategorii", true],
         ["Topovaný v sekci", false],
-        ["Kdo si zobrazil inzerát", false],
       ]
     },
     { 
@@ -161,7 +161,7 @@ async function main() {
         ["až 25 fotografií u inzerátu", true],
         ["Doba uložení až 4 měsíce", true],
         ["Počet zobrazení inzerátu", true],
-        ["Kdo si zobrazil inzerát", true],
+        ["Topovaný ve vyhledávání", true],
         ["Topovaný v kategorii", true],
         ["Topovaný v sekci", true],
       ]
