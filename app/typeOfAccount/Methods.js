@@ -230,7 +230,7 @@ const userAccountTypes = await prisma.users.findUnique({
       sortedAccounts[0].accountType.price = sortedAccounts[0]?.price?.value;
       sortedAccounts[0].accountType.toDate = sortedAccounts[0].toDate;
       sortedAccounts[0].accountType.gifted = sortedAccounts[0].gifted;
-      console.log(sortedAccounts[0].accountType)
+
       return sortedAccounts[0].accountType;  // Vraťte název účtu s nejvyšší prioritou
     } else {
       return null; // Žádný odpovídající účet nenalezen

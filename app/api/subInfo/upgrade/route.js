@@ -360,7 +360,7 @@ const UnixTotoDate = new Date("2025-01-29T17:01:59.000Z").getTime() / 1000; // S
                     last4: method.card.last4,
                 }));
                 
-                console.log(cards);
+                
                 return cards
             } catch (error) {
                 console.error('Chyba při načítání dat o zákazníkovi:', error);

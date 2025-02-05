@@ -49,7 +49,7 @@ export async function POST(request) {
                     isDefault: method.id === defaultPaymMethod, // Označení defaultní karty
                 }));
         
-                console.log(cards);
+          
                 return cards;
             } catch (error) {
                 console.error('Chyba při načítání dat o zákazníkovi:', error);
@@ -58,7 +58,7 @@ export async function POST(request) {
         }
       let  cardsOfUser = await getCustomerCard(customer.id)
 
-        console.log(cardsOfUser)
+    
 
         return new Response(JSON.stringify({    
             cards: cardsOfUser

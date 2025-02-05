@@ -356,7 +356,7 @@ console.log("pred !!!")
 if (typPost) {
   console.log("Jdu dovnitr!!!")
 let monthIn = await getUserAccountTypeOnStripe(session.email)
-console.log(monthIn?.monthIn)
+
 
 console.log("Jdu kontrolvat top")
 
@@ -457,7 +457,7 @@ const formDataObject = Object.fromEntries(formData.entries());
 }
 console.log("Počet měsícu abych ho mohl tento top:",isAllowed?.numberOfMonthsToValid )
 console.log("Počet měsícu které mám:", monthIn?.monthIn)
-console.log(isAllowed?.numberOfMonthsToValid  > monthIn?.monthIn)
+
  if(isAllowed?.numberOfMonthsToValid > monthIn?.monthIn)   {
   const rawIp =
   req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
@@ -646,11 +646,15 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
               .setZone('Europe/Prague') // Čas zůstane v českém pásmu
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
               try{
+                
                 console.log( "Nasel sem top",isAllowed?.length > 0)
                 console.log("tento top:",isAllowed?.id)
                 const price = validatedFields?.data?.price;
                 const validatedPrice = typeof price === 'number' && Number.isInteger(price) ? price.toString() : price;
                 console.log("pred vytvorenim")
+
+              
+              
                  newPost = await prisma.posts.create({
                   data: {
                     dateAndTime: localISODateFixedOffset,

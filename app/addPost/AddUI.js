@@ -255,7 +255,7 @@ const handleDeleteImage = (index) => {
       if (targetNode) observer.disconnect();
     };
   });
-console.log(infoTop)
+
   return (
     <>
     <div className='flex justify-center gap-4 p-2'> <span style={{ color: infoTop ? infoTop : '' }} className="badge badge-lg badge-outline">

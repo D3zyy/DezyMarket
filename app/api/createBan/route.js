@@ -173,7 +173,7 @@ export async function POST(req) {
         }
       );
     }
-    console.log(data)
+ 
     // Vytvoření banu
     const ban = await prisma.bans.create({
       data: {
