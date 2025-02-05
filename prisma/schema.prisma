@@ -8,6 +8,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -305,7 +306,9 @@ model Posts {
   actions     ManagementActions[] // Back-relation to ManagementActions
   postViews   PostViews[] // One-to-many relationship with PostViews
   postReport  PostReport[] // One-to-many relationship with PostViews
-
+searchVector Unsupported("tsvector") 
+  
+  @@index([searchVector], type: Gin)
   @@index([id])
 }
 

@@ -8,6 +8,7 @@ import { CloudFrontClient, CreateInvalidationCommand } from "@aws-sdk/client-clo
 import { DateTime } from 'luxon';
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
+import { stringify } from "uuid";
 const schema = z.object({
   name: z.string()
     .max(70, 'Název může mít maximálně 70 znaků.') 
@@ -701,7 +702,7 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 data : { 
                 info: `Chyba na /api/posts - POST - (Nastala chyba při přidávání příspěvku do db.)  formData: ${JSON.stringify(formDataObject)}  `,
                 dateAndTime: dateAndTime,
-                errorPrinted: error,
+                errorPrinted: typeof error === 'object' ? JSON.stringify(error) : String(error),
                 userId: session?.userId,
                 ipAddress:ip,
                 }
@@ -753,7 +754,7 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 data : { 
                 info: `Chyba na /api/posts - POST - (catch)  formData: ${JSON.stringify(formDataObject)}  `,
                 dateAndTime: dateAndTime,
-                errorPrinted: error,
+                errorPrinted: typeof error === 'object' ? JSON.stringify(error) : String(error),
                 userId: session?.userId,
                 ipAddress:ip,
                 }
@@ -1353,7 +1354,7 @@ export async function PUT(req) {
                 data:{
                 info: `Chyba na /api/posts - PUT - (catch)  data: ${data}  `,
                 dateAndTime: dateAndTime,
-                errorPrinted: error,
+                errorPrinted: typeof error === 'object' ? JSON.stringify(error) : String(error),
                 userId: session?.userId,
                 ipAddress:ip,}
               })
@@ -1618,7 +1619,7 @@ export async function DELETE(req) {
                 data:{
                 info: `Chyba na /api/posts - DELETE - (catch)  data: ${data}  `,
                 dateAndTime: dateAndTime,
-                errorPrinted: error,
+                errorPrinted: typeof error === 'object' ? JSON.stringify(error) : String(error),
                 userId: session?.userId,
                 ipAddress:ip,}
               })

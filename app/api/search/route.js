@@ -16,27 +16,16 @@ import { DateTime } from "luxon";
       );
     }
 
-    console.log("Hledám:", data.searchQuery);
+    const foundPosts = await prisma.$queryRaw`
+  SELECT * FROM "Posts"
+  WHERE to_tsvector('english', name || ' ' || description) @@ plainto_tsquery('english', ${data.searchQuery})
+  ORDER BY ts_rank(to_tsvector('english', name || ' ' || description), plainto_tsquery('english', ${data.searchQuery})) DESC
+  LIMIT 50;
+`;
 
-    // 🔍 Hledání v Elasticsearch
-    const { body } = await elasticClient.search({
-      index: "posts",
-      body: {
-        query: {
-          multi_match: {
-            query: data.searchQuery,
-            fields: ["name", "description"],
-            fuzziness: "AUTO", // Oprava překlepů
-          },
-        },
-      },
-    });
+    console.log("Výsledky hledání:", foundPosts);
 
-    const searchResult = body.hits.hits.map((hit) => hit._source);
-
-    console.log("Výsledky hledání:", searchResult);
-
-    return new Response(JSON.stringify({ data: searchResult }), {
+    return new Response(JSON.stringify({ data: foundPosts }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
