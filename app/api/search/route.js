@@ -43,7 +43,7 @@ export async function POST(req) {
       if (!matches) return null; // Pokud nic nenajde, vrátí null
     
       const uniqueWord = matches[0]; // Vezme první nalezené slovo
-      const highlighted = `<span style="font-weight: 600; color: gray;">${query}</span>${uniqueWord.slice(query.length)}`;
+      const highlighted = `<span style="color: black;">${query}</span><span style="font-weight: 600; color: gray;">${uniqueWord.slice(query.length)}</span>`;
     
       return { highlighted, fullWord: uniqueWord };
     };
