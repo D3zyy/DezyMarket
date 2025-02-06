@@ -43,7 +43,9 @@ export async function POST(req) {
       if (!matches) return null; // Pokud nic nenajde, vrátí null
     
       const uniqueWord = matches[0]; // Vezme první nalezené slovo
-      return `<span style="font-weight: 600; color: gray;">${query}</span>${uniqueWord.slice(query.length)}`;
+      const highlighted = `<span style="font-weight: 600; color: gray;">${query}</span>${uniqueWord.slice(query.length)}`;
+    
+      return { highlighted, fullWord: uniqueWord };
     };
     
     // Použití Setu pro globální odstranění duplikátů napříč všemi příspěvky
@@ -51,17 +53,23 @@ export async function POST(req) {
     
     const highlightedPostsFullText = foundPostsFullText
       .map(post => {
-        const highlightedName = highlightText(post?.name, data.searchQuery);
+        const result = highlightText(post?.name, data.searchQuery);
         
-        if (!highlightedName) return null; // Pokud není žádný výsledek, přeskočíme
-        if (seenWords.has(highlightedName)) return null; // Pokud už slovo existuje, přeskočíme
+        if (!result) return null; // Pokud není žádný výsledek, přeskočíme
+        if (seenWords.has(result.fullWord)) return null; // Pokud už slovo existuje, přeskočíme
     
-        seenWords.add(highlightedName); // Přidáme do Setu, aby se už neopakovalo
+        seenWords.add(result.fullWord); // Přidáme do Setu, aby se už neopakovalo
     
-        return { name: highlightedName, id: post?.id, top: post?.top, numberOfMonthsToValid: post?.top?.numberOfMonthsToValid };
+        return { 
+          searchName: data.searchQuery, 
+          name: result.highlighted, 
+          fullWord: result.fullWord, // Přidá celé slovo
+          id: post?.id, 
+          top: post?.top, 
+          numberOfMonthsToValid: post?.top?.numberOfMonthsToValid 
+        };
       })
       .filter(Boolean); // Odstraní null hodnoty
-
     // Seřadíme nejprve podle toho, zda má příspěvek top (nebo ne), a pak podle numberOfMonthsToValid
     const sortedPosts = highlightedPostsFullText
       .sort((a, b) => {

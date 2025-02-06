@@ -81,7 +81,7 @@ function SearchComponent() {
         foundData.length > 0 ? (
           <div className="absolute left-0 right-0 rounded-lg bg-base-200 shadow-md mt-1 max-h-60 overflow-y-auto">
             {foundData.map((post, index) => (
-              <Link key={index} href={`/post/${post.id}`}>
+              <Link key={index} href={`/search/${post.fullWord}`}>
                 <div className="p-2 hover:bg-base-300">
                
                   <h3 dangerouslySetInnerHTML={{ __html: post.name }} className="font-semibold" />
