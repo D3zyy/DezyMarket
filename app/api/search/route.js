@@ -23,10 +23,10 @@ export async function POST(req) {
     // Full-textové vyhledávání
     const foundPostsFullText = await prisma.posts.findMany({
       where: {
-        OR: [
-          { name: { search: `*${data.searchQuery}*` } },
-          { description: { search: `*${data.searchQuery}*` } },
-        ],
+     
+           name: { search: `*${data.searchQuery}*` } ,
+          description: { search: `*${data.searchQuery}*` } ,
+     
       },
     });
 
