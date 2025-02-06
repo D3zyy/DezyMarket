@@ -1,37 +1,33 @@
+'use client' 
 import React from 'react'
 import SearchComponent from '@/app/components/SearchComponent'
-function layout({children}) {
+
+function Layout({ children }) {
   return (
-    <div >
-     <div className='flex justify-center items-center'>
-
-     <div className="join">
-  <div>
     <div>
-    <SearchComponent/>
-    </div>
-  </div>
-  <select className="select select-bordered join-item">
-    <option disabled selected>Kategorie</option>
-    <option>Sci-fi</option>
-    <option>Drama</option>
-    <option>Action</option>
-  </select>
-  <select className="select select-bordered join-item">
-    <option disabled selected>Sekce</option>
-    <option>Sci-fi</option>
-    <option>Drama</option>
-    <option>Action</option>
-  </select>
- 
-</div>
-
+<div className="fixed top-20 left-1/2 transform -translate-x-1/2 flex justify-center items-center  z-50 p-4">
+        <div className="join">
+          <div>
+            <SearchComponent />
+          </div>
+          <select className="select select-bordered join-item">
+            <option disabled selected>Kategorie</option>
+            <option>Sci-fi</option>
+            <option>Drama</option>
+            <option>Action</option>
+          </select>
+          <select className="select select-bordered join-item">
+            <option disabled selected>Sekce</option>
+            <option>Sci-fi</option>
+            <option>Drama</option>
+            <option>Action</option>
+          </select>
         </div>
+      </div>
 
-     {children}
-     
-     </div>
+      {children}
+    </div>
   )
 }
 
-export default layout
+export default Layout
