@@ -52,7 +52,6 @@ async function main() {
         ["Základní typ inzerátu", true],
         ["Topování v kategorii", false],
         ["Topování v sekci", false],
-        ["Topovaní ve vyhledávání", false],
         ["Odznáček vedle jména", false],
         ["Prioritní zákaznická podpora", false]
       ]
@@ -62,7 +61,7 @@ async function main() {
       priority: 2, 
       numberOfAllowedImages: 20,
       emoji: `<div class="badge badge-lg badge-secondary badge-outline" style="color: #ff7d5c; border-color: #ff7d5c;">Šikula</div>`,
-      priceAmountCZKMonthly: "215", 
+      priceAmountCZKMonthly: "152", 
       perks: [
         ["Neomezený počet inzerátů", true],
         ["Neomezené topování", true],
@@ -70,7 +69,6 @@ async function main() {
         ["Odznáček vedle jména", true],
         ["Topování v kategorii", true],
         ["Prioritní zákaznická podpora", true],
-        ["Topovaní ve vyhledávání", true],
         ["Topování v sekci", false],
 
       ]
@@ -80,7 +78,7 @@ async function main() {
       numberOfAllowedImages: 25, 
       emoji: `<div class='badge badge-lg badge-secondary badge-outline' style='color: #c792e9; border-color: #c792e9;'>Profík</div>`,
       priority: 3, 
-      priceAmountCZKMonthly: "242", 
+      priceAmountCZKMonthly: "170", 
       perks: [
         ["Neomezený počet inzerátů", true],
         ["Neomezené topování", true],
@@ -89,7 +87,6 @@ async function main() {
         ["Topování v sekci", true],
         ["Odznáček vedle jména", true],
         ["Prioritní zákaznická podpora", true]
-        ["Topovaní ve vyhledávání", true],
       ]
     }
   ];
@@ -127,7 +124,6 @@ async function main() {
         ["až 15 fotografií u inzerátu", true],
         ["Doba uložení ař 2 měsíce", true],
         ["Počet zobrazení inzerátu", true],
-        ["Topovaný ve vyhledávání", false],
         ["Topovaný v kategorii", false],
         ["Topovaný v sekci", false],
       ]
@@ -140,7 +136,6 @@ async function main() {
         ["až X fotografií u inzerátu", true],
         ["Doba uložení až X měsíců", true],
         ["Počet zobrazení inzerátu", true],
-        ["Topovaný ve vyhledávání", true],
         ["Topovaný v kategorii", true],
         ["Topovaný v sekci", true],
       ]
@@ -150,7 +145,6 @@ async function main() {
         ["až 20 fotografií u inzerátu", true],
         ["Doba uložení až 3 měsíce", true],
         ["Počet zobrazení inzerátu", true],
-        ["Topovaný ve vyhledávání", true],
         ["Topovaný v kategorii", true],
         ["Topovaný v sekci", false],
       ]
@@ -161,7 +155,6 @@ async function main() {
         ["až 25 fotografií u inzerátu", true],
         ["Doba uložení až 4 měsíce", true],
         ["Počet zobrazení inzerátu", true],
-        ["Topovaný ve vyhledávání", true],
         ["Topovaný v kategorii", true],
         ["Topovaný v sekci", true],
       ]
