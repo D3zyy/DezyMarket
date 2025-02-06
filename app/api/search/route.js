@@ -36,20 +36,31 @@ export async function POST(req) {
 
     // Konec měření času
     console.timeEnd("Full-text search time");
-
-    // Funkce pro zvýraznění výsledků
-    const highlightText = (text) => {
-      const regex = new RegExp(data.searchQuery, "gi");
-      return text.replace(regex, (match) => `<span style="font-weight: 600; color: gray;">${match}</span>`);
+    const highlightText = (text, query) => {
+      const regex = new RegExp(`\\b(${query}\\w*)`, "gi"); // Najde všechna slova začínající na query
+      const matches = text.match(regex); // Najde odpovídající slova
+    
+      if (!matches) return null; // Pokud nic nenajde, vrátí null
+    
+      const uniqueWord = matches[0]; // Vezme první nalezené slovo
+      return `<span style="font-weight: 600; color: gray;">${query}</span>${uniqueWord.slice(query.length)}`;
     };
-
-    // Zvýraznění textu pro full-text výsledky
-    const highlightedPostsFullText = foundPostsFullText.map(post => ({
-      name: highlightText(post?.name),
-      id: highlightText(post?.id),
-      top: post?.top,
-      numberOfMonthsToValid: post?.top?.numberOfMonthsToValid
-    }));
+    
+    // Použití Setu pro globální odstranění duplikátů napříč všemi příspěvky
+    const seenWords = new Set();
+    
+    const highlightedPostsFullText = foundPostsFullText
+      .map(post => {
+        const highlightedName = highlightText(post?.name, data.searchQuery);
+        
+        if (!highlightedName) return null; // Pokud není žádný výsledek, přeskočíme
+        if (seenWords.has(highlightedName)) return null; // Pokud už slovo existuje, přeskočíme
+    
+        seenWords.add(highlightedName); // Přidáme do Setu, aby se už neopakovalo
+    
+        return { name: highlightedName, id: post?.id, top: post?.top, numberOfMonthsToValid: post?.top?.numberOfMonthsToValid };
+      })
+      .filter(Boolean); // Odstraní null hodnoty
 
     // Seřadíme nejprve podle toho, zda má příspěvek top (nebo ne), a pak podle numberOfMonthsToValid
     const sortedPosts = highlightedPostsFullText
