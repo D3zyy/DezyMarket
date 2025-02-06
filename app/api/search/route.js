@@ -24,14 +24,10 @@ export async function POST(req) {
     const foundPostsFullText = await prisma.posts.findMany({
       where: {
         OR: [
-          { name: { search: `+${data.searchQuery}*` } },
-          { description: { search: `+${data.searchQuery}*` } },
+          { name: { search: `*${data.searchQuery}*` } },
+          { description: { search: `*${data.searchQuery}*` } },
         ],
       },
-      include: {
-        top: true,
-       
-      }
     });
 
     // Konec měření času
@@ -61,27 +57,19 @@ export async function POST(req) {
         seenWords.add(result.fullWord); // Přidáme do Setu, aby se už neopakovalo
     
         return { 
-          searchName: data.searchQuery, 
           name: result.highlighted, 
           fullWord: result.fullWord, // Přidá celé slovo
           id: post?.id, 
-          top: post?.top, 
-          numberOfMonthsToValid: post?.top?.numberOfMonthsToValid 
         };
       })
       .filter(Boolean); // Odstraní null hodnoty
     // Seřadíme nejprve podle toho, zda má příspěvek top (nebo ne), a pak podle numberOfMonthsToValid
-    const sortedPosts = highlightedPostsFullText
-      .sort((a, b) => {
-        return b.numberOfMonthsToValid - a.numberOfMonthsToValid; // Pokud oba mají stejný top, seřadíme podle numberOfMonthsToValid
-      })
-      .slice(0, 20);  // Vezmeme prvních 20 výsledků
-
+   
     // Porovnání výsledků (můžeš vypisovat počet záznamů nebo jiné metriky)
     console.log("Počet výsledků FULLTEXT:", foundPostsFullText.length);
 
     return new Response(JSON.stringify({
-      data: sortedPosts, // Vrátí seřazené příspěvky
+      data: highlightedPostsFullText, // Vrátí seřazené příspěvky
     }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
