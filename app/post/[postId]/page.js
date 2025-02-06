@@ -218,9 +218,7 @@ const Page = async ({ params }) => {
     wordWrap: "break-word", // Nebo použijte "overflowWrap: 'break-word'"
     maxWidth: "100%", // Zajistí, že se text zalomí v rámci šířky rodiče
   }}
-  className={`text-xl font-bold mb-6 sm:mb-5 ${
-    postRecord?.typeOfPost === process.env.BASE_RANK ? "mt-10" : "mt-0"
-  } lg:mt-0`}
+  className={`text-xl font-bold mb-6 sm:mb-5 mt-5 md:mt-0`}
 >
 
   {postRecord?.name}
