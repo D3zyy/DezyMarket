@@ -334,13 +334,14 @@ if (firstStep && secondStep) {
     }
   }}
   type="button"
-  className={`w-full btn text-sm sm:text-base ${
+  disabled={!shouldDisable || loading} // Disable button based on condition
+  className={`w-full   btn text-sm sm:text-base ${ !isLogged ? "!bg-[#8300ff] !text-white !opacity-50 !cursor-not-allowed":
     isActive
       ? "disabled:bg-[#8300ff] disabled:text-white disabled:opacity-50 disabled:cursor-not-allowed"
       : "bg-[#8300ff] text-white hover:bg-[#6600cc] focus:outline-none focus:ring-2 focus:ring-[#8300ff] focus:ring-opacity-50"
-  } ${!shouldDisable ? "cursor-not-allowed" : "cursor-pointer"}`}
+  } ${!shouldDisable ? "cursor-not-allowed text-red-500" : "cursor-pointer"}`}
   
-  disabled={!shouldDisable || loading} // Disable button based on condition
+ 
 >
 
 

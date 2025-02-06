@@ -24,8 +24,8 @@ export async function POST(req) {
     const foundPostsFullText = await prisma.posts.findMany({
       where: {
      
-           name: { search: `*${data.searchQuery}*` } ,
-          description: { search: `*${data.searchQuery}*` } ,
+           name: { search: `${data.searchQuery}*` } ,
+          description: { search: `${data.searchQuery}*` } ,
      
       },
     });
