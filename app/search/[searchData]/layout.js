@@ -1,11 +1,11 @@
-'use client' 
 import React from 'react'
 import SearchComponent from '@/app/components/SearchComponent'
 
 function Layout({ children }) {
-  return (
+  
+    return (
     <div>
-<div className="fixed top-20 left-1/2 transform -translate-x-1/2 flex justify-center items-center  z-50 p-4">
+<div className="fixed top-20 left-1/2 transform -translate-x-1/2 flex justify-center items-center z-5  p-4">
         <div className="join">
           <div>
             <SearchComponent />
