@@ -3,6 +3,8 @@ import Link from 'next/link';
 import React, { useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
 
 function SearchComponent({ categories }) {
   const [isLoadingSearch, setIsLoadingSearch] = useState(false);
@@ -11,47 +13,62 @@ function SearchComponent({ categories }) {
   const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
   const [isClient, setIsClient] = useState(false);
+
+  
   useEffect(() => {
     setIsClient(true);  // Nastaví isClient na true, jakmile se komponenta vykreslí na klientu
   }, []);
+  
   const router = useRouter();
   const category = searchParams.get('category') || "";
   const section = searchParams.get('section') || "";
   const location = searchParams.get('location') || "";
   const price = searchParams.get('price') || "";
+  
   const [selectedCategory, setSelectedCategory] = useState(category);
   const [selectedSection, setSelectedSection] = useState(section);
   const [selectedLocation, setSelectedLocation] = useState(location);
   const [selectedPrice, setSelectedPrice] = useState(price);
-  function htmlToText(htmlString) {
-
-      const div = document.createElement('div');
-      div.innerHTML = htmlString;
-      return div.textContent || div.innerText || "";
   
+  function htmlToText(htmlString) {
+    const div = document.createElement('div');
+    div.innerHTML = htmlString;
+    return div.textContent || div.innerText || "";
   }
+
   const handleCategoryChange = (e) => {
     const selected = e.target.value;
     setSelectedCategory(selected);
 
-    // Vytvoření URL s přidanými filtry (kategorie, místo, cena)
-    const queryParams = new URLSearchParams();
+    // Resetujeme sekci, pokud je kategorie změněná
+    setSelectedSection("");
 
+    const queryParams = new URLSearchParams();
     if (selected) queryParams.append('category', selected);
     if (selectedLocation) queryParams.append('location', selectedLocation);
     if (selectedPrice) queryParams.append('price', selectedPrice);
 
-    // Přesměrování na URL s parametry
     router.push(`/search?${queryParams.toString()}`);
   };
 
-  // Funkce pro změnu místa a přesměrování s ostatními filtry
+  const handleSectionChange = (e) => {
+    const selected = e.target.value;
+    setSelectedSection(selected);
+
+    const queryParams = new URLSearchParams();
+    if (selectedCategory) queryParams.append('category', selectedCategory);
+    if (selected) queryParams.append('section', selected);
+    if (selectedLocation) queryParams.append('location', selectedLocation);
+    if (selectedPrice) queryParams.append('price', selectedPrice);
+
+    router.push(`/search?${queryParams.toString()}`);
+  };
+
   const handleLocationChange = (e) => {
     const selected = e.target.value;
     setSelectedLocation(selected);
 
     const queryParams = new URLSearchParams();
-
     if (selectedCategory) queryParams.append('category', selectedCategory);
     if (selected) queryParams.append('location', selected);
     if (selectedPrice) queryParams.append('price', selectedPrice);
@@ -59,21 +76,17 @@ function SearchComponent({ categories }) {
     router.push(`/search?${queryParams.toString()}`);
   };
 
-  // Funkce pro změnu ceny a přesměrování s ostatními filtry
   const handlePriceChange = (e) => {
     const selected = e.target.value;
     setSelectedPrice(selected);
 
     const queryParams = new URLSearchParams();
-
     if (selectedCategory) queryParams.append('category', selectedCategory);
     if (selectedLocation) queryParams.append('location', selectedLocation);
     if (selected) queryParams.append('price', selected);
 
     router.push(`/search?${queryParams.toString()}`);
   };
-
-
 
   const searchUser = async (info) => {
     setIsLoadingSearch(true);
@@ -153,10 +166,10 @@ function SearchComponent({ categories }) {
             <div className="absolute left-0 right-0 rounded-lg bg-base-200 shadow-md mt-1 max-h-60 overflow-y-auto">
               {foundData.map((post, index) => (
                 <Link 
-  key={index} 
-  href={`/search?keyWord=${post.fullWord}${selectedCategory ? `&category=${selectedCategory}` : ''}${selectedLocation ? `&location=${selectedLocation}` : ''}${selectedPrice ? `&price=${selectedPrice}` : ''}`} 
-  onClick={closeSearchResults}
->
+                  key={index} 
+                  href={`/search?keyWord=${post.fullWord}${selectedCategory ? `&category=${selectedCategory}` : ''}${selectedLocation ? `&location=${selectedLocation}` : ''}${selectedPrice ? `&price=${selectedPrice}` : ''}`} 
+                  onClick={closeSearchResults}
+                >
                   <div className="p-2 hover:bg-base-300">
                     <h3 dangerouslySetInnerHTML={{ __html: post.name }} className="font-semibold" />
                   </div>
@@ -177,23 +190,39 @@ function SearchComponent({ categories }) {
       </div>
 
       <div className="flex flex-col gap-2 md:flex-row justify-center font-bold md:static p-2 rounded-lg max-w-[300px] md:max-w-[600px] mx-auto mt-2 mb-1">
-      <select
-      className="md:max-w-[130px] select select-bordered"
-      onChange={handleCategoryChange}
-      value={selectedCategory}
-    >
-      {/* Pokud není vybraná kategorie, zobrazí se možnost "Kategorie" */}
-      {!selectedCategory && <option value="">Kategorie</option>}
-      
-      {categories?.map((cat) => (
-  <option key={cat.id} value={cat.name}>
-    {isClient && htmlToText(cat.logo)} {/* Podmíněné vykreslení */}
-    {cat.name}
-  </option>
-))}
-    </select>
-
         <select
+          className="md:max-w-[130px] select select-bordered"
+          onChange={handleCategoryChange}
+          value={selectedCategory}
+        >
+          {!selectedCategory && <option value="">Kategorie</option>}
+          {categories?.map((cat) => (
+            <option key={cat.id} value={cat.name}>
+              {isClient && htmlToText(cat.logo)} 
+              {cat.name}
+            </option>
+          ))}
+        </select>
+
+        {selectedCategory && (
+          <select
+          className="md:max-w-[150px] select select-bordered"
+          value={selectedSection}
+          onChange={handleSectionChange}
+        >
+          <option value="">Sekce</option>
+          {selectedCategory &&
+            categories
+              .find((cat) => cat.name === selectedCategory)
+              ?.sections?.map((section) => (
+                <option key={section.id} value={section.name}>
+                  {section.name}
+                </option>
+              ))}
+        </select>
+        )}
+
+<select
           className="md:max-w-[150px] select select-bordered"
           value={selectedLocation}
           onChange={handleLocationChange}
@@ -230,7 +259,7 @@ function SearchComponent({ categories }) {
           value={selectedPrice}
           onChange={handlePriceChange}
         >
-          <option   value="">Cena</option>
+          <option value="">Cena</option>
           <option  selected={selectedPrice == 'Dohodou'}    value="Dohodou">Dohodou</option>
           <option  selected={selectedPrice == 'Vtextu'}    value="V textu">V textu</option>
           <option selected={selectedPrice == 'Zdarma'}   value="Zdarma">Zdarma</option>
