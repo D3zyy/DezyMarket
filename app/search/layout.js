@@ -25,7 +25,7 @@ async function Layout({ children  }) {
 
   return (
     <div>
-      <div className="fixed top-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center w-full z-10 p-4">
+      <div className="fixed top-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center w-full z-5 p-4">
         <h1 className={`${bebas.className} text-4xl font-bold`}>Dezy</h1>
         <span className={`${pacifico.className} text-lg font-semibold mt-1 mb-4`}>
           „Lepší místo pro vaše inzeráty.“
