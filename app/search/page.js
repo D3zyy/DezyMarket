@@ -2,7 +2,7 @@ import React from 'react'
 
 
 function page({searchParams}) {
-    const keyWord= searchParams.searchData
+    const keyWord= searchParams.keyWord
     const category = searchParams.category
     const section = searchParams.section
     const price = searchParams.price
