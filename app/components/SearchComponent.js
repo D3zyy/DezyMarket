@@ -95,7 +95,11 @@ function SearchComponent({ categories }) {
           foundData.length > 0 ? (
             <div className="absolute left-0 right-0 rounded-lg bg-base-200 shadow-md mt-1 max-h-60 overflow-y-auto">
               {foundData.map((post, index) => (
-                <Link key={index} href={`/search?keyWord=${post.fullWord}`} onClick={closeSearchResults}>
+                <Link 
+  key={index} 
+  href={`/search?keyWord=${post.fullWord}${selectedCategory ? `&category=${selectedCategory}` : ''}${selectedLocation ? `&location=${selectedLocation}` : ''}${selectedPrice ? `&price=${selectedPrice}` : ''}`} 
+  onClick={closeSearchResults}
+>
                   <div className="p-2 hover:bg-base-300">
                     <h3 dangerouslySetInnerHTML={{ __html: post.name }} className="font-semibold" />
                   </div>
@@ -122,7 +126,7 @@ function SearchComponent({ categories }) {
         >
           <option value="">Kategorie</option>
           {categories?.map((cat) => (
-            <option key={cat.id} value={cat.id} selected={selectedCategory == cat.name}>
+            <option key={cat.id} value={cat.name} selected={selectedCategory == cat.name}>
               {cat.name}
             </option>
           ))}
@@ -164,7 +168,6 @@ function SearchComponent({ categories }) {
           value={selectedPrice}
           onChange={(e) => setSelectedPrice(e.target.value)}
         >
-          <option value="">Cena</option>
           <option   value="">Cena</option>
           <option  selected={selectedPrice == 'Dohodou'}    value="Dohodou">Dohodou</option>
           <option  selected={selectedPrice == 'Vtextu'}    value="V textu">V textu</option>
