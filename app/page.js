@@ -54,13 +54,13 @@ const Page = async () => {
               {categories.map((category) => (
                 <div key={category.id} className="p-2  rounded-md ">
                   <h2 className="text-lg font-bold  flex  gap-2 ">
-                    <Link href={`/category?categoryName=${category.name}`} className='underline'>{category.name}</Link>
+                    <Link href={`/search?category=${category.name}`} className='underline'>{category.name}</Link>
                 
                     <span dangerouslySetInnerHTML={{ __html: category.logo }}></span>
                   </h2>
                   <ul className="">
                     {category.sections.map((section) => (
-                     <li  key={section.id}>   <Link   href={`/section?categoryName=${category.name}&sectionName=${section.name}`} className='underline text-sm'>{section.name}</Link> </li>
+                     <li  key={section.id}>   <Link   href={`/search?category=${category.name}&section=${section.name}`} className='underline text-sm'>{section.name}</Link> </li>
         
                     ))}
                   </ul>
