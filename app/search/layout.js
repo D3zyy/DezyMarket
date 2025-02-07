@@ -32,7 +32,7 @@ async function Layout({ children  }) {
         </span>
 
         
-          <SearchComponent categories={categories} />
+          <SearchComponent categories={categories} displaySections={true} />
     
 
        

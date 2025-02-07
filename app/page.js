@@ -44,7 +44,7 @@ const Page = async () => {
 
       <div  className={`   max-w-[300px] md:max-w-[250px] mx-auto mt-2 `}>
 
-      <SearchComponent categories={categories} />
+      <SearchComponent categories={categories} displaySections={false} />
 
       </div> 
       

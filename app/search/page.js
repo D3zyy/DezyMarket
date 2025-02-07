@@ -2,11 +2,12 @@ import React from 'react'
 
 
 function page({searchParams}) {
-  
+
     const keyWord= searchParams.keyWord
     const category = searchParams.category
     const section = searchParams.section
     const price = searchParams.price
+    const location = searchParams.location
 
 
   return (
@@ -15,6 +16,7 @@ function page({searchParams}) {
         category: {category}
         section: {section}
         price: {price}
+        lokace: {location}
         
 
     </div>

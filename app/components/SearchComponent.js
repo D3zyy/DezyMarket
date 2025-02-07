@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
 
-function SearchComponent({ categories }) {
+function SearchComponent({ categories,displaySections }) {
   const [isLoadingSearch, setIsLoadingSearch] = useState(false);
   const [foundData, setFoundData] = useState([]);
   const searchTimeout = useRef(null);
@@ -204,7 +204,7 @@ function SearchComponent({ categories }) {
           ))}
         </select>
 
-        {selectedCategory && (
+        {selectedCategory && displaySections && (
           <select
           className="md:max-w-[150px] select select-bordered"
           value={selectedSection}
