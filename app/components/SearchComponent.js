@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import React, { useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 function SearchComponent({ categories }) {
   const [isLoadingSearch, setIsLoadingSearch] = useState(false);
@@ -9,7 +10,7 @@ function SearchComponent({ categories }) {
   const searchTimeout = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
-
+  const router = useRouter();
   const category = searchParams.get('category') || "";
   const section = searchParams.get('section') || "";
   const location = searchParams.get('location') || "";
@@ -17,6 +18,51 @@ function SearchComponent({ categories }) {
   const [selectedCategory, setSelectedCategory] = useState(category);
   const [selectedLocation, setSelectedLocation] = useState(location);
   const [selectedPrice, setSelectedPrice] = useState(price);
+
+  const handleCategoryChange = (e) => {
+    const selected = e.target.value;
+    setSelectedCategory(selected);
+
+    // Vytvoření URL s přidanými filtry (kategorie, místo, cena)
+    const queryParams = new URLSearchParams();
+
+    if (selected) queryParams.append('category', selected);
+    if (selectedLocation) queryParams.append('location', selectedLocation);
+    if (selectedPrice) queryParams.append('price', selectedPrice);
+
+    // Přesměrování na URL s parametry
+    router.push(`/search?${queryParams.toString()}`);
+  };
+
+  // Funkce pro změnu místa a přesměrování s ostatními filtry
+  const handleLocationChange = (e) => {
+    const selected = e.target.value;
+    setSelectedLocation(selected);
+
+    const queryParams = new URLSearchParams();
+
+    if (selectedCategory) queryParams.append('category', selectedCategory);
+    if (selected) queryParams.append('location', selected);
+    if (selectedPrice) queryParams.append('price', selectedPrice);
+
+    router.push(`/search?${queryParams.toString()}`);
+  };
+
+  // Funkce pro změnu ceny a přesměrování s ostatními filtry
+  const handlePriceChange = (e) => {
+    const selected = e.target.value;
+    setSelectedPrice(selected);
+
+    const queryParams = new URLSearchParams();
+
+    if (selectedCategory) queryParams.append('category', selectedCategory);
+    if (selectedLocation) queryParams.append('location', selectedLocation);
+    if (selected) queryParams.append('price', selected);
+
+    router.push(`/search?${queryParams.toString()}`);
+  };
+
+
 
   const searchUser = async (info) => {
     setIsLoadingSearch(true);
@@ -122,7 +168,8 @@ function SearchComponent({ categories }) {
       <div className="flex flex-col gap-2 md:flex-row justify-center font-bold md:static p-2 rounded-lg max-w-[300px] md:max-w-[600px] mx-auto mt-2 mb-1">
         <select
           className="md:max-w-[130px] select select-bordered"
-          onChange={(e) => setSelectedCategory(e.target.value)}
+          onChange={handleCategoryChange}
+          value={selectedCategory}
         >
           <option value="">Kategorie</option>
           {categories?.map((cat) => (
@@ -134,7 +181,8 @@ function SearchComponent({ categories }) {
 
         <select
           className="md:max-w-[150px] select select-bordered"
-          onChange={(e) => setSelectedLocation(e.target.value)}
+          value={selectedLocation}
+          onChange={handleLocationChange}
         >
           <option value="">Místo</option>
           {[
@@ -166,7 +214,7 @@ function SearchComponent({ categories }) {
         <select
           className="md:max-w-[120px] select select-bordered"
           value={selectedPrice}
-          onChange={(e) => setSelectedPrice(e.target.value)}
+          onChange={handlePriceChange}
         >
           <option   value="">Cena</option>
           <option  selected={selectedPrice == 'Dohodou'}    value="Dohodou">Dohodou</option>
