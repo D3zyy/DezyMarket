@@ -166,18 +166,20 @@ function SearchComponent({ categories }) {
       </div>
 
       <div className="flex flex-col gap-2 md:flex-row justify-center font-bold md:static p-2 rounded-lg max-w-[300px] md:max-w-[600px] mx-auto mt-2 mb-1">
-        <select
-          className="md:max-w-[130px] select select-bordered"
-          onChange={handleCategoryChange}
-          value={selectedCategory}
-        >
-          <option value="">Kategorie</option>
-          {categories?.map((cat) => (
-            <option key={cat.id} value={cat.name} selected={selectedCategory == cat.name}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+      <select
+      className="md:max-w-[130px] select select-bordered"
+      onChange={handleCategoryChange}
+      value={selectedCategory}
+    >
+      {/* Pokud není vybraná kategorie, zobrazí se možnost "Kategorie" */}
+      {!selectedCategory && <option value="">Kategorie</option>}
+      
+      {categories?.map((cat) => (
+        <option key={cat.id} value={cat.name}>
+          {cat.name}
+        </option>
+      ))}
+    </select>
 
         <select
           className="md:max-w-[150px] select select-bordered"
