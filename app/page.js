@@ -42,14 +42,12 @@ const Page = async () => {
         </span>
       </div>
 
-      <div  className={`   max-w-[300px] md:max-w-[250px] mx-auto mt-2 `}>
-
-      <SearchComponent categories={categories} displaySections={false} />
-
-      </div> 
-      
-
+     <div className='items-center mx-auto max-w-[300px]    rounded-md p-4'>
+     <SearchComponent categories={categories} displaySections={false} />
+     </div>
+    
           <div className="flex justify-center items-center mx-auto border-2 border-dotted max-w-[300px]  md:max-w-[800px] border-gray-900  rounded-md p-4 ">
+           
             <div className="grid grid-cols-1 md:grid-cols-4  gap-4 ml-14">
               {categories.map((category) => (
                 <div key={category.id} className="p-2  rounded-md ">
