@@ -18,7 +18,11 @@ function SearchComponent({ categories }) {
   const [selectedCategory, setSelectedCategory] = useState(category);
   const [selectedLocation, setSelectedLocation] = useState(location);
   const [selectedPrice, setSelectedPrice] = useState(price);
-
+  function htmlToText(htmlString) {
+    const div = document.createElement('div');
+    div.innerHTML = htmlString;
+    return div.textContent || div.innerText || "";
+  }
   const handleCategoryChange = (e) => {
     const selected = e.target.value;
     setSelectedCategory(selected);
@@ -176,7 +180,7 @@ function SearchComponent({ categories }) {
       
       {categories?.map((cat) => (
         <option key={cat.id} value={cat.name}>
-          {cat.name}
+       {htmlToText(cat.logo)} {cat.name}
         </option>
       ))}
     </select>

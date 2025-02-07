@@ -41,7 +41,7 @@ const Page = async () => {
         </span>
       </div>
 
-      <div  className={`   max-w-[300px] md:max-w-[350px] mx-auto mt-2 `}>
+      <div  className={`   max-w-[300px] md:max-w-[250px] mx-auto mt-2 `}>
       <SearchComponent categories={categories} />
       </div> 
       
