@@ -6,32 +6,26 @@ import { useSearchParams } from 'next/navigation';
 function SearchComponent({ categories }) {
   const [isLoadingSearch, setIsLoadingSearch] = useState(false);
   const [foundData, setFoundData] = useState([]);
-  const searchTimeout = useRef(null); // useRef pro zajištění, že timeout je uchován mezi renderováními
-  const [searchQuery, setSearchQuery] = useState(""); // Uchovávat hledaný text
+  const searchTimeout = useRef(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
 
-  // 🟢 Získání hodnot z URL parametrů
   const category = searchParams.get('category') || "";
   const section = searchParams.get('section') || "";
   const location = searchParams.get('location') || "";
   const price = searchParams.get('price') || "";
-console.log("KATEGORIE:",category)
-console.log("SECTION:",section)
-console.log("LOCAITON:",location)
-console.log("PRICE:",price)
   const [selectedCategory, setSelectedCategory] = useState(category);
   const [selectedLocation, setSelectedLocation] = useState(location);
   const [selectedPrice, setSelectedPrice] = useState(price);
 
-  // 🟢 Funkce pro hledání uživatelů
   const searchUser = async (info) => {
-    setIsLoadingSearch(true); // Nastavení loading stavu na true
+    setIsLoadingSearch(true);
     if (info.length >= 2) {
       if (searchTimeout.current) {
-        clearTimeout(searchTimeout.current); // Pokud je aktivní timeout, zrušíme ho
+        clearTimeout(searchTimeout.current);
       }
       setFoundData([]);
-      searchTimeout.current = setTimeout(async () => { // Spustí se až po určitém zpoždění
+      searchTimeout.current = setTimeout(async () => {
         try {
           const response = await fetch('/api/search', {
             method: 'POST',
@@ -44,21 +38,23 @@ console.log("PRICE:",price)
           });
 
           const result = await response.json();
-
-          // Ujistíme se, že result je pole
           setFoundData(Array.isArray(result.data) ? result.data : []);
         } catch (error) {
           console.error('Chyba získávání uživatele', error);
         } finally {
-          setIsLoadingSearch(false); // Po dokončení nebo chybě, nastavíme loading na false
+          setIsLoadingSearch(false);
         }
-      }, 1000); // 500 ms zpoždění
+      }, 1000);
     } else {
-      setFoundData([]); // Pokud je searchQuery prázdné, resetujeme výsledky
+      setFoundData([]);
     }
   };
 
-  // 🟢 Nastavení hodnoty filtru při změně
+  const closeSearchResults = () => {
+    setFoundData([]); // Zavře výsledky hledání
+    setSearchQuery(""); // Resetuje text v inputu
+  };
+
   useEffect(() => {
     setSelectedCategory(category);
     setSelectedLocation(location);
@@ -69,12 +65,7 @@ console.log("PRICE:",price)
     <>
       <div className="relative">
         <label className="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className="h-4 w-4 opacity-70"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
             <path
               fillRule="evenodd"
               d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
@@ -86,26 +77,25 @@ console.log("PRICE:",price)
             className="grow"
             onChange={(e) => {
               const value = e.target.value;
-              setSearchQuery(value); // Uložení hledaného textu
+              setSearchQuery(value);
               if (value.length >= 2) {
                 searchUser(value);
               } else {
-                setFoundData([]); // Pokud je searchQuery kratší než 2 znaky, vyčistíme výsledky
+                setFoundData([]);
               }
             }}
             placeholder="Vyhledat.."
-            value={searchQuery} // Nastavení hodnoty inputu
+            value={searchQuery}
           />
         </label>
 
-        {/* Dropdown pro výsledky */}
         {isLoadingSearch ? (
           <></>
         ) : (
           foundData.length > 0 ? (
             <div className="absolute left-0 right-0 rounded-lg bg-base-200 shadow-md mt-1 max-h-60 overflow-y-auto">
               {foundData.map((post, index) => (
-                <Link key={index} href={`/search?keyWord=${post.fullWord}`}>
+                <Link key={index} href={`/search?keyWord=${post.fullWord}`} onClick={closeSearchResults}>
                   <div className="p-2 hover:bg-base-300">
                     <h3 dangerouslySetInnerHTML={{ __html: post.name }} className="font-semibold" />
                   </div>
@@ -125,30 +115,22 @@ console.log("PRICE:",price)
         )}
       </div>
 
-      {/* Kategorie, Místo a Cena */}
       <div className="flex flex-col gap-2 md:flex-row justify-center font-bold md:static p-2 rounded-lg max-w-[300px] md:max-w-[600px] mx-auto mt-2 mb-1">
-        {/* Kategorie */} 
         <select
-  className="md:max-w-[130px] select select-bordered"
-  onChange={(e) => setSelectedCategory(e.target.value)} // Ukládáme změněnou hodnotu
->
-  <option value="">Kategorie</option>
-  {categories?.map((cat) => (<>
-    <option 
-      key={cat.id} 
-      value={cat.id} 
-      selected={selectedCategory == cat.name} // Pokud se selectedCategory rovná cat.id, nastavíme selected
-    >
-      {cat.name}
-    </option>
-    </>
-  ))}
-</select>
-        {/* Místo */}
+          className="md:max-w-[130px] select select-bordered"
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">Kategorie</option>
+          {categories?.map((cat) => (
+            <option key={cat.id} value={cat.id} selected={selectedCategory == cat.name}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+
         <select
           className="md:max-w-[150px] select select-bordered"
-
-          onChange={(e) => setSelectedLocation(e.target.value)} // Ukládáme změněnou hodnotu
+          onChange={(e) => setSelectedLocation(e.target.value)}
         >
           <option value="">Místo</option>
           {[
@@ -177,12 +159,12 @@ console.log("PRICE:",price)
           ))}
         </select>
 
-        {/* Cena */}
         <select
           className="md:max-w-[120px] select select-bordered"
-          value={selectedPrice} // Používáme value místo defaultValue
-          onChange={(e) => setSelectedPrice(e.target.value)} // Ukládáme změněnou hodnotu
+          value={selectedPrice}
+          onChange={(e) => setSelectedPrice(e.target.value)}
         >
+          <option value="">Cena</option>
           <option   value="">Cena</option>
           <option  selected={selectedPrice == 'Dohodou'}    value="Dohodou">Dohodou</option>
           <option  selected={selectedPrice == 'Vtextu'}    value="V textu">V textu</option>
