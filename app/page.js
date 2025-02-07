@@ -41,8 +41,28 @@ const Page = async () => {
         </span>
       </div>
 
-      <div  className={`  flex justify-center font-bold sticky md:static mdtop-0   top-4  p-2 rounded-lg  max-w-[600px] mx-auto  mt-2  mb-2 `}>
-      <SearchComponent/>
+      <div  className={`  flex flex-col gap-2 md:flex-row justify-center font-bold sticky md:static mdtop-0   top-4  p-2 rounded-lg max-w-[300px] md:max-w-[600px] mx-auto  mt-2  mb-2 `}>
+      <SearchComponent />
+      </div> 
+      <div className="flex flex-col gap-2 md:flex-row justify-center font-bold md:static md:top-0 p-2 rounded-lg max-w-[300px] md:max-w-[600px] mx-auto mt-2 mb-2">
+          <select className="select select-bordered">
+            <option disabled selected>Kategorie</option>
+            <option>Sci-fi</option>
+            <option>Drama</option>
+            <option>Action</option>
+          </select>
+          <select className="select select-bordered">
+            <option disabled selected>Sekce</option>
+            <option>Sci-fi</option>
+            <option>Drama</option>
+            <option>Action</option>
+          </select>
+          <select className="select select-bordered">
+            <option disabled selected>Lokace</option>
+            <option>Sci-fi</option>
+            <option>Drama</option>
+            <option>Action</option>
+          </select>
      
       </div>
 
