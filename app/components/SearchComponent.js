@@ -10,18 +10,25 @@ function SearchComponent({ categories }) {
   const searchTimeout = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
   const searchParams = useSearchParams();
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);  // Nastaví isClient na true, jakmile se komponenta vykreslí na klientu
+  }, []);
   const router = useRouter();
   const category = searchParams.get('category') || "";
   const section = searchParams.get('section') || "";
   const location = searchParams.get('location') || "";
   const price = searchParams.get('price') || "";
   const [selectedCategory, setSelectedCategory] = useState(category);
+  const [selectedSection, setSelectedSection] = useState(section);
   const [selectedLocation, setSelectedLocation] = useState(location);
   const [selectedPrice, setSelectedPrice] = useState(price);
   function htmlToText(htmlString) {
-    const div = document.createElement('div');
-    div.innerHTML = htmlString;
-    return div.textContent || div.innerText || "";
+
+      const div = document.createElement('div');
+      div.innerHTML = htmlString;
+      return div.textContent || div.innerText || "";
+  
   }
   const handleCategoryChange = (e) => {
     const selected = e.target.value;
@@ -179,10 +186,11 @@ function SearchComponent({ categories }) {
       {!selectedCategory && <option value="">Kategorie</option>}
       
       {categories?.map((cat) => (
-        <option key={cat.id} value={cat.name}>
-       {htmlToText(cat.logo)} {cat.name}
-        </option>
-      ))}
+  <option key={cat.id} value={cat.name}>
+    {isClient && htmlToText(cat.logo)} {/* Podmíněné vykreslení */}
+    {cat.name}
+  </option>
+))}
     </select>
 
         <select

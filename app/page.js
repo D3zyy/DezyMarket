@@ -3,6 +3,7 @@ import { prisma } from './database/db';
 import localFont from 'next/font/local';
 import Link from 'next/link';
 import SearchComponent from './components/SearchComponent';
+
 const pacifico = localFont({
   src: '../public/fonts/Pacifico/Pacifico-Regular.ttf', // Začíná lomítkem
   weight: '400',
@@ -42,7 +43,9 @@ const Page = async () => {
       </div>
 
       <div  className={`   max-w-[300px] md:max-w-[250px] mx-auto mt-2 `}>
+
       <SearchComponent categories={categories} />
+
       </div> 
       
 
