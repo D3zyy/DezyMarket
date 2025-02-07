@@ -335,7 +335,7 @@ const Page = async ({ params }) => {
             <div className="mt-3">
       <strong className="text-sm">Kategorie:</strong>
       <span className="ml-1">
-        <Link href={`/category?categoryName=${postRecord?.category?.name}`}>
+        <Link href={`/search?category=${postRecord?.category?.name}`}>
      {postRecord?.category?.logo ?  <span style={{ marginRight: "5px" }} dangerouslySetInnerHTML={{ __html: postRecord?.category?.logo }}></span> : ""}    
           <span className="link">{postRecord?.category?.name}</span>
         </Link>
@@ -344,7 +344,7 @@ const Page = async ({ params }) => {
     <div className="mt-3">
       <strong className="text-sm">Sekce:</strong>
       <span className="ml-1">
-        <Link className="link" href={`/section?categoryName=${postRecord?.category?.name}&sectionName=${postRecord?.section?.name}`}>
+        <Link className="link" href={`/search?category=${postRecord?.category?.name}&section=${postRecord?.section?.name}`}>
           {postRecord?.section?.name}
         </Link>
       </span>
