@@ -19,15 +19,25 @@ export async function POST(req) {
 
     // Začátek měření času
     console.time("Full-text search time");
+    const { keyWord, category, section, price, location } = data
 
+    const filters = {
+      ...(category && { category: { is: { name: category } } }),
+      ...(section && { section: { is: { name: section } } }),
+      ...(price && { price }),
+      ...(location && { location })
+  }
     // Full-textové vyhledávání
     const foundPostsFullText = await prisma.posts.findMany({
       where: {
-     
-           name: { search: `${data.searchQuery}*` } ,
-          description: { search: `${data.searchQuery}*` } ,
-     
-      },
+        ...filters,
+        OR: keyWord
+            ? [
+                  { name: { search: `${keyWord}:*` } },
+                  { description: { search: `${keyWord}:*` } }
+              ]
+            : undefined
+    },
     });
 
     // Konec měření času
