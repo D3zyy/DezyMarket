@@ -104,6 +104,10 @@ function SearchComponent({ categories,displaySections }) {
             },
             body: JSON.stringify({
               searchQuery: info,
+              category: selectedCategory,
+              section: selectedSection,
+              price: selectedPrice,
+              location: selectedLocation
             }),
           });
 
