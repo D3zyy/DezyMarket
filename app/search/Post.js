@@ -13,7 +13,7 @@ function Post({ postDetails }) {
 
     return (
         <div
-            className="mb-5 cursor-pointer p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:shadow-lg transition flex flex-col justify-center"
+            className="mb-5 cursor-pointer p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:shadow-lg transition flex flex-col justify-center"
             onClick={() => router.push(`/post/${id}`)}
         >
             {/* Podmíněné zobrazení badge */}
