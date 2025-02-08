@@ -11,7 +11,7 @@ async function page({ searchParams }) {
         ...(section && { section: { is: { name: section } } }),
         ...(location && { location }),
     }
-
+    console.log("CEnaaa tady:",price)
     // Načteme příspěvky podle parametrů
     let filteredPosts = await prisma.posts.findMany({
         where: {
@@ -22,7 +22,7 @@ async function page({ searchParams }) {
                     { description: { search: `${keyWord}:*` } }
                   ]
                 : undefined,
-            ...(price && (price === 'Dohodou' || price === 'Vtextu' || price === 'Zdarma') && { price })
+            ...(price && (price === 'Dohodou' || price === 'V textu' || price === 'Zdarma') && { price })
         },
         include: {
             images: {
@@ -31,9 +31,9 @@ async function page({ searchParams }) {
             top: true
         }
     })
-
+    console.log("ps:",filteredPosts)
     // Pokud je cena definována a není jednou z těchto hodnot, použijeme filtr až po načtení příspěvků
-    if (price && !['Dohodou', 'Vtextu', 'Zdarma'].includes(price)) {
+    if (price && !['Dohodou', 'V textu', 'Zdarma'].includes(price)) {
         const isNumeric = (value) => /^\d+$/.test(value);
 
         filteredPosts = filteredPosts.filter((post) => {
@@ -53,7 +53,7 @@ async function page({ searchParams }) {
         });
     }
 
-    console.log("Filtered posts with price:", filteredPosts);
+   // console.log("Filtered posts with price:", filteredPosts);
     let sortedPosts
     if( filteredPosts?.length > 0){
 

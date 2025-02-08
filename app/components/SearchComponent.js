@@ -265,7 +265,7 @@ function SearchComponent({ categories,displaySections }) {
         >
           <option value="">Cena</option>
           <option  selected={selectedPrice == 'Dohodou'}    value="Dohodou">Dohodou</option>
-          <option  selected={selectedPrice == 'Vtextu'}    value="V textu">V textu</option>
+          <option  selected={selectedPrice == 'V textu'}    value="V textu">V textu</option>
           <option selected={selectedPrice == 'Zdarma'}   value="Zdarma">Zdarma</option>
           <option selected={selectedPrice == '1-500'}   value="1-500">1-500 Kč</option>
           <option selected={selectedPrice == '500-5000'}  value="500-5000">500-5 000 Kč</option>

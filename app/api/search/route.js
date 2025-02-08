@@ -40,9 +40,9 @@ export async function POST(req) {
           : undefined,
       },
     });
-
+    console.log("CEnaaa:",price)
     // Pouze pokud je filtr `price` poslán a není jedna z hodnot 'Dohodou', 'Vtextu' nebo 'Zdarma'
-    if (price && !["Dohodou", "Vtextu", "Zdarma"].includes(price)) {
+    if (price && !["Dohodou", "V textu", "Zdarma"].includes(price)) {
       const isNumeric = (value) => /^\d+$/.test(value);
 
       // Aplikujeme filtr na ceny až po načtení příspěvků
@@ -61,7 +61,7 @@ export async function POST(req) {
           return numericPrice === Number(price);
         }
       });
-    } else if (price && ["Dohodou", "Vtextu", "Zdarma"].includes(price)) {
+    } else if (price && ["Dohodou", "V textu", "Zdarma"].includes(price)) {
       // Pokud je cena jedna z hodnot 'Dohodou', 'Vtextu' nebo 'Zdarma', filtrujeme přímo v DB
       foundPostsFullText = foundPostsFullText.filter((post) => post.price === price);
     }
