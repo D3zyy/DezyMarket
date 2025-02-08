@@ -13,7 +13,7 @@ async function page({ searchParams }) {
         // `price` nebude aplikováno do dotazu v SQL, pokud není specifikováno
     }
 
-    console.log("filters:", filters)
+    
 
     // Načteme příspěvky podle parametrů
     let filteredPosts = await prisma.posts.findMany({
@@ -31,7 +31,8 @@ async function page({ searchParams }) {
         include: {
             images: {
                 take: 1 
-            }
+            },
+            top: true
         }
     })
 
