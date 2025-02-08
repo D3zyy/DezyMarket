@@ -9,13 +9,16 @@ function Post({ postDetails }) {
     const { id, name, images } = postDetails
     const imageUrl = images.length > 0 ? images[0].url : null
 
+    const hasTop = postDetails?.topId !== null;
+
     return (
         <div
-            className="mb-5  cursor-pointer p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:shadow-lg transition"
+            className="mb-5 cursor-pointer p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:shadow-lg transition flex flex-col justify-center"
             onClick={() => router.push(`/post/${id}`)}
         >
-            {postDetails?.topId !== null && (
-                <div className="flex justify-start mb-2">
+            {/* Podmíněné zobrazení badge */}
+            {hasTop && (
+                <div className="flex justify-start mb-2 min-h-[2rem]">
                     <div
                         className="badge badge-md badge-outline px-3 py-3"
                         style={{
@@ -23,7 +26,7 @@ function Post({ postDetails }) {
                             padding: '10px',
                             borderWidth: '1.2px',
                             borderStyle: 'solid',
-                            height: '2rem', // Přidej pro větší výšku
+                            height: '2rem',
                             borderColor: postDetails?.top?.color,
                         }}
                     >
@@ -41,9 +44,10 @@ function Post({ postDetails }) {
                     </div>
                 </div>
             )}
-            
-            <div className="flex items-center space-x-4">
-                <div className="w-24 h-24 flex items-center justify-center rounded-md">
+
+            {/* Obsah příspěvku centrovaný vertikálně */}
+            <div className="flex items-center justify-center space-x-4 flex-grow">
+                <div className="w-24 flex-shrink-0 h-24 flex items-center justify-center rounded-md">
                     {!imageUrl ? (
                         <Image 
                             quality={75} 
@@ -52,7 +56,7 @@ function Post({ postDetails }) {
                             alt={name} 
                             width={96}
                             height={96}  
-                            className="object-cover rounded-md"
+                            className="object-cover flex-shrink-0 rounded-md"
                         />
                     ) : (
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 flex-shrink-0 text-gray-500">
