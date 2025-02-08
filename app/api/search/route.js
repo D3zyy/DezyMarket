@@ -85,25 +85,38 @@ export async function POST(req) {
     const seenWords = new Set();
     
     const highlightedPostsFullText = foundPostsFullText
-      .map((post) => {
-        const result = highlightText(post?.name, data.searchQuery);
-        
-        if (!result) return null; // Pokud není žádný výsledek, přeskočíme
-        if (seenWords.has(result.fullWord)) return null; // Pokud už slovo existuje, přeskočíme
-    
-        seenWords.add(result.fullWord); // Přidáme do Setu, aby se už neopakovalo
-    
-        return { 
-          name: result.highlighted, 
-          fullWord: result.fullWord, // Přidá celé slovo
-          id: post?.id, 
-        };
-      })
-      .filter(Boolean); // Odstraní null hodnoty
+    .map((post) => {
+      // Zvýraznění v názvu
+      const nameResult = highlightText(post?.name, data.searchQuery);
+      const descriptionResult = highlightText(post?.description, data.searchQuery);
+  
+      if (!nameResult && !descriptionResult) return null; // Pokud není žádný výsledek v názvu ani v popisku, přeskočíme
+  
+      // Pokud je název zvýrazněn, uložíme ho
+      const highlightedName = nameResult ? nameResult.highlighted : post?.name;
+  
+      // Pokud je popis zvýrazněn, uložíme ho
+      const highlightedDescription = descriptionResult ? descriptionResult.highlighted : post?.description;
+  
+      // Uložíme celé slovo pro obě oblasti (name i description)
+      const fullWord = nameResult ? nameResult.fullWord : descriptionResult ? descriptionResult.fullWord : null;
+  
+      if (seenWords.has(fullWord)) return null; // Pokud už slovo existuje, přeskočíme
+  
+      seenWords.add(fullWord); // Přidáme do Setu, aby se už neopakovalo
+  
+      return {
+        name: highlightedName,
+        description: highlightedDescription,
+        fullWord: fullWord, // Přidá celé slovo
+        id: post?.id,
+      };
+    })
+    .filter(Boolean); // Odstraní null hodnoty
 
     // Seřadíme výsledky podle potřeby (např. podle top, months to valid)
     console.log("Počet výsledků FULLTEXT:", foundPostsFullText.length);
-
+      console.log("Našel sem:",foundPostsFullText)
     return new Response(JSON.stringify({
       data: highlightedPostsFullText, // Vrátí seřazené příspěvky
     }), {
