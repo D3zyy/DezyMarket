@@ -88,17 +88,20 @@ export async function POST(req) {
     .map((post) => {
       // Zvýraznění v názvu
       const nameResult = highlightText(post?.name, data.searchQuery);
+      // Zvýraznění v popisku
       const descriptionResult = highlightText(post?.description, data.searchQuery);
   
       if (!nameResult && !descriptionResult) return null; // Pokud není žádný výsledek v názvu ani v popisku, přeskočíme
   
-      // Pokud je název zvýrazněn, uložíme ho
-      const highlightedName = nameResult ? nameResult.highlighted : post?.name;
+      // Rozhodneme, co vrátit - buď název nebo popis
+      let highlightedText;
+      if (nameResult) {
+        highlightedText = nameResult.highlighted; // Zvýrazněný název
+      } else if (descriptionResult) {
+        highlightedText = descriptionResult.highlighted; // Zvýrazněný popis
+      }
   
-      // Pokud je popis zvýrazněn, uložíme ho
-      const highlightedDescription = descriptionResult ? descriptionResult.highlighted : post?.description;
-  
-      // Uložíme celé slovo pro obě oblasti (name i description)
+      // Uložíme celé slovo pro jednu oblast (name nebo description)
       const fullWord = nameResult ? nameResult.fullWord : descriptionResult ? descriptionResult.fullWord : null;
   
       if (seenWords.has(fullWord)) return null; // Pokud už slovo existuje, přeskočíme
@@ -106,9 +109,8 @@ export async function POST(req) {
       seenWords.add(fullWord); // Přidáme do Setu, aby se už neopakovalo
   
       return {
-        name: highlightedName,
-        description: highlightedDescription,
-        fullWord: fullWord, // Přidá celé slovo
+        name: highlightedText, // Zvýrazněný text, který buď pochází z name nebo description
+        fullWord, // Přidá celé slovo
         id: post?.id,
       };
     })
