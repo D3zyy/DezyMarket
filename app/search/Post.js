@@ -15,11 +15,11 @@ function Post({ postDetails }) {
         >
             {/* Levá část - obrázek nebo SVG */}
             <div className="w-24 h-24 flex items-center justify-center rounded-md">
-                {imageUrl ? (
+                {!imageUrl ? (
                     <Image 
                         quality={75} 
                         loading="lazy" 
-                        src={imageUrl} 
+                        src={'https://www.bazos.cz/img/1/236/197761236.jpg?t=1738762343'} 
                         alt={name} 
                         width={96} // 24 * 4px = 96px
                         height={96}  

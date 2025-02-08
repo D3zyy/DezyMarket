@@ -3,7 +3,7 @@ import SearchComponent from "@/app/components/SearchComponent";
 import localFont from "next/font/local";
 import { prisma } from "../database/db";
 import { headers } from "next/headers"; // Získání URL requestu
-
+import Link from "next/link";
 // Správné cesty k fontům (musí být v /public/fonts/)
 const pacifico = localFont({
   src: "/../../public/fonts/Pacifico/Pacifico-Regular.ttf",
@@ -26,7 +26,7 @@ async function Layout({ children  }) {
   return (
     <div>
  <div className="flex flex-col items-center w-full p-4">
-        <h1 className={`${bebas.className} text-4xl font-bold`}>Dezy</h1>
+        <h1 className={`${bebas.className} text-4xl font-bold`}> <Link href={'/'}>Dezy</Link></h1>
         <span className={`${pacifico.className} text-lg font-semibold mt-1 mb-4`}>
           „Lepší místo pro vaše inzeráty.“
         </span>

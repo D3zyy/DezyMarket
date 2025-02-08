@@ -10,10 +10,7 @@ async function page({ searchParams }) {
         ...(category && { category: { is: { name: category } } }),
         ...(section && { section: { is: { name: section } } }),
         ...(location && { location }),
-        // `price` nebude aplikováno do dotazu v SQL, pokud není specifikováno
     }
-
-    
 
     // Načteme příspěvky podle parametrů
     let filteredPosts = await prisma.posts.findMany({
@@ -25,7 +22,6 @@ async function page({ searchParams }) {
                     { description: { search: `${keyWord}:*` } }
                   ]
                 : undefined,
-            // Pokud je cena jedna z těchto hodnot, bude se filtrovat přímo v DB
             ...(price && (price === 'Dohodou' || price === 'Vtextu' || price === 'Zdarma') && { price })
         },
         include: {
@@ -61,9 +57,18 @@ async function page({ searchParams }) {
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filteredPosts.map((post) => (
-                <Post key={post.id} postDetails={post} />
-            ))}
+            {filteredPosts.length > 0 ? (
+                filteredPosts?.map((post) => (
+                    <Post key={post.id} postDetails={post} />
+                ))
+            ) : (
+                <div className="flex  gap-2 items-center justify-center w-full col-span-full h-5 text-center text-gray-500">
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6" />
+</svg>
+    Žádné příspěvky nebyly nalezeny
+                </div>
+            )}
         </div>
     )
 }
