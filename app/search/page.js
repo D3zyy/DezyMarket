@@ -54,11 +54,21 @@ async function page({ searchParams }) {
     }
 
     console.log("Filtered posts with price:", filteredPosts);
+    let sortedPosts
+    if( filteredPosts?.length > 0){
 
+
+     sortedPosts = filteredPosts?.sort((a, b) => {
+        const aTopValue = a.top?.numberOfMonthsToValid ?? 0;
+        const bTopValue = b.top?.numberOfMonthsToValid ?? 0;
+        
+        return bTopValue - aTopValue; // Seřadí od nejvyššího topu dolů
+    });
+}
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-2">
             {filteredPosts.length > 0 ? (
-                filteredPosts?.map((post) => (
+                sortedPosts?.map((post) => (
                     <Post key={post.id} postDetails={post} />
                 ))
             ) : (
