@@ -65,12 +65,10 @@ export async function POST(req) {
       // Pokud je cena jedna z hodnot 'Dohodou', 'Vtextu' nebo 'Zdarma', filtrujeme přímo v DB
       foundPostsFullText = foundPostsFullText.filter((post) => post.price === price);
     }
-
-    // Konec měření času
     console.timeEnd("Full-text search time");
-
+   
     const highlightText = (text, query) => {
-      const regex = new RegExp(`\\b(${query}\\w*)`, "gi"); // Najde všechna slova začínající na query
+      const regex = new RegExp(`\\b(${query}\\p{L}*)`, "giu"); // Použití unicode pro diakritiku
       const matches = text.match(regex); // Najde odpovídající slova
     
       if (!matches) return null; // Pokud nic nenajde, vrátí null
@@ -80,7 +78,6 @@ export async function POST(req) {
     
       return { highlighted, fullWord: uniqueWord };
     };
-
     // Použití Setu pro globální odstranění duplikátů napříč všemi příspěvky
     const seenWords = new Set();
     
