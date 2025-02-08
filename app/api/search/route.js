@@ -19,55 +19,56 @@ export async function POST(req) {
 
     // Začátek měření času
     console.time("Full-text search time");
-    const { keyWord, category, section, price, location } = data
+    const { keyWord, category, section, price, location } = data;
 
-  
+    // Filtry pro zbytek parametrů
     const filters = {
       ...(category && { category: { is: { name: category } } }),
       ...(section && { section: { is: { name: section } } }),
-      ...(location && { location })
-  }
+      ...(location && { location }),
+    };
+
     // Full-textové vyhledávání
-    const foundPostsFullText = await prisma.posts.findMany({
+    let foundPostsFullText = await prisma.posts.findMany({
       where: {
         ...filters,
         OR: keyWord
-            ? [
-                  { name: { search: `${keyWord}:*` } },
-                  { description: { search: `${keyWord}:*` } }
-              ]
-            : undefined
-    },
+          ? [
+              { name: { search: `${keyWord}:*` } },
+              { description: { search: `${keyWord}:*` } },
+            ]
+          : undefined,
+      },
     });
 
-// Pouze pokud je filtr `price` poslán, aplikujeme ho
-let filteredPosts = foundPostsFullText;
+    // Pouze pokud je filtr `price` poslán a není jedna z hodnot 'Dohodou', 'Vtextu' nebo 'Zdarma'
+    if (price && !["Dohodou", "Vtextu", "Zdarma"].includes(price)) {
+      const isNumeric = (value) => /^\d+$/.test(value);
 
-if (price) {
-  const isNumeric = (value) => /^\d+$/.test(value);
+      // Aplikujeme filtr na ceny až po načtení příspěvků
+      foundPostsFullText = foundPostsFullText.filter((post) => {
+        if (!isNumeric(post.price)) return false; // Odstraní nečíselné ceny
 
-  filteredPosts = foundPostsFullText.filter((post) => {
-    if (!isNumeric(post.price)) return false; // Odstraní nečíselné ceny
+        const numericPrice = Number(post.price); // Převod na číslo
 
-    const numericPrice = Number(post.price); // Převod na číslo
-
-    if (price.includes("-")) {
-      const [min, max] = price.split("-").map(Number);
-      return numericPrice >= min && numericPrice <= max;
-    } else if (price.endsWith("+")) {
-      const min = Number(price.replace("+", ""));
-      return numericPrice >= min;
-    } else {
-      return numericPrice === Number(price);
+        if (price.includes("-")) {
+          const [min, max] = price.split("-").map(Number);
+          return numericPrice >= min && numericPrice <= max;
+        } else if (price.endsWith("+")) {
+          const min = Number(price.replace("+", ""));
+          return numericPrice >= min;
+        } else {
+          return numericPrice === Number(price);
+        }
+      });
+    } else if (price && ["Dohodou", "Vtextu", "Zdarma"].includes(price)) {
+      // Pokud je cena jedna z hodnot 'Dohodou', 'Vtextu' nebo 'Zdarma', filtrujeme přímo v DB
+      foundPostsFullText = foundPostsFullText.filter((post) => post.price === price);
     }
-  });
-}
-
-console.log("Filtered posts:", filteredPosts);
-
 
     // Konec měření času
     console.timeEnd("Full-text search time");
+
     const highlightText = (text, query) => {
       const regex = new RegExp(`\\b(${query}\\w*)`, "gi"); // Najde všechna slova začínající na query
       const matches = text.match(regex); // Najde odpovídající slova
@@ -79,12 +80,12 @@ console.log("Filtered posts:", filteredPosts);
     
       return { highlighted, fullWord: uniqueWord };
     };
-    
+
     // Použití Setu pro globální odstranění duplikátů napříč všemi příspěvky
     const seenWords = new Set();
     
-    const highlightedPostsFullText = filteredPosts
-      .map(post => {
+    const highlightedPostsFullText = foundPostsFullText
+      .map((post) => {
         const result = highlightText(post?.name, data.searchQuery);
         
         if (!result) return null; // Pokud není žádný výsledek, přeskočíme
@@ -99,10 +100,9 @@ console.log("Filtered posts:", filteredPosts);
         };
       })
       .filter(Boolean); // Odstraní null hodnoty
-    // Seřadíme nejprve podle toho, zda má příspěvek top (nebo ne), a pak podle numberOfMonthsToValid
-   
-    // Porovnání výsledků (můžeš vypisovat počet záznamů nebo jiné metriky)
-    console.log("Počet výsledků FULLTEXT:", filteredPosts.length);
+
+    // Seřadíme výsledky podle potřeby (např. podle top, months to valid)
+    console.log("Počet výsledků FULLTEXT:", foundPostsFullText.length);
 
     return new Response(JSON.stringify({
       data: highlightedPostsFullText, // Vrátí seřazené příspěvky
@@ -110,7 +110,6 @@ console.log("Filtered posts:", filteredPosts);
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-
   } catch (error) {
     console.error(error);
     return new NextResponse(
