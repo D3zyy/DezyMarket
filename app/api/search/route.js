@@ -21,10 +21,10 @@ export async function POST(req) {
     console.time("Full-text search time");
     const { keyWord, category, section, price, location } = data
 
+  
     const filters = {
       ...(category && { category: { is: { name: category } } }),
       ...(section && { section: { is: { name: section } } }),
-      ...(price && { price }),
       ...(location && { location })
   }
     // Full-textové vyhledávání
@@ -39,6 +39,32 @@ export async function POST(req) {
             : undefined
     },
     });
+
+// Pouze pokud je filtr `price` poslán, aplikujeme ho
+let filteredPosts = foundPostsFullText;
+
+if (price) {
+  const isNumeric = (value) => /^\d+$/.test(value);
+
+  filteredPosts = foundPostsFullText.filter((post) => {
+    if (!isNumeric(post.price)) return false; // Odstraní nečíselné ceny
+
+    const numericPrice = Number(post.price); // Převod na číslo
+
+    if (price.includes("-")) {
+      const [min, max] = price.split("-").map(Number);
+      return numericPrice >= min && numericPrice <= max;
+    } else if (price.endsWith("+")) {
+      const min = Number(price.replace("+", ""));
+      return numericPrice >= min;
+    } else {
+      return numericPrice === Number(price);
+    }
+  });
+}
+
+console.log("Filtered posts:", filteredPosts);
+
 
     // Konec měření času
     console.timeEnd("Full-text search time");
@@ -57,7 +83,7 @@ export async function POST(req) {
     // Použití Setu pro globální odstranění duplikátů napříč všemi příspěvky
     const seenWords = new Set();
     
-    const highlightedPostsFullText = foundPostsFullText
+    const highlightedPostsFullText = filteredPosts
       .map(post => {
         const result = highlightText(post?.name, data.searchQuery);
         
@@ -76,7 +102,7 @@ export async function POST(req) {
     // Seřadíme nejprve podle toho, zda má příspěvek top (nebo ne), a pak podle numberOfMonthsToValid
    
     // Porovnání výsledků (můžeš vypisovat počet záznamů nebo jiné metriky)
-    console.log("Počet výsledků FULLTEXT:", foundPostsFullText.length);
+    console.log("Počet výsledků FULLTEXT:", filteredPosts.length);
 
     return new Response(JSON.stringify({
       data: highlightedPostsFullText, // Vrátí seřazené příspěvky
