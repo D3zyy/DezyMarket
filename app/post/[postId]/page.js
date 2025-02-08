@@ -105,14 +105,14 @@ const Page = async ({ params }) => {
     </li>
     <li >
         
-      <Link   href={`/category?categoryName=${postRecord?.category?.name}`}>
+      <Link   href={`/search?category=${postRecord?.category?.name}`}>
         {postRecord?.category?.logo  ? <span className="mr-2 " dangerouslySetInnerHTML={{ __html: postRecord?.category?.logo }}></span> : ""}  
           <span className="underline">{postRecord?.category?.name}</span>
         </Link>
     </li>
     <li>
      
-        <Link className="underline" href={`/section?categoryName=${postRecord?.category?.name}&sectionName=${postRecord?.section?.name}`}>
+        <Link className="underline" href={`/search?category=${postRecord?.category?.name}&section=${postRecord?.section?.name}`}>
           {postRecord?.section?.name}
         </Link>
 
