@@ -12,7 +12,7 @@ function Post({ postDetails }) {
             className="cursor-pointer p-4 border rounded-lg hover:shadow-lg transition"
             onClick={() => router.push(`/post/${id}`)}
         >
-            <Image src={imageUrl} alt={name} width={100} height={100}  className=" object-cover rounded-md" />
+            <Image quality={75} loading='lazy' src={imageUrl} alt={name} width={100} height={100}  className=" object-cover rounded-md" />
             <h3 className="mt-2 text-lg font-semibold">{name}</h3>
         </div>
     )
