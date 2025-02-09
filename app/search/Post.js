@@ -9,7 +9,8 @@ function Post({ postDetails , section}) {
     const { id, name, images } = postDetails
     const imageUrl = images.length > 0 ? images[0].url : null
     const hasTop = postDetails?.top !== null && ( !section || section && postDetails?.AllTops);
- 
+    console.log("sekce přitomena:",section)
+    console.log("bude top:",hasTop)
 
     return (
         <div

@@ -1,18 +1,17 @@
 import { prisma } from '../../database/db';
 
 export async function POST(request) {
-    
     const { keyWord, category, section, price, location, page = 1 } = await request.json();
     const pageSize = 9; // Počet příspěvků na stránku
 
-    // Filtry pro zbytek parametrů
+    // Filtry pro ostatní parametry
     const filters = {
         ...(category && { category: { is: { name: category } } }),
         ...(section && { section: { is: { name: section } } }),
         ...(location && { location }),
     };
 
-    // Načteme příspěvky podle filtrů, stránkování a ceny
+    // Načteme příspěvky s priorizací topovaných podle numberOfMonthsToValid
     const posts = await prisma.posts.findMany({
         where: {
             ...filters,
@@ -26,8 +25,12 @@ export async function POST(request) {
         },
         include: {
             images: { take: 1 },
-            top: true
+            top: true, // Připojení topování
         },
+        orderBy: [
+            { top: { numberOfMonthsToValid: 'desc' } }, // Nejvyšší numberOfMonthsToValid první
+            { dateAndTime: 'desc' } // Ostatní seřadit podle data
+        ],
         skip: (page - 1) * pageSize,  // Skip podle aktuální stránky
         take: pageSize,  // Načteme pouze "pageSize" příspěvků
     });

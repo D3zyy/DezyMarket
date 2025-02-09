@@ -17,7 +17,7 @@ const PostsPageContent = () => {
     const [hasMore, setHasMore] = useState(true);
     const loaderRef = useRef(null);
     const searchParams = useSearchParams();
-
+    let isSection =   searchParams.get("section")
     const getFilters = () => ({
         keyWord: searchParams.get("keyWord") || "",
         category: searchParams.get("category") || "",
@@ -69,7 +69,7 @@ const PostsPageContent = () => {
             if (entry.isIntersecting && hasMore && !loading) {
                 setPage((prevPage) => prevPage + 1);
             }
-        }, { rootMargin: "100px" });
+        }, { rootMargin: "-100px" });
 
         if (loaderRef.current) {
             observer.observe(loaderRef.current);
@@ -81,7 +81,7 @@ const PostsPageContent = () => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-5">
             {posts.length > 0 ? (
-                posts.map((post) => <Post key={post.id} postDetails={post} section={post.section} />)
+                posts.map((post) => <Post key={post.id} postDetails={post} section={isSection} />)
             ) : (!loading && (
                 <div className="flex gap-2 items-center justify-center w-full col-span-full text-center text-gray-500 ">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -101,6 +101,7 @@ const PostsPageContent = () => {
                 ))
             }
 
+           
             <div ref={loaderRef} className="w-full h-10"></div>
         </div>
     );
