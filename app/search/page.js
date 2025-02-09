@@ -1,7 +1,7 @@
 import React from 'react'
 import { prisma } from '../database/db'
 import Post from './Post'
-
+import PostsPage from '../components/PostsPage'
 async function page({ searchParams }) {
     const { keyWord, category, section, price, location } = searchParams
 
@@ -76,28 +76,10 @@ async function page({ searchParams }) {
     }
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-            {filteredPosts.length > 0 ? (
-                sortedPosts?.map((post) => (
-                    <Post key={post.id} postDetails={{
-                        id: post.id,
-                        AllTops: post.AllTops,
-                        name: post.name,
-                        price: post.price,
-                        location: post.location,
-                        top: post?.top,
-                        images: post.images
-                    }} section={section} />
-                ))
-            ) : (
-                <div className="flex gap-2 items-center justify-center w-full col-span-full text-center text-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6" />
-                    </svg>
-                    Žádné příspěvky nebyly nalezeny
-                </div>
-            )}
-        </div>
+        
+           <PostsPage />
+          
+     
     )
 }
 

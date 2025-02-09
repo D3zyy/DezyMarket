@@ -12,12 +12,9 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'photos.dezy.cz', // Přidejte tento nový hostname
       },
-      // Pokud máte další hostitele, přidejte je sem:
-      // {
-      //   protocol: 'https',
-      //   hostname: 'další-hostname.cz',
-      // },
+    
     ],
+    minimumCacheTTL: 300,
   },
 
 };
