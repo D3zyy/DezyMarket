@@ -4,12 +4,13 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 
-function Post({ postDetails }) {
+function Post({ postDetails , section}) {
     const router = useRouter()
     const { id, name, images } = postDetails
     const imageUrl = images.length > 0 ? images[0].url : null
 
-    const hasTop = postDetails?.topId !== null;
+    const hasTop = postDetails?.topId !== null && ( !section || section && postDetails?.AllTops);
+ 
 
     return (
         <div
@@ -17,7 +18,7 @@ function Post({ postDetails }) {
             onClick={() => router.push(`/post/${id}`)}
         >
             {/* Podmíněné zobrazení badge */}
-            {hasTop && (
+            {hasTop &&  (
                 <div className="flex justify-start mb-2 min-h-[2rem]">
                     <div
                         className="badge badge-md badge-outline px-3 py-3"
