@@ -17,7 +17,8 @@ const PostsPageContent = () => {
     const [hasMore, setHasMore] = useState(true);
     const loaderRef = useRef(null);
     const searchParams = useSearchParams();
-    let isSection =   searchParams.get("section")
+    let isSection = searchParams.get("section");
+
     const getFilters = () => ({
         keyWord: searchParams.get("keyWord") || "",
         category: searchParams.get("category") || "",
@@ -27,7 +28,7 @@ const PostsPageContent = () => {
     });
 
     const fetchPosts = async (page, filters) => {
-        if (!hasMore ) return;
+        if (!hasMore) return;
         setLoading(true);
 
         try {
@@ -42,7 +43,11 @@ const PostsPageContent = () => {
             if (data.posts.length === 0) {
                 setHasMore(false);
             } else {
-                setPosts((prevPosts) => [...prevPosts, ...data.posts]);
+                setPosts((prevPosts) => {
+                    const existingIds = new Set(prevPosts.map(post => post.id));
+                    const newPosts = data.posts.filter(post => !existingIds.has(post.id)); // Odstranění duplicitních příspěvků
+                    return [...prevPosts, ...newPosts];
+                });
             }
         } catch (error) {
             console.error("Chyba při načítání příspěvků:", error);
@@ -101,7 +106,6 @@ const PostsPageContent = () => {
                 ))
             }
 
-           
             <div ref={loaderRef} className="w-full h-10"></div>
         </div>
     );

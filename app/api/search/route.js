@@ -112,9 +112,7 @@ export async function POST(req) {
     })
     .filter(Boolean); // Odstraní null hodnoty
 
-    // Seřadíme výsledky podle potřeby (např. podle top, months to valid)
-    console.log("Počet výsledků FULLTEXT:", foundPostsFullText.length);
-      console.log("Našel sem:",foundPostsFullText)
+
     return new Response(JSON.stringify({
       data: highlightedPostsFullText, // Vrátí seřazené příspěvky
     }), {
