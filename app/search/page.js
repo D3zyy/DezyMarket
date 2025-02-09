@@ -1,14 +1,13 @@
 import React from 'react'
-import { prisma } from '../database/db'
-import Post from './Post'
 import PostsPage from '../components/PostsPage'
-async function page({  }) {
+import { Suspense } from 'react'
+async function page() {
     
 
     return (
-        
+        <Suspense>
            <PostsPage />
-          
+           </Suspense>
      
     )
 }

@@ -319,7 +319,7 @@ model Posts {
   @@index([AllTops])
   @@index([dateAndTime  (sort: Desc)])
   @@index([topId])
-
+  @@index([price])
 
   @@index([sectionId, AllTops, topId, dateAndTime  (sort: Desc)]) 
   @@index([categoryId, sectionId]) 
@@ -372,6 +372,7 @@ model Image {
   url    String
   postId String
   post   Posts  @relation(fields: [postId], references: [id], onDelete: Cascade)
+@@index([url])
 }
 
 model NumberOfTries {
