@@ -86,10 +86,11 @@ const PostsPage = () => {
             {/* Zobrazí skeletony, dokud se načítají příspěvky */}
             {loading ? (
                 Array.from({ length: 9 }).map((_, index) => (
-                    <div
-                        key={index}
-                        className="skeleton h-40 w-full sm:w-56 md:w-64 mx-auto rounded-md"
-                    ></div>
+                    <div  key={index} className="flex  w-full flex-col gap-4">
+  <div className="skeleton h-32 w-full"></div>
+  <div className="skeleton h-4 w-28"></div>  <div className="skeleton h-4 w-28"></div>
+
+</div>
                 ))
             ) : posts.length > 0 ? (
                 // Zobrazí skutečné příspěvky, pokud byly načteny
@@ -99,7 +100,7 @@ const PostsPage = () => {
             ) : (
                 // Pokud nejsou žádné příspěvky, i tak se zobrazí skeletony
                 Array.from({ length: 12 }).map((_, index) => (
-                    <div className="flex  w-full flex-col gap-4">
+                    <div  key={index} className="flex  w-full flex-col gap-4">
   <div className="skeleton h-32 w-full"></div>
   <div className="skeleton h-4 w-28"></div>  <div className="skeleton h-4 w-28"></div>
 
