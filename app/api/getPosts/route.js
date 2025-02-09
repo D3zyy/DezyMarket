@@ -14,6 +14,9 @@ export async function POST(request) {
     // Přidáme podmínku pro topování pouze tehdy, když je aktivní sekce
     const sectionFilter = section ? { AllTops: true } : {};
 
+    // Začátek měření času
+    console.time('fetchPosts');
+
     // Načteme příspěvky s prioritizací podle toho, zda se filtruje podle sekce
     const posts = await prisma.posts.findMany({
         where: {
@@ -59,9 +62,12 @@ export async function POST(request) {
         }
     });
 
+    // Konec měření času
+    console.timeEnd('fetchPosts');
+
     return new Response(
         JSON.stringify({ posts, total: totalPosts }),
-            {
+        {
             headers: { 'Content-Type': 'application/json' }
         }
     );
