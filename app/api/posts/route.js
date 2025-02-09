@@ -38,7 +38,7 @@ const schema = z.object({
 
   description: z.string()
     .min(15, 'Popis musí mít alespoň 15 znaků.')
-    .max(1000, 'Popis může mít maximálně 1000 znaků.')
+    .max(1200, 'Popis může mít maximálně 1200 znaků.')
     .refine((value) => !/[<>]/.test(value), {
       message: 'Popis nesmí obsahovat znaky < a >.',
     })

@@ -287,7 +287,7 @@ model Errors {
 model Posts {
   id          String              @id @unique @default(uuid())
   name        String              @db.VarChar(150)
-  description String              @db.VarChar(1000)
+  description String              @db.VarChar(1200)
   price       String              @db.VarChar(100)
   categoryId  Int
   sectionId   Int
@@ -373,6 +373,8 @@ model Image {
   postId String
   post   Posts  @relation(fields: [postId], references: [id], onDelete: Cascade)
 @@index([url])
+@@index([postId])
+@@index([id])
 }
 
 model NumberOfTries {

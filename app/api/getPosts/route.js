@@ -1,6 +1,8 @@
 import { prisma } from '../../database/db';
 
 export async function POST(request) {
+
+    
     const { keyWord, category, section, price, location, page = 1 } = await request.json();
     const pageSize = 9; // Počet příspěvků na stránku
 
