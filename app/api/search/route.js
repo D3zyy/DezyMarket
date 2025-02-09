@@ -30,15 +30,14 @@ export async function POST(req) {
 
     // Full-textové vyhledávání
     let foundPostsFullText = await prisma.posts.findMany({
-      where: {
-        ...filters,
-        OR: keyWord
-          ? [
+      where: keyWord
+        ? {
+            OR: [
               { name: { search: `${keyWord}:*` } },
               { description: { search: `${keyWord}:*` } },
-            ]
-          : undefined,
-      },
+            ],
+          }
+        : undefined,
     });
     console.log("CEnaaa:",price)
     // Pouze pokud je filtr `price` poslán a není jedna z hodnot 'Dohodou', 'Vtextu' nebo 'Zdarma'
