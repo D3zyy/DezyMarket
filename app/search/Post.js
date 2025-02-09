@@ -51,12 +51,12 @@ function Post({ postDetails , section}) {
                 <div className="w-24    flex-shrink-0 h-24 flex items-center justify-center rounded-md">
                     {imageUrl ? (
                       <Image 
-                      quality={65} 
+                      quality={75} 
                       loading="lazy" 
                       src={imageUrl} 
                       alt={name} 
-                      width={75}
-                      height={75}  
+                      width={60}
+                      height={60}  
                       className="object-contain flex-shrink-0 rounded-md"
                       style={{ width: 'auto', height: 'auto' }} 
                   />
