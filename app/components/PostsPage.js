@@ -82,7 +82,7 @@ const PostsPage = () => {
     }, [loading, hasMore]);
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-5">
             {/* Zobrazí skeletony, dokud se načítají příspěvky */}
             {loading ? (
                 Array.from({ length: 9 }).map((_, index) => (
@@ -99,7 +99,7 @@ const PostsPage = () => {
                 ))
             ) : (<> 
                 {!loading&&
-                <div className="flex gap-2 items-center justify-center w-full col-span-full text-center text-gray-500">
+                <div className="flex gap-2 items-center justify-center w-full col-span-full text-center text-gray-500 ">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6" />
                 </svg>
@@ -109,10 +109,7 @@ const PostsPage = () => {
             </>
             )}
 
-            {/* Loader */}
-            <div ref={loaderRef} className="loading-indicator">
-                {loading && <div>Načítám...</div>}
-            </div>
+           
 
             {/* Pokud nejsou žádné další příspěvky, zobraz informaci */}
             {!hasMore && !loading && posts.length > 0&& (

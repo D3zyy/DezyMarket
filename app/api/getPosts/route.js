@@ -3,7 +3,7 @@ import { prisma } from '../../database/db';
 export async function POST(request) {
     
     const { keyWord, category, section, price, location, page = 1 } = await request.json();
-    const pageSize = 20; // Počet příspěvků na stránku
+    const pageSize = 9; // Počet příspěvků na stránku
 
     // Filtry pro zbytek parametrů
     const filters = {
