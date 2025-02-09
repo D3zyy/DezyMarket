@@ -107,13 +107,12 @@ async function resizeImage(buffer) {
   // SVG watermark jako string (přizpůsobený pro pravý dolní roh)
   const svgWatermark = `
     <svg width="200" height="50" xmlns="http://www.w3.org/2000/svg">
-      <rect width="100%" height="100%" fill="black" fill-opacity="0.3" rx="8" />
-      <text x="10" y="35" font-size="30" fill="white" font-family="Arial" font-weight="bold">${watermarkText}</text>
+      <text x="10" y="25" font-size="35" fill="white" font-family="Arial" font-weight="bold">${watermarkText}</text>
     </svg>`;
 
   // Převede SVG na PNG buffer
   const watermark = await sharp(Buffer.from(svgWatermark))
-    .toFormat('png')
+    .toFormat('webp')
     .toBuffer();
 
   // Změna velikosti hlavního obrázku (žádná deformace!)
@@ -132,6 +131,7 @@ async function resizeImage(buffer) {
         blend: 'overlay', // Lepší vizuální integrace s obrázkem
       },
     ])
+    .toFormat('webp')
     .toBuffer();
 
   return resizedBuffer;
@@ -209,9 +209,9 @@ async function uploadImagesToS3(files,postId) {
 
     const params = {
       Bucket: process.env.AWS_S3_BUCKET_NAME,
-      Key: `${postId}/${Date.now()}-image-${index}.jpg`,
+      Key: `${postId}/${Date.now()}-image-${index}.webp`,
       Body: resizedImage,
-      ContentType: "image/jpeg"
+      ContentType: "image/webp"
     };
 
     const command = new PutObjectCommand(params);
