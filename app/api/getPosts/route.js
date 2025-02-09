@@ -11,7 +11,10 @@ export async function POST(request) {
         ...(location && { location }),
     };
 
-    // Načteme příspěvky s priorizací topovaných podle numberOfMonthsToValid
+    // Přidáme podmínku pro topování pouze tehdy, když je aktivní sekce
+    const sectionFilter = section ? { AllTops: true } : {};
+
+    // Načteme příspěvky s prioritizací podle toho, zda se filtruje podle sekce
     const posts = await prisma.posts.findMany({
         where: {
             ...filters,
@@ -25,14 +28,21 @@ export async function POST(request) {
         },
         include: {
             images: { take: 1 },
-            top: true, // Připojení topování
+            top: true,
         },
-        orderBy: [
-            { top: { numberOfMonthsToValid: 'desc' } }, // Nejvyšší numberOfMonthsToValid první
-            { dateAndTime: 'desc' } // Ostatní seřadit podle data
-        ],
-        skip: (page - 1) * pageSize,  // Skip podle aktuální stránky
-        take: pageSize,  // Načteme pouze "pageSize" příspěvků
+        orderBy: section
+            ? [
+                { AllTops: 'desc' }, // Topované příspěvky se berou jen pokud mají AllTops === true
+                { top: { numberOfMonthsToValid: 'desc' } }, // Seřazení podle počtu měsíců topování
+                { dateAndTime: 'desc' } // Ostatní příspěvky podle data
+            ]
+            : [
+                { top: { numberOfMonthsToValid: 'desc' } }, // Normální řazení bez filtru sekce
+                { topId: 'desc' },
+                { dateAndTime: 'desc' }
+            ],
+        skip: (page - 1) * pageSize,
+        take: pageSize,
     });
 
     // Získání celkového počtu příspěvků pro stránkování
@@ -49,7 +59,6 @@ export async function POST(request) {
         }
     });
 
-    // Vracíme příspěvky a celkový počet pro klienta
     return new Response(
         JSON.stringify({ posts, total: totalPosts }),
         {
