@@ -98,14 +98,13 @@ const PostsPage = () => {
                     <Post key={post.id} postDetails={post} section={post.section} />
                 ))
             ) : (
-                // Pokud nejsou žádné příspěvky, i tak se zobrazí skeletony
-                Array.from({ length: 12 }).map((_, index) => (
-                    <div  key={index} className="flex  w-full flex-col gap-4">
-  <div className="skeleton h-32 w-full"></div>
-  <div className="skeleton h-4 w-28"></div>  <div className="skeleton h-4 w-28"></div>
-
-</div>
-                ))
+               
+                <div className="flex gap-2 items-center justify-center w-full col-span-full text-center text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6" />
+                </svg>
+                Žádné příspěvky nebyly nalezeny
+            </div>
             )}
 
             {/* Loader */}
@@ -114,7 +113,7 @@ const PostsPage = () => {
             </div>
 
             {/* Pokud nejsou žádné další příspěvky, zobraz informaci */}
-            {!hasMore && !loading && (
+            {!hasMore && !loading && posts.length > 0&& (
                 <div className="no-more-posts">Žádné další příspěvky</div>
             )}
         </div>
