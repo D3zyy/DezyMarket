@@ -299,6 +299,7 @@ model Posts {
   category    Categories          @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   section     Sections            @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   images      Image[] // Define a one-to-many relation
+  AllTops Boolean? @default(false)
   userId      String
   dateAndTime DateTime
   user        Users               @relation(fields: [userId], references: [id], onDelete: Cascade)

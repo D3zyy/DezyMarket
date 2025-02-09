@@ -8,7 +8,7 @@ const ImageGallery = ({ allImages }) => {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
 
-  allImages = [
+  let allImagess = [
     
     {
       id: 31,

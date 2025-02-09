@@ -48,16 +48,16 @@ function Post({ postDetails }) {
 
             {/* Obsah příspěvku centrovaný vertikálně */}
             <div className="flex break-all items-center justify-center space-x-4 flex-grow">
-                <div className="w-24 flex-shrink-0 h-24 flex items-center justify-center rounded-md">
-                    {!imageUrl ? (
+                <div className="w-24    flex-shrink-0 h-24 flex items-center justify-center rounded-md">
+                    {imageUrl ? (
                         <Image 
                             quality={75} 
                             loading="lazy" 
-                            src={'https://www.bazos.cz/img/1/236/197761236.jpg?t=1738762343'} 
+                            src={imageUrl} 
                             alt={name} 
-                            width={96}
-                            height={96}  
-                            className="object-cover flex-shrink-0 rounded-md"
+                            width={75}
+                            height={75}  
+                            className="object-contain flex-shrink-0 rounded-md"
                         />
                     ) : (
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className=" w-16 h-16 flex-shrink-0 text-gray-500">

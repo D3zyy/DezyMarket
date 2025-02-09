@@ -100,18 +100,44 @@ const s3Client = new S3Client({
   }
 })
 async function resizeImage(buffer) {
+  const width = 1200;
+  const height = 1200;
+  const watermarkText = 'Dezy.cz';
+
+  // SVG watermark jako string (přizpůsobený pro pravý dolní roh)
+  const svgWatermark = `
+    <svg width="200" height="50" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="black" fill-opacity="0.3" rx="8" />
+      <text x="10" y="35" font-size="30" fill="white" font-family="Arial" font-weight="bold">${watermarkText}</text>
+    </svg>`;
+
+  // Převede SVG na PNG buffer
+  const watermark = await sharp(Buffer.from(svgWatermark))
+    .toFormat('png')
+    .toBuffer();
+
+  // Změna velikosti hlavního obrázku (žádná deformace!)
   const resizedBuffer = await sharp(buffer)
     .rotate() // Automaticky použije EXIF data k zachování orientace
     .resize({
-      width: 1200,
-      height: 1200,
-      fit: sharp.fit.inside,
-      withoutEnlargement: true, // Zamezí zvětšování obrázku, pokud je menší
+      width,
+      height,
+      fit: sharp.fit.inside, // Zajistí, že obrázek nebude oříznut
+      withoutEnlargement: true, // Zabrání zvětšování malých obrázků
     })
+    .composite([
+      {
+        input: watermark,
+        gravity: 'southeast', // Umístí watermark správně do pravého dolního rohu
+        blend: 'overlay', // Lepší vizuální integrace s obrázkem
+      },
+    ])
     .toBuffer();
 
   return resizedBuffer;
 }
+
+
 async function invalidateImagesOnCloudFrontByPostId(postId) {
 
   try {
@@ -214,7 +240,7 @@ async function uploadImagesToS3(files,postId) {
 
 
 export async function POST(req) {
-  
+  let accOfUser
   let allowedTypeOfPost
   let formData
   let allImages
@@ -319,7 +345,7 @@ const formDataObject = Object.fromEntries(formData.entries());
   });
 }
 
-if (invisiblePosts > 100) {
+if (invisiblePosts > 150) {
   const rawIp =
   req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
   req.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -356,7 +382,7 @@ console.log("pred !!!")
 if (typPost) {
   console.log("Jdu dovnitr!!!")
 let monthIn = await getUserAccountTypeOnStripe(session.email)
-
+console.log("Typ účtu :::",monthIn)
 
 console.log("Jdu kontrolvat top")
 
@@ -397,13 +423,13 @@ const formDataObject = Object.fromEntries(formData.entries());
     headers: { 'Content-Type': 'application/json' }
   });
 }
-const accOfUser = await prisma.accountType.findMany({
+ accOfUser = await prisma.accountType.findMany({
   where: {
     name: monthIn.name
   }
 });
 
-if(allImages?.length > accOfUser?.numberOfAllowedImages ){
+if(allImages?.length > accOfUser[0]?.numberOfAllowedImages ){
   const rawIp =
   req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
   req.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -631,22 +657,35 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 console.log("pred vytvorenim")
                 console.log("VALIDATED PRICE:",validatedPrice)
 
-                 newPost = await prisma.posts.create({
+                newPost = await prisma.posts.create({
                   data: {
                     dateAndTime: localISODateFixedOffset,
                     name: validatedFields.data.name,
                     description: validatedFields.data.description,
                     price: validatedPrice,
                     location: validatedFields.data.location,
-                    topId:  isAllowed?.id ?  isAllowed?.id : null,
+                    topId: isAllowed?.id ? isAllowed.id : null,
+                    AllTops: isAllowed?.id 
+                    ? accOfUser[0]?.priority === 2 
+                      ? false 
+                      : accOfUser[0]?.priority === 3
+                        ? true 
+                        : false   
+                    : false, 
                     categoryId: validatedFields.data.category,
-                    sectionId : validatedFields.data.section,
-                    phoneNumber : validatedFields.data.phoneNumber,
-                    userId : session.userId,
-                 
-                  }
+                    sectionId: validatedFields.data.section,
+                    phoneNumber: validatedFields.data.phoneNumber,
+                    userId: session.userId,
+                  },
                 });
-                
+                console.log("Priorita ucut:",accOfUser[0])
+                console.log("Všechny:", isAllowed?.id 
+                  ? accOfUser[0]?.priority === 2 
+                    ? false 
+                    : accOfUser[0]?.priority === 3
+                      ? true 
+                      : false   
+                  : false,  )
                 const FilePath = await uploadImagesToS3(buffers,newPost.id)
                
                 const imageUrls = FilePath; 
