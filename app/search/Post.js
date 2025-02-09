@@ -8,8 +8,8 @@ function Post({ postDetails , section}) {
     const router = useRouter()
     const { id, name, images } = postDetails
     const imageUrl = images.length > 0 ? images[0].url : null
-
-    const hasTop = postDetails?.topId !== null && ( !section || section && postDetails?.AllTops);
+console.log(postDetails)
+    const hasTop = postDetails?.top !== null && ( !section || section && postDetails?.AllTops);
  
 
     return (

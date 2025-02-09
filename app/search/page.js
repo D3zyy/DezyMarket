@@ -79,7 +79,15 @@ async function page({ searchParams }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
             {filteredPosts.length > 0 ? (
                 sortedPosts?.map((post) => (
-                    <Post key={post.id} postDetails={post} section={section} />
+                    <Post key={post.id} postDetails={{
+                        id: post.id,
+                        AllTops: post.AllTops,
+                        name: post.name,
+                        price: post.price,
+                        location: post.location,
+                        top: post?.top,
+                        images: post.images
+                    }} section={section} />
                 ))
             ) : (
                 <div className="flex gap-2 items-center justify-center w-full col-span-full text-center text-gray-500">
@@ -93,4 +101,4 @@ async function page({ searchParams }) {
     )
 }
 
-export default page;
+export default page
