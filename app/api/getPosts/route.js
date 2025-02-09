@@ -64,9 +64,19 @@ export async function POST(request) {
 
     // Konec měření času
     console.timeEnd('fetchPosts');
-
+    const filteredPosts = posts.map(post => ({
+        id: post.id,
+        name: post.name,
+        location: post.location,
+        top: post.top,
+        images: post.images,
+        AllTops: post.AllTops,
+        price: post.price
+    }));
+    
+    
     return new Response(
-        JSON.stringify({ posts, total: totalPosts }),
+        JSON.stringify({ posts: filteredPosts, total: totalPosts }),
         {
             headers: { 'Content-Type': 'application/json' }
         }
