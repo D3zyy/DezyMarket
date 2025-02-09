@@ -252,7 +252,7 @@ function SearchComponent({ categories,displaySections }) {
             { id: "moravskoslezsky_kraj", name: "Moravskoslezský kraj" },
             { id: "kraj_vysocina", name: "Kraj Vysočina" },
           ].map((location) => (
-            <option key={location.id} value={location.name}  selected={selectedLocation == location.name}  >
+            <option key={location.id} value={location.name}  defaultValue={selectedLocation == location.name}  >
               {location.name}
             </option>
           ))}
@@ -264,13 +264,13 @@ function SearchComponent({ categories,displaySections }) {
           onChange={handlePriceChange}
         >
           <option value="">Cena</option>
-          <option  selected={selectedPrice == 'Dohodou'}    value="Dohodou">Dohodou</option>
-          <option  selected={selectedPrice == 'V textu'}    value="V textu">V textu</option>
-          <option selected={selectedPrice == 'Zdarma'}   value="Zdarma">Zdarma</option>
-          <option selected={selectedPrice == '1-500'}   value="1-500">1-500 Kč</option>
-          <option selected={selectedPrice == '500-5000'}  value="500-5000">500-5 000 Kč</option>
-          <option selected={selectedPrice == '5000-50000'}  value="5000-50000">5 000-50 000 Kč</option>
-          <option selected={selectedPrice == '50000+'}  value="50000+">50 000+</option>
+          <option  defaultValue={selectedPrice == 'Dohodou'}   value="Dohodou">Dohodou</option>
+          <option  defaultValue={selectedPrice == 'V textu'}    value="V textu">V textu</option>
+          <option defaultValue={selectedPrice == 'Zdarma'}   value="Zdarma">Zdarma</option>
+          <option defaultValue={selectedPrice == '1-500'}   value="1-500">1-500 Kč</option>
+          <option defaultValue={selectedPrice == '500-5000'}  value="500-5000">500-5 000 Kč</option>
+          <option defaultValue={selectedPrice == '5000-50000'}  value="5000-50000">5 000-50 000 Kč</option>
+          <option defaultValue={selectedPrice == '50000+'}  value="50000+">50 000+</option>
         </select>
       </div>
     </>
