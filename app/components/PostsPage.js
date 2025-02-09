@@ -1,24 +1,39 @@
-"use client"
-import React, { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Post from '../search/Post';
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
+import Post from "../search/Post";
 
 const PostsPage = () => {
+    const searchParams = useSearchParams();
+    const searchKey = searchParams.toString(); // Vygenerujeme klíč na základě URL parametrů
+
+    return <PostsPageContent key={searchKey} />;
+};
+
+const PostsPageContent = () => {
     const [posts, setPosts] = useState([]);
     const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [hasMore, setHasMore] = useState(true);
     const loaderRef = useRef(null);
     const searchParams = useSearchParams();
 
+    const getFilters = () => ({
+        keyWord: searchParams.get("keyWord") || "",
+        category: searchParams.get("category") || "",
+        section: searchParams.get("section") || "",
+        price: searchParams.get("price") || "",
+        location: searchParams.get("location") || "",
+    });
+
     const fetchPosts = async (page, filters) => {
-        if (!hasMore || loading) return; // Pokud už nejsou další příspěvky, nedělej nic
+        if (!hasMore ) return;
         setLoading(true);
 
         try {
-            const res = await fetch('/api/getPosts', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            const res = await fetch("/api/getPosts", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ ...filters, page }),
             });
 
@@ -37,41 +52,24 @@ const PostsPage = () => {
     };
 
     useEffect(() => {
-        const keyWord = searchParams.get('keyWord') || '';
-        const category = searchParams.get('category') || '';
-        const section = searchParams.get('section') || '';
-        const price = searchParams.get('price') || '';
-        const location = searchParams.get('location') || '';
-
-        const filters = { keyWord, category, section, price, location };
-
-        setPosts([]); // Resetujeme příspěvky při změně filtrů
+        const filters = getFilters();
+        setPosts([]);
         setPage(1);
         setHasMore(true);
-
-        fetchPosts(1, filters); // Načteme první stránku
+        fetchPosts(1, filters);
     }, [searchParams]);
 
     useEffect(() => {
-        const keyWord = searchParams.get('keyWord') || '';
-        const category = searchParams.get('category') || '';
-        const section = searchParams.get('section') || '';
-        const price = searchParams.get('price') || '';
-        const location = searchParams.get('location') || '';
-
-        const filters = { keyWord, category, section, price, location };
-
-        if (page > 1) {
-            fetchPosts(page, filters);
-        }
+        if (page === 1) return;
+        fetchPosts(page, getFilters());
     }, [page]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting && !loading && hasMore) {
+            if (entry.isIntersecting && hasMore && !loading) {
                 setPage((prevPage) => prevPage + 1);
             }
-        }, { rootMargin: '100px' });
+        }, { rootMargin: "100px" });
 
         if (loaderRef.current) {
             observer.observe(loaderRef.current);
@@ -82,16 +80,16 @@ const PostsPage = () => {
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-5">
-            {posts.length > 0
-                ? posts.map((post) => <Post key={post.id} postDetails={post} section={post.section} />)
-                : !loading && (
-                    <div className="flex gap-2 items-center justify-center w-full col-span-full text-center text-gray-500 ">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6" />
-                        </svg>
-                        Žádné příspěvky nebyly nalezeny
-                    </div>
-                )}
+            {posts.length > 0 ? (
+                posts.map((post) => <Post key={post.id} postDetails={post} section={post.section} />)
+            ) : (!loading && (
+                <div className="flex gap-2 items-center justify-center w-full col-span-full text-center text-gray-500 ">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6" />
+                    </svg>
+                    Žádné příspěvky nebyly nalezeny
+                </div>
+            ))}
 
             {loading &&
                 Array.from({ length: 9 }).map((_, index) => (
@@ -102,8 +100,6 @@ const PostsPage = () => {
                     </div>
                 ))
             }
-
-         
 
             <div ref={loaderRef} className="w-full h-10"></div>
         </div>

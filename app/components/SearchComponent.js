@@ -63,28 +63,29 @@ function SearchComponent({ categories,displaySections }) {
 
     router.push(`/search?${queryParams.toString()}`);
   };
-
   const handleLocationChange = (e) => {
     const selected = e.target.value;
     setSelectedLocation(selected);
-
+  
     const queryParams = new URLSearchParams();
     if (selectedCategory) queryParams.append('category', selectedCategory);
+    if (selectedSection) queryParams.append('section', selectedSection); // Přidá sekci zpět
     if (selected) queryParams.append('location', selected);
     if (selectedPrice) queryParams.append('price', selectedPrice);
-
+  
     router.push(`/search?${queryParams.toString()}`);
   };
-
+  
   const handlePriceChange = (e) => {
     const selected = e.target.value;
     setSelectedPrice(selected);
-
+  
     const queryParams = new URLSearchParams();
     if (selectedCategory) queryParams.append('category', selectedCategory);
+    if (selectedSection) queryParams.append('section', selectedSection); // Přidá sekci zpět
     if (selectedLocation) queryParams.append('location', selectedLocation);
     if (selected) queryParams.append('price', selected);
-
+  
     router.push(`/search?${queryParams.toString()}`);
   };
 
