@@ -3,7 +3,7 @@ import { prisma } from './database/db';
 import localFont from 'next/font/local';
 import Link from 'next/link';
 import SearchComponent from './components/SearchComponent';
-
+import { Suspense } from 'react';
 const pacifico = localFont({
   src: '../public/fonts/Pacifico/Pacifico-Regular.ttf', // Začíná lomítkem
   weight: '400',
@@ -43,7 +43,9 @@ const Page = async () => {
       </div>
 
      <div className='items-center mx-auto max-w-[300px]    rounded-md p-4'>
+     <Suspense>
      <SearchComponent categories={categories} displaySections={false} />
+     </Suspense>
      </div>
     
           <div className="flex justify-center items-center mx-auto border-2 border-dotted max-w-[300px]  md:max-w-[800px] border-gray-900  rounded-md p-4 ">

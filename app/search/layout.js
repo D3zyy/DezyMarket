@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import SearchComponent from "@/app/components/SearchComponent";
 import localFont from "next/font/local";
 import { prisma } from "../database/db";
@@ -31,8 +31,10 @@ async function Layout({ children  }) {
           „Lepší místo pro vaše inzeráty.“
         </span>
 
-        
-          <SearchComponent categories={categories} displaySections={true} />
+        <Suspense>   
+        <SearchComponent categories={categories} displaySections={true} />
+           </Suspense>
+       
     
 
        
