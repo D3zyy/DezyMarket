@@ -18,7 +18,7 @@ const bebas = localFont({
 });
 
 async function Layout({ children  }) {
-
+try{
   const categories = await prisma.categories.findMany({
     include: { sections: true },
   });
@@ -43,7 +43,13 @@ async function Layout({ children  }) {
       {/* Obsah stránky */}
       <div className="mt-16">{children}</div>
     </div>
-  );
+  
+  ); 
+ }catch (e) {
+    console.error("Chyba při načítání dat:", e);
+    return <div className="flex items-center justify-center min-h-screen">Nastala chyba.</div>;
+  }
+
 }
 
 export default Layout;
