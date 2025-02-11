@@ -11,7 +11,6 @@ const PostsPage = () => {
 };
 
 const PostsPageContent = () => {
-
     const [posts, setPosts] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
@@ -19,33 +18,7 @@ const PostsPageContent = () => {
     const loaderRef = useRef(null);
     const searchParams = useSearchParams();
     let isSection = searchParams.get("section");
-    useEffect(() => {
-        const filters = getFilters();
-        setPosts([]);
-        setPage(1);
-        setHasMore(true);
-        fetchPosts(1, filters);
-    }, [searchParams]);
 
-    useEffect(() => {
-        if (page === 1) return;
-        fetchPosts(page, getFilters());
-    }, [page]);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting && hasMore && !loading) {
-                setPage((prevPage) => prevPage + 1);
-            }
-        }, { rootMargin: "-100px" });
-
-        if (loaderRef.current) {
-            observer.observe(loaderRef.current);
-        }
-
-        return () => observer.disconnect();
-    }, [loading, hasMore]);
-    try{
     const getFilters = () => ({
         keyWord: searchParams.get("keyWord") || "",
         category: searchParams.get("category") || "",
@@ -83,7 +56,32 @@ const PostsPageContent = () => {
         setLoading(false);
     };
 
-    
+    useEffect(() => {
+        const filters = getFilters();
+        setPosts([]);
+        setPage(1);
+        setHasMore(true);
+        fetchPosts(1, filters);
+    }, [searchParams]);
+
+    useEffect(() => {
+        if (page === 1) return;
+        fetchPosts(page, getFilters());
+    }, [page]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting && hasMore && !loading) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        }, { rootMargin: "-100px" });
+
+        if (loaderRef.current) {
+            observer.observe(loaderRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, [loading, hasMore]);
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-5">
@@ -111,10 +109,6 @@ const PostsPageContent = () => {
             <div ref={loaderRef} className="w-full h-10"></div>
         </div>
     );
-} catch (e) {
-    console.error("Chyba při načítání dat:", e);
-    return <div className="flex items-center justify-center min-h-screen">Nastala chyba.</div>;
-  }
 };
 
 export default PostsPage;
