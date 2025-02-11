@@ -11,7 +11,7 @@ function Post({ postDetails , section}) {
     const hasTop = postDetails?.top !== null && ( !section || section && postDetails?.AllTops);
     console.log("sekce přitomena:",section)
     console.log("bude top:",hasTop)
-try{
+
     return (
         <div
             className="mb-5 cursor-pointer p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:shadow-lg transition flex flex-col justify-center"
@@ -90,10 +90,7 @@ try{
             </div>
         </div>
     )
-}catch (e) {
-    console.error("Chyba při načítání dat:", e);
-    return <div className="flex items-center justify-center min-h-screen">Nastala chyba.</div>;
-  }
+
 }
 
 export default Post
