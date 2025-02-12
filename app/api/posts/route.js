@@ -1555,9 +1555,9 @@ export async function DELETE(req) {
         });
       }
         //sets its visibility to false istead of removing
-     
+        await invalidateCache(`post_record_${data.postId}`)
 
- ;
+ 
     
        
       return new Response(JSON.stringify({
@@ -1664,7 +1664,7 @@ export async function DELETE(req) {
       await prisma.posts.delete({
         where: { id: data.postId }
       })
-
+      await invalidateCache(`post_record_${data.postId}`)
             //ještě z s3 deletnout
             if(haveImages.length > 0){
   

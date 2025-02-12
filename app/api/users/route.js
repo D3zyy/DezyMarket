@@ -58,7 +58,7 @@ export async function POST(req) {
       });
     }
     
-
+    console.log("yooo")
  const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findFirst({
     where: { email: email}
     }), 600)
@@ -70,12 +70,13 @@ export async function POST(req) {
     let messageBan = false;
     
     if (user) {
-      
+        console.log("HESLO:",isPasswordValid)
+        console.log("HESLO usr:",user.password)
 
 
       isPasswordValid = await bcrypt.compare(password, user.password);
       ban = await checkUserBan(user.id);
-
+      console.log(isPasswordValid)
    
 
      // if(user && !ban && !isPasswordValid ){

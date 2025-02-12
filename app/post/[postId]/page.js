@@ -75,7 +75,7 @@ const Page = async ({ params }) => {
     if(postRecord?.topId !== null){
       if(postRecord?.topId) {
 
-        const topinfo = await getCachedData(
+         topinfo = await getCachedData(
           `topinfo:${postRecord?.topId}`, // Unikátní klíč pro cache
           async () => await prisma.tops.findUnique({
             where: { id: postRecord?.topId }
