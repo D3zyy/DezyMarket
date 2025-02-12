@@ -4,7 +4,7 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon"; // Pokud ještě není importováno
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-import { getCachedData } from "@/app/getSetCachedData/caching";
+import { getCachedData, invalidateCache} from "@/app/getSetCachedData/caching";
 
 export async function POST(request) {
   let roleId, idOfUser,session
@@ -176,6 +176,7 @@ export async function POST(request) {
         );
       }
     }
+    await invalidateCache(`userRole_${idOfUser}`)
  await prisma.users.update({
       where: { id: idOfUser },
       data : {roleId : roleId }
