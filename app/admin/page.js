@@ -52,103 +52,109 @@ headers().get("x-real-ip") ||
   try{
 
    
-    [errorsfromServer,countOfAllPosts,activePostsCount,nmbrOfPostsToday,nmbrOfPostsYestrday,nmbrOfPostsThisMonth,nmbrOfPostsLastMonth,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats] = await Promise.all([
-      getCachedData("errorsfromServer",prisma.errors.findMany,5),
-      prisma.posts.count(),
-      prisma.posts.count({where: {visible: true}})
-      ,
-      await prisma.posts.count({
+    const [
+      errorsfromServer,
+      countOfAllPosts,
+      activePostsCount,
+      nmbrOfPostsToday,
+      nmbrOfPostsYestrday,
+      nmbrOfPostsThisMonth,
+      nmbrOfPostsLastMonth,
+      reports,
+      suppTickets,
+      subscTypes,
+      allTops,
+      countOfAllUsers,
+      registredTodayNumberOfUsr,
+      registredYestrdayNumberOfUsr,
+      registredThisMonthyNumberOfUsr,
+      registredLastMonthyNumberOfUsr,
+      allSubToStats
+    ] = await Promise.all([
+      getCachedData("errorsfromServer", () => prisma.errors.findMany(), 600),
+      getCachedData("countOfAllPosts", () => prisma.posts.count(), 600),
+      getCachedData("activePostsCount", () => prisma.posts.count({ where: { visible: true } }), 600),
+      getCachedData("nmbrOfPostsToday", () => prisma.posts.count({
         where: {
           dateAndTime: {
-                gte: today.toISO(), // Od začátku dne
-                lt: today.plus({ days: 1 }).toISO() // Do konce dne
-            }
-        }
-    }), await prisma.posts.count({
-      where: {
-        dateAndTime: {
-              gte: yesterday.toISO(), // Od začátku včerejšího dne
-              lt: today.toISO() // Do konce včerejšího dne
+            gte: today.toISO(),
+            lt: today.plus({ days: 1 }).toISO()
           }
-      }
-  }),await prisma.posts.count({
-    where: {
-      dateAndTime: {
+        }
+      }), 600),
+      getCachedData("nmbrOfPostsYestrday", () => prisma.posts.count({
+        where: {
+          dateAndTime: {
+            gte: yesterday.toISO(),
+            lt: today.toISO()
+          }
+        }
+      }), 600),
+      getCachedData("nmbrOfPostsThisMonth", () => prisma.posts.count({
+        where: {
+          dateAndTime: {
             gte: startOfThisMonth.toISO(),
             lt: endOfThisMonth.toISO()
+          }
         }
-    }
-}),await prisma.posts.count({
-    where: {
-      dateAndTime: {
+      }), 600),
+      getCachedData("nmbrOfPostsLastMonth", () => prisma.posts.count({
+        where: {
+          dateAndTime: {
             gte: startOfLastMonth.toISO(),
             lt: endOfLastMonth.toISO()
+          }
         }
-    }
-})
-
-     , prisma.postReport.findMany({
-        where: {
-          active: true,
-        },
+      }), 600),
+      getCachedData("reports", () => prisma.postReport.findMany({
+        where: { active: true },
         include: {
-          post: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
+          post: { select: { id: true, name: true } },
           user: {
-            select: {
-              id: true,
-              fullName: true,
-              role: {
-                select: {
-                  privileges: true,
-                },
-              },
-            },
-          },
-        },
-      }),
-      prisma.supportTickets.findMany({where: { active: true }, include : {ipOfusrOnsup : true} }),
-      getTypeOfAccountDetails(),
-       prisma.tops.findMany({}),
-       prisma.users.count(),
-
-        await prisma.users.count({
+            select: { id: true, fullName: true, role: { select: { privileges: true } } }
+          }
+        }
+      }), 600),
+      getCachedData("suppTickets", () => prisma.supportTickets.findMany({
+        where: { active: true },
+        include: { ipOfusrOnsup: true }
+      }), 600),
+      getCachedData("subscTypes", getTypeOfAccountDetails, 600),
+      getCachedData("allTops", () => prisma.tops.findMany(), 600),
+      getCachedData("countOfAllUsers", () => prisma.users.count(), 600),
+      getCachedData("registredTodayNumberOfUsr", () => prisma.users.count({
         where: {
           dateOfRegistration: {
-                gte: today.toISO(), // Od začátku dne
-                lt: today.plus({ days: 1 }).toISO() // Do konce dne
-            }
+            gte: today.toISO(),
+            lt: today.plus({ days: 1 }).toISO()
+          }
         }
-    })
-,
-     await prisma.users.count({
+      }), 600),
+      getCachedData("registredYestrdayNumberOfUsr", () => prisma.users.count({
         where: {
-            dateOfRegistration: {
-                gte: yesterday.toISO(), // Od začátku včerejšího dne
-                lt: today.toISO() // Do konce včerejšího dne
-            }
+          dateOfRegistration: {
+            gte: yesterday.toISO(),
+            lt: today.toISO()
+          }
         }
-    }) , await prisma.users.count({
-      where: {
-        dateOfRegistration: {
-              gte: startOfThisMonth.toISO(),
-              lt: endOfThisMonth.toISO()
+      }), 600),
+      getCachedData("registredThisMonthyNumberOfUsr", () => prisma.users.count({
+        where: {
+          dateOfRegistration: {
+            gte: startOfThisMonth.toISO(),
+            lt: endOfThisMonth.toISO()
           }
-      }
-  }), await prisma.users.count({
-      where: {
-        dateOfRegistration: {
-              gte: startOfLastMonth.toISO(),
-              lt: endOfLastMonth.toISO()
+        }
+      }), 600),
+      getCachedData("registredLastMonthyNumberOfUsr", () => prisma.users.count({
+        where: {
+          dateOfRegistration: {
+            gte: startOfLastMonth.toISO(),
+            lt: endOfLastMonth.toISO()
           }
-      }
-  }),   prisma.accountType.findMany(),
-
-
+        }
+      }), 600),
+      getCachedData("allSubToStats", () => prisma.accountType.findMany(), 600)
     ]);
 
     let poststats = {}
