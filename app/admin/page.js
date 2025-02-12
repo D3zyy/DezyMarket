@@ -193,30 +193,31 @@ headers().get("x-real-ip") ||
 
 
     for(let j = 0; j < allSubToStats.length; j++) {
-      
-      const numberOfUpgrades = await prisma.accountUpgrades.findMany({
+      let numberOfUpgrades = await  getCachedData("numberOfUpgrades", () =>  prisma.accountUpgrades.findMany({
         where: {
           AccountTypeIdAfter: allSubToStats[j].id, // Správný název pole podle modelu
           
+          
         }
-      });
-
-//console.log("Počet uprgradů:",numberOfUpgrades.length)
+      }), 300)
+      
 
 
       // Fetch all active users once
-      const allUsers = await prisma.accountTypeUsers.findMany({
+      const allUsers = await    getCachedData("allUsers", () =>  prisma.accountTypeUsers.findMany({
           where: {
               accountTypeId: allSubToStats[j].id, // Use id from allSubToStats
        
           }
-      });
-      const allUsersCount = await prisma.accountTypeUsers.findMany({
+      }), 300)
+
+
+      const allUsersCount =await    getCachedData("allUsersCount", () => prisma.accountTypeUsers.findMany({
         where: {
             accountTypeId: allSubToStats[j].id, // Use id from allSubToStats
             active: true
         }
-    });
+    }), 300);
   
      
 
@@ -228,10 +229,8 @@ headers().get("x-real-ip") ||
       const lastMonthStart = now.minus({ months: 1 }).startOf('month');
       const lastMonthEnd = now.minus({ months: 1 }).endOf('month');
       
-      // Get the count of users for each category
-      const numberOfAllUsers = allUsers.length;
-  
-      const numberOfGifted = allUsers.filter(user => user.gifted).length;
+
+      const numberOfGifted = allUsers.filter(user => user.gifted && user.active).length;
   
       const numberOfToday = allUsers.filter(user => {
           const createdAt = DateTime.fromJSDate(user.fromDate);
