@@ -121,7 +121,7 @@ const Page = async ({ params }) => {
       }
     }
     nmbOfViews =   await prisma.postViews.count({
-      where: { userId: session.userId, postId: postRecord?.id },
+      where: { postId: postRecord?.id },
     });
     console.log("Počet views:",nmbOfViews)
     accType = await getUserAccountTypeOnStripe(postRecord?.user.email);
