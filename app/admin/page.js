@@ -8,6 +8,7 @@ import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { headers } from 'next/headers';
 import { checkRateLimit } from '../RateLimiter/rateLimit';
+import { getCachedData } from '../getSetCachedData/caching';
 const Page = async () => {
 const ipToRedis =
 headers().get("x-forwarded-for")?.split(",")[0] || 
@@ -47,10 +48,13 @@ headers().get("x-real-ip") ||
     if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }
+  errorsfromServer = await  getCachedData("errorsfromServer",   prisma.errors.findMany,60)
   try{
-    [errorsfromServer,countOfAllPosts,activePostsCount,nmbrOfPostsToday,nmbrOfPostsYestrday,nmbrOfPostsThisMonth,nmbrOfPostsLastMonth,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats] = await Promise.all([
-      prisma.errors.findMany()
-      ,prisma.posts.count(),
+
+   
+
+    [countOfAllPosts,activePostsCount,nmbrOfPostsToday,nmbrOfPostsYestrday,nmbrOfPostsThisMonth,nmbrOfPostsLastMonth,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats] = await Promise.all([
+  prisma.posts.count(),
       prisma.posts.count({where: {visible: true}})
       ,
       await prisma.posts.count({
@@ -297,11 +301,10 @@ const topCounts = sortedTops.map(top => {
 
 
 
-
-
   return (
     <div>
       {session.role.privileges > 1 && 
+      
        <MenuByRole errorsfromServer={errorsfromServer} poststats={poststats} subscriptionStats={subscriptionStats} topsWithCounts={topCounts} usersStats={usersStats} allTops={allTops} supTick={suppTickets} reports={reports} privileges={session.role.privileges} subscTypes={subscTypes} />
       }
      
@@ -314,7 +317,7 @@ const topCounts = sortedTops.map(top => {
 } catch (error) {
 try{
 
-        
+        console.log(error)
       const rawIp =
   headers().get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
   headers().get("x-real-ip") ||                      // Alternativní hlavička                   // Lokální fallback
