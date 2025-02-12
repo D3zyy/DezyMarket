@@ -2,6 +2,7 @@ import { prisma } from "@/app/database/db";
 import { getSession } from "@/app/authentication/actions";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData } from "@/app/getSetCachedData/caching";
 export async function GET(req) {
   let session
   try {

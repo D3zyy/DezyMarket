@@ -15,7 +15,7 @@ postRecord =  await getCachedData(
   async () => await prisma.posts.findUnique({
     where: {
       id: postId,
-      visible: true, // Jen viditelné příspěvky
+      ...(privi > 1 ? {} : { visible: true }), // Viditelnost pouze pokud privi <= 1
     },
     include: {
       category: true,

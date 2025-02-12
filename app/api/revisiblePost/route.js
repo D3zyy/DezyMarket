@@ -2,6 +2,7 @@ import { prisma } from "@/app/database/db";
 import { getSession } from "@/app/authentication/actions";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData,invalidateCache } from "@/app/getSetCachedData/caching";
 export async function POST(req) {
   let data,session
   try {
@@ -72,6 +73,7 @@ export async function POST(req) {
         visible: true
     }
 });
+await invalidateCache(`post_record_${data.postId}`)
     return new Response(
         JSON.stringify({ message: 'Úspěch' }),
       {
