@@ -9,6 +9,7 @@ import { DateTime } from 'luxon';
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData } from "@/app/getSetCachedData/caching";
 const schema = z.object({
   name: z.string()
     .max(70, 'Název může mít maximálně 70 znaků.') 
@@ -556,9 +557,11 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
 
 
 
-               const categoryExist = await prisma.Categories.findUnique({
+    
+              const categoryExist = await    getCachedData(`categoryExist_${parseInt(formData.get('category'))}`, () =>prisma.Categories.findUnique({
                 where: { id: parseInt(formData.get('category')) }
-              });
+              }), 31556952)
+
               if (!categoryExist) {
                 const rawIp =
                 req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
@@ -920,10 +923,10 @@ export async function PUT(req) {
       });
     } 
 
-
-      const categoryExist = await prisma.Categories.findUnique({
-        where: { id: parseInt(data.category) }
-      });
+    const categoryExist = await    getCachedData(`categoryExist_${parseInt(data.category)}`, () =>prisma.categories.findUnique({
+      where: { id: parseInt(data.category) }
+    }), 31556952)
+    
       if (!categoryExist) {
         const rawIp =
       req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
@@ -1152,9 +1155,9 @@ export async function PUT(req) {
         headers: { 'Content-Type': 'application/json' }
       });
     } 
-    const categoryExist = await prisma.Categories.findUnique({
+    const categoryExist = await    getCachedData(`categoryExist_${parseInt(data.category)}`, () =>prisma.categories.findUnique({
       where: { id: parseInt(data.category) }
-    });
+    }), 31556952)
     if (!categoryExist) {
           
   
@@ -1300,9 +1303,12 @@ export async function PUT(req) {
           });
         }
       
-        // Načtení nových kategorií a sekcí podle jejich ID
+       
+
         const newCategory = newData.category
-          ? await prisma.categories.findFirst({ where: { id: parseInt(newData.category, 10) } })
+          ? await    getCachedData(`categoryExist_${parseInt(newData.category, 10)}`, () =>prisma.categories.findUnique({
+            where: { id:  parseInt(newData.category, 10) }
+          }), 31556952)
           : null;
       
         const newSection = newData.section

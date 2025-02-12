@@ -65,30 +65,30 @@ headers().get("x-real-ip") ||
         try {
 
           [CategoriesFromDb, SectionsFromDb, typeofPosts, typeTops, accEmojis, allowedNumberOfImg] = await Promise.all([
-            getCachedData("categoriesFromDb", () => prisma.categories.findMany({}), 600),
-            getCachedData("sectionsFromDb", () => prisma.sections.findMany({}), 600),
-            getCachedData("typeofPosts", () => prisma.postType.findMany({
-              where: {
-                OR: [
-                  { validFrom: { lte: dateAndTime }, validTo: { gte: dateAndTime } },
-                  { validFrom: null, validTo: null }
-                ]
-              },
-              include: { perks: true }
-            }), 600),
-            getCachedData("typeTops", () => prisma.tops.findMany({ where: { hidden: { not: true } } }), 600),
-            getCachedData("accEmojis", () => prisma.accountType.findMany({
-              where: {
-                dependencyPriorityAcc: null,
-                emoji: { not: null }
-              },
-              select: { emoji: true, name: true }
-            }), 600),
-            getCachedData("allowedNumberOfImg", () => prisma.accountType.findFirst({
-              where: { name: accType },
-              select: { numberOfAllowedImages: true }
-            }), 600)
-          ]);
+            getCachedData(`categoriesFromDb`, () => prisma.categories.findMany({}), 31556952),
+            getCachedData(`sectionsFromDb`, () => prisma.sections.findMany({}), 31556952),
+            getCachedData(`typeofPosts_${dateAndTime}`, () => prisma.postType.findMany({
+                where: {
+                    OR: [
+                        { validFrom: { lte: dateAndTime }, validTo: { gte: dateAndTime } },
+                        { validFrom: null, validTo: null }
+                    ]
+                },
+                include: { perks: true }
+            }), 31556952),
+            getCachedData(`typeTops`, () => prisma.tops.findMany({ where: { hidden: { not: true } } }), 31556952),
+            getCachedData(`accEmojis`, () => prisma.accountType.findMany({
+                where: {
+                    dependencyPriorityAcc: null,
+                    emoji: { not: null }
+                },
+                select: { emoji: true, name: true }
+            }), 31556952),
+            getCachedData(`allowedNumberOfImg_${accType}`, () => prisma.accountType.findFirst({
+                where: { name: accType },
+                select: { numberOfAllowedImages: true }
+            }), 31556952)
+        ]);
 
 
 

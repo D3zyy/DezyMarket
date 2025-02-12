@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { prisma } from "../database/db";
 import { headers } from "next/headers"; // Získání URL requestu
 import Link from "next/link";
+import { getCachedData } from "../getSetCachedData/caching";
 // Správné cesty k fontům (musí být v /public/fonts/)
 const pacifico = localFont({
   src: "/../../public/fonts/Pacifico/Pacifico-Regular.ttf",
@@ -19,9 +20,10 @@ const bebas = localFont({
 
 async function Layout({ children  }) {
 try{
-  const categories = await prisma.categories.findMany({
-    include: { sections: true },
-  });
+   const categories  = await  getCachedData(`categoriesAndSection`, () => prisma.categories.findMany({  include: {
+        sections: true,
+      },}), 31556952)
+  
 
   return (
     <div>

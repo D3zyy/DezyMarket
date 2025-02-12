@@ -6,7 +6,7 @@ import SearchComponent from './components/SearchComponent';
 import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import { checkRateLimit } from './RateLimiter/rateLimit';
-
+import { getCachedData } from './getSetCachedData/caching';
 const pacifico = localFont({
   src: '../public/fonts/Pacifico/Pacifico-Regular.ttf', // Začíná lomítkem
   weight: '400',
@@ -47,13 +47,11 @@ const Page = async () => {
       )
     }
 
+    const categories  = await  getCachedData(`categoriesAndSection`, () => prisma.categories.findMany({  include: {
+      sections: true,
+    },}), 31556952)
 
 
-    const categories = await prisma.categories.findMany({
-      include: {
-        sections: true,
-      },
-    });
 
 
 

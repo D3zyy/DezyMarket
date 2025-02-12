@@ -3,7 +3,7 @@ import { prisma } from "@/app/database/db";
 import { getSession } from "@/app/authentication/actions";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-
+import { getCachedData } from "@/app/getSetCachedData/caching";
 
   export async function GET(req) {
  let session
@@ -37,7 +37,8 @@ import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
         );
       }
      
-      const Allcategory = await prisma.categories.findMany();
+   
+      const Allcategory = await   getCachedData(`categoriesFromDb`, () => prisma.categories.findMany({}), 31556952)
       return new Response(
         JSON.stringify(Allcategory), // Make sure to JSON.stringify the data
         {
