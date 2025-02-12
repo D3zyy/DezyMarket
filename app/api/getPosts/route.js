@@ -1,7 +1,8 @@
 import { prisma } from '../../database/db';
 import { checkRateLimit } from '@/app/RateLimiter/rateLimit';
-
+import { getSession } from '@/app/authentication/actions';
 export async function POST(request) {
+    try {
     const ipToRedis =
     request.headers.get("x-forwarded-for")?.split(",")[0] || 
     request.headers.get("x-real-ip") ||                     
@@ -99,4 +100,41 @@ export async function POST(request) {
             headers: { 'Content-Type': 'application/json' }
         }
     );
+     } catch (error) {
+          
+            try{
+            
+              const rawIp =
+              request.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
+              request.headers.get("x-real-ip") ||                      // Alternativní hlavička
+              request.socket?.remoteAddress ||                         // Lokální fallback
+              null;
+            
+            // Odstranění případného prefixu ::ffff:
+            const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
+            
+                const session =await getSession()
+            
+                  const dateAndTime = DateTime.now()
+                  .setZone('Europe/Prague')
+                  .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+                    await prisma.errors.create({ data: {
+                      info: `Chyba na /api/getPosts - POST - (catch) keyWord: ${data.keyWord},  category: ${data.category}  section: ${data.section} price: ${data.price} location: ${data.location} page: ${page}   `,
+                      dateAndTime: dateAndTime,
+                      errorPrinted: error,
+                      userId: session?.userId,
+                      ipAddress:ip },
+                    })
+        
+                  }catch(error){}
+              console.error('Chyba na serveru [POST] požadavek informace o předplatném:  ', error);
+              return new NextResponse(JSON.stringify({
+                  message: 'Chyba na serveru [POST] požadavek informace o předplatném'
+              }), {
+                  status: 500,
+                  headers: { 'Content-Type': 'application/json' }
+              });
+          }finally {
+            await prisma.$disconnect(); // Uzavřete připojení po dokončení
+      }
 }
