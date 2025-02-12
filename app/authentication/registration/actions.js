@@ -122,11 +122,14 @@ console.log("IP adresa :", ip);
 
 
 
-// Najít existující IP adresu v databázi
-let ipToRegister = await prisma.ipAddresses.findFirst({
-  where: { value: ip },
-});
 
+let ipToRegister = await getCachedData(
+  `ip:${ip}`,
+  async () => await prisma.ipAddresses.findFirst({
+    where: { value: ip },
+  }),
+  600
+);
 if (!ipToRegister) {
   // Pokud IP adresa neexistuje, vytvoříme ji
   ipToRegister = await prisma.ipAddresses.create({

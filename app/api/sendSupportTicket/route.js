@@ -3,7 +3,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon"; // Pokud ještě není importováno
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-
+import { getCachedData } from "@/app/getSetCachedData/caching";
 export async function POST(request) {
   let  data
   let session
@@ -35,10 +35,15 @@ export async function POST(request) {
   
   // Odstranění případného prefixu ::ffff:
   const ip = rawIp?.startsWith("::ffff:") ? rawIp.replace("::ffff:", "") : rawIp;
-  const ipVal = await prisma.ipAddresses.findFirst({
-    where: { value: ip},
-  });
 
+
+  const ipVal = await getCachedData(
+    `ip:${ip}`,
+    async () => await prisma.ipAddresses.findFirst({
+      where: { value: ip },
+    }),
+    600
+  );
 
 
     const nbrOfActTick = await prisma.supportTickets.count({

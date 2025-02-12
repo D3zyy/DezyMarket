@@ -114,33 +114,47 @@ const Page = async ({ params }) => {
       sessionsOfUser = await prisma.sessions.findMany({
         where: { userId: userAcc.id },
       });
-    
-      ipsOfUser = await prisma.ipAddressesOnUsers.findMany({
-        where: { userId: userAcc.id },
-        include: {
-          ipAddress: true, // Fetches the associated IP address details
-        },
-      });
-       ipsWithOtherUsers = await Promise.all(
-        ipsOfUser.map(async (userIp) => {
-          const otherUsers = await prisma.ipAddressesOnUsers.findMany({
-            where: {
-              ipAddressId: userIp.ipAddressId,
-              userId: { not: userAcc.id }, // Exclude the current user
-            },
-            include: {
-              user: true, // Include user details for the matching IPs
-            },
-          });
+
+
+       ipsOfUser = await getCachedData(
+        `user_ips:${userAcc.id}`,
+        async () => await prisma.ipAddressesOnUsers.findMany({
+          where: { userId: userAcc.id },
+          include: {
+            ipAddress: true, // Fetches the associated IP address details
+          },
+        }),
+        600
+      );
       
-          return {
-            ip: userIp.ipAddress.value, // IP address value
-            otherUsers: otherUsers.map((entry) => entry.user), // Extract user info
-          };
-        })
+       ipsWithOtherUsers = await getCachedData(
+        `ips_with_other_users:${userAcc.id}`,
+        async () => await Promise.all(
+          ipsOfUser.map(async (userIp) => {
+            const otherUsers = await prisma.ipAddressesOnUsers.findMany({
+              where: {
+                ipAddressId: userIp.ipAddressId,
+                userId: { not: userAcc.id }, // Exclude the current user
+              },
+              include: {
+                user: true, // Include user details for the matching IPs
+              },
+            });
+      
+            return {
+              ip: userIp.ipAddress.value, // IP address value
+              otherUsers: otherUsers.map((entry) => entry.user), // Extract user info
+            };
+          })
+        ),
+        600
       );
      
+
+
+
 }
+
 
 
 if(session?.role?.privileges > 3){
