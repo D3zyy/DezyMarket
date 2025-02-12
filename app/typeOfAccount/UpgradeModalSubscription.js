@@ -135,7 +135,7 @@ export function openUpgradeModalSubscriptionModal(nameToUpgrade) {
                             <h2 className="text-lg font-bold mb-4 text-center">
                             Upgradovat předplatné na {nameToUpgrade}
                             </h2>
-                            <ul className="space-y-4 text-centre">
+                            <ul className="space-y-4 text-centre mb-2">
                                 <li className="text-center">
                                     <span>Částka k doplacení: </span>
                                     <span className="font-bold">{priceToUpgrade} Kč</span>
