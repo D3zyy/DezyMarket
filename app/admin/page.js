@@ -48,7 +48,7 @@ headers().get("x-real-ip") ||
     if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }
-  errorsfromServer = await  getCachedData("errorsfromServer",   prisma.errors.findMany,60)
+  errorsfromServer = await  getCachedData("errorsfromServer",   prisma.errors.findMany,5)
   try{
 
    
