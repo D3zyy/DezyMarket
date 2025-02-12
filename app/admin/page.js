@@ -193,31 +193,28 @@ headers().get("x-real-ip") ||
 
 
     for(let j = 0; j < allSubToStats.length; j++) {
-      let numberOfUpgrades = await  getCachedData("numberOfUpgrades", () =>  prisma.accountUpgrades.findMany({
-        where: {
-          AccountTypeIdAfter: allSubToStats[j].id, // Správný název pole podle modelu
-          
-          
-        }
-      }), 300)
-      
-
-
-      // Fetch all active users once
-      const allUsers = await    getCachedData("allUsers", () =>  prisma.accountTypeUsers.findMany({
+      let numberOfUpgrades = await getCachedData(`numberOfUpgrades_${allSubToStats[j].id}`, () => 
+        prisma.accountUpgrades.findMany({
           where: {
-              accountTypeId: allSubToStats[j].id, // Use id from allSubToStats
-       
+            AccountTypeIdAfter: allSubToStats[j].id, // Správný název pole podle modelu
           }
-      }), 300)
-
-
-      const allUsersCount =await    getCachedData("allUsersCount", () => prisma.accountTypeUsers.findMany({
-        where: {
+        }), 300);
+      
+      // Fetch all active users once
+      const allUsers = await getCachedData(`allUsers_${allSubToStats[j].id}`, () => 
+        prisma.accountTypeUsers.findMany({
+          where: {
+            accountTypeId: allSubToStats[j].id, // Use id from allSubToStats
+          }
+        }), 300);
+      
+      const allUsersCount = await getCachedData(`allUsersCount_${allSubToStats[j].id}`, () => 
+        prisma.accountTypeUsers.findMany({
+          where: {
             accountTypeId: allSubToStats[j].id, // Use id from allSubToStats
             active: true
-        }
-    }), 300);
+          }
+        }), 300);
   
      
 
