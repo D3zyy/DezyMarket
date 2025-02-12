@@ -24,6 +24,7 @@ import DeletePernamentBtn from "./DeletePernamentBtn";
 import ReVisibleBtn from "./ReVisibleBtn";
 import { headers } from "next/headers";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { DateTime } from "luxon";
 const Page = async ({ params }) => {
   let session;
   let accType;
@@ -32,6 +33,7 @@ const Page = async ({ params }) => {
   let isOverflowing;
   let imageUrls
   let topinfo
+  let nmbOfViews
   try{  
     const ipToRedis =
                 headers().get("x-forwarded-for")?.split(",")[0] || 
@@ -60,7 +62,9 @@ const Page = async ({ params }) => {
   try {
     session = await getSession();
 
-    const privileges = session ? session.role?.privileges : 1;
+
+
+    const  privileges = session ? session.role?.privileges : 1;
 
 [postRecord, imageUrls] = (await Promise.allSettled([
   getPostFromDb(params.postId, privileges),
@@ -76,6 +80,9 @@ const Page = async ({ params }) => {
       }
      
     }
+
+
+
     if (!postRecord) {
       return (
         <div className="p-4 text-center">
@@ -93,6 +100,30 @@ const Page = async ({ params }) => {
         </div>
       );
     }
+
+    if (session?.isLoggedIn && session?.userId != postRecord?.user?.id) {
+      const alreadyViewed = await prisma.postViews.findFirst({
+        where: { userId: session.userId, postId: postRecord?.id },
+      });
+    
+      if (!alreadyViewed) {
+        const dateAndTime = DateTime.now()
+           .setZone('Europe/Prague')
+           .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+    
+        await prisma.postViews.create({
+          data: {
+            userId: session.userId,
+            postId: postRecord.id,
+            viewedAt: dateAndTime
+          },
+        });
+      }
+    }
+    nmbOfViews =   await prisma.postViews.count({
+      where: { userId: session.userId, postId: postRecord?.id },
+    });
+    console.log("Počet views:",nmbOfViews)
     accType = await getUserAccountTypeOnStripe(postRecord?.user.email);
     accType = accType?.name
    
@@ -248,7 +279,7 @@ const Page = async ({ params }) => {
 
 <div className="btn inline-block w-32 mb-5 " style={{ display: 'flex', alignItems: 'center' }}>
   <span className="text-3xl" style={{ marginTop: '-5px' }}>&#128064;</span>
-  <span className="font-bold">200x</span>
+  <span className="font-bold">{nmbOfViews}x</span>
 </div>
  
   
@@ -487,6 +518,7 @@ Ohodnotit uživatele</a>
     </div>
   );
 } catch (error) {
+  console.log(error)
    try{
         const rawIp =
     headers().get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
