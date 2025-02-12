@@ -1041,10 +1041,11 @@ export async function PUT(req) {
     }
 
     // Fetch the session user's role and privileges only if they are not the creator
-    const sessionUser = await prisma.users.findUnique({
+
+    const sessionUser = await     getCachedData(`userRole_${session.userId}`, () => prisma.users.findUnique({
       where: { id: session.userId },
       include: { role: true }
-    });
+  }), 600)
 
     if (!sessionUser) {
       return new Response(JSON.stringify({

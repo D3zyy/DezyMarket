@@ -18,6 +18,7 @@ import ReNewSubButton from "./ReNewSub";
 import DeleteSessionBtn from "./BtnDeleteSession";
 import { headers } from "next/headers";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData } from "@/app/getSetCachedData/caching";
 const Page = async ({ params }) => {
   let emojiForAcc,session,userAcc, posts, rankingOfUser, accType,bansOfUser,isBanned,allRoles,allSub,sessionsOfUser,ipsOfUser,ipsWithOtherUsers,allManagementsActions
   try{ 
@@ -46,16 +47,16 @@ const Page = async ({ params }) => {
           )
         }
 
-
+      
   try{
    [session,userAcc, posts, rankingOfUser,bansOfUser] = await Promise.all([
     getSession()
-    , prisma.users.findUnique({
-      where: { id: params?.userId },
-      include: {
-        role: true,  
-      },
-    }),
+    ,     
+    getCachedData(`userRole_${params?.userId}`, () => prisma.users.findUnique({
+      where: { id:params?.userId },
+      include: { role: true }
+  }),6000)
+    ,
     prisma.posts.findMany({
       where: { userId: params?.userId },
       include: {

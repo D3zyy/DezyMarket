@@ -11,7 +11,7 @@ export async function verifyToken(email, token) {
             include: { user: true }
         });
 
- const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findUnique({
+ const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findFirst({
     where: { email: email }
     }), 600)
         // Check if the token record exists
@@ -56,7 +56,7 @@ export async function verifyToken(email, token) {
 
             // Adding customer to Stripe
             const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-            const userFromDb = await getCachedData(`userEmail_${email}`, () => prisma.users.findUnique({
+            const userFromDb = await getCachedData(`userEmail_${email}`, () => prisma.users.findFirst({
                 where: { email: email }
                 }), 600)
 

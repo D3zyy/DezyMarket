@@ -4,6 +4,7 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon"; // Pokud ještě není importováno
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData } from "@/app/getSetCachedData/caching";
 export async function POST(request) {
   let name,session
   try {
@@ -34,10 +35,11 @@ export async function POST(request) {
       );
     }
     ({ name} = await request.json());
-    const user = await prisma.Users.findFirst({
-      where: { email: session.email },
-    });
 
+ const user = await getCachedData(`userEmail_${session.email}`, () => prisma.users.findFirst({
+    where: { email: session.email }
+    }), 600)
+    
     if (!user) {
       return new NextResponse(
         JSON.stringify({ message: 'Uživatel nenalezen' }),

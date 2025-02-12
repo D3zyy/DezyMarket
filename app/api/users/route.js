@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { checkUserBan } from "../session/dbMethodsSession";
 import { handleLoginAttempt, resetUserTries } from "./handleLoginAttempts";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-
+import { getCachedData } from "@/app/getSetCachedData/caching";
 // POST method for logging in
 export async function POST(req) {
   let data;
@@ -56,12 +56,11 @@ export async function POST(req) {
       });
     }
     
-    // Find the user in the database
-    const user = await prisma.Users.findUnique({
-      where: {
-        email: email,
-      },
-    });
+
+ const user = await getCachedData(`userEmail_${session.email}`, () => prisma.users.findFirst({
+    where: { email: email}
+    }), 600)
+
 
     // Check validity of the password and ban status
     let isPasswordValid = false;

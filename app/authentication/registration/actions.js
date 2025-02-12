@@ -7,7 +7,7 @@ import { sendVerificationEmail } from '@/app/api/email/email';
 import { headers } from "next/headers";
 import { DateTime } from 'luxon';
 import { checkRateLimit } from '@/app/RateLimiter/rateLimit';
-
+import { getCachedData } from '@/app/getSetCachedData/caching';
 const schema = z.object({
   email: z.string()
     .email({ message: 'Nesprávný formát emailu.' }),
@@ -58,13 +58,13 @@ export const handleRegistration = async (formData) => {
   try {
 
 
-    // Zkontrolujte, zda uživatel s daným e-mailem již existuje
-    const existingUser = await prisma.users.findUnique({
-      where: {
-        email: validatedFields.data.email,
-      }
-    });
 
+
+    const existingUser = await getCachedData(`userEmail_${validatedFields.data.email}`, () => prisma.users.findFirst({
+      where: { email: validatedFields.data.email}
+      }), 600)
+
+    
     if (existingUser) {
       return {
         message: "Email již existuje.",

@@ -40,7 +40,7 @@ export async function POST(req) {
         }
       );
     }
- const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findUnique({
+ const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findFirst({
     where: { email: email }
     }), 600)
 

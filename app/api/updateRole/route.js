@@ -4,6 +4,8 @@ import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon"; // Pokud ještě není importováno
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData } from "@/app/getSetCachedData/caching";
+
 export async function POST(request) {
   let roleId, idOfUser,session
   try {
@@ -102,12 +104,12 @@ export async function POST(request) {
         }
       );
     }
-    const usr = await prisma.users.findUnique({
-        where: { id: idOfUser },
-        include: {
-            role : true
-        }
-      });
+
+    const usr = await     getCachedData(`userRole_${idOfUser}`, () => prisma.users.findUnique({
+      where: { id: idOfUser },
+      include: { role: true }, 
+    }), 600)
+
 
 
     if (!usr) {

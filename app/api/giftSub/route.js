@@ -3,6 +3,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData } from "@/app/getSetCachedData/caching";
 const { DateTime } = require('luxon');
 
 
@@ -59,8 +60,16 @@ const { DateTime } = require('luxon');
             }
           );
         }
-        let thisUserToGIft = await prisma.users.findUnique({where: {id: data.idOfUser}})
-        console.log("TOgle je ten user:",thisUserToGIft)
+
+ const thisUserToGIft = await     getCachedData(`userRole_${data.idOfUser}`, () => prisma.users.findUnique({
+        where: {id: data.idOfUser},
+        include: { role: true }
+    }), 600)
+
+    
+
+
+
       let  currentSub = await getUserAccountTypeOnStripe(thisUserToGIft.email)
       console.log("Tohle má teďka :",currentSub)
       if(currentSub?.priority > 1 && currentSub?.priority != null){

@@ -4,6 +4,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData } from "@/app/getSetCachedData/caching";
 export async function POST(req) {
     let data ,session
     try {
@@ -53,11 +54,13 @@ export async function POST(req) {
             
             if(session.role.privileges > 2){
 
-         
-                usrToReactivate = await prisma.users.findFirst({
-            where: { id: data.usrId },
-            include: {role : true}
-        });
+              usrToReactivate = await     getCachedData(`userRole_${data.usrId}`, () => prisma.users.findFirst({
+                where: { id: data.usrId },
+                include: { role: true }
+            }), 600)
+
+
+
         if(!usrToReactivate){
             const rawIp =
             req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci

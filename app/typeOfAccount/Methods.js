@@ -2,7 +2,7 @@ import { prisma } from "../database/db";
 import { getSession } from "../authentication/actions";
 import { DateTime } from 'luxon';
 import { select } from "@nextui-org/react";
-
+import { getCachedData } from "../getSetCachedData/caching";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function getUserAccountTypeFromDb(email) {
@@ -66,19 +66,21 @@ export async function getUserAccountTypeFromDb(email) {
 
     // If no active subscription is found, check local database
     let userAccountTypes = null;
-    
-      userAccountTypes = await prisma.users.findUnique({
-        where: {
-          email: email,
-        },
-        select: {
-          accountTypes: {
-            select: {
-              name: true,
-            },
+      
+    userAccountTypes = await     getCachedData(`userAccTypes_${email}`, () => prisma.users.findUnique({
+      where: {
+        email: email,
+      },
+      select: {
+        accountTypes: {
+          select: {
+            name: true,
           },
         },
-      });
+      },
+        }), 6000)
+
+
    
 
     // Return the account type from the local database if found
@@ -174,48 +176,54 @@ export async function getUserAccountTypeOnStripe(email) {
   .setZone('Europe/Prague')
   .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
 
-// Načtěte typy účtů uživatele z databáze a filtrujte pouze aktivní účty
-const userAccountTypes = await prisma.users.findUnique({
-  where: {
-    email: email, // Filter by user email
-  },
-  select: {
-    accounts: {
-      where: {
-        active: true, // Filter only active accounts
-        fromDate: {
-          lte: DateAndTimeNowPrague, // Ensure fromDate <= current date
-        },
-        OR: [
-          {
-            toDate: {
-              gte: DateAndTimeNowPrague, // toDate >= current date
+
+
+ const userAccountTypes = await getCachedData(`userAcc_${email}`, () => prisma.users.findUnique({
+    where: {
+      email: email, // Filter by user email
+    },
+    select: {
+      accounts: {
+        where: {
+          active: true, // Filter only active accounts
+          fromDate: {
+            lte: DateAndTimeNowPrague, // Ensure fromDate <= current date
+          },
+          OR: [
+            {
+              toDate: {
+                gte: DateAndTimeNowPrague, // toDate >= current date
+              },
             },
-          },
-          {
-            toDate: null, // toDate is not set
-          },
-        ],
-      },
-      select: {
-        price: true,
+            {
+              toDate: null, // toDate is not set
+            },
+          ],
+        },
+        select: {
+          price: true,
+           
          
-       
-        fromDate: true,
-        toDate: true,
-        monthIn: true,
-        gifted: true,
-        scheduleToCancel: true,
-        accountType: {
-          select: {
-            priority: true,
-            name: true, // Access the 'name' field in the 'accountType' table
+          fromDate: true,
+          toDate: true,
+          monthIn: true,
+          gifted: true,
+          scheduleToCancel: true,
+          accountType: {
+            select: {
+              priority: true,
+              name: true, // Access the 'name' field in the 'accountType' table
+            },
           },
         },
       },
     },
-  },
-});
+      }), 6000)
+
+
+
+
+
 
 
   

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/database/db";
 import { DateTime } from 'luxon';
-
+import { getCachedData } from "@/app/getSetCachedData/caching";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
@@ -65,10 +65,10 @@ export async function POST(request) {
             }
 
             // Načtení uživatele z databáze pomocí emailu
-            const user = await prisma.Users.findFirst({
-                where: { email: userEmail },
-            });
-
+        
+            const user = await getCachedData(`userEmail_${userEmail}`, () => prisma.users.findFirst({
+                where: { email:userEmail }
+                }), 600)
             if (!user) {
                 throw new Error(`Uživatel s e-mailem ${userEmail} nebyl nalezen.`);
             }
@@ -168,10 +168,10 @@ export async function POST(request) {
                     .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
             
                 // Get the user based on their email
-                const user = await prisma.Users.findFirst({
-                    where: { email: paymentIntent.customer_email },
-                });
-            
+ 
+                const user = await getCachedData(`userEmail_${paymentIntent.customer_email }`, () => prisma.users.findFirst({
+                    where: { email:paymentIntent.customer_email  }
+                    }), 600)
                 // Find the AccountTypeId by its name
                 const accountType = await prisma.AccountType.findFirst({
                     where: { name: paymentIntent.subscription_details.metadata.name },
@@ -211,9 +211,11 @@ const endOfSubscription = DateTime.now()
                 const customer = await stripe.customers.retrieve(paymentIntent.customer);
                 let customerEmail = customer.email
                 // Get the user based on their email
-                const user = await prisma.users.findFirst({
-                    where: { email: customerEmail },
-                });
+ 
+                
+                const user = await getCachedData(`userEmail_${customerEmail }`, () => prisma.users.findFirst({
+                    where: { email:customerEmail  }
+                    }), 600)
                 console.log("Uživatel kterému bylo zrušeno předplatné:",user)
                 // Find the AccountTypeId by its name
                 const accountType = await prisma.AccountType.findFirst({
