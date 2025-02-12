@@ -8,7 +8,7 @@ import { checkUserBan } from '../api/session/dbMethodsSession';
 import { getUserAccountTypeOnStripe } from '../typeOfAccount/Methods';
 import { headers } from 'next/headers';
 import { checkRateLimit } from '../RateLimiter/rateLimit';
-import { invalidateCache } from '../getSetCachedData/caching';
+import { invalidateCache, getCachedData } from '../getSetCachedData/caching';
 export const getSession = async () => {
     try {
    
