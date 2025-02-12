@@ -3,6 +3,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData, invalidateCache } from "@/app/getSetCachedData/caching";
 export async function POST(req) {
   let data ,session
     try {
@@ -109,16 +110,17 @@ export async function POST(req) {
             });
           }
          
-          const PostReports = await prisma.PostReport.findMany({
-            where: {
-              postId: data.postId,
-            },
-            include: {
-              user: true,
-              post: true
-            
-            },
-          });
+          const PostReports = await  getCachedData(`postReports_${data.postId}`, () => prisma.postReport.findMany({
+    where: {
+      postId: data.postId,
+    },
+    include: {
+      user: true,
+      post: true
+    
+    },
+      }), 600)
+
           
           const allReportsOfPost = PostReports.map(report => ({
             fromUser: {

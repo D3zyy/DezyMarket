@@ -2,7 +2,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from 'luxon';
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-
+import { getCachedData,invalidateCache } from "@/app/getSetCachedData/caching";
 export async function POST(req) {
   let data,session
     try {
@@ -201,14 +201,15 @@ export async function POST(req) {
           });
       }
 
-      const alreadyReported = await prisma.postReport.findFirst({
-        where: {
-          postId: data.postId,
-          userId: session.userId,  // assuming session.userId contains the user's ID
-        },
-      });
+   const alreadyReported = await prisma.postReport.findMany({
+  where: {
+    postId: data.postId,
+    userId: session.userId, 
+  } 
+});
+    console.log("Nasel sem:",alreadyReported)
 
-      if (alreadyReported) {
+      if (alreadyReported.length > 0) {
         
         const rawIp =
         req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
@@ -269,6 +270,7 @@ export async function POST(req) {
         }
       }
 
+      await invalidateCache(`postReports_${data.postId}`)
       return new Response(JSON.stringify({
         message: 'Příspěvek byl úspěšně nahlášen',
         success: true
