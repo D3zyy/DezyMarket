@@ -184,8 +184,8 @@ export async function POST(req) {
             numberOfStars: data.numberOfStars,
         },
     });
-    
- await invalidateCache(`userRakings_${params?.userId}`)
+
+ await invalidateCache(`userRakings_${data.userId}`)
 
 
 
