@@ -4,7 +4,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-import { getCachedData } from "@/app/getSetCachedData/caching";
+import { getCachedData, invalidateCache } from "@/app/getSetCachedData/caching";
 export async function POST(req) {
     let data ,session
     try {
@@ -248,6 +248,16 @@ export async function POST(req) {
                active: false
             },
         });
+
+        let userGifteeedd= await getCachedData(`userRole_${myAcc ? session.userId : usrToCancel.id}`, () => prisma.users.findUnique({
+          where: { id:myAcc ? session.userId : usrToCancel.id },
+          include: { role: true }
+      }),60)
+
+           await invalidateCache(`userRole_${myAcc ? session.userId : usrToCancel.id}`)
+           await invalidateCache(`userAcc_${userGifteeedd.email}`)
+
+
         const nowww = DateTime.now()
         .setZone('Europe/Prague')
         .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
@@ -437,6 +447,17 @@ export async function POST(req) {
            scheduleToCancel: true
         },
     });
+
+    let userGifteeedde= await getCachedData(`userRole_${myAcc ? session.userId : usrToCancel.id}`, () => prisma.users.findUnique({
+      where: { id:myAcc ? session.userId : usrToCancel.id },
+      include: { role: true }
+  }),60)
+
+       await invalidateCache(`userRole_${myAcc ? session.userId : usrToCancel.id}`)
+       await invalidateCache(`userAcc_${userGifteeedde.email}`)
+
+
+
     if(!myAcc){
 
  

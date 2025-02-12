@@ -70,7 +70,7 @@ export async function POST(request) {
                 where: { email:userEmail }
                 }), 600)
                await invalidateCache(`userEmail_${userEmail}`)
-               await invalidateCache(`userAccTypes_${userEmail}`)
+               await invalidateCache(`userAcc_${userEmail}`)
                await invalidateCache(`userRole_${user.userId}`)
             if (!user) {
                 throw new Error(`Uživatel s e-mailem ${userEmail} nebyl nalezen.`);
@@ -177,7 +177,7 @@ export async function POST(request) {
                     }), 600)
 
                     await invalidateCache(`userEmail_${paymentIntent.customer_email }`)
-                    await invalidateCache(`userAccTypes_${paymentIntent.customer_email}`)
+                    await invalidateCache(`userAcc_${paymentIntent.customer_email}`)
                     await invalidateCache(`userRole_${user.userId}`)
                 // Find the AccountTypeId by its name
                 const accountType = await prisma.AccountType.findFirst({
@@ -224,7 +224,7 @@ const endOfSubscription = DateTime.now()
                     where: { email:customerEmail  }
                     }), 600)
                     await invalidateCache(`userEmail_${customerEmail}`)
-                    await invalidateCache(`userAccTypes_${customerEmail}`)
+                    await invalidateCache(`userAcc_${customerEmail}`)
                     await invalidateCache(`userRole_${user.userId}`)
   
                 console.log("Uživatel kterému bylo zrušeno předplatné:",user)

@@ -3,7 +3,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-import { getCachedData } from "@/app/getSetCachedData/caching";
+import { getCachedData, invalidateCache } from "@/app/getSetCachedData/caching";
 const { DateTime } = require('luxon');
 
 
@@ -195,6 +195,16 @@ const { DateTime } = require('luxon');
             accountType: { connect: { id: data.idOfSub } },
           },
         });
+        
+
+ let userGifteeedd= await getCachedData(`userRole_${data.idOfUser }`, () => prisma.users.findUnique({
+      where: { id:data.idOfUser },
+      include: { role: true }
+  }),60)
+   
+        await invalidateCache(`userRole_${data.idOfUser}`)
+        await invalidateCache(`userAcc_${userGifteeedd.email}`)
+
        let gi= await prisma.accountType.findUnique({
           where: {id: data.idOfSub}
         });
