@@ -12,7 +12,10 @@ export async function verifyToken(email, token) {
         const user = await prisma.Users.findUnique({
             where: { email }
         });
-
+ const userr = await     getCachedData(`userRole_${userId}`, () => prisma.users.findUnique({
+      where: { id: userId },
+      include: { role: true }, 
+    }), 600)
         // Check if the token record exists
         if (!tokenRecord) {
             if (user) {

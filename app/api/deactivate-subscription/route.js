@@ -94,11 +94,11 @@ export async function POST(req) {
         if(data.usrId != null){
             if(session.role.privileges > 2){
 
-         
-         usrToCancel = await prisma.users.findFirst({
-            where: { id: data.usrId },
-            include: {role : true}
-        });
+           usrToCancel = await     getCachedData(`userRole_${data.usrId}`, () => prisma.users.findUnique({
+               where: { id: data.usrId },
+               include: { role: true }, 
+             }), 600)
+        
         if(!usrToCancel){
 
       

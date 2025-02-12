@@ -2,6 +2,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData } from "@/app/getSetCachedData/caching";
 export async function POST(req) {
   let   userId, bannedFrom, bannedTo, permanent, reason ,session
   try {
@@ -74,10 +75,11 @@ export async function POST(req) {
     }
 
     // Najdeme uživatele, který má být zabanován
-    const userToBeBanned = await prisma.users.findUnique({
-      where: { id: userId }, // Opraveno, aby bylo správné použití klíče
-      include: { role: true }, // Zahrneme role uživatele
-    });
+    const userToBeBanned = await     getCachedData(`userRole_${userId}`, () => prisma.users.findUnique({
+      where: { id: userId },
+      include: { role: true }, 
+    }), 600)
+  
 
     if (!userToBeBanned) {
       const rawIp =
