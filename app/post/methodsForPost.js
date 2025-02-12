@@ -5,11 +5,12 @@ export async function getPostFromDb(postId,privi = 1) {
   let postRecord = null;
 
   try {
-   
-   
+  
     
     // Uložíme data do dvou cache klíčů
-   postRecord =  await getCachedData(`post_record_${postId}_privi_${privi}`,  prisma.Posts.findUnique({
+postRecord = await getCachedData(
+  `post_record_${postId}_privi_${privi}`, // Cache pro s privilegii
+  async () => await prisma.posts.findUnique({
     where: {
       id: postId,
       ...(privi > 1 ? {} : { visible: true }), // Viditelnost pouze pokud privi <= 1
@@ -23,22 +24,30 @@ export async function getPostFromDb(postId,privi = 1) {
         },
       },
     },
-  }), 300); // Cache pro s privilegii
-    await getCachedData(`post_record_${postId}`,  prisma.Posts.findUnique({
-      where: {
-        id: postId,
-        ...(privi > 1 ? {} : { visible: true }), // Viditelnost pouze pokud privi <= 1
-      },
-      include: {
-        category: true,
-        section: true,
-        user: {
-          include: {
-            role: true,
-          },
+  }),
+  300 // Cache expirace na 5 minut (300 sekund)
+);
+
+// Uložíme data do cache bez privilegii
+await getCachedData(
+  `post_record_${postId}`, // Cache bez privilegii
+  async () => await prisma.posts.findUnique({
+    where: {
+      id: postId,
+      visible: true, // Jen viditelné příspěvky
+    },
+    include: {
+      category: true,
+      section: true,
+      user: {
+        include: {
+          role: true,
         },
       },
-    }), 300); // Cache bez privilegii
+    },
+  }),
+  300 // Cache expirace na 5 minut (300 sekund)
+);
     
    
     if(privi <=1){

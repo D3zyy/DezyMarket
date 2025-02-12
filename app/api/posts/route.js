@@ -1000,7 +1000,7 @@ export async function PUT(req) {
         });
       }
 
-      const categorySectionExist = await  getCachedData(`categorySectionExist_${parseInt(formData.get('category'))}_${parseInt(formData.get('section'))}`, () =>prisma.sections.findUnique({
+      const categorySectionExist = await  getCachedData(`categorySectionExist_${parseInt(data.category)}_${parseInt(data.category)}`, () =>prisma.sections.findUnique({
         where: { id:  parseInt(data.section) , categoryId:   parseInt(data.category)}
       }), 31556952)
 
