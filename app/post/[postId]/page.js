@@ -110,9 +110,14 @@ const Page = async ({ params }) => {
     }
 
     if (session?.isLoggedIn && session?.userId != postRecord?.user?.id) {
-      const alreadyViewed = await prisma.postViews.findFirst({
-        where: { userId: session.userId, postId: postRecord?.id },
-      });
+
+const alreadyViewed = await getCachedData(
+  `post_view_${session.userId}_${postRecord?.id}`, // Unikátní cache klíč závislý na userId a postId
+  async () => await prisma.postViews.findFirst({
+    where: { userId: session.userId, postId: postRecord?.id },
+  }),
+  42000
+);
     
       if (!alreadyViewed) {
         const dateAndTime = DateTime.now()
@@ -128,9 +133,13 @@ const Page = async ({ params }) => {
         });
       }
     }
-    nmbOfViews =   await prisma.postViews.count({
-      where: { postId: postRecord?.id },
-    });
+    nmbOfViews = await getCachedData(
+      `post_views_count_${postRecord?.id}`, // Unikátní cache klíč závislý na postId
+      async () => await prisma.postViews.count({
+        where: { postId: postRecord?.id },
+      }),
+      300 
+    );
     console.log("Počet views:",nmbOfViews)
     accType = await getUserAccountTypeOnStripe(postRecord?.user.email);
     accType = accType?.name

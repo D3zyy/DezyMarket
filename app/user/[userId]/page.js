@@ -263,7 +263,7 @@ function checkBans(bansOfUser) {
 
 if(session?.role?.privileges > 2   ){
   // fetch all types
-  const allSub = await getCachedData(
+   allSub = await getCachedData(
     `account_types_priority_gt_1`, // Unikátní klíč pro cache
     async () => await prisma.accountType.findMany({
       where: {
