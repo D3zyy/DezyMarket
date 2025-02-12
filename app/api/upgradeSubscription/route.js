@@ -4,6 +4,7 @@ import { prisma } from "@/app/database/db";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { DateTime } from 'luxon';
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { invalidateCache } from "@/app/getSetCachedData/caching";
 export async function POST(request) {
   let data
   let session
@@ -567,7 +568,7 @@ console.log("Jeho nínejší produkt",product)
               priceId: pricevalueOfDesiredSub?.price?.priceCode
           },
       });
-
+      await invalidateCache(`userAcc_${session.email}`)
          await prisma.AccountUpgrades.create({
         data: {
             dateTime: dateAndTime,

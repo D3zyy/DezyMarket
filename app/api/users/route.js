@@ -7,6 +7,8 @@ import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
 import { getCachedData } from "@/app/getSetCachedData/caching";
 // POST method for logging in
 export async function POST(req) {
+
+
   let data;
   try {
    const ipToRedis =
@@ -57,7 +59,7 @@ export async function POST(req) {
     }
     
 
- const user = await getCachedData(`userEmail_${session.email}`, () => prisma.users.findFirst({
+ const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findFirst({
     where: { email: email}
     }), 600)
 
