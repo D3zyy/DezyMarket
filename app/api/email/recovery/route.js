@@ -3,7 +3,7 @@ import { prisma } from '@/app/database/db';
 import nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
 import { DateTime } from 'luxon';
-
+import { checkRateLimit } from '@/app/RateLimiter/rateLimit';
 const smtpServer = process.env.SMTP_SERVER;
 const port = parseInt(process.env.SMTP_PORT, 10);
 const senderEmail = process.env.EMAIL_USER;
@@ -13,6 +13,22 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 export async function POST(req) {
   let email
   try {
+    const ipToRedis =
+                     req.headers.get("x-forwarded-for")?.split(",")[0] || 
+                     req.headers.get("x-real-ip") ||                     
+                                       null;
+                             
+                                     const ipCheck = ipToRedis?.startsWith("::ffff:") ? ipToRedis.replace("::ffff:", "") : ipToRedis;
+                                 const rateLimitStatus = await checkRateLimit(ipCheck);
+                             
+                                 if (!rateLimitStatus.allowed) {
+                                     return new Response(JSON.stringify({
+                                         message: "Příliš mnoho požadavků"
+                                     }), {
+                                         status: 403,
+                                         headers: { 'Content-Type': 'application/json' }
+                                     });
+                                 }
     ({ email} = await req.json());
     if (!email) {
       return new Response(

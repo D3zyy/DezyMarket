@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import { sendVerificationEmail } from '@/app/api/email/email';
 import { headers } from "next/headers";
 import { DateTime } from 'luxon';
+import { checkRateLimit } from '@/app/RateLimiter/rateLimit';
 
 const schema = z.object({
   email: z.string()
@@ -26,6 +27,21 @@ const schema = z.object({
 });
 
 export const handleRegistration = async (formData) => {
+        const ipToRedis =
+                headers().get("x-forwarded-for")?.split(",")[0] || 
+                headers().get("x-real-ip") ||                     
+                null;
+      
+          const ipCheck = ipToRedis?.startsWith("::ffff:") ? ipToRedis.replace("::ffff:", "") : ipToRedis;
+          const rateLimitStatus = await checkRateLimit(ipCheck);
+      
+          if (!rateLimitStatus.allowed) {
+            return {
+              message: "Příliš mnoho požadavků",
+            };
+          }
+
+
   const validatedFields = schema.safeParse({
     email: formData.email,
     password: formData.password,

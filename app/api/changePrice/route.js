@@ -3,11 +3,27 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-
+import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
 
 export async function POST(request) {
   let   accTypeId, newPrice,session
   try {
+      const ipToRedis =
+           request.headers.get("x-forwarded-for")?.split(",")[0] || 
+           request.headers.get("x-real-ip") ||                     
+                                               null;
+                                     
+                                             const ipCheck = ipToRedis?.startsWith("::ffff:") ? ipToRedis.replace("::ffff:", "") : ipToRedis;
+                                         const rateLimitStatus = await checkRateLimit(ipCheck);
+                                     
+                                         if (!rateLimitStatus.allowed) {
+                                             return new Response(JSON.stringify({
+                                                 message: "Příliš mnoho požadavků"
+                                             }), {
+                                                 status: 403,
+                                                 headers: { 'Content-Type': 'application/json' }
+                                             });
+                                         }
     ({ accTypeId, newPrice } = await request.json());
      session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {

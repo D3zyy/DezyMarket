@@ -6,7 +6,8 @@ import { cookies } from "next/headers"
 import { prisma } from '../database/db';
 import { checkUserBan } from '../api/session/dbMethodsSession';
 import { getUserAccountTypeOnStripe } from '../typeOfAccount/Methods';
-
+import { headers } from 'next/headers';
+import { checkRateLimit } from '../RateLimiter/rateLimit';
 export const getSession = async () => {
     try {
    
@@ -85,6 +86,21 @@ export const getSession = async () => {
     const sessionId = uuidv4(); // Generate a unique session ID
 
     try {
+
+       const ipToRedis =
+                      headers().get("x-forwarded-for")?.split(",")[0] || 
+                      headers().get("x-real-ip") ||                     
+                      null;
+            
+                const ipCheck = ipToRedis?.startsWith("::ffff:") ? ipToRedis.replace("::ffff:", "") : ipToRedis;
+                const rateLimitStatus = await checkRateLimit(ipCheck);
+            
+                if (!rateLimitStatus.allowed) {
+                  return {
+                    message: "Příliš mnoho požadavků",
+                  };
+                }
+
       const now = new Date();
       now.setHours(now.getHours() + 2); // Add 2 hours to the current date for validFrom
       const validTill = new Date(now); // Create a copy of the now date

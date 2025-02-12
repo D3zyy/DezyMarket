@@ -8,7 +8,7 @@ import { CloudFrontClient, CreateInvalidationCommand } from "@aws-sdk/client-clo
 import { DateTime } from 'luxon';
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
-import { stringify } from "uuid";
+import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
 const schema = z.object({
   name: z.string()
     .max(70, 'Název může mít maximálně 70 znaků.') 
@@ -248,6 +248,22 @@ export async function POST(req) {
   let isAllowed 
   let session
     try {
+       const ipToRedis =
+             req.headers.get("x-forwarded-for")?.split(",")[0] || 
+             req.headers.get("x-real-ip") ||                     
+                                                       null;
+                                             
+                                                     const ipCheck = ipToRedis?.startsWith("::ffff:") ? ipToRedis.replace("::ffff:", "") : ipToRedis;
+                                                 const rateLimitStatus = await checkRateLimit(ipCheck);
+                                             
+                                                 if (!rateLimitStatus.allowed) {
+                                                     return new Response(JSON.stringify({
+                                                         message: "Příliš mnoho požadavků"
+                                                     }), {
+                                                         status: 403,
+                                                         headers: { 'Content-Type': 'application/json' }
+                                                     });
+                                                 }
       formData = await req.formData();
         try {
           
@@ -806,6 +822,22 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
 export async function PUT(req) {
   let data,session
   try {
+    const ipToRedis =
+    req.headers.get("x-forwarded-for")?.split(",")[0] || 
+    req.headers.get("x-real-ip") ||                     
+                                              null;
+                                    
+                                            const ipCheck = ipToRedis?.startsWith("::ffff:") ? ipToRedis.replace("::ffff:", "") : ipToRedis;
+                                        const rateLimitStatus = await checkRateLimit(ipCheck);
+                                    
+                                        if (!rateLimitStatus.allowed) {
+                                            return new Response(JSON.stringify({
+                                                message: "Příliš mnoho požadavků"
+                                            }), {
+                                                status: 403,
+                                                headers: { 'Content-Type': 'application/json' }
+                                            });
+                                        }
      session = await getSession();
     if (!session || !session.isLoggedIn || !session.email) {
       return new Response(JSON.stringify({
@@ -1401,6 +1433,22 @@ export async function DELETE(req) {
   let data,session
 
   try {
+    const ipToRedis =
+    req.headers.get("x-forwarded-for")?.split(",")[0] || 
+    req.headers.get("x-real-ip") ||                     
+                                              null;
+                                    
+                                            const ipCheck = ipToRedis?.startsWith("::ffff:") ? ipToRedis.replace("::ffff:", "") : ipToRedis;
+                                        const rateLimitStatus = await checkRateLimit(ipCheck);
+                                    
+                                        if (!rateLimitStatus.allowed) {
+                                            return new Response(JSON.stringify({
+                                                message: "Příliš mnoho požadavků"
+                                            }), {
+                                                status: 403,
+                                                headers: { 'Content-Type': 'application/json' }
+                                            });
+                                        }
      session = await getSession();
 
     if (!session || !session.isLoggedIn || !session.email) {

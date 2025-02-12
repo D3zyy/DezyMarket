@@ -3,13 +3,28 @@ import { prisma } from "@/app/database/db";
 import bcrypt from 'bcrypt'; 
 import { checkUserBan } from "../session/dbMethodsSession";
 import { handleLoginAttempt, resetUserTries } from "./handleLoginAttempts";
-
+import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
 
 // POST method for logging in
 export async function POST(req) {
   let data;
   try {
-   
+   const ipToRedis =
+    req.headers.get("x-forwarded-for")?.split(",")[0] || 
+    req.headers.get("x-real-ip") ||                     
+                                                    null;
+                                          
+                                                  const ipCheck = ipToRedis?.startsWith("::ffff:") ? ipToRedis.replace("::ffff:", "") : ipToRedis;
+                                              const rateLimitStatus = await checkRateLimit(ipCheck);
+                                          
+                                              if (!rateLimitStatus.allowed) {
+                                                  return new Response(JSON.stringify({
+                                                      message: "Příliš mnoho požadavků"
+                                                  }), {
+                                                      status: 403,
+                                                      headers: { 'Content-Type': 'application/json' }
+                                                  });
+                                              }
     // Attempt to parse the request body
   
     try {

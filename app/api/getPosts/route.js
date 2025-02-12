@@ -1,7 +1,23 @@
 import { prisma } from '../../database/db';
+import { checkRateLimit } from '@/app/RateLimiter/rateLimit';
 
 export async function POST(request) {
-
+    const ipToRedis =
+    request.headers.get("x-forwarded-for")?.split(",")[0] || 
+    request.headers.get("x-real-ip") ||                     
+                                   null;
+                         
+                                 const ipCheck = ipToRedis?.startsWith("::ffff:") ? ipToRedis.replace("::ffff:", "") : ipToRedis;
+                             const rateLimitStatus = await checkRateLimit(ipCheck);
+                         
+                             if (!rateLimitStatus.allowed) {
+                                 return new Response(JSON.stringify({
+                                     message: "Příliš mnoho požadavků"
+                                 }), {
+                                     status: 403,
+                                     headers: { 'Content-Type': 'application/json' }
+                                 });
+                             }
     
     const { keyWord, category, section, price, location, page = 1 } = await request.json();
     const pageSize = 9; // Počet příspěvků na stránku

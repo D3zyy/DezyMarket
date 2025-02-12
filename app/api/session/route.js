@@ -1,12 +1,27 @@
 import { logOut } from "../../authentication/actions";
 import { DateTime } from "luxon";
-
+import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
 
 
 
 export async function DELETE(req) {
   try {
-
+const ipToRedis =
+ req.headers.get("x-forwarded-for")?.split(",")[0] || 
+ req.headers.get("x-real-ip") ||                     
+                                                 null;
+                                       
+                                               const ipCheck = ipToRedis?.startsWith("::ffff:") ? ipToRedis.replace("::ffff:", "") : ipToRedis;
+                                           const rateLimitStatus = await checkRateLimit(ipCheck);
+                                       
+                                           if (!rateLimitStatus.allowed) {
+                                               return new Response(JSON.stringify({
+                                                   message: "Příliš mnoho požadavků"
+                                               }), {
+                                                   status: 403,
+                                                   headers: { 'Content-Type': 'application/json' }
+                                               });
+                                           }
     // Call logOut and handle its response
     const { success, message, status } = await logOut(req);
    
