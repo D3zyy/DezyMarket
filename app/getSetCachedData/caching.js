@@ -1,7 +1,7 @@
 import redis from "../redis/rd";
 
 export async function getCachedData(key, fetchFunction, ttl) {
-  console.time("Cache Operation Duration"); // Začátek měření času
+  console.time("Čas"); // Začátek měření času
 
   const cachedData = await redis.get(key);
   let result;
@@ -16,6 +16,6 @@ export async function getCachedData(key, fetchFunction, ttl) {
     await redis.setex(key, ttl, JSON.stringify(result)); // Uloží do cache s TTL
   }
 
-  console.timeEnd("Cache Operation Duration"); // Konec měření času
+  console.timeEnd("Čas"); // Konec měření času
   return result;
 }
