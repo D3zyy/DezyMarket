@@ -12,6 +12,7 @@ import { DateTime } from 'luxon';
 import { headers } from "next/headers";
 import { openLoginModal } from '../components/modals/LoginModal';
 import { checkRateLimit } from '../RateLimiter/rateLimit';
+import { getCachedData } from '../getSetCachedData/caching';
 const Page = async () => {
     let session
     let accType
@@ -62,55 +63,36 @@ headers().get("x-real-ip") ||
         // Fetching Categories and Sections with error handling
         let CategoriesFromDb, SectionsFromDb,typeofPosts,typeTops,accEmojis,allowedNumberOfImg;
         try {
-        [CategoriesFromDb, SectionsFromDb,typeofPosts,typeTops,accEmojis,allowedNumberOfImg] = (await Promise.allSettled([
-            prisma.categories.findMany({}),
-            prisma.sections.findMany({}),
-            prisma.postType.findMany({
-                where: {
-                  OR: [
-                    {
-                      validFrom: { lte: dateAndTime }, // validFrom <= dateAndTime
-                      validTo: { gte: dateAndTime }    // validTo >= dateAndTime
-                    },
-                    {
-                      validFrom: null, // Zahrne případy, kdy validFrom není nastaveno
-                      validTo: null    // Zahrne případy, kdy validTo není nastaveno
-                    }
-                  ]
-                },
-                include: {
-                  perks: true // Zahrne všechny PerksPost patřící k danému PostType
-                }
-              }), 
-               prisma.tops.findMany({ where: {
-              
-                hidden: { not: true } 
-              
-            },}),prisma.accountType.findMany({
-                where: {
-                    dependencyPriorityAcc: null, // Filtrovat pouze ty, které nemají žádnou závislost (null),
-                    emoji: { not: null } ,
-                  
-                },
-                select: {
-                    emoji: true, // Získání pouze emoji pro tyto záznamy
-                    name: true,
-                    
-                }
-            }),prisma.accountType.findFirst({
-                where: {
-                    name:  accType
-                  
-                },
-                select: {
-                    numberOfAllowedImages: true, // Získání pouze emoji pro tyto záznamy
-                    
-                }
-            })
+
+          [CategoriesFromDb, SectionsFromDb, typeofPosts, typeTops, accEmojis, allowedNumberOfImg] = await Promise.all([
+            getCachedData("categoriesFromDb", () => prisma.categories.findMany({}), 600),
+            getCachedData("sectionsFromDb", () => prisma.sections.findMany({}), 600),
+            getCachedData("typeofPosts", () => prisma.postType.findMany({
+              where: {
+                OR: [
+                  { validFrom: { lte: dateAndTime }, validTo: { gte: dateAndTime } },
+                  { validFrom: null, validTo: null }
+                ]
+              },
+              include: { perks: true }
+            }), 600),
+            getCachedData("typeTops", () => prisma.tops.findMany({ where: { hidden: { not: true } } }), 600),
+            getCachedData("accEmojis", () => prisma.accountType.findMany({
+              where: {
+                dependencyPriorityAcc: null,
+                emoji: { not: null }
+              },
+              select: { emoji: true, name: true }
+            }), 600),
+            getCachedData("allowedNumberOfImg", () => prisma.accountType.findFirst({
+              where: { name: accType },
+              select: { numberOfAllowedImages: true }
+            }), 600)
+          ]);
 
 
 
-          ])).map(result => result.status === 'fulfilled' ? result.value : null);
+
        
         } catch (dbError) {
             throw new Error("Chyba při načítání kategorií  a sekcí na /addPost - přidání příspěvku : " + dbError.message);

@@ -8,8 +8,7 @@ import { useEffect } from 'react';
 
 export function Post({ isLogged,allTops,priority,allowedTops,name,emoji, benefits, hasThisType }) {
   const [loading, setLoading] = useState(false);
-  console.log("Všechny tops:", allTops);
-  console.log("Filtrované dovolené tops:", allowedTops);
+
   let result
   if (Array.isArray(allowedTops)) {
 
