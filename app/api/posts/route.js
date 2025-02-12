@@ -326,7 +326,7 @@ if (Number(session.role.privileges) !== 4) {
 const posts = await prisma.posts.findMany({
   where: { userId: session.userId },
 });
-
+console.log("TADYYYYYYYYYYY 1")
 // Count the visible and invisible posts
 const visiblePosts = posts.filter(post => post.visible === true).length;
 const invisiblePosts = posts.filter(post => post.visible === false).length;
@@ -403,19 +403,15 @@ console.log("Typ účtu :::",monthIn)
 
 console.log("Jdu kontrolvat top")
 
-const isAllowed = await getCachedData(
-  `top:${typPost}`, // Unikátní klíč pro cache
-  async () => await prisma.tops.findFirst({
-    where: { name: typPost }
-  }),
-  600 
-);
+ isAllowed = await prisma.tops.findFirst({
+  where: { name: typPost }
+})
 
 console.log("Nasel sem top:",isAllowed)
 console.log("POst name:",typPost)
 
 
-if(isAllowed.hidden){
+if(isAllowed?.hidden){
   const rawIp =
   req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
   req.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -443,7 +439,7 @@ const formDataObject = Object.fromEntries(formData.entries());
     headers: { 'Content-Type': 'application/json' }
   });
 }
-const accOfUser = await getCachedData(
+ accOfUser = await getCachedData(
   `account_types_for_${monthIn.name}`, // Unikátní klíč pro cache na základě monthIn.name
   async () => await prisma.accountType.findMany({
     where: {
@@ -565,9 +561,9 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
 
 
     
-              const categoryExist = await    getCachedData(`categoryExist_${parseInt(formData.get('category'))}`, () =>prisma.Categories.findUnique({
+              const categoryExist = await   prisma.Categories.findUnique({
                 where: { id: parseInt(formData.get('category')) }
-              }), 31556952)
+              })
 
               if (!categoryExist) {
                 const rawIp =
@@ -597,13 +593,12 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                   headers: { 'Content-Type': 'application/json' }
                 });
               }
-              const sectionExist = await    getCachedData(`sectionExist_${parseInt(formData.get('section'))}`, () =>prisma.Sections.findUnique({
-                where: { id: parseInt(formData.get('section')) }
-              }), 31556952)
-          
+              const sectionExist = await prisma.Sections.findUnique({
+                where: { id: parseInt(formData.get('section'), 10) }
+              });
 
 
-
+              console.log("TADYYYYYYYYYYY 28952")
 
               if (!sectionExist) {
                 const rawIp =
@@ -634,13 +629,13 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 });
               }
 
-              const categorySectionExist = await  getCachedData(`categorySectionExist_${parseInt(formData.get('category'))}_${parseInt(formData.get('section'))}`, () =>prisma.sections.findUnique({
+          
+              const categorySectionExist = await prisma.sections.findUnique({
                 where: { id: parseInt(formData.get('section')) , categoryId:  parseInt(formData.get('category'))}
-              }), 31556952)
-
-
+              })
+              console.log("kategorei a sekce existují:",)
               if (!categorySectionExist) {
-                                
+
         const rawIp =
         req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
         req.headers.get("x-real-ip") ||                      // Alternativní hlavička
@@ -675,13 +670,13 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                 return Buffer.from(arrayBuffer);  // Convert arrayBuffer to Buffer
               }));
               let newPost
-               
+         
               console.log("Tadyyyy 1")
               const localISODateFixedOffset = DateTime.now()
               .setZone('Europe/Prague') // Čas zůstane v českém pásmu
               .toFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'"); // Pevně přidá offset "+00:00"
               try{
-                
+                console.log("TADYYYYYYYYYYY jjjj")
                 console.log( "Nasel sem top",isAllowed?.length > 0)
                 console.log("tento top:",isAllowed?.id)
                 const price = validatedFields?.data?.price;
@@ -786,7 +781,7 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
 
 
     } catch (error) {
-
+console.log(error)
       try{
            
         const formDataObject = Object.fromEntries(formData.entries());
