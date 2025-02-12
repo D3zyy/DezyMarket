@@ -403,16 +403,19 @@ console.log("Typ účtu :::",monthIn)
 
 console.log("Jdu kontrolvat top")
 
- isAllowed = await prisma.tops.findFirst({
-  where: {
-    name: typPost
-  }
-});
+const isAllowed = await getCachedData(
+  `top:${typPost}`, // Unikátní klíč pro cache
+  async () => await prisma.tops.findFirst({
+    where: { name: typPost }
+  }),
+  600 
+);
+
 console.log("Nasel sem top:",isAllowed)
 console.log("POst name:",typPost)
 
 
-if(isAllowed?.hidden){
+if(isAllowed.hidden){
   const rawIp =
   req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
   req.headers.get("x-real-ip") ||                      // Alternativní hlavička

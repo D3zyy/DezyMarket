@@ -258,7 +258,11 @@ export async function getUserAccountTypeOnStripe(email) {
 export async function getTypeOfTops() {
   try {
     // Získání AccountType s připojenými perkami a cenami
-    const accountTypes = await prisma.Tops.findMany({});
+    const accountTypes = await getCachedData(
+      `allTops`, // Unikátní klíč pro cache (nemusí být závislý na konkrétní hodnotě)
+      async () => await prisma.tops.findMany({}),
+      600 // Cache expirace na 600 sekund (10 minut)
+    );
 
     // Mapování výsledků pro každého accountType
     const result = accountTypes.map(accountType => {

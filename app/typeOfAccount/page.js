@@ -9,6 +9,8 @@ import { prisma } from '../database/db';
 import { headers } from 'next/headers';
 import { DateTime } from 'luxon';
 import { checkRateLimit } from '../RateLimiter/rateLimit';
+import { getCachedData } from '../getSetCachedData/caching';
+
 const Page = async ({ searchParams }) => {
   const ipToRedis =
               headers().get("x-forwarded-for")?.split(",")[0] || 
@@ -48,7 +50,12 @@ let accTypeOfUser, acctypes,typeOfTops
    [accTypeOfUser, acctypes,typeOfTops] = await Promise.all([
     getUserAccountTypeOnStripe(session.email),
     getTypeOfAccountDetails(),
-     prisma.tops.findMany({}),
+       getCachedData(
+      `allTops`, // Unikátní klíč pro cache (nemusí být závislý na konkrétní hodnotě)
+      async () => await prisma.tops.findMany({}),
+      600 // Cache expirace na 600 sekund (10 minut)
+    )
+     ,
   ]);
 } catch {
   console.log("Error")

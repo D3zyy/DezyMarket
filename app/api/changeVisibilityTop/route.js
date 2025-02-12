@@ -3,6 +3,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { invalidateCache } from "@/app/getSetCachedData/caching";
 export async function POST(request) {
   let   topId, visibility,session
   try {
@@ -123,7 +124,9 @@ export async function POST(request) {
             where: { id: topId  },
             data:{ hidden: !visibility}
           });
-  
+         await invalidateCache('allTops')
+         await invalidateCache(`topinfo:${topId}`)
+         await invalidateCache(`top:${typPost}`)
    
 
 
