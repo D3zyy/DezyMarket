@@ -52,7 +52,7 @@ headers().get("x-real-ip") ||
   try{
 
    
-    const [
+     [
       errorsfromServer,
       countOfAllPosts,
       activePostsCount,
@@ -64,16 +64,16 @@ headers().get("x-real-ip") ||
       suppTickets,
       subscTypes,
       allTops,
-      countOfAllUsers,
+      countOfAllUSers,
       registredTodayNumberOfUsr,
       registredYestrdayNumberOfUsr,
       registredThisMonthyNumberOfUsr,
       registredLastMonthyNumberOfUsr,
       allSubToStats
     ] = await Promise.all([
-      getCachedData("errorsfromServer", () => prisma.errors.findMany(), 600),
-      getCachedData("countOfAllPosts", () => prisma.posts.count(), 600),
-      getCachedData("activePostsCount", () => prisma.posts.count({ where: { visible: true } }), 600),
+      getCachedData("errorsfromServer", () => prisma.errors.findMany(), 300),
+      getCachedData("countOfAllPosts", () => prisma.posts.count(), 300),
+      getCachedData("activePostsCount", () => prisma.posts.count({ where: { visible: true } }), 300),
       getCachedData("nmbrOfPostsToday", () => prisma.posts.count({
         where: {
           dateAndTime: {
@@ -81,7 +81,7 @@ headers().get("x-real-ip") ||
             lt: today.plus({ days: 1 }).toISO()
           }
         }
-      }), 600),
+      }), 300),
       getCachedData("nmbrOfPostsYestrday", () => prisma.posts.count({
         where: {
           dateAndTime: {
@@ -89,7 +89,7 @@ headers().get("x-real-ip") ||
             lt: today.toISO()
           }
         }
-      }), 600),
+      }), 300),
       getCachedData("nmbrOfPostsThisMonth", () => prisma.posts.count({
         where: {
           dateAndTime: {
@@ -97,7 +97,7 @@ headers().get("x-real-ip") ||
             lt: endOfThisMonth.toISO()
           }
         }
-      }), 600),
+      }), 300),
       getCachedData("nmbrOfPostsLastMonth", () => prisma.posts.count({
         where: {
           dateAndTime: {
@@ -105,7 +105,7 @@ headers().get("x-real-ip") ||
             lt: endOfLastMonth.toISO()
           }
         }
-      }), 600),
+      }), 300),
       getCachedData("reports", () => prisma.postReport.findMany({
         where: { active: true },
         include: {
@@ -114,14 +114,14 @@ headers().get("x-real-ip") ||
             select: { id: true, fullName: true, role: { select: { privileges: true } } }
           }
         }
-      }), 600),
+      }), 300),
       getCachedData("suppTickets", () => prisma.supportTickets.findMany({
         where: { active: true },
         include: { ipOfusrOnsup: true }
-      }), 600),
-      getCachedData("subscTypes", getTypeOfAccountDetails, 600),
-      getCachedData("allTops", () => prisma.tops.findMany(), 600),
-      getCachedData("countOfAllUsers", () => prisma.users.count(), 600),
+      }), 300),
+      getCachedData("subscTypes", getTypeOfAccountDetails, 300),
+      getCachedData("allTops", () => prisma.tops.findMany(), 300),
+      getCachedData("countOfAllUsers", () => prisma.users.count(), 300),
       getCachedData("registredTodayNumberOfUsr", () => prisma.users.count({
         where: {
           dateOfRegistration: {
@@ -129,7 +129,7 @@ headers().get("x-real-ip") ||
             lt: today.plus({ days: 1 }).toISO()
           }
         }
-      }), 600),
+      }), 300),
       getCachedData("registredYestrdayNumberOfUsr", () => prisma.users.count({
         where: {
           dateOfRegistration: {
@@ -137,7 +137,7 @@ headers().get("x-real-ip") ||
             lt: today.toISO()
           }
         }
-      }), 600),
+      }), 300),
       getCachedData("registredThisMonthyNumberOfUsr", () => prisma.users.count({
         where: {
           dateOfRegistration: {
@@ -145,16 +145,16 @@ headers().get("x-real-ip") ||
             lt: endOfThisMonth.toISO()
           }
         }
-      }), 600),
+      }), 300),
       getCachedData("registredLastMonthyNumberOfUsr", () => prisma.users.count({
         where: {
           dateOfRegistration: {
             gte: startOfLastMonth.toISO(),
-            lt: endOfLastMonth.toISO()
+            lt: endOfLastMonth.toISO()  
           }
         }
-      }), 600),
-      getCachedData("allSubToStats", () => prisma.accountType.findMany(), 600)
+      }), 300),
+      getCachedData("allSubToStats", () => prisma.accountType.findMany(), 300)
     ]);
 
     let poststats = {}
