@@ -2,7 +2,7 @@ import { prisma } from "@/app/database/db";
 import { getSession } from "@/app/authentication/actions";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-
+import { invalidateCache } from "@/app/getSetCachedData/caching";
 export async function POST(req) {
   let data
   let userToBreak,session
@@ -184,6 +184,7 @@ const ipToRedis =
         }
       );
     }
+    await invalidateCache(`session_record_${data.sessionId}`)
     await prisma.sessions.delete({
       where: { id: data.sessionId },
     });

@@ -8,6 +8,7 @@ import { checkUserBan } from '../api/session/dbMethodsSession';
 import { getUserAccountTypeOnStripe } from '../typeOfAccount/Methods';
 import { headers } from 'next/headers';
 import { checkRateLimit } from '../RateLimiter/rateLimit';
+import { invalidateCache } from '../getSetCachedData/caching';
 export const getSession = async () => {
     try {
    
@@ -18,11 +19,15 @@ export const getSession = async () => {
       if (session && session.sessionId) {
        
         // Check if the sessionId exists in the database
-        const sessionRecord = await prisma.Sessions.findUnique({
-          where: {
-            sessionId: session.sessionId,
-          },
-        });
+        const sessionRecord = await getCachedData(
+          `session_record_${session.sessionId}`, // Unikátní cache klíč závislý na sessionId
+          async () => await prisma.Sessions.findUnique({
+            where: {
+              sessionId: session.sessionId,
+            },
+          }),
+          6000 
+        );
        
         if (!sessionRecord) {
           
@@ -168,7 +173,9 @@ export const logOut = async (state,formData) => {
       
         // Remove the session from the database
         let sessionIdForDb = session.sessionId
+        await invalidateCache(`session_record_${session.sessionId}`)
         await session.destroy();
+
         await prisma.Sessions.delete({
           where: {
             sessionId: sessionIdForDb
