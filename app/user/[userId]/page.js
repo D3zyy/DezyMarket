@@ -64,12 +64,17 @@ const Page = async ({ params }) => {
         top: true
       },
     }),
-    prisma.userRatings.findMany({
+
+    getCachedData(`userRakings_${params?.userId}`, () => prisma.userRatings.findMany({
       where: { toUserId: params?.userId },
       include: {
-        fromUser: true,  // Předpokládám, že vztah mezi userRatings a users je definován jako toUser
-      },
-    }),bansOfUser = await prisma.bans.findMany({
+        fromUser: true,  
+      }
+  }),6000)
+
+    
+    
+    ,bansOfUser = await prisma.bans.findMany({
       where: { userId: params?.userId },
        include: {
         fromUser: {

@@ -2,7 +2,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from 'luxon';
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-import { getCachedData } from "@/app/getSetCachedData/caching";
+import { getCachedData, invalidateCache } from "@/app/getSetCachedData/caching";
 
 export async function POST(req) {
   let data ,session
@@ -184,7 +184,8 @@ export async function POST(req) {
             numberOfStars: data.numberOfStars,
         },
     });
-
+    
+ await invalidateCache(`userRakings_${params?.userId}`)
 
 
 
