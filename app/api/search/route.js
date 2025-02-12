@@ -3,6 +3,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData } from "@/app/getSetCachedData/caching";
 export async function POST(req) {
   let data;
   try {
@@ -45,16 +46,22 @@ export async function POST(req) {
     };
 
     // Full-textové vyhledávání
-    let foundPostsFullText = await prisma.posts.findMany({
-      where: keyWord
-        ? {
-            OR: [
-              { name: { search: `${keyWord}:*` } },
-              { description: { search: `${keyWord}:*` } },
-            ],
-          }
-        : undefined,
-    });
+    let foundPostsFullText = await getCachedData(
+      `found_posts_full_text_${keyWord}`, // Unikátní klíč pro cache, který závisí na keyWord
+      async () => await prisma.posts.findMany({
+        where: keyWord
+          ? {
+              OR: [
+                { name: { search: `${keyWord}:*` } },
+                { description: { search: `${keyWord}:*` } },
+              ],
+            }
+          : undefined,
+      }),
+      300 // Cache expirace na 5 minut (300 sekund)
+    );
+
+
     console.log("CEnaaa:",price)
     // Pouze pokud je filtr `price` poslán a není jedna z hodnot 'Dohodou', 'Vtextu' nebo 'Zdarma'
     if (price && !["Dohodou", "V textu", "Zdarma"].includes(price)) {

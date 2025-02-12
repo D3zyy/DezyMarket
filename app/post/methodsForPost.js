@@ -1,26 +1,45 @@
 import { prisma } from "../database/db";
 import { checkUserBan } from "../api/session/dbMethodsSession";
+import { getCachedData } from "../getSetCachedData/caching";
 export async function getPostFromDb(postId,privi = 1) {
   let postRecord = null;
 
   try {
    
-    postRecord = await prisma.Posts.findUnique({
-      
+   
+    
+    // Uložíme data do dvou cache klíčů
+   postRecord =  await getCachedData(`post_record_${postId}_privi_${privi}`,  prisma.Posts.findUnique({
+    where: {
+      id: postId,
+      ...(privi > 1 ? {} : { visible: true }), // Viditelnost pouze pokud privi <= 1
+    },
+    include: {
+      category: true,
+      section: true,
+      user: {
+        include: {
+          role: true,
+        },
+      },
+    },
+  }), 300); // Cache pro s privilegii
+    await getCachedData(`post_record_${postId}`,  prisma.Posts.findUnique({
       where: {
         id: postId,
-        ...(privi > 1 ? {} : { visible: true }),
+        ...(privi > 1 ? {} : { visible: true }), // Viditelnost pouze pokud privi <= 1
       },
       include: {
         category: true,
         section: true,
         user: {
           include: {
-            role: true
-          }
-        }
+            role: true,
+          },
+        },
       },
-    });
+    }), 300); // Cache bez privilegii
+    
    
     if(privi <=1){
 
