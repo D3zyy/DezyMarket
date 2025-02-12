@@ -283,11 +283,12 @@ headers().get("x-real-ip") ||
  // console.log("Statistiky subs:", subscriptionStats);
     
 
- const allUsersCountt = await prisma.accountTypeUsers.findMany({
-  where: {
+ const allUsersCountt = await getCachedData("allUsersCounttlUsrC", () => 
+  prisma.accountTypeUsers.findMany({
+    where: {
       active: true
-  }
-});
+    }
+  }), 300);
 
 const sortedTops = [...allTops].sort((a, b) => a.numberOfMonthsToValid - b.numberOfMonthsToValid);
 
