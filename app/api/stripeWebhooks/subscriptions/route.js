@@ -68,7 +68,7 @@ export async function POST(request) {
         
             const user = await getCachedData(`userEmail_${userEmail}`, () => prisma.users.findFirst({
                 where: { email:userEmail }
-                }), 600)
+                }), 43829)
                await invalidateCache(`userEmail_${userEmail}`)
                await invalidateCache(`userAcc_${userEmail}`)
                await invalidateCache(`userRole_${user.userId}`)
@@ -174,7 +174,7 @@ export async function POST(request) {
  
                 const user = await getCachedData(`userEmail_${paymentIntent.customer_email }`, () => prisma.users.findFirst({
                     where: { email:paymentIntent.customer_email  }
-                    }), 600)
+                    }), 43829)
 
                     await invalidateCache(`userEmail_${paymentIntent.customer_email }`)
                     await invalidateCache(`userAcc_${paymentIntent.customer_email}`)
@@ -222,7 +222,7 @@ const endOfSubscription = DateTime.now()
                 
                 const user = await getCachedData(`userEmail_${customerEmail }`, () => prisma.users.findFirst({
                     where: { email:customerEmail  }
-                    }), 600)
+                    }), 43829)
                     await invalidateCache(`userEmail_${customerEmail}`)
                     await invalidateCache(`userAcc_${customerEmail}`)
                     await invalidateCache(`userRole_${user.userId}`)

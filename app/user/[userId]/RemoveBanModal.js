@@ -61,7 +61,7 @@ export const openRemoveBanModal = (banId) => {
           <div className="text-center">
             <button
               type="button"
-              className="btn hover:bg-red-600 border-red-500  bg-red-500"
+              className="btn hover:bg-red-43829 border-red-500  bg-red-500"
               onClick={updateBan}
             >
               Smazat 

@@ -97,7 +97,7 @@ export async function POST(req) {
            usrToCancel = await     getCachedData(`userRole_${data.usrId}`, () => prisma.users.findUnique({
                where: { id: data.usrId },
                include: { role: true }, 
-             }), 600)
+             }), 43829)
         
         if(!usrToCancel){
 
@@ -252,7 +252,7 @@ export async function POST(req) {
         let userGifteeedd= await getCachedData(`userRole_${myAcc ? session.userId : usrToCancel.id}`, () => prisma.users.findUnique({
           where: { id:myAcc ? session.userId : usrToCancel.id },
           include: { role: true }
-      }),60)
+      }),43829)
 
            await invalidateCache(`userRole_${myAcc ? session.userId : usrToCancel.id}`)
            await invalidateCache(`userAcc_${userGifteeedd.email}`)
@@ -451,7 +451,7 @@ export async function POST(req) {
     let userGifteeedde= await getCachedData(`userRole_${myAcc ? session.userId : usrToCancel.id}`, () => prisma.users.findUnique({
       where: { id:myAcc ? session.userId : usrToCancel.id },
       include: { role: true }
-  }),60)
+  }),43829)
 
        await invalidateCache(`userRole_${myAcc ? session.userId : usrToCancel.id}`)
        await invalidateCache(`userAcc_${userGifteeedde.email}`)

@@ -42,7 +42,7 @@ export async function POST(request) {
     async () => await prisma.ipAddresses.findFirst({
       where: { value: ip },
     }),
-    600
+    43829
   );
 
 

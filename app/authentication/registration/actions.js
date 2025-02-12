@@ -62,7 +62,7 @@ export const handleRegistration = async (formData) => {
 
     const existingUser = await getCachedData(`userEmail_${validatedFields.data.email}`, () => prisma.users.findFirst({
       where: { email: validatedFields.data.email}
-      }), 600)
+      }), 43829)
 
     
     if (existingUser) {
@@ -128,7 +128,7 @@ let ipToRegister = await getCachedData(
   async () => await prisma.ipAddresses.findFirst({
     where: { value: ip },
   }),
-  600
+  43829
 );
 if (!ipToRegister) {
   // Pokud IP adresa neexistuje, vytvoříme ji

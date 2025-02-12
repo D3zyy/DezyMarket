@@ -27,7 +27,7 @@ postRecord =  await getCachedData(
       },
     },
   }),
-  300 // Cache expirace na 5 minut (300 sekund)
+  43829 // Cache expirace na 5 minut (300 sekund)
 );
     
    

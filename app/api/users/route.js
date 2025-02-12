@@ -61,7 +61,7 @@ export async function POST(req) {
     console.log("yooo")
  const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findFirst({
     where: { email: email}
-    }), 600)
+    }), 43829)
 
 
     // Check validity of the password and ban status
@@ -138,7 +138,7 @@ export async function POST(req) {
       async () => await prisma.ipAddresses.findFirst({
         where: { value: ip },
       }),
-      600
+      43829
     );
     if (!ipToRegister) {
       // Pokud IP adresa neexistuje, vytvoříme ji

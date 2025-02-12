@@ -64,7 +64,7 @@ const { DateTime } = require('luxon');
  const thisUserToGIft = await     getCachedData(`userRole_${data.idOfUser}`, () => prisma.users.findUnique({
         where: {id: data.idOfUser},
         include: { role: true }
-    }), 600)
+    }), 43829)
 
     
 
@@ -200,7 +200,7 @@ const { DateTime } = require('luxon');
  let userGifteeedd= await getCachedData(`userRole_${data.idOfUser }`, () => prisma.users.findUnique({
       where: { id:data.idOfUser },
       include: { role: true }
-  }),60)
+  }),43829)
    
         await invalidateCache(`userRole_${data.idOfUser}`)
         await invalidateCache(`userAcc_${userGifteeedd.email}`)

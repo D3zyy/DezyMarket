@@ -13,7 +13,7 @@ export async function verifyToken(email, token) {
 
  const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findFirst({
     where: { email: email }
-    }), 600)
+    }), 43829)
         // Check if the token record exists
         if (!tokenRecord) {
             if (user) {
@@ -58,7 +58,7 @@ export async function verifyToken(email, token) {
             const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
             const userFromDb = await getCachedData(`userEmail_${email}`, () => prisma.users.findFirst({
                 where: { email: email }
-                }), 600)
+                }), 43829)
 
             const customer = await stripe.customers.create({
                 email: email,

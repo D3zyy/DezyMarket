@@ -53,7 +53,7 @@ let accTypeOfUser, acctypes,typeOfTops
        getCachedData(
       `allTops`, // Unikátní klíč pro cache (nemusí být závislý na konkrétní hodnotě)
       async () => await prisma.tops.findMany({}),
-      600 // Cache expirace na 600 sekund (10 minut)
+      43829 // Cache expirace na 43829 sekund (10 minut)
     )
      ,
   ]);

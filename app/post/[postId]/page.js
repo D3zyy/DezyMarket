@@ -80,7 +80,7 @@ const Page = async ({ params }) => {
           async () => await prisma.tops.findUnique({
             where: { id: postRecord?.topId }
           }),
-          600 // Cache expirace na 600 sekund (10 minut)
+          43829 // Cache expirace na 43829 sekund (10 minut)
         );
        
 

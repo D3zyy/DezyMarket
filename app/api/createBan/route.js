@@ -78,7 +78,7 @@ export async function POST(req) {
     const userToBeBanned = await     getCachedData(`userRole_${userId}`, () => prisma.users.findUnique({
       where: { id: userId },
       include: { role: true }, 
-    }), 600)
+    }), 43829)
   
 
     if (!userToBeBanned) {

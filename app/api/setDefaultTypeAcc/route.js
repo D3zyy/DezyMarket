@@ -38,7 +38,7 @@ export async function POST(request) {
 
  const user = await getCachedData(`userEmail_${session.email}`, () => prisma.users.findFirst({
     where: { email: session.email }
-    }), 600)
+    }), 43829)
     await invalidateCache(`userAcc_${session.email}`)
     if (!user) {
       return new NextResponse(

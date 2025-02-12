@@ -124,7 +124,7 @@ const Page = async ({ params }) => {
             ipAddress: true, // Fetches the associated IP address details
           },
         }),
-        600
+        43829
       );
       
        ipsWithOtherUsers = await getCachedData(
@@ -147,7 +147,7 @@ const Page = async ({ params }) => {
             };
           })
         ),
-        600
+        43829
       );
      
 
@@ -170,7 +170,7 @@ if(accType?.priority > 1){
       where: { name: accType?.name },
       select: { emoji: true },
     }),
-    600 // Cache expirace na 600 sekund (10 minut)
+    43829 // Cache expirace na 43829 sekund (10 minut)
   );
 }
 
@@ -272,7 +272,7 @@ if(session?.role?.privileges > 2   ){
         },
       },
     }),
-    600 // Cache expirace na 600 sekund (10 minut)
+    43829 // Cache expirace na 600 sekund (10 minut)
   );
 
 }

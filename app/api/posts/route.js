@@ -446,7 +446,7 @@ const formDataObject = Object.fromEntries(formData.entries());
       name: monthIn.name
     }
   }),
-  600 // Cache expirace na 600 sekund (10 minut)
+  43829 // Cache expirace na 43829 sekund (10 minut)
 );
 
 if(allImages?.length > accOfUser[0]?.numberOfAllowedImages ){
@@ -1050,7 +1050,7 @@ export async function PUT(req) {
     const sessionUser = await     getCachedData(`userRole_${session.userId}`, () => prisma.users.findUnique({
       where: { id: session.userId },
       include: { role: true }
-  }), 600)
+  }), 43829)
 
     if (!sessionUser) {
       return new Response(JSON.stringify({
