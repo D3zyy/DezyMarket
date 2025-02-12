@@ -590,9 +590,13 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                   headers: { 'Content-Type': 'application/json' }
                 });
               }
-              const sectionExist = await prisma.Sections.findUnique({
+              const sectionExist = await    getCachedData(`sectionExist_${parseInt(formData.get('section'))}`, () =>prisma.Sections.findUnique({
                 where: { id: parseInt(formData.get('section')) }
-              });
+              }), 31556952)
+          
+
+
+
 
               if (!sectionExist) {
                 const rawIp =
@@ -622,9 +626,12 @@ if (priceConverted && !isNaN(priceConverted) && Number.isInteger(parseFloat(pric
                   headers: { 'Content-Type': 'application/json' }
                 });
               }
-              const categorySectionExist = await prisma.Sections.findUnique({
+
+              const categorySectionExist = await  getCachedData(`categorySectionExist_${parseInt(formData.get('category'))}_${parseInt(formData.get('section'))}`, () =>prisma.sections.findUnique({
                 where: { id: parseInt(formData.get('section')) , categoryId:  parseInt(formData.get('category'))}
-              });
+              }), 31556952)
+
+
               if (!categorySectionExist) {
                                 
         const rawIp =
@@ -954,10 +961,10 @@ export async function PUT(req) {
           headers: { 'Content-Type': 'application/json' }
         });
       }
-      const sectionExist = await prisma.Sections.findUnique({
-        where: { id: parseInt(data.section) }
-      });
 
+              const sectionExist = await    getCachedData(`sectionExist_${parseInt(data.section)}`, () =>prisma.sections.findUnique({
+                where: { id: parseInt(data.section) }
+              }), 31556952)
       if (!sectionExist) {
         const rawIp =
       req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
@@ -985,12 +992,12 @@ export async function PUT(req) {
           headers: { 'Content-Type': 'application/json' }
         });
       }
-      const categorySectionExist = await prisma.Sections.findUnique({
-        where: {
-          id: parseInt(data.section),
-          categoryId: parseInt(data.category),
-        },
-      });
+
+      const categorySectionExist = await  getCachedData(`categorySectionExist_${parseInt(formData.get('category'))}_${parseInt(formData.get('section'))}`, () =>prisma.sections.findUnique({
+        where: { id:  parseInt(data.section) , categoryId:   parseInt(data.category)}
+      }), 31556952)
+
+
       if (!categorySectionExist) {
 
       const rawIp =
@@ -1189,10 +1196,10 @@ export async function PUT(req) {
       });
     }
     
-    const sectionExist = await prisma.Sections.findUnique({
-      where: { id: parseInt(data.section) }
-    });
 
+    const sectionExist = await    getCachedData(`sectionExist_${parseInt(data.section)}`, () =>prisma.sections.findUnique({
+      where: { id: parseInt(data.section) }
+    }), 31556952)
     if (!sectionExist) {
           
   
@@ -1223,12 +1230,12 @@ export async function PUT(req) {
         headers: { 'Content-Type': 'application/json' }
       });
     }
-    const categorySectionExist = await prisma.Sections.findUnique({
-      where: {
-        id: parseInt(data.section),
-        categoryId: parseInt(data.category),
-      },
-    });
+
+    const categorySectionExist = await  getCachedData(`categorySectionExist_${parseInt(formData.get('category'))}_${parseInt(formData.get('section'))}`, () =>prisma.sections.findUnique({
+      where: { id: parseInt(data.section) , categoryId: parseInt(data.category)}
+    }), 31556952)
+
+
     if (!categorySectionExist) {
           
   
@@ -1306,13 +1313,16 @@ export async function PUT(req) {
        
 
         const newCategory = newData.category
-          ? await    getCachedData(`categoryExist_${parseInt(newData.category, 10)}`, () =>prisma.categories.findUnique({
+          ? await    getCachedData(`categoryExist_${parseInt(newData.category, 10)}`, () =>prisma.categories.findFirst({
             where: { id:  parseInt(newData.category, 10) }
           }), 31556952)
           : null;
       
         const newSection = newData.section
-          ? await prisma.sections.findFirst({ where: { id: parseInt(newData.section, 10) } })
+          ? getCachedData(`sectionExist_${parseInt(newData.section, 10)}`, () =>prisma.sections.findFirst({
+            where: { id: parseInt(newData.section, 10)}
+          }), 31556952)
+          
           : null;
       
         const changes = [];

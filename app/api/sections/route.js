@@ -32,7 +32,7 @@ export async function GET(req) {
       );
     }
 
-    const allSections = await prisma.Sections.findMany();
+    const allSections = await getCachedData(`sectionsFromDb`, () => prisma.sections.findMany({}), 31556952)
     return new Response(
       JSON.stringify(allSections), // Make sure to JSON.stringify the data
       {
