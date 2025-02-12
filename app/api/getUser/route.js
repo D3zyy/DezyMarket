@@ -3,6 +3,7 @@ import { getSession } from "@/app/authentication/actions";
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
+import { getCachedData } from "@/app/getSetCachedData/caching";
     export async function POST(req) {
       let data,session;
       try {
@@ -91,7 +92,11 @@ import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
               );
         }
 //, mode: 'insensitive' only on postgres
-const usersAll = await prisma.users.findMany({
+
+
+ const usersAll = await getCachedData(`searchUser_data:${data.info}`, () =>
+  
+  prisma.users.findMany({
     where: {
       OR: [
         { id: { contains: data.info } },
@@ -106,21 +111,34 @@ const usersAll = await prisma.users.findMany({
         }
       }
     }
-  });
-  let foundUsersByIp = await prisma.ipAddressesOnUsers.findMany({
-    where: {
-      ipAddress: {
-        value:{ contains: data.info }  // Query based on the 'value' field in the IpAddresses model
-      }
-    },
-    include: {
-      user: {
+    })
+    
+    
+    
+    , 600)
+
+
+    const foundUsersByIp = await getCachedData(`searchUserIp_data:${data.info}`, () =>
+  
+      prisma.ipAddressesOnUsers.findMany({
+        where: {
+          ipAddress: {
+            value:{ contains: data.info }  // Query based on the 'value' field in the IpAddresses model
+          }
+        },
         include: {
-          role: true  // Include the full role relation
+          user: {
+            include: {
+              role: true  // Include the full role relation
+            }
+          }
         }
-      }
-    }
-  });
+        })
+        , 600)
+
+
+
+
  
   
   const userss = [

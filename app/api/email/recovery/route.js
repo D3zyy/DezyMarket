@@ -4,6 +4,7 @@ import nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
 import { DateTime } from 'luxon';
 import { checkRateLimit } from '@/app/RateLimiter/rateLimit';
+import { getCachedData } from '@/app/getSetCachedData/caching';
 const smtpServer = process.env.SMTP_SERVER;
 const port = parseInt(process.env.SMTP_PORT, 10);
 const senderEmail = process.env.EMAIL_USER;
@@ -39,11 +40,10 @@ export async function POST(req) {
         }
       );
     }
+ const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findUnique({
+    where: { email: email }
+    }), 600)
 
-    // Kontrola existence emailu v databázi
-    const user = await prisma.Users.findUnique({
-      where: { email: email },
-    });
 
     if (!user) {
       return new Response(

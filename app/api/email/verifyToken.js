@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { prisma } from '@/app/database/db';
 import { DateTime } from 'luxon';
+import { getCachedData } from '@/app/getSetCachedData/caching';
 
 export async function verifyToken(email, token) {
     try {
@@ -9,12 +10,9 @@ export async function verifyToken(email, token) {
             where: { user: { email } },
             include: { user: true }
         });
-        const user = await prisma.Users.findUnique({
-            where: { email }
-        });
- const userr = await     getCachedData(`userRole_${userId}`, () => prisma.users.findUnique({
-      where: { id: userId },
-      include: { role: true }, 
+
+ const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findUnique({
+    where: { email: email }
     }), 600)
         // Check if the token record exists
         if (!tokenRecord) {
@@ -58,9 +56,9 @@ export async function verifyToken(email, token) {
 
             // Adding customer to Stripe
             const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-            let userFromDb = await prisma.Users.findUnique({
+            const userFromDb = await getCachedData(`userEmail_${email}`, () => prisma.users.findUnique({
                 where: { email: email }
-            });
+                }), 600)
 
             const customer = await stripe.customers.create({
                 email: email,
