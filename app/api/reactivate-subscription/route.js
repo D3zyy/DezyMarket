@@ -4,7 +4,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { prisma } from "@/app/database/db";
 import { DateTime } from "luxon";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-import { getCachedData } from "@/app/getSetCachedData/caching";
+import { getCachedData,invalidateCache } from "@/app/getSetCachedData/caching";
 export async function POST(req) {
     let data ,session
     try {
@@ -50,14 +50,25 @@ export async function POST(req) {
 
         let usrToReactivate
         let myAcc = true
+     if(   data.usrId != null){
+      myAcc = false
+     }
+console.log(myAcc)
         if(data.usrId != null){
-            
+              console.log("DVONITR")
             if(session.role.privileges > 2){
-
+              let myAcc = false
               usrToReactivate = await     getCachedData(`userRole_${data.usrId}`, () => prisma.users.findFirst({
-                where: { id: data.usrId },
+                where: { id:data.usrId},
                 include: { role: true }
             }), 600)
+
+            let rcv = await getCachedData(`userRole_${data.usrId}`, () => prisma.users.findUnique({
+              where: { id:data.usrId},
+              include: { role: true }
+          }),60)
+       await invalidateCache(`userRole_${data.usrId}`)
+       await invalidateCache(`userAcc_${rcv.email}`)
 
 
 
@@ -120,6 +131,7 @@ export async function POST(req) {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
+        console.log("NASTAVUJI na false my acc")
         myAcc = false
     }  else {
 
@@ -133,7 +145,7 @@ export async function POST(req) {
     }
 
  if(!myAcc){
-
+  console.log("NENI MUJ UCET CIZI DEAKTIVUJI")
 
     const currentDate = DateTime.now()
     .setZone('Europe/Prague')
