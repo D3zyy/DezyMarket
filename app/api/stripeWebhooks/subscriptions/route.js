@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/database/db";
 import { DateTime } from 'luxon';
-import { getCachedData } from "@/app/getSetCachedData/caching";
+import { getCachedData,invalidateCache } from "@/app/getSetCachedData/caching";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
@@ -69,6 +69,9 @@ export async function POST(request) {
             const user = await getCachedData(`userEmail_${userEmail}`, () => prisma.users.findFirst({
                 where: { email:userEmail }
                 }), 600)
+               await invalidateCache(`userEmail_${userEmail}`)
+               await invalidateCache(`userAccTypes_${userEmail}`)
+               await invalidateCache(`userRole_${user.userId}`)
             if (!user) {
                 throw new Error(`Uživatel s e-mailem ${userEmail} nebyl nalezen.`);
             }
@@ -172,6 +175,10 @@ export async function POST(request) {
                 const user = await getCachedData(`userEmail_${paymentIntent.customer_email }`, () => prisma.users.findFirst({
                     where: { email:paymentIntent.customer_email  }
                     }), 600)
+
+                    await invalidateCache(`userEmail_${paymentIntent.customer_email }`)
+                    await invalidateCache(`userAccTypes_${paymentIntent.customer_email}`)
+                    await invalidateCache(`userRole_${user.userId}`)
                 // Find the AccountTypeId by its name
                 const accountType = await prisma.AccountType.findFirst({
                     where: { name: paymentIntent.subscription_details.metadata.name },
@@ -216,6 +223,10 @@ const endOfSubscription = DateTime.now()
                 const user = await getCachedData(`userEmail_${customerEmail }`, () => prisma.users.findFirst({
                     where: { email:customerEmail  }
                     }), 600)
+                    await invalidateCache(`userEmail_${customerEmail}`)
+                    await invalidateCache(`userAccTypes_${customerEmail}`)
+                    await invalidateCache(`userRole_${user.userId}`)
+  
                 console.log("Uživatel kterému bylo zrušeno předplatné:",user)
                 // Find the AccountTypeId by its name
                 const accountType = await prisma.AccountType.findFirst({
