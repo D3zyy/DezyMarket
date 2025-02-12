@@ -164,10 +164,14 @@ if(session?.role?.privileges > 3){
 
  emojiForAcc = false
 if(accType?.priority > 1){
-     emojiForAcc = await prisma.AccountType.findMany({
-        where: { name: accType?.name },
-        select: { emoji: true }
-    });
+  const emojiForAcc = await getCachedData(
+    `emoji_for_accaaa:${accType?.name}`, // Unikátní klíč pro cache na základě accType.name
+    async () => await prisma.AccountType.findMany({
+      where: { name: accType?.name },
+      select: { emoji: true },
+    }),
+    600 // Cache expirace na 600 sekund (10 minut)
+  );
 }
 
   }catch(e){
@@ -259,13 +263,17 @@ function checkBans(bansOfUser) {
 
 if(session?.role?.privileges > 2   ){
   // fetch all types
-   allSub = await prisma.accountType.findMany({
-    where: {
-      priority: {
-        gt: 1, // gt znamená "greater than" (větší než)
+  const allSub = await getCachedData(
+    `account_types_priority_gt_1`, // Unikátní klíč pro cache
+    async () => await prisma.accountType.findMany({
+      where: {
+        priority: {
+          gt: 1, // gt znamená "greater than" (větší než)
+        },
       },
-    },
-  });
+    }),
+    600 // Cache expirace na 600 sekund (10 minut)
+  );
 
 }
 

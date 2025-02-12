@@ -443,11 +443,15 @@ const formDataObject = Object.fromEntries(formData.entries());
     headers: { 'Content-Type': 'application/json' }
   });
 }
- accOfUser = await prisma.accountType.findMany({
-  where: {
-    name: monthIn.name
-  }
-});
+const accOfUser = await getCachedData(
+  `account_types_for_${monthIn.name}`, // Unikátní klíč pro cache na základě monthIn.name
+  async () => await prisma.accountType.findMany({
+    where: {
+      name: monthIn.name
+    }
+  }),
+  600 // Cache expirace na 600 sekund (10 minut)
+);
 
 if(allImages?.length > accOfUser[0]?.numberOfAllowedImages ){
   const rawIp =

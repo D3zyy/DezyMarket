@@ -107,16 +107,20 @@ const DateAndTimeNowPrague = DateTime.now()
   export async function getTypeOfAccountDetails() {
     try {
       // Získání AccountType s připojenými perkami a cenami
-      const accountTypes = await prisma.accountType.findMany({
-        include: {
-          perks: true,
-          accPrices: {
-            include: {
-              price: true,
+      const accountTypes = await getCachedData(
+        `account_types_with_perks_and_prices`, // Unikátní klíč pro cache
+        async () => await prisma.accountType.findMany({
+          include: {
+            perks: true,
+            accPrices: {
+              include: {
+                price: true,
+              },
             },
           },
-        },
-      });
+        }),
+        600 // Cache expirace na 600 sekund (10 minut)
+      );
   
       // Mapování výsledků pro každého accountType
       const result = accountTypes.map(accountType => {

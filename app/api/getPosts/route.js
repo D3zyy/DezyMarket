@@ -1,6 +1,7 @@
 import { prisma } from '../../database/db';
 import { checkRateLimit } from '@/app/RateLimiter/rateLimit';
 import { getSession } from '@/app/authentication/actions';
+import { getCachedData } from '@/app/getSetCachedData/caching';
 export async function POST(request) {
     try {
     const ipToRedis =
@@ -37,49 +38,56 @@ export async function POST(request) {
     console.time('fetchPosts');
 
     // Načteme příspěvky s prioritizací podle toho, zda se filtruje podle sekce
-    const posts = await prisma.posts.findMany({
-        where: {
+    const posts = await getCachedData(
+        `posts_filter_${JSON.stringify(filters)}_keyWord_${keyWord}_price_${price}_page_${page}_section_${section}`, // Unikátní klíč pro cache
+        async () => await prisma.posts.findMany({
+          where: {
             ...filters,
             OR: keyWord
-                ? [
-                    { name: { search: `${keyWord}:*` } },
-                    { description: { search: `${keyWord}:*` } }
+              ? [
+                  { name: { search: `${keyWord}:*` } },
+                  { description: { search: `${keyWord}:*` } }
                 ]
-                : undefined,
+              : undefined,
             ...(price && (price === 'Dohodou' || price === 'V textu' || price === 'Zdarma') && { price })
-        },
-        include: {
+          },
+          include: {
             images: { take: 1 },
             top: true,
-        },
-        orderBy: section
+          },
+          orderBy: section
             ? [
                 { AllTops: 'desc' }, // Topované příspěvky se berou jen pokud mají AllTops === true
                 { top: { numberOfMonthsToValid: 'desc' } }, // Seřazení podle počtu měsíců topování
                 { dateAndTime: 'desc' } // Ostatní příspěvky podle data
-            ]
+              ]
             : [
                 { top: { numberOfMonthsToValid: 'desc' } }, // Normální řazení bez filtru sekce
                 { topId: 'desc' },
                 { dateAndTime: 'desc' }
-            ],
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-    });
+              ],
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+        }),
+        300 // Cache expirace na 5 minut (300 sekund)
+      );
 
-    // Získání celkového počtu příspěvků pro stránkování
-    const totalPosts = await prisma.posts.count({
-        where: {
+    const totalPosts = await getCachedData(
+        `total_posts_filter_${JSON.stringify(filters)}_keyWord_${keyWord}_price_${price}_section_${section}`, // Unikátní klíč pro cache
+        async () => await prisma.posts.count({
+          where: {
             ...filters,
             OR: keyWord
-                ? [
-                    { name: { search: `${keyWord}:*` } },
-                    { description: { search: `${keyWord}:*` } }
+              ? [
+                  { name: { search: `${keyWord}:*` } },
+                  { description: { search: `${keyWord}:*` } }
                 ]
-                : undefined,
+              : undefined,
             ...(price && (price === 'Dohodou' || price === 'V textu' || price === 'Zdarma') && { price })
-        }
-    });
+          }
+        }),
+        300 // Cache expirace na 5 minut (300 sekund)
+      );
 
     // Konec měření času
     console.timeEnd('fetchPosts');
