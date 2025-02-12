@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { getUserAccountTypeOnStripe } from "@/app/typeOfAccount/Methods";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
-import { getCachedData } from "@/app/getSetCachedData/caching";
+import { getCachedData, invalidateCache } from "@/app/getSetCachedData/caching";
 const schema = z.object({
   name: z.string()
     .max(70, 'Název může mít maximálně 70 znaků.') 
@@ -1039,6 +1039,9 @@ export async function PUT(req) {
 
 
       await updatePost(data.postId, data);
+      await invalidateCache(`post_record_${data.postId}`)
+
+
       return new Response(JSON.stringify({
         message: "Úspěšná aktualizace příspěvku"
       }), {

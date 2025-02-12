@@ -7,29 +7,10 @@ export async function getPostFromDb(postId,privi = 1) {
   try {
   
     
-    // Uložíme data do dvou cache klíčů
-postRecord = await getCachedData(
-  `post_record_${postId}_privi_${privi}`, // Cache pro s privilegii
-  async () => await prisma.posts.findUnique({
-    where: {
-      id: postId,
-      ...(privi > 1 ? {} : { visible: true }), // Viditelnost pouze pokud privi <= 1
-    },
-    include: {
-      category: true,
-      section: true,
-      user: {
-        include: {
-          role: true,
-        },
-      },
-    },
-  }),
-  300 // Cache expirace na 5 minut (300 sekund)
-);
+
 
 // Uložíme data do cache bez privilegii
-await getCachedData(
+postRecord =  await getCachedData(
   `post_record_${postId}`, // Cache bez privilegii
   async () => await prisma.posts.findUnique({
     where: {
