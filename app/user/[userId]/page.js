@@ -65,12 +65,12 @@ const Page = async ({ params }) => {
       },
     }),
 
-    getCachedData(`userRakings_${params?.userId}`, () => prisma.userRatings.findMany({
+    prisma.userRatings.findMany({
       where: { toUserId: params?.userId },
       include: {
         fromUser: true,  
       }
-  }),6000)
+  })
 
     
     
