@@ -48,13 +48,13 @@ headers().get("x-real-ip") ||
     if(!session || session?.role?.privileges <= 1|| !session.isLoggedIn || !session.email ){
       redirect('/');
   }
-  errorsfromServer = await  getCachedData("errorsfromServer",   prisma.errors.findMany,5)
+
   try{
 
    
-
-    [countOfAllPosts,activePostsCount,nmbrOfPostsToday,nmbrOfPostsYestrday,nmbrOfPostsThisMonth,nmbrOfPostsLastMonth,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats] = await Promise.all([
-  prisma.posts.count(),
+    [errorsfromServer,countOfAllPosts,activePostsCount,nmbrOfPostsToday,nmbrOfPostsYestrday,nmbrOfPostsThisMonth,nmbrOfPostsLastMonth,reports,suppTickets,subscTypes,allTops,countOfAllUSers,registredTodayNumberOfUsr,registredYestrdayNumberOfUsr,registredThisMonthyNumberOfUsr,registredLastMonthyNumberOfUsr,allSubToStats] = await Promise.all([
+      getCachedData("errorsfromServer",prisma.errors.findMany,5),
+      prisma.posts.count(),
       prisma.posts.count({where: {visible: true}})
       ,
       await prisma.posts.count({

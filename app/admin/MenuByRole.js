@@ -225,7 +225,12 @@ const changeTopSMonths = async (newMo,topId) => {
 
 
 
-const formatDate = (date) => {
+const formatDate = (dateString) => {
+  // Převede datum ve formátu ISO 8601 na Date objekt
+  const date = new Date(dateString);
+
+  console.log("DATE:", date);
+
   const day = String(date.getUTCDate()).padStart(2, '0');
   const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Měsíce jsou od 0
   const year = date.getUTCFullYear();
