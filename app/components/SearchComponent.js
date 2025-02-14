@@ -104,11 +104,8 @@ function SearchComponent({ categories,displaySections }) {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              searchQuery: info,
-              category: selectedCategory,
-              section: selectedSection,
-              price: selectedPrice,
-              location: selectedLocation
+              keyWord: info,
+           
             }),
           });
 

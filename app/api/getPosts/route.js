@@ -116,6 +116,7 @@ export async function POST(request) {
       } else if (price && ["Dohodou", "V textu", "Zdarma"].includes(price)) {
         // Pokud je cena jedna z hodnot 'Dohodou', 'Vtextu' nebo 'Zdarma', filtrujeme přímo v DB
         posts = posts.filter((post) => post.price === price);
+  
       }
       console.log("Po filtraci:",posts)
 

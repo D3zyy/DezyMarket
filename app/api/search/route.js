@@ -27,7 +27,7 @@ export async function POST(req) {
     data = await req.json();
 
     // Ověření, že vyhledávací dotaz je dlouhý alespoň 2 znaky
-    if (!data || !data.searchQuery || data.searchQuery.length < 2) {
+    if (!data || !data.keyWord || data.keyWord.length < 2) {
       return new Response(
         JSON.stringify({ message: "Vyhledávací dotaz musí mít alespoň 2 znaky." }),
         { status: 400 }
@@ -37,7 +37,11 @@ export async function POST(req) {
     // Začátek měření času
     console.time("Full-text search time");
     const { keyWord, category, section, price, location } = data;
-
+    console.log("keyWord:",keyWord)
+    console.log("Category:",category)
+    console.log("Section:",section)
+    console.log("Price:",price)
+    console.log("Location:",location)
     // Filtry pro zbytek parametrů
     const filters = {
       ...(category && { category: { is: { name: category } } }),
@@ -61,8 +65,8 @@ export async function POST(req) {
       300 // Cache expirace na 5 minut (300 sekund)
     );
 
-
-    console.log("CEnaaa:",price)
+    console.log("KEY WORD:",keyWord)
+    console.log("nasel semmmmmm:",foundPostsFullText)
     // Pouze pokud je filtr `price` poslán a není jedna z hodnot 'Dohodou', 'Vtextu' nebo 'Zdarma'
     if (price && !["Dohodou", "V textu", "Zdarma"].includes(price)) {
       const isNumeric = (value) => /^\d+$/.test(value);
@@ -110,9 +114,9 @@ export async function POST(req) {
     const highlightedPostsFullText = foundPostsFullText
     .map((post) => {
       // Zvýraznění v názvu
-      const nameResult = highlightText(post?.name, data.searchQuery);
+      const nameResult = highlightText(post?.name, data.keyWord);
       // Zvýraznění v popisku
-      const descriptionResult = highlightText(post?.description, data.searchQuery);
+      const descriptionResult = highlightText(post?.description, data.keyWord);
   
       if (!nameResult && !descriptionResult) return null; // Pokud není žádný výsledek v názvu ani v popisku, přeskočíme
   
