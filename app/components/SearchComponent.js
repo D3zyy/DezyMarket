@@ -145,6 +145,7 @@ function SearchComponent({ categories,displaySections }) {
             />
           </svg>
           <input
+            id='searchIn'
             type="text"
             className="grow"
             onChange={(e) => {
@@ -193,6 +194,7 @@ function SearchComponent({ categories,displaySections }) {
 
       <div className="flex flex-col gap-2 md:flex-row justify-center font-bold md:static p-2 rounded-lg max-w-[300px] md:max-w-[600px] mx-auto mt-2 mb-1">
         <select
+          id='selectCategory'
           className="md:max-w-[130px] select select-bordered"
           onChange={handleCategoryChange}
           value={selectedCategory}
@@ -208,6 +210,7 @@ function SearchComponent({ categories,displaySections }) {
 
         {selectedCategory && displaySections && (
           <select
+           id='selectSection'
           className="md:max-w-[150px] select select-bordered"
           value={selectedSection}
           onChange={handleSectionChange}
@@ -225,6 +228,7 @@ function SearchComponent({ categories,displaySections }) {
         )}
 
 <select
+ id='selectLocation'
           className="md:max-w-[150px] select select-bordered"
           value={selectedLocation}
           onChange={handleLocationChange}
@@ -257,6 +261,7 @@ function SearchComponent({ categories,displaySections }) {
         </select>
 
         <select
+         id='selectPrice'
           className="md:max-w-[120px] select select-bordered"
           value={selectedPrice}
           onChange={handlePriceChange}
