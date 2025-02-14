@@ -74,12 +74,16 @@ export async function POST(req) {
         const numericPrice = Number(post.price); // Převod na číslo
 
         if (price.includes("-")) {
+          console.log(1)
           const [min, max] = price.split("-").map(Number);
+          console.log("TOGLE vracím:", numericPrice >= min && numericPrice <= max)
           return numericPrice >= min && numericPrice <= max;
         } else if (price.endsWith("+")) {
+          console.log(2)
           const min = Number(price.replace("+", ""));
           return numericPrice >= min;
         } else {
+          console.log(3)
           return numericPrice === Number(price);
         }
       });

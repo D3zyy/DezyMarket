@@ -38,7 +38,7 @@ export async function POST(request) {
     console.time('fetchPosts');
 
     // Načteme příspěvky s prioritizací podle toho, zda se filtruje podle sekce
-    const posts = await getCachedData(
+    let posts = await getCachedData(
         `posts_filter_${JSON.stringify(filters)}_keyWord_${keyWord}_price_${price}_page_${page}_section_${section}`, // Unikátní klíč pro cache
         async () => await prisma.posts.findMany({
           where: {
@@ -49,7 +49,7 @@ export async function POST(request) {
                   { description: { search: `${keyWord}:*` } }
                 ]
               : undefined,
-            ...(price && (price === 'Dohodou' || price === 'V textu' || price === 'Zdarma') && { price })
+           
           },
           include: {
             images: { take: 1 },
@@ -72,7 +72,7 @@ export async function POST(request) {
         300 // Cache expirace na 5 minut (300 sekund)
       );
 
-    const totalPosts = await getCachedData(
+    let totalPosts = await getCachedData(
         `total_posts_filter_${JSON.stringify(filters)}_keyWord_${keyWord}_price_${price}_section_${section}`, // Unikátní klíč pro cache
         async () => await prisma.posts.count({
           where: {
@@ -83,11 +83,41 @@ export async function POST(request) {
                   { description: { search: `${keyWord}:*` } }
                 ]
               : undefined,
-            ...(price && (price === 'Dohodou' || price === 'V textu' || price === 'Zdarma') && { price })
+        
           }
         }),
         300 // Cache expirace na 5 minut (300 sekund)
       );
+
+      console.log("Před našel sem příspěvky:",posts)
+      if (price && !["Dohodou", "V textu", "Zdarma"].includes(price)) {
+        const isNumeric = (value) => /^\d+$/.test(value);
+  
+        // Aplikujeme filtr na ceny až po načtení příspěvků
+        posts = posts.filter((post) => {
+          if (!isNumeric(post.price)) return false; // Odstraní nečíselné ceny
+  
+          const numericPrice = Number(post.price); // Převod na číslo
+  
+          if (price.includes("-")) {
+            console.log(1)
+            const [min, max] = price.split("-").map(Number);
+            console.log("TOGLE vracím:", numericPrice >= min && numericPrice <= max)
+            return numericPrice >= min && numericPrice <= max;
+          } else if (price.endsWith("+")) {
+            console.log(2)
+            const min = Number(price.replace("+", ""));
+            return numericPrice >= min;
+          } else {
+            console.log(3)
+            return numericPrice === Number(price);
+          }
+        });
+      } else if (price && ["Dohodou", "V textu", "Zdarma"].includes(price)) {
+        // Pokud je cena jedna z hodnot 'Dohodou', 'Vtextu' nebo 'Zdarma', filtrujeme přímo v DB
+        posts = posts.filter((post) => post.price === price);
+      }
+      console.log("Po filtraci:",posts)
 
     // Konec měření času
     console.timeEnd('fetchPosts');
