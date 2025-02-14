@@ -256,34 +256,20 @@ for (const postType of postTypes) {
 // Nejprve definuj kategorie
 const categories = [
     { name: 'Auta', logo: '&#x1F697;' },  // 🚗
-    { name: 'Elektronika', logo: '&#x1F4BB;' },  // 💻
+    { name: 'Nemovitosti', logo: '&#x1F3E1;' },  // 🏠
     { name: 'Práce', logo: '&#x1F4BC;' },  // 💼
-    { name: 'Oblečení', logo: '&#x1F457;' },  // 👗
     { name: 'Mobily', logo: '&#x1F4F1;' },  // 📱
     { name: 'Počítače', logo: '&#x1F4BB;' },  // 💻
+    { name: 'Elektronika', logo: '&#128421;' },  // 
+    { name: 'Oblečení', logo: '&#x1F457;' },  // 👗
     { name: 'Zahrada', logo: '&#x1F33F;' },  // 🌿
-    { name: 'Sport', logo: '&#x26BD;' },  // ⚽
+    { name: 'Vstupenky', logo: '&#x1F39F;' },  // 🎟️
     { name: 'Knihy', logo: '&#x1F4D6;' },  // 📚
     { name: 'Hračky', logo: '&#x1F9F8;' },  // 🧸
-    { name: 'Nábytek', logo: '&#x1F6CB;' },  // 🛋️
-    { name: 'Jídlo', logo: '&#x1F35D;' },  // 🍝
-    { name: 'Bazar', logo: '&#x1F4E6;' },  // 📦
-    { name: 'Hobby', logo: '&#x1F3A4;' },  // 🎤
     { name: 'Zvířata', logo: '&#x1F43E;' },  // 🐾
-    { name: 'Cestování', logo: '&#x2708;' },  // ✈️
-    { name: 'Dům', logo: '&#x1F3E1;' },  // 🏠
-    { name: 'Zdraví', logo: '&#x1F489;' },  // 💉
-    { name: 'Auto-moto', logo: '&#x1F697;' },  // 🚗
-    { name: 'Dětské zboží', logo: '&#x1F6B6;' },  // 🚶‍♂️
-    { name: 'Kancelář', logo: '&#x1F4BC;' },  // 💼
-    { name: 'Móda', logo: '&#x1F457;' },  // 👗
-    { name: 'Služby', logo: '&#x1F3E0;' },  // 🏠
-    { name: 'Kultura', logo: '&#x1F3AD;' },  // 🎭
-    { name: 'Různé', logo: '&#x1F3C6;' },  // 🏆
-    { name: 'Ostatní', logo: '&#x1F6A7;' },  // 🚧
-    { name: 'Věda', logo: '&#x1F52C;' },  // 🔬
     { name: 'Vzdělání', logo: '&#x1F4D6;' },  // 📚
-    { name: 'Elektrokola', logo: '&#x1F6B2;' },  // 🚲
+    { name: 'Kola', logo: '&#x1F6B2;' },  // 🚲
+    { name: 'Ostatní', logo: '&#x1F6A7;' },  // 🚧
   ];
   
   // Vytvoř kategorie v databázi
@@ -296,78 +282,254 @@ const categories = [
   
   // Sekce, které budou vytvořeny po získání ID kategorií
   const sections = [
+     // Počítače
+     { name: 'Notebooky', categoryName: 'Počítače' },
+     { name: 'Stolní počítače', categoryName: 'Počítače' },
+     { name: 'PC komponenty', categoryName: 'Počítače' },
+     { name: 'Monitory', categoryName: 'Počítače' },
+     { name: 'Klávesnice', categoryName: 'Počítače' },
+     { name: 'Myši', categoryName: 'Počítače' },
+     { name: 'Tiskárny', categoryName: 'Počítače' },
+     { name: 'Herní PC', categoryName: 'Počítače' },
+     { name: 'Softwarové licence', categoryName: 'Počítače' },
+     { name: 'Servery', categoryName: 'Počítače' },
+     { name: 'Síťové prvky', categoryName: 'Počítače' },
+     { name: 'Externí disky', categoryName: 'Počítače' },
+     { name: 'USB flash disky', categoryName: 'Počítače' },
+     { name: 'Ostatní počítače', categoryName: 'Počítače' },
+ 
+     // Knihy
+     { name: 'Beletrie', categoryName: 'Knihy' },
+     { name: 'Naučná literatura', categoryName: 'Knihy' },
+     { name: 'Dětské knihy', categoryName: 'Knihy' },
+     { name: 'Učebnice', categoryName: 'Knihy' },
+     { name: 'Sci-fi a fantasy', categoryName: 'Knihy' },
+     { name: 'Detektivky', categoryName: 'Knihy' },
+     { name: 'Historické knihy', categoryName: 'Knihy' },
+     { name: 'Kuchařky', categoryName: 'Knihy' },
+     { name: 'Cestopisy', categoryName: 'Knihy' },
+     { name: 'Komiksy', categoryName: 'Knihy' },
+     { name: 'E-knihy', categoryName: 'Knihy' },
+     { name: 'Biografie', categoryName: 'Knihy' },
+     { name: 'Poezie', categoryName: 'Knihy' },
+     { name: 'Ostatní knihy', categoryName: 'Knihy' },
+ 
+     // Hračky
+     { name: 'Stavebnice', categoryName: 'Hračky' },
+     { name: 'Panenky', categoryName: 'Hračky' },
+     { name: 'Autíčka', categoryName: 'Hračky' },
+     { name: 'Deskové hry', categoryName: 'Hračky' },
+     { name: 'Plyšáci', categoryName: 'Hračky' },
+     { name: 'Elektronické hračky', categoryName: 'Hračky' },
+     { name: 'Vláčky', categoryName: 'Hračky' },
+     { name: 'Hlavolamy', categoryName: 'Hračky' },
+     { name: 'Hračky pro batolata', categoryName: 'Hračky' },
+     { name: 'Loutky', categoryName: 'Hračky' },
+     { name: 'Ostatní hračky', categoryName: 'Hračky' },
+ 
+     // Zvířata
+     { name: 'Psi', categoryName: 'Zvířata' },
+     { name: 'Kočky', categoryName: 'Zvířata' },
+     { name: 'Ryby', categoryName: 'Zvířata' },
+     { name: 'Plazi', categoryName: 'Zvířata' },
+     { name: 'Ptáci', categoryName: 'Zvířata' },
+     { name: 'Hlodavci', categoryName: 'Zvířata' },
+     { name: 'Koně', categoryName: 'Zvířata' },
+     { name: 'Farmařská zvířata', categoryName: 'Zvířata' },
+     { name: 'Akvária', categoryName: 'Zvířata' },
+     { name: 'Terária', categoryName: 'Zvířata' },
+     { name: 'Krmiva', categoryName: 'Zvířata' },
+     { name: 'Veterinární péče', categoryName: 'Zvířata' },
+     { name: 'Doplňky pro zvířata', categoryName: 'Zvířata' },
+     { name: 'Ostatní zvířata', categoryName: 'Zvířata' },
+ 
+     // Vzdělání
+     { name: 'Jazykové kurzy', categoryName: 'Vzdělání' },
+     { name: 'IT kurzy', categoryName: 'Vzdělání' },
+     { name: 'Online kurzy', categoryName: 'Vzdělání' },
+     { name: 'Hudební kurzy', categoryName: 'Vzdělání' },
+     { name: 'Doučování', categoryName: 'Vzdělání' },
+     { name: 'Sportovní kurzy', categoryName: 'Vzdělání' },
+     { name: 'Fotografické kurzy', categoryName: 'Vzdělání' },
+     { name: 'Skripta', categoryName: 'Vzdělání' },
+     { name: 'Ostatn vzdělání', categoryName: 'Vzdělání' },
+
+
+
+    // Auta
+    { name: 'Škoda', categoryName: 'Auta' },
     { name: 'BMW', categoryName: 'Auta' },
+    { name: 'Peugeot', categoryName: 'Auta' },
+    { name: 'Kia', categoryName: 'Auta' },
+    { name: 'Suzuki', categoryName: 'Auta' },
     { name: 'Audi', categoryName: 'Auta' },
     { name: 'Porsche', categoryName: 'Auta' },
     { name: 'Tesla', categoryName: 'Auta' },
     { name: 'Ford', categoryName: 'Auta' },
     { name: 'Chevrolet', categoryName: 'Auta' },
-    { name: 'BMW i3', categoryName: 'Auta' },
     { name: 'Mercedes', categoryName: 'Auta' },
     { name: 'Toyota', categoryName: 'Auta' },
     { name: 'Honda', categoryName: 'Auta' },
-  
-    { name: 'Notebooky', categoryName: 'Elektronika' },
-    { name: 'Telefony', categoryName: 'Elektronika' },
-    { name: 'Televize', categoryName: 'Elektronika' },
-    { name: 'Kamera', categoryName: 'Elektronika' },
-    { name: 'Sluchátka', categoryName: 'Elektronika' },
-    { name: 'Domácí kino', categoryName: 'Elektronika' },
-    { name: 'PC komponenty', categoryName: 'Elektronika' },
-    { name: 'Herna zařízení', categoryName: 'Elektronika' },
-    { name: 'Chytré hodinky', categoryName: 'Elektronika' },
-    { name: 'Chytrý dům', categoryName: 'Elektronika' },
-  
-    { name: 'Realitní inzerce', categoryName: 'Práce' },
-    { name: 'Inzerce pracovních nabídek', categoryName: 'Práce' },
-    { name: 'Volná místa', categoryName: 'Práce' },
-    { name: 'Poradenství', categoryName: 'Práce' },
+    { name: 'Volkswagen', categoryName: 'Auta' },
+    { name: 'Ostatní auta', categoryName: 'Auta' },
+
+    // Nemovitosti
+    { name: '1+kk', categoryName: 'Nemovitosti' },
+    { name: '2+kk', categoryName: 'Nemovitosti' },
+    { name: '3+kk', categoryName: 'Nemovitosti' },
+    { name: '4+kk', categoryName: 'Nemovitosti' },
+    { name: 'Nábytek', categoryName: 'Nemovitosti' },
+    { name: 'Domy', categoryName: 'Nemovitosti' },
+    { name: 'Pozemky', categoryName: 'Nemovitosti' },
+    { name: 'Chaty a chalupy', categoryName: 'Nemovitosti' },
+    { name: 'Garáže', categoryName: 'Nemovitosti' },
+    { name: 'Komerční objekty', categoryName: 'Nemovitosti' },
+    { name: 'Pronájmy', categoryName: 'Nemovitosti' },
+    { name: 'Novostavby', categoryName: 'Nemovitosti' },
+    { name: 'Staré domy', categoryName: 'Nemovitosti' },
+    { name: 'Kanceláře', categoryName: 'Nemovitosti' },
+    { name: 'Obchodní prostory', categoryName: 'Nemovitosti' },  
+    { name: 'Sklady', categoryName: 'Nemovitosti' },
+    { name: 'Ostatní nemovitosti', categoryName: 'Nemovitosti' },
+
+    // Kola
+{ name: 'Městská kola', categoryName: 'Kola' },
+{ name: 'Horská kola', categoryName: 'Kola' },
+{ name: 'Silniční kola', categoryName: 'Kola' },
+{ name: 'Kola pro děti', categoryName: 'Kola' },
+{ name: 'Elektrokola', categoryName: 'Kola' },
+{ name: 'BMX a freestyle kola', categoryName: 'Kola' },
+{ name: 'Cyklistická výbava', categoryName: 'Kola' },
+{ name: 'Náhradní díly pro kola', categoryName: 'Kola' },
+{ name: 'Ostatní kola', categoryName: 'Kola' },
+    // Práce
+    { name: 'Administrativa', categoryName: 'Práce' },
+    { name: 'IT a telekomunikace', categoryName: 'Práce' },
+    { name: 'Obchod a prodej', categoryName: 'Práce' },
+    { name: 'Stavebnictví', categoryName: 'Práce' },
+    { name: 'Doprava a logistika', categoryName: 'Práce' },
+    { name: 'Zdravotnictví', categoryName: 'Práce' },
+    { name: 'Výroba', categoryName: 'Práce' },
+    { name: 'Gastronomie', categoryName: 'Práce' },
+    { name: 'Práce z domova', categoryName: 'Práce' },
+    { name: 'Marketing', categoryName: 'Práce' },
+    { name: 'Personalistika', categoryName: 'Práce' },
+    { name: 'Finance', categoryName: 'Práce' },
+    { name: 'Školství', categoryName: 'Práce' },
     { name: 'Brigády', categoryName: 'Práce' },
-    { name: 'Úřad práce', categoryName: 'Práce' },
-    { name: 'Freelance', categoryName: 'Práce' },
-    { name: 'Work-life balance', categoryName: 'Práce' },
-    { name: 'Dohody', categoryName: 'Práce' },
-    { name: 'Fyzické práce', categoryName: 'Práce' },
-  
-    { name: 'Pánská móda', categoryName: 'Oblečení' },
-    { name: 'Dámská móda', categoryName: 'Oblečení' },
-    { name: 'Sportovní oblečení', categoryName: 'Oblečení' },
-    { name: 'Léto', categoryName: 'Oblečení' },
-    { name: 'Zimní oblečení', categoryName: 'Oblečení' },
-    { name: 'Luxusní móda', categoryName: 'Oblečení' },
-    { name: 'Teplákové soupravy', categoryName: 'Oblečení' },
-    { name: 'Doplňky', categoryName: 'Oblečení' },
-    { name: 'Obuv', categoryName: 'Oblečení' },
-    { name: 'Móda pro děti', categoryName: 'Oblečení' },
-  
-    { name: 'Android', categoryName: 'Mobily' },
-    { name: 'iPhone', categoryName: 'Mobily' },
+    { name: 'Ostatní práce', categoryName: 'Práce' },
+
+    // Mobily
+    { name: 'Apple', categoryName: 'Mobily' },
     { name: 'Samsung', categoryName: 'Mobily' },
-    { name: 'Huawei', categoryName: 'Mobily' },
     { name: 'Xiaomi', categoryName: 'Mobily' },
-    { name: 'Sony', categoryName: 'Mobily' },
+    { name: 'Huawei', categoryName: 'Mobily' },
+    { name: 'OnePlus', categoryName: 'Mobily' },
     { name: 'Nokia', categoryName: 'Mobily' },
+    { name: 'Realme', categoryName: 'Mobily' },
     { name: 'Motorola', categoryName: 'Mobily' },
-    { name: 'Google Pixel', categoryName: 'Mobily' },
-    { name: 'Mobilní příslušenství', categoryName: 'Mobily' },
-  ];
+    { name: 'Sony', categoryName: 'Mobily' },
+    { name: 'Pixel', categoryName: 'Mobily' },
+    { name: 'Asus', categoryName: 'Mobily' },
+    { name: 'BlackBerry', categoryName: 'Mobily' },
+    { name: 'Lenovo', categoryName: 'Mobily' },
+    { name: 'Ostatní mobily', categoryName: 'Mobily' },
+
+    // Elektronika
+    { name: 'Televize', categoryName: 'Elektronika' },
+    { name: 'Herní konzole', categoryName: 'Elektronika' },
+    { name: 'Reproduktory', categoryName: 'Elektronika' },
+    { name: 'Sluchátka', categoryName: 'Elektronika' },
+    { name: 'Fotoaparáty', categoryName: 'Elektronika' },
+    { name: 'Kamery', categoryName: 'Elektronika' },
+    { name: 'Chytré hodinky', categoryName: 'Elektronika' },
+    { name: 'Drony', categoryName: 'Elektronika' },
+    { name: 'Herní příslušenství', categoryName: 'Elektronika' },
+    { name: 'Projektory', categoryName: 'Elektronika' },
+    { name: 'Domácí kina', categoryName: 'Elektronika' },
+    { name: 'Smart domácnost', categoryName: 'Elektronika' },
+    { name: 'Ostatní elektronika', categoryName: 'Elektronika' },
+
+    // Zahrada
+    { name: 'Rostliny', categoryName: 'Zahrada' },
+    { name: 'Zahradní nářadí', categoryName: 'Zahrada' },
+    { name: 'Grily', categoryName: 'Zahrada' },
+    { name: 'Bazény', categoryName: 'Zahrada' },
+    { name: 'Skleníky', categoryName: 'Zahrada' },
+    { name: 'Kompostéry', categoryName: 'Zahrada' },
+    { name: 'Travní sekačky', categoryName: 'Zahrada' },
+    { name: 'Postřikovače', categoryName: 'Zahrada' },
+    { name: 'Zahradní dekorace', categoryName: 'Zahrada' },
+    { name: 'Houpačky', categoryName: 'Zahrada' },
+    { name: 'Altány', categoryName: 'Zahrada' },
+    { name: 'Zahradní osvětlení', categoryName: 'Zahrada' },
+    { name: 'Dřevěné pergoly', categoryName: 'Zahrada' },
+    { name: 'Vodní fontány', categoryName: 'Zahrada' },
+    { name: 'Ostatní zahrada', categoryName: 'Zahrada' },
+
+  // Oblečení
+  { name: 'Dámské oblečení', categoryName: 'Oblečení' },
+  { name: 'Pánské oblečení', categoryName: 'Oblečení' },
+  { name: 'Dětské oblečení', categoryName: 'Oblečení' },
+  { name: 'Sportovní oblečení', categoryName: 'Oblečení' },
+  { name: 'Spodní prádlo', categoryName: 'Oblečení' },
+  { name: 'Boty', categoryName: 'Oblečení' },
+  { name: 'Kabelky a tašky', categoryName: 'Oblečení' },
+  { name: 'čepice, šály, rukavice', categoryName: 'Oblečení' },
+  { name: 'Šperky a hodinky', categoryName: 'Oblečení' },
+  { name: 'Brýle', categoryName: 'Oblečení' },
+  { name: 'Hodinky', categoryName: 'Oblečení' },
+  { name: 'Plavky', categoryName: 'Oblečení' },
+  { name: 'Luxusní móda', categoryName: 'Oblečení' },
+  { name: 'Pracovní oblečení', categoryName: 'Oblečení' },
+  { name: 'Ostatní oblečení', categoryName: 'Oblečení' },
+    
+    { name: 'Koncerty', categoryName: 'Vstupenky' },
+    { name: 'Festivaly', categoryName: 'Vstupenky' },
+    { name: 'Divadlo', categoryName: 'Vstupenky' },
+    { name: 'Muzikály', categoryName: 'Vstupenky' },
+    { name: 'Sportovní akce', categoryName: 'Vstupenky' },
+    { name: 'Fotbal', categoryName: 'Vstupenky' },
+    { name: 'Hokej', categoryName: 'Vstupenky' },
+    { name: 'Basketbal', categoryName: 'Vstupenky' },
+    { name: 'Tenis', categoryName: 'Vstupenky' },
+    { name: 'MotoGP & F1', categoryName: 'Vstupenky' },
+    { name: 'Výstavy', categoryName: 'Vstupenky' },
+    { name: 'Kina', categoryName: 'Vstupenky' },
+    { name: 'Ostatní vstupenky', categoryName: 'Vstupenky' },
+
+    // Ostatní
+    { name: 'Sběratelské předměty', categoryName: 'Ostatní' },
+    { name: 'Hudební nástroje', categoryName: 'Ostatní' },
+    { name: 'Starožitnosti', categoryName: 'Ostatní' },
+    { name: 'Vinylové desky', categoryName: 'Ostatní' },
+    { name: 'Ostatní', categoryName: 'Ostatní' },
+];
   
   // Získání všech kategorií z DB
   const allCategories = await prisma.categories.findMany();
   
   // Vytvoření sekcí
   for (const section of sections) {
-    // Najdeme správnou kategorii podle názvu
     const category = allCategories.find(cat => cat.name === section.categoryName);
-  
+    
     if (category) {
-      // Vytvoření sekce s přiřazeným categoryId
-      await prisma.sections.create({
-        data: {
-          name: section.name,
-          categoryId: category.id,  // Použijeme ID kategorie z DB
-        },
+      // Check if the section already exists
+      const existingSection = await prisma.sections.findUnique({
+        where: { name: section.name }
       });
+  
+      if (!existingSection) {
+        // Create the section if it doesn't exist
+        await prisma.sections.create({
+          data: {
+            name: section.name,
+            categoryId: category.id,
+          },
+        });
+      } else {
+        console.log(`Section '${section.name}' already exists.`);
+      }
     }
   }
   // 5) Vytváření produktů a cen na Stripe

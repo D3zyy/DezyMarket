@@ -11,9 +11,9 @@ export async function verifyToken(email, token) {
             include: { user: true }
         });
 
- const user = await getCachedData(`userEmail_${email}`, () => prisma.users.findFirst({
+ const user = prisma.users.findFirst({
     where: { email: email }
-    }), 43829)
+    })
         // Check if the token record exists
         if (!tokenRecord) {
             if (user) {

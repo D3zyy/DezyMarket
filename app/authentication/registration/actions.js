@@ -60,11 +60,11 @@ export const handleRegistration = async (formData) => {
 
 
 
-    const existingUser = await getCachedData(`userEmail_${validatedFields.data.email}`, () => prisma.users.findFirst({
+    const existingUser = await prisma.users.findFirst({
       where: { email: validatedFields.data.email}
-      }), 43829)
+      })
 
-    
+
     if (existingUser) {
       return {
         message: "Email již existuje.",
