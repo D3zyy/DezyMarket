@@ -54,7 +54,7 @@ function TermsOfUse() {
           <h2 className="font-semibold">6. Zákaz použití API</h2>
           <ul className="list-disc pl-6">
             <li>Použití API portálu Dezy je výslovně zakázáno.</li>
-            <li>Uživatelé nesmí přistupovat k portálu nebo jeho obsahu automatizovanými prostředky, jako jsou skripty, roboty, nebo jiné nástroje, které by mohly poškodit nebo narušit fungování portálu.</li>
+            <li>Uživatelé nesmí přistupovat k portálu nebo jeho obsahu automatizovanými prostředky, jako jsou skripty nebo jiné nástroje, které by mohly poškodit nebo narušit fungování portálu.</li>
           </ul>
         </div>
   
@@ -74,6 +74,7 @@ function TermsOfUse() {
             <ul className="list-inside pl-6">
               <li>Jakékoli ztráty, škody nebo zranění vzniklé z obchodních transakcí mezi uživateli.</li>
               <li>Obsah inzerátů zveřejněných uživateli.</li>
+              <li>Jakoukoliv ztrátu dat.</li>
               <li>Jakékoli porušení právních předpisů uživateli.</li>
               <li>Výpadky portálu nebo technické problémy, které mohou nastat při používání webu.</li>
               <li>Uživatelé využívají portál na vlastní riziko.</li>
