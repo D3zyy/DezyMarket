@@ -6,7 +6,8 @@ function TermsOfUse() {
         <div className="mb-4">
           <h2 className="font-semibold">1. Úvodní ustanovení</h2>
           <p>
-            Tento dokument obsahuje podmínky použití internetového inzertního portálu Dezy (dále jen „portál“), který je provozován fyzickou osobou Michal Doležel, IČO: 21992711 (dále jen „provozovatel“). Používáním portálu souhlasíte s těmito podmínkami.
+            Tento dokument obsahuje podmínky použití internetového inzertního portálu Dezy (dále jen „portál“), který je provozován fyzickou osobou Michal Doležel, IČO: 21992711,Průběžná 1827/65
+            100 00 Praha 10 (dále jen „provozovatel“). Používáním portálu souhlasíte s těmito podmínkami.
           </p>
         </div>
   
