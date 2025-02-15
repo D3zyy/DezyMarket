@@ -9,6 +9,7 @@ import { getUserAccountTypeOnStripe } from '../typeOfAccount/Methods';
 import { headers } from 'next/headers';
 import { checkRateLimit } from '../RateLimiter/rateLimit';
 import { invalidateCache, getCachedData } from '../getSetCachedData/caching';
+import redis from '../redis/rd';
 export const getSession = async () => {
     try {
    
@@ -18,16 +19,19 @@ export const getSession = async () => {
   
       if (session && session.sessionId) {
        
-        // Check if the sessionId exists in the database
-        const sessionRecord = await getCachedData(
-          `session_record_${session.sessionId}`, // Unikátní cache klíč závislý na sessionId
-          async () => await prisma.Sessions.findUnique({
+
+        let sessionRecord = await redis.get(`session_record_${session.sessionId}`);
+        if(sessionRecord){
+
+        } else{
+          // try in db as well
+          sessionRecord =  await prisma.Sessions.findUnique({
             where: {
               sessionId: session.sessionId,
             },
-          }),
-          6000 
-        );
+          })
+        }
+
        
         if (!sessionRecord) {
           
@@ -113,7 +117,7 @@ export const getSession = async () => {
       let userId = userToCreate.id
       // Create session in the database
       
-      await prisma.Sessions.create({
+     let savedSes =  await prisma.Sessions.create({
         data: {
           sessionId,
           userId,
@@ -141,6 +145,7 @@ export const getSession = async () => {
       
       // Use iron-session to set the session ID in a cookie
       const session = await getIronSession( cookies(), sessionOptions);
+      await redis.setex(`session_record_${sessionId}`, 180000, JSON.stringify(savedSes)); // Uloží do cache s TTL
       session.showCards = (accPriority > 1 &&!acgifted)
       session.userId = userId;
       session.accPriority = accPriority

@@ -33,7 +33,7 @@ const ipToRedis =
           headers: { "Content-Type": "application/json" },
         }
       );
-    }
+    } 
     const data = await req.json();
     userToBreak = await prisma.sessions.findFirst({
       where: { id: data.sessionId },
@@ -184,9 +184,10 @@ const ipToRedis =
         }
       );
     }
-    await invalidateCache(`session_record_${data.sessionId}`)
+    console.log("tohle invaliduji:",`session_record_${userToBreak.sessionId}`)
+    await invalidateCache(`session_record_${userToBreak.sessionId}`)
     await prisma.sessions.delete({
-      where: { id: data.sessionId },
+      where: { sessionId: userToBreak.sessionId },
     });
 
     const nowww = DateTime.now()

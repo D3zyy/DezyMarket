@@ -56,9 +56,9 @@ export async function verifyToken(email, token) {
 
             // Adding customer to Stripe
             const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-            const userFromDb = await getCachedData(`userEmail_${email}`, () => prisma.users.findFirst({
+            const userFromDb = await  prisma.users.findFirst({
                 where: { email: email }
-                }), 43829)
+                })
 
             const customer = await stripe.customers.create({
                 email: email,
@@ -70,6 +70,7 @@ export async function verifyToken(email, token) {
             return { message: 'Odkaz je neplatný.', success: false };
         }
     } catch (error) {
+        console.log(error)
          try{                
                               const dateAndTime = DateTime.now()
                               .setZone('Europe/Prague')
