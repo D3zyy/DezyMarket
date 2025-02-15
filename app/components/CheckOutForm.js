@@ -128,7 +128,7 @@ export default function CheckoutForm({priceId,nameOfSub,price}) {
     Souhlasím s 
     <Link
       style={{ textDecoration: "underline",marginLeft: "4px", marginRight: "15px" }}
-      href={"/BusinessConditions"}
+      href={"/businessconditions"}
       target='_blank'
     >
       obchodními podmínky
