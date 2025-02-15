@@ -20,8 +20,7 @@ export default function RootLayout({ children }) {
           <meta charSet="utf-8" />
           <meta property="og:description" content="Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele." />
           <meta property="og:url" content="https://dezy.cz" />
-      </head>
-      <script
+          <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -49,6 +48,8 @@ export default function RootLayout({ children }) {
             }),
           }}
         />
+      </head>
+      
       <body style={{ display: 'flex', flexDirection: 'column', height: '100%', margin: '0' }}>
     <CookieConsent />
         <Navigation />
