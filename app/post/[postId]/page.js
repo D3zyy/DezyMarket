@@ -27,7 +27,57 @@ import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
 import { DateTime } from "luxon";
 import { getCachedData } from "@/app/getSetCachedData/caching";
 import Head from "next/head";
+import Script from "next/script";
+
+
+export const generateMetadata = async ({ params }) => {
+  let postRecord = await  getPostFromDb(params.postId, 4);
+
+  return {
+    title: postRecord?.name || 'Default Title',
+    description: postRecord?.description || 'Default description',
+    openGraph: {
+      locale: 'cs_CZ',
+      type: 'article',
+      siteName: 'Dezy',
+      image: 'https://dezy.cz/icon.png',
+      title: postRecord?.name,
+      description: postRecord?.description,
+      url: `https://dezy.cz/post/${params.postId}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: postRecord?.name,
+      description: postRecord?.description,
+      image: 'https://dezy.cz/icon.png',
+    },
+    meta: {
+      viewport: 'width=device-width, initial-scale=1.0',
+      charSet: 'utf-8',
+    },
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: postRecord?.name,
+      description: postRecord?.description,
+      author: {
+        '@type': 'Person',
+      },
+      mainEntityOfPage: {
+        '@type': 'WebSite',
+        '@id': 'https://dezy.cz',
+      },
+      dateCreated: new Date().toISOString(),
+      datePublished: new Date().toISOString(),
+      dateModified: new Date().toISOString(),
+      url: `https://dezy.cz/post/${params.postId}`,
+      image: 'https://dezy.cz/icon.png',
+    }
+  };
+};
+
 const Page = async ({ params }) => {
+  console.log(params)
   let session;
   let accType;
   let postRecord;
@@ -90,7 +140,7 @@ const Page = async ({ params }) => {
      
     }
 
-
+  
 
     if (!postRecord) {
       return (
@@ -161,19 +211,7 @@ const alreadyViewed = await getCachedData(
 
   return (
   <div>
-          <Head>
-          <title>{postRecord?.name}</title>
-          <meta name="description" content={postRecord?.description} />
-          <meta property="og:locale" content="cs_CZ" />
-          <meta property="og:type" content="article" />
-          <meta property="og:site_name" content="Dezy" />
-          <meta property="og:image" content="https://dezy.cz/icon.png" />
-          <meta property="og:title" content={postRecord?.name} />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta charSet="utf-8" />
-          <meta property="og:description" content={postRecord?.description} />
-          <meta property="og:url" content={`https://dezy.cz/post/${params.postId}`} />
-          <script
+          <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
               isFamilyFriendly: "true",
@@ -198,7 +236,7 @@ const alreadyViewed = await getCachedData(
             }),
           }}
         />
-        </Head>
+      
     <div className="md:mt-0 mt-4 pr-4 pl-4 lg:pr-8 lg:pl-8 md:pl-4  md:pr-4 breadcrumbs text-sm scrollbar-hidden">
   <ul>
     <li>

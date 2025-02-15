@@ -8,6 +8,8 @@ import { headers } from 'next/headers';
 import { checkRateLimit } from './RateLimiter/rateLimit';
 import { getCachedData } from './getSetCachedData/caching';
 import Head from 'next/head';
+import Script from 'next/script';
+
 const pacifico = localFont({
   src: '../public/fonts/Pacifico/Pacifico-Regular.ttf', // Začíná lomítkem
   weight: '400',
@@ -19,6 +21,55 @@ const bebas = localFont({
   weight: '400',
   style: 'normal',
 });
+
+export const metadata = {
+
+    title: 'Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy',
+    description: 'Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele.',
+    openGraph: {
+      locale: 'cs_CZ',
+      type: 'website',
+      siteName: 'Dezy',
+      image: 'https://dezy.cz/icon.png',
+      title: 'Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy',
+      description: 'Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele.',
+      url: 'https://dezy.cz',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy',
+      description: 'Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele.',
+      image: 'https://dezy.cz/icon.png',
+    },
+    meta: {
+      viewport: 'width=device-width, initial-scale=1.0',
+      charSet: 'utf-8',
+    },
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Dezy',
+      url: 'https://dezy.cz',
+      description: 'Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení.',
+      publisher: {
+        '@type': 'Organization',
+        name: 'Dezy',
+        logo: 'https://dezy.cz/icon.png',
+      },
+      image: 'https://dezy.cz/icon.png',
+      dateCreated: new Date().toISOString(),
+      datePublished: new Date().toISOString(),
+      dateModified: new Date().toISOString(),
+      mainEntityOfPage: {
+        '@type': 'WebSite',
+        '@id': 'https://dezy.cz',
+      },
+      isFamilyFriendly: 'true',
+      inLanguage: 'cs-CZ',
+
+    }
+};
+
 
 const Page = async () => {
  
@@ -58,19 +109,8 @@ const Page = async () => {
 
 
     return (<> 
-<Head>
-          <title>Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy</title>
-          <meta name="description" content="Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele." />
-          <meta property="og:locale" content="cs_CZ" />
-          <meta property="og:type" content="website" />
-          <meta property="og:site_name" content="Dezy" />
-          <meta property="og:image" content="https://dezy.cz/icon.png" />
-          <meta property="og:title" content="Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta charSet="utf-8" />
-          <meta property="og:description" content="Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele." />
-          <meta property="og:url" content="https://dezy.cz" />
-          <script
+
+          <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
@@ -97,8 +137,7 @@ const Page = async () => {
               inLanguage: "cs-CZ",
             }),
           }}
-        />
-        </Head>        
+        />      
       <div  className={`${bebas.className} flex justify-center text-4xl font-bold   p-2  `}>
       <h1>Dezy</h1>
       </div>
