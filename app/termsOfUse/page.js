@@ -86,7 +86,7 @@ function TermsOfUse() {
         <div className="mb-4">
           <h2 className="font-semibold">9. Ochrana osobních údajů</h2>
           <p>
-            Provozovatel respektuje ochranu osobních údajů uživatelů a nakládá s nimi v souladu s platnou legislativou (např. GDPR). Podrobnosti o ochraně osobních údajů jsou uvedeny v <a href="/privacy-policy" className="text-blue-500">zásadách ochrany osobních údajů</a>.
+            Provozovatel respektuje ochranu osobních údajů uživatelů a nakládá s nimi v souladu s platnou legislativou (např. GDPR). Podrobnosti o ochraně osobních údajů jsou uvedeny v <a href="/privacyPolicy" className="text-blue-500">zásadách ochrany osobních údajů</a>.
           </p>
         </div>
   
@@ -131,7 +131,7 @@ function TermsOfUse() {
   <h2 className="font-semibold">16. Řešení sporů</h2>
 
   <p>
-    V případě sporu mezi uživatelem a provozovatelem, který se nepodaří vyřešit prostřednictvím naší <a className="text-blue-500" href="support">podpory</a>, má uživatel možnost využít mimosoudní řešení sporu prostřednictvím České obchodní inspekce . Pro více informací o mimosoudním řešení sporů a způsobu podání návrhu, navštivte jejich <a className="text-blue-500" href="https://coi.cz/mimosoudni-reseni-spotrebitelskych-sporu-adr/">stránky</a>.
+    V případě sporu mezi uživatelem a provozovatelem, který se nepodaří vyřešit prostřednictvím naší <a className="text-blue-500" href="support">podpory</a>, má uživatel možnost využít mimosoudní řešení sporu prostřednictvím České obchodní inspekce . Pro více informací o mimosoudním řešení sporů a způsobu podání návrhu, navštivte jejich <a className="text-blue-500" target="_blank" href="https://coi.cz/mimosoudni-reseni-spotrebitelskych-sporu-adr/">stránky</a>.
   </p>
 
 </div>

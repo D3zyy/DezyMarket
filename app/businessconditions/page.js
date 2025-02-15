@@ -83,7 +83,7 @@ function TermsAndConditions() {
   <h2 className="font-semibold mt-6 mb-2">12. Řešení sporů</h2>
 
   <p>
-    V případě sporu mezi uživatelem a provozovatelem, který se nepodaří vyřešit prostřednictvím naší <a className="text-blue-500" href="support">podpory</a>, má uživatel možnost využít mimosoudní řešení sporu prostřednictvím České obchodní inspekce . Pro více informací o mimosoudním řešení sporů a způsobu podání návrhu, navštivte jejich <a className="text-blue-500" href="https://coi.cz/mimosoudni-reseni-spotrebitelskych-sporu-adr/">stránky</a>.
+    V případě sporu mezi uživatelem a provozovatelem, který se nepodaří vyřešit prostřednictvím naší <a className="text-blue-500"  href="/support">podpory</a>, má uživatel možnost využít mimosoudní řešení sporu prostřednictvím České obchodní inspekce . Pro více informací o mimosoudním řešení sporů a způsobu podání návrhu, navštivte jejich <a className="text-blue-500" target='_blank' href="https://coi.cz/mimosoudni-reseni-spotrebitelskych-sporu-adr/">stránky</a>.
   </p>
 
 
