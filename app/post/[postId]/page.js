@@ -168,8 +168,8 @@ const Page = async ({ params }) => {
       );
     }
 
-    if (session?.isLoggedIn && session?.userId != postRecord?.user?.id) {
-
+    if (session?.isLoggedIn && session?.userId != postRecord?.user?.id && postRecord.visible) {
+console.log("Tady",postRecord.visible)
 const alreadyViewed = await getCachedData(
   `post_view_${session.userId}_${postRecord?.id}`, // Unikátní cache klíč závislý na userId a postId
   async () => await prisma.postViews.findFirst({

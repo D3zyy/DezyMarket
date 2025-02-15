@@ -1237,7 +1237,7 @@ export async function PUT(req) {
       });
     }
 
-    const categorySectionExist = await  getCachedData(`categorySectionExist_${parseInt(formData.get('category'))}_${parseInt(formData.get('section'))}`, () =>prisma.sections.findUnique({
+    const categorySectionExist = await  getCachedData(`categorySectionExist_${parseInt(data.category)}_${parseInt(data.section)}`, () =>prisma.sections.findUnique({
       where: { id: parseInt(data.section) , categoryId: parseInt(data.category)}
     }), 31556952)
 
@@ -1399,6 +1399,7 @@ export async function PUT(req) {
 
     // Proceed with updating the post if privileges are higher
     await updatePost(data.postId, data);
+    await invalidateCache(`post_record_${data.postId}`)
     return new Response(JSON.stringify({
       message: "Úspěšná aktualizace příspěvku"
     }), {
@@ -1670,6 +1671,7 @@ export async function DELETE(req) {
                   
              }
     } else{
+      await invalidateCache(`post_record_${data.postId}`)
       await prisma.posts.update({
         where: { id: data.postId },
         data: { visible: false },
