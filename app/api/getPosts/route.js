@@ -73,7 +73,7 @@ export async function POST(request) {
         }),
         300 // Cache expirace na 5 minut (300 sekund)
       );
-
+      console.log("GETPOSTS:",posts)
     let totalPosts = await getCachedData(
         `total_posts_filter_${JSON.stringify(filters)}_keyWord_${keyWord}_price_${price}_section_${section}`, // Unikátní klíč pro cache
         async () => await prisma.posts.count({

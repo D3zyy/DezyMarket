@@ -47,6 +47,7 @@ export async function POST(req) {
       ...(category && { category: { is: { name: category } } }),
       ...(section && { section: { is: { name: section } } }),
       ...(location && { location }),
+      ... { visible: true  }
     };
 
     // Full-textové vyhledávání
@@ -96,7 +97,7 @@ export async function POST(req) {
       foundPostsFullText = foundPostsFullText.filter((post) => post.price === price);
     }
     console.timeEnd("Full-text search time");
-   
+
     const highlightText = (text, query) => {
       const regex = new RegExp(`\\b(${query}\\p{L}*)`, "giu"); // Použití unicode pro diakritiku
       const matches = text.match(regex); // Najde odpovídající slova
@@ -142,8 +143,7 @@ export async function POST(req) {
       };
     })
     .filter(Boolean); // Odstraní null hodnoty
-
-
+    
     return new Response(JSON.stringify({
       data: highlightedPostsFullText, // Vrátí seřazené příspěvky
     }), {
