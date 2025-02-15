@@ -8,34 +8,42 @@ export async function getPostFromDb(postId,privi = 1) {
   
     
 
-
-// Uložíme data do cache bez privilegii
-postRecord =  await getCachedData(
-  `post_record_${postId}`, // Cache bez privilegii
-  async () => await prisma.posts.findUnique({
-    where: {
-      id: postId,
-      ...(privi > 1 ? {} : { visible: true }), // Viditelnost pouze pokud privi <= 1
-    },
-    include: {
-      category: true,
-      section: true,
-      user: {
-        include: {
-          role: true,
-        },
-      },
-    },
-  }),
-  43829 // Cache expirace na 5 minut (300 sekund)
-);
+    console.log("PRIVILEGIA:", privi);
+    console.log("POSTID:", postId);
     
-   
+    // Definujeme podmínku WHERE předem
+    const whereCondition = { id: postId };
+    
+    if (privi <= 1) {
+      whereCondition.visible = true;
+    }
+    
+    console.log("WHERE CONDITION:", whereCondition); // Debug výstup
+    
+    // Uložíme data do cache bez privilegii
+    postRecord = await getCachedData(
+      `post_record_${postId}`, // Cache bez privilegii
+      async () => await prisma.posts.findUnique({
+        where: whereCondition,
+        include: {
+          category: true,
+          section: true,
+          user: {
+            include: {
+              role: true,
+            },
+          },
+        },
+      }),
+      43829 // Cache expirace na 5 minut (300 sekund)
+    );
+    
+   console.log("POST:",postRecord)
     if(privi <=1){
 
 
     let cannotShow = await checkUserBan(postRecord.user.id)
-    if(cannotShow){
+    if(cannotShow || postRecord.visible == false){
       return false
     }
   }

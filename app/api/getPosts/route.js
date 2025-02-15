@@ -29,6 +29,7 @@ export async function POST(request) {
         ...(category && { category: { is: { name: category } } }),
         ...(section && { section: { is: { name: section } } }),
         ...(location && { location }),
+        ... { visible: true  }
     };
 
     // Přidáme podmínku pro topování pouze tehdy, když je aktivní sekce
@@ -47,6 +48,7 @@ export async function POST(request) {
               ? [
                   { name: { search: `${keyWord}:*` } },
                   { description: { search: `${keyWord}:*` } }
+          
                 ]
               : undefined,
            
@@ -81,6 +83,7 @@ export async function POST(request) {
               ? [
                   { name: { search: `${keyWord}:*` } },
                   { description: { search: `${keyWord}:*` } }
+               
                 ]
               : undefined,
         
