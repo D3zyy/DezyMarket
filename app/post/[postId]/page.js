@@ -26,16 +26,24 @@ import { headers } from "next/headers";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
 import { DateTime } from "luxon";
 import { getCachedData } from "@/app/getSetCachedData/caching";
-import Head from "next/head";
 import Script from "next/script";
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+}
 
 export const generateMetadata = async ({ params }) => {
   let postRecord = await  getPostFromDb(params.postId, 4);
 
   return {
-    title: postRecord?.name || 'Default Title',
-    description: postRecord?.description || 'Default description',
+    appleWebApp: {
+      title:  postRecord?.name ,
+      statusBarStyle: "default",
+      capable: true
+    },
+    title: postRecord?.name ,
+    description: postRecord?.description,
     openGraph: {
       locale: 'cs_CZ',
       type: 'article',
@@ -212,6 +220,7 @@ const alreadyViewed = await getCachedData(
   return (
   <div>
           <Script
+          id='ldjsonPost'
           type="application/ld+json"
           dangerouslySetInnerHTML={{
               isFamilyFriendly: "true",

@@ -22,8 +22,17 @@ const bebas = localFont({
   style: 'normal',
 });
 
-export const metadata = {
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+}
 
+export const metadata = {
+  appleWebApp: {
+    title: "Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy",
+    statusBarStyle: "default",
+    capable: true
+  },
     title: 'Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy',
     description: 'Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele.',
     openGraph: {
@@ -111,6 +120,7 @@ const Page = async () => {
     return (<> 
 
           <Script
+           id='ldjsonMain'
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

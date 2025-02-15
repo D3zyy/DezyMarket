@@ -4,8 +4,18 @@ import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
 import Script from 'next/script';
 
-export const metadata = {
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+}
 
+export const metadata = {
+  
+  appleWebApp: {
+    title: "Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy",
+    statusBarStyle: "default",
+    capable: true
+  },
   title: 'Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy',
   description: 'Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele.',
   openGraph: {
@@ -58,6 +68,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="cs" style={{ height: '100%' }}>
        <Script
+           id='ldjson'
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

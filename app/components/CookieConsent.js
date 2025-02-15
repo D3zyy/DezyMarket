@@ -36,7 +36,7 @@ const CookieConsent = () => {
       {loaded && (
         <>
           <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-base-300 dark:bg-black p-4 rounded-lg flex flex-col md:flex-row gap-4 items-center justify-between md:max-w-[90%] w-9/12 md:w-6/12 shadow-lg z-50">
-            <p className="text-sm">Používáme cookies pro zajištění správné funkčnosti webu a analýzu návštěvnosti. Kliknutím na 'Přijmout' souhlasíte s naším použitím cookies. <Link target='_blank' href="/cookies-policy" className="underline">Přečíst více</Link></p>
+            <p className="text-sm">Používáme cookies pro zajištění správné funkčnosti webu a analýzu návštěvnosti. Kliknutím na &#39;Přijmout&#39; souhlasíte s naším použitím cookies. <Link target='_blank' href="/cookies-policy" className="underline">Přečíst více</Link></p>
             <div className="flex flex-row">
               <button 
                 onClick={handleNotAccept}
