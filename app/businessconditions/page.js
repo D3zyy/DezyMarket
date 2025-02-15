@@ -5,9 +5,9 @@ function TermsAndConditions() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Obchodní podmínky</h1>
       <p>
-        Tyto obchodní podmínky (dále jen "Podmínky") platí pro prodej produktů a služeb na  portálu Dezy (dále jen "portál"), který provozuje Michal Doležel (dále jen "provozovatel").
-        Před použitím portálu si prosím důkladně přečtěte následující podmínky.
-      </p>
+  Tyto obchodní podmínky (dále jen &quot;Podmínky&quot;) platí pro prodej produktů a služeb na portálu Dezy (dále jen &quot;portál&quot;), který provozuje Michal Doležel (dále jen &quot;provozovatel&quot;).
+  Před použitím portálu si prosím důkladně přečtěte následující podmínky.
+</p>
 
       <h2 className="font-semibold mt-6 mb-2">1. Údaje o provozovateli</h2>
       <p>

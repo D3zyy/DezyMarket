@@ -5,9 +5,9 @@ function PrivacyPolicy() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Zásady ochrany osobních údajů</h1>
       <p>
-        Tento dokument popisuje, jakým způsobem shromažďujeme, používáme a chráníme osobní údaje, které nám uživatelé poskytují při registraci a jiných místech portálu Dezy (dále jen "portál"). Provozovatel portálu, Michal Doležel, IČO: 21992711, Průběžná 1827/65
-100 00 Praha 10 (dále jen "správce"), se zavazuje k ochraně vašich osobních údajů v souladu s platnými právními předpisy, včetně nařízení Evropského parlamentu a Rady (EU) 2016/679 o ochraně osobních údajů (GDPR).
-      </p>
+  Tento dokument popisuje, jakým způsobem shromažďujeme, používáme a chráníme osobní údaje, které nám uživatelé poskytují při registraci a jiných místech portálu Dezy (dále jen &quot;portál&quot;). Provozovatel portálu, Michal Doležel, IČO: 21992711, Průběžná 1827/65
+100 00 Praha 10 (dále jen &quot;správce&quot;), se zavazuje k ochraně vašich osobních údajů v souladu s platnými právními předpisy, včetně nařízení Evropského parlamentu a Rady (EU) 2016/679 o ochraně osobních údajů (GDPR).
+</p>
 
       <h2 className="font-semibold mt-6 mb-2">1. Shromažďované osobní údaje</h2>
       <p>
@@ -66,7 +66,7 @@ function PrivacyPolicy() {
       <ul className="list-disc pl-6">
         <li>Právo na přístup k osobním údajům.</li>
         <li>Právo na opravu nepřesných nebo neúplných osobních údajů.</li>
-        <li>Právo na vymazání osobních údajů ("právo na zapomenutí").</li>
+        <li>Právo na vymazání osobních údajů.</li>
         <li>Právo na omezení zpracování údajů.</li>
         <li>Právo na přenositelnost údajů.</li>
         <li>Právo vznést námitku proti zpracování osobních údajů, pokud se zpracování zakládá na oprávněném zájmu.</li>
