@@ -7,6 +7,7 @@ import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import { checkRateLimit } from './RateLimiter/rateLimit';
 import { getCachedData } from './getSetCachedData/caching';
+import Head from 'next/head';
 const pacifico = localFont({
   src: '../public/fonts/Pacifico/Pacifico-Regular.ttf', // Začíná lomítkem
   weight: '400',
@@ -56,7 +57,20 @@ const Page = async () => {
 
 
 
-    return (<>         
+    return (<> 
+<Head>
+          <title>Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy</title>
+          <meta name="description" content="Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele." />
+          <meta property="og:locale" content="cs_CZ" />
+          <meta property="og:type" content="website" />
+          <meta property="og:site_name" content="Dezy" />
+          <meta property="og:image" content="https://dezy.cz/icon.png" />
+          <meta property="og:title" content="Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <meta charSet="utf-8" />
+          <meta property="og:description" content="Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele." />
+          <meta property="og:url" content="https://dezy.cz" />
+        </Head>        
       <div  className={`${bebas.className} flex justify-center text-4xl font-bold   p-2  `}>
       <h1>Dezy</h1>
       </div>

@@ -7,22 +7,17 @@ export default function RootLayout({ children }) {
   return (
     <html lang="cs" style={{ height: '100%' }}>
       <head>
-        <title>Dezy - Inzeretový portál</title>
-        <meta
-          name="description"
-          content="Nakupujte, inzerujte a prodávejte své nepotřebné věci. Vše na jednom místě, přehledné a uživatelsky přívětivý portál, který Vás provede celým procesem ať už inzerujete či nakupujete."
-        />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="Dezy - Nakupuj, inzeruj a prodávej „de to i online.“" />
-        <meta
-          property="og:description"
-          content="Nakupujte, inzerujte a prodávejte své nepotřebné věci. Vše na jednom místě, přehledné a uživatelsky přívětivý portál, který Vás provede celým procesem ať už inzerujete či nakupujete."
-        />
-        <meta property="og:image" content="URL k obrázku" />
-        <meta property="og:type" content="website" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta charSet="UTF-8" />
-        <link rel="icon" href="/icon.png" sizes="any" />
+        <title>Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy</title>
+          <meta name="description" content="Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele." />
+          <meta property="og:locale" content="cs_CZ" />
+          <meta property="og:type" content="website" />
+          <meta property="og:site_name" content="Dezy" />
+          <meta property="og:image" content="https://dezy.cz/icon.png" />
+          <meta property="og:title" content="Inzerce zdarma,Inzeráty, „Lepší místo pro vaše inzeráty“ Dezy" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <meta charSet="utf-8" />
+          <meta property="og:description" content="Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení. Na našem bazaru můžete snadno prodávat, nakupovat a objevovat nové nabídky ve vašem okolí. S naším sloganem „Lepší místo pro vaše inzeráty“ věříme, že vám přinášíme platformu, která je pohodlná, rychlá a bezpečná pro všechny uživatele." />
+          <meta property="og:url" content="https://dezy.cz" />
       </head>
       <body style={{ display: 'flex', flexDirection: 'column', height: '100%', margin: '0' }}>
     <CookieConsent />

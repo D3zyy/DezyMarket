@@ -26,6 +26,7 @@ import { headers } from "next/headers";
 import { checkRateLimit } from "@/app/RateLimiter/rateLimit";
 import { DateTime } from "luxon";
 import { getCachedData } from "@/app/getSetCachedData/caching";
+import Head from "next/head";
 const Page = async ({ params }) => {
   let session;
   let accType;
@@ -160,7 +161,19 @@ const alreadyViewed = await getCachedData(
 
   return (
   <div>
-    
+          <Head>
+          <title>{postRecord?.name}</title>
+          <meta name="description" content={postRecord?.description} />
+          <meta property="og:locale" content="cs_CZ" />
+          <meta property="og:type" content="article" />
+          <meta property="og:site_name" content="Dezy" />
+          <meta property="og:image" content="https://dezy.cz/icon.png" />
+          <meta property="og:title" content={postRecord?.name} />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <meta charSet="utf-8" />
+          <meta property="og:description" content={postRecord?.description} />
+          <meta property="og:url" content={`https://dezy.cz/post/${params.postId}`} />
+        </Head>
     <div className="md:mt-0 mt-4 pr-4 pl-4 lg:pr-8 lg:pl-8 md:pl-4  md:pr-4 breadcrumbs text-sm scrollbar-hidden">
   <ul>
     <li>

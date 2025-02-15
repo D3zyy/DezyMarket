@@ -1,0 +1,7 @@
+# Zablokování přístupu do /admin
+User-agent: *
+Disallow: /admin
+
+# Povolení přístupu pro všechny ostatní stránky
+User-agent: *
+Allow: /
