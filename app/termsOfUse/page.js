@@ -36,7 +36,7 @@ function TermsOfUse() {
             <li>Inzerce je povolena pouze na zboží, které je legální a odpovídá platným právním předpisům České republiky.</li>
             <li>Zakázána je inzerce zboží, které je nelegální, nebezpečné, nebo porušuje autorská práva. Také je zakázáno inzerovat služby nebo produkty, které mohou ohrozit bezpečnost nebo zdraví uživatelů.</li>
             <li>Inzeráty nesmí obsahovat klamavé, zavádějící, nebo nepravdivé informace.</li>
-            <li>Provozovatel si vyhrazuje právo na odstranění jakýchkoli inzerátů bez ohledu na to zda je příspěvek topován, které porušují podmínky nebo jsou v rozporu s právními předpisy.</li>
+            <li>Provozovatel si vyhrazuje právo na odstranění jakýchkoli inzerátů bez ohledu na to zda je příspěvek topovaní, které porušují podmínky nebo jsou v rozporu s právními předpisy.</li>
             <li>Uživatelé nesmí provozovat na portálu žádnou podnikatelskou činnost, a to jak legální, tak nelegální. Tento portál není určen pro komerční prodeje, a to ani pro firmy, ani pro jednotlivce.</li>
           </ul>
         </div>
