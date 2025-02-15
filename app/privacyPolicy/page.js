@@ -4,11 +4,22 @@ function PrivacyPolicy() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Zásady ochrany osobních údajů</h1>
+      <h2 className="font-semibold mt-6 mb-2"> Základní ustanovení</h2>
       <p>
-  Tento dokument popisuje, jakým způsobem shromažďujeme, používáme a chráníme osobní údaje, které nám uživatelé poskytují při registraci a jiných místech portálu Dezy (dále jen &quot;portál&quot;). Provozovatel portálu, Michal Doležel, IČO: 21992711, Průběžná 1827/65
-100 00 Praha 10 (dále jen &quot;správce&quot;), se zavazuje k ochraně vašich osobních údajů v souladu s platnými právními předpisy, včetně nařízení Evropského parlamentu a Rady (EU) 2016/679 o ochraně osobních údajů (GDPR).
+      Správcem osobních údajů podle čl. 4 bod 7 nařízení Evropského parlamentu a Rady
+(EU) 2016/679 o ochraně fyzických osob v souvislos se zpracováním osobních údajů
+a o volném pohybu těchto údajů (dále jen: &quot;GDPR&quot;) je fyzická osoba  Michal Doležel IČ: 21992711
+se sídlem Průběžná 1827/65 100 00 Praha 10(dále jen &quot;správce&quot;).
 </p>
-
+<h2>  </h2>
+<p>
+Osobními údaji se rozumí veškeré informace o idenkované nebo idenkovatelné
+fyzické osobě; idenkovatelnou fyzickou osobou je fyzická osoba, kterou lze přímo či
+nepřímo idenkovat, zejména odkazem na určitý idenkátor, například jméno,
+idenkační číslo, lokační údaje, síťový idenkátor nebo na jeden či více zvláštních
+prvků fyzické, fyziologické, genecké, psychické, ekonomické, kulturní nebo
+společenské identy této fyzické osoby.
+4. Správce nejmenoval pověřence pro ochranu osobních údajů.   </p>
       <h2 className="font-semibold mt-6 mb-2">1. Shromažďované osobní údaje</h2>
       <p>
         Při používání portálu shromažďujeme následující osobní údaje:
