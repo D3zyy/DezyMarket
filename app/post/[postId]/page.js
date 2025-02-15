@@ -173,6 +173,31 @@ const alreadyViewed = await getCachedData(
           <meta charSet="utf-8" />
           <meta property="og:description" content={postRecord?.description} />
           <meta property="og:url" content={`https://dezy.cz/post/${params.postId}`} />
+          <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+              isFamilyFriendly: "true",
+              inLanguage: "cs-CZ",
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: postRecord?.name,
+              description: postRecord?.description,
+              author: {
+                "@type": "Person",
+              },
+              mainEntityOfPage: {
+                "@type": "WebSite",
+                "@id": "https://dezy.cz"
+              },
+              dateCreated:  new Date().toISOString(),
+              datePublished:  new Date().toISOString(),
+              dateModified: new Date().toISOString(), 
+              url: `https://dezy.cz/post/${params.postId}`,
+              image:  "https://dezy.cz/icon.png",
+            }),
+          }}
+        />
         </Head>
     <div className="md:mt-0 mt-4 pr-4 pl-4 lg:pr-8 lg:pl-8 md:pl-4  md:pr-4 breadcrumbs text-sm scrollbar-hidden">
   <ul>
