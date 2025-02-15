@@ -42,7 +42,7 @@ function TermsAndConditions() {
 
       <h2 className="font-semibold mt-6 mb-2">7. Práva a povinnosti uživatelů</h2>
       <p>
-        Uživatelé portálu mají právo využívat služby portálu v souladu s těmito podmínkami. Uživatelé se zavazují zveřejňovat pouze pravdivé a neklamavé informace v inzerátech a respektovat pravidla portálu. Provozovatel si vyhrazuje právo smazat  i topované inzeráty, které porušují pravidla nebo jsou nelegální.
+        Uživatelé portálu mají právo využívat služby spojené s předplatném na  portálu v souladu s těmito podmínkami. Uživatelé se zavazují zveřejňovat pouze pravdivé a neklamavé informace v inzerátech a respektovat pravidla portálu. Provozovatel si vyhrazuje právo smazat  i topované inzeráty, které porušují pravidla nebo jsou nelegální.
       </p>
 
       <h2 className="font-semibold mt-6 mb-2">8. Odpovědnost a omezení odpovědnosti</h2>
