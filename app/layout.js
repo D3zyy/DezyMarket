@@ -67,6 +67,9 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="cs" style={{ height: '100%' }}>
+    <head>
+    <link rel="icon" href="/icon.png" sizes="any" />
+    </head>
        <Script
            id='ldjson'
           type="application/ld+json"
