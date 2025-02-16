@@ -50,11 +50,11 @@ function Post({ postDetails , section}) {
             {/* Obsah příspěvku centrovaný vertikálně */}
             <div className="flex  items-center justify-center space-x-4 flex-grow">
                 <div className="w-24    flex-shrink-0 h-24 flex items-center justify-center rounded-md">
-                    {!imageUrl ? (
+                    {imageUrl ? (
                       <Image 
                       quality={75} 
                       loading="lazy" 
-                      src={'https://www.bazos.cz/img/2/661/197722661.jpg?t=1738930762'} 
+                      src={imageUrl} 
                       alt={name} 
                       width={60}
                       height={60}  
