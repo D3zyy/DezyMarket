@@ -77,7 +77,8 @@ export default function RootLayout({ children }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "Dezy",
+              name: "Bazar Dezy",
+              alternateName: ["Nejlepší bazar", "Online inzerce","Bazar","Bazarový portál",],
               url: "https://dezy.cz",
               description:
                 "Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení.",
@@ -101,12 +102,14 @@ export default function RootLayout({ children }) {
         />  
       
       <body style={{ display: 'flex', flexDirection: 'column', height: '100%', margin: '0' }}>
+     
     <CookieConsent />
         <Navigation />
         <main style={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ width: '100%', maxWidth: '1300px', padding: '0 20px' }}>{children}</div>
         </main>
         <Footer />
+        
       </body>
     </html>
   );
