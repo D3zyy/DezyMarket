@@ -170,7 +170,7 @@ export async function POST(request) {
         
                   }catch(error){}
               console.error('Chyba na serveru [POST] požadavek informace o předplatném:  ', error);
-              return new NextResponse(JSON.stringify({
+              return new Response(JSON.stringify({
                   message: 'Chyba na serveru [POST] požadavek informace o předplatném'
               }), {
                   status: 500,
