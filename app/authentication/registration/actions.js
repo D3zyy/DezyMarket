@@ -81,6 +81,19 @@ export const handleRegistration = async (formData) => {
         name: 'uzivatel'
       }
     });
+    const nmbrOfAlreadyUsersWithThisIp = await prisma.ipAddressesOnUsers.count({
+      where: {
+        ipAddress: {
+          value: ipCheck // Nahraďte 'specifická_IP_adresa' konkrétní hodnotou IP adresy
+        }
+      }
+    });
+
+    if(nmbrOfAlreadyUsersWithThisIp > 30){
+      return {
+        message: "Registrace se nepovedla. Kontaktujte nás prosím",
+      };
+    }
 
 
       let registrationMail = validatedFields.data.email
