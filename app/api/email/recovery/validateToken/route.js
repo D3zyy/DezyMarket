@@ -3,6 +3,7 @@ import { prisma } from '@/app/database/db';
 import { z } from 'zod';
 import { DateTime } from 'luxon';
 import { checkRateLimit } from '@/app/RateLimiter/rateLimit';
+import { invalidateCache } from '@/app/getSetCachedData/caching';
 export async function POST(req) {
   let token, newPassword
   try {
@@ -51,7 +52,9 @@ export async function POST(req) {
       where: { token: token },
       include: { user: true }
     });
-   
+    
+    await invalidateCache(`userAcc_${tokenRecord.user.email}`)
+    await invalidateCache(`userEmail_${tokenRecord.user.email}`)
     // Check if the token record exists
     if (!tokenRecord) {
     
