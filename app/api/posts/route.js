@@ -356,13 +356,13 @@ const formDataObject = Object.fromEntries(formData.entries());
           ipAddress:ip,
           }
         })
-  return new Response(JSON.stringify({ messageToDisplay: "Již jste nahráli maximální počet příspěvků." }), {
+  return new Response(JSON.stringify({ messageToDisplay: "Již jste nahráli maximální počet příspěvků. Zkuste nějaký odstranit" }), {
     status: 403,
     headers: { 'Content-Type': 'application/json' }
   });
 }
 
-if (invisiblePosts > 150) {
+if (invisiblePosts > 200) {
   const rawIp =
   req.headers.get("x-forwarded-for")?.split(",")[0] || // První adresa v řetězci
   req.headers.get("x-real-ip") ||                      // Alternativní hlavička
