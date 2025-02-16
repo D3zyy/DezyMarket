@@ -81,7 +81,7 @@ export default function RootLayout({ children }) {
               alternateName: ["Nejlepší bazar", "Online inzerce","Bazar","Bazarový portál",],
               url: "https://dezy.cz",
               description:
-                "Dezy je inzertový portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení.",
+              "Dezy | Bazar | Inzerce je portál zdarma, který vám nabízí možnost inzerovat a najít širokou škálu produktů, od elektroniky po oblečení.",
               publisher: {
                 "@type": "Organization",
                 name: "Dezy",
